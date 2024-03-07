@@ -1,0 +1,42 @@
+@use "../variables/core-variables" as c;
+
+$topbar-height: 56px;
+
+.layoutWrapper {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: $topbar-height auto;
+    background-color: rgb(var(--nav-background-rgb));
+
+    & > .pageContent {
+        overflow-y: auto;
+        padding: 1.6rem 2rem;
+        box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.1);
+        border-top-left-radius: var(--border-radius);
+        background: rgb(var(--background-rgb));
+        position: relative;
+    }
+}
+
+.header {
+    background-color: rgb(var(--nav-background-rgb));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    & > img {
+        cursor: pointer;
+    }
+
+    .themeButton {
+        position: absolute;
+        right: 1rem;
+    }
+}
+
+// @media (max-width: c.$media-md) {
+// }

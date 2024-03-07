@@ -1,0 +1,149 @@
+:root {
+    --max-width: 1100px;
+    --border-radius: 12px;
+    --font-regular: Inter, "Roboto", sans-serif;
+    --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
+        "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
+        "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+
+    --foreground-rgb: 51, 51, 51;
+    --background-rgb: 245, 245, 245;
+    --nav-background-rgb: 255, 255, 255;
+
+    --transition: 0.25s ease-in-out;
+
+    --text-muted: #9da0a8;
+    --muted: 157, 160, 168;
+    --max-z: 2147483647;
+
+    font-family: var(--font-mono);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    line-height: normal;
+    font-weight: 400;
+
+    --status-success: #5aa897;
+    --status-info: #5bc0de;
+    --status-warning: #f0ad4e;
+    --status-danger: #e74c3c;
+}
+
+[data-theme="dark"]:root {
+    --foreground-rgb: 240, 242, 247;
+    --background-rgb: 20, 20, 20;
+    --nav-background-rgb: 30, 30, 30;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background: rgb(var(--background-rgb));
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+}
+
+$scrollbar-thickness: 4px;
+$scrollbar-track-color: #f1f1f180;
+$scrollbar-thumb-color: #a6a6a6;
+$scrollbar-thumb-border-radius: 4px;
+$scrollbar-thumb-hover-color: #9d9d9d;
+
+$scrollbar-track-color-dark: #55555580;
+$scrollbar-thumb-color-dark: #808080;
+$scrollbar-thumb-hover-color-dark: #b3b3b3;
+
+/* scrollbar width */
+::-webkit-scrollbar {
+    height: $scrollbar-thickness;
+    width: $scrollbar-thickness;
+}
+
+/* scrollbar Track */
+::-webkit-scrollbar-track {
+    background: $scrollbar-track-color;
+}
+
+/* scrollbar Handle */
+::-webkit-scrollbar-thumb {
+    background: $scrollbar-thumb-color;
+    border-radius: $scrollbar-thumb-border-radius;
+}
+
+/* scrollbar Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $scrollbar-thumb-hover-color;
+}
+
+[data-theme="dark"] {
+    /* scrollbar width */
+    ::-webkit-scrollbar {
+        height: $scrollbar-thickness;
+        width: $scrollbar-thickness;
+    }
+
+    /* scrollbar Track */
+    ::-webkit-scrollbar-track {
+        background: $scrollbar-track-color-dark;
+    }
+
+    /* scrollbar Handle */
+    ::-webkit-scrollbar-thumb {
+        background: $scrollbar-thumb-color-dark;
+        border-radius: $scrollbar-thumb-border-radius;
+    }
+
+    /* scrollbar Handle on hover */
+    ::-webkit-scrollbar-thumb:hover {
+        background: $scrollbar-thumb-hover-color-dark;
+    }
+}
+
+button {
+    outline: none !important;
+}
+
+code {
+    border: 1px solid rgba(var(--foreground-rgb), 0.1);
+    border-radius: 3px;
+    padding: 0 4px;
+}
+
+// Library overrides
+
+:root {
+    --toastify-icon-color-success: var(--status-success);
+    --toastify-icon-color-info: var(--status-info);
+    --toastify-icon-color-warning: var(--status-warning);
+    --toastify-icon-color-danger: var(--status-danger);
+}
+.Toastify__toast {
+    border: 2px solid rgb(var(--background-rgb));
+    background: rgb(var(--nav-background-rgb));
+    color: rgb(var(--foreground-rgb));
+}
+.Toastify__close-button {
+    color: rgb(var(--foreground-rgb));
+}
