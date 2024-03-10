@@ -1,7 +1,7 @@
 :root {
     --max-width: 1100px;
     --border-radius: 12px;
-    --font-regular: "Inter", sans-serif;
+    --font-regular: "Noto Sans", sans-serif;
     --font-mono: "Noto Sans Mono", monospace;
 
     --primary-rgb: 126, 156, 216;
@@ -32,6 +32,13 @@
     --status-info: #5bc0de;
     --status-warning: #f0ad4e;
     --status-danger: #e74c3c;
+}
+
+[data-font-type="regular"]:root {
+    font-family: var(--font-regular);
+}
+[data-font-type="monospace"]:root {
+    font-family: var(--font-mono);
 }
 
 [data-theme="kanagawa"]:root {

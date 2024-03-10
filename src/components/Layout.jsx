@@ -3,12 +3,12 @@ import { IconButton } from "@mui/material";
 import { SettingsSharp } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 
-import { useColorScheme } from "@/utils/color-scheme-provider";
+import { useTheme } from "@/utils/theme-provider";
 import { HOMEPAGE } from "@/utils/constants";
 import Logo from "@/components/Logo";
 
 const Header = () => {
-    const { colors } = useColorScheme();
+    const { colors } = useTheme();
 
     return (
         <div className={styles.header}>

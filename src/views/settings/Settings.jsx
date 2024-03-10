@@ -7,18 +7,21 @@ import { getTitle } from "@/utils/util";
 
 import SchemeSelector from "./SchemeSelector";
 import { PaletteSharp } from "@mui/icons-material";
-import { useColorScheme } from "@/utils/color-scheme-provider";
+import { useTheme } from "@/utils/theme-provider";
 import { Button } from "@mui/material";
 
 const Settings = () => {
     const title = useMemo(() => getTitle("Settings"), []);
-    const { colorScheme: scheme, setColorScheme } = useColorScheme();
-
-    const [fontType, setFontType] = useState("monospace");
+    const {
+        colorScheme: scheme,
+        fontType,
+        setThemeKey,
+        setFontType,
+    } = useTheme();
 
     const setScheme = key => {
         if (key) {
-            setColorScheme(key);
+            setThemeKey(key);
         }
     };
 
@@ -57,7 +60,7 @@ const Settings = () => {
                             disableElevation
                             className={globalStyles.fontTypeRegular}
                             sx={{
-                                fontFamily: "Inter",
+                                fontFamily: "Noto Sans",
                             }}
                         >
                             Regular

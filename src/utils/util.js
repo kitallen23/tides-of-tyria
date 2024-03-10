@@ -33,7 +33,7 @@ export function relativeDateFormat({
 
 // See here for details:
 // https://stackoverflow.com/questions/56300132/how-to-override-css-prefers-color-scheme-setting
-export function detectColorScheme() {
+export function detectTheme() {
     let theme = "kanagawa";
 
     if (localStorage.getItem("theme")) {

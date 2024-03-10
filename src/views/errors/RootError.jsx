@@ -9,25 +9,24 @@ import { Helmet } from "react-helmet";
 
 import styles from "@/styles/modules/errors.module.scss";
 import { SCHEMES } from "@/utils/color-schemes";
-import { getTitle, detectColorScheme } from "@/utils/util";
-import /* HOMEPAGE */ "@/utils/constants";
+import { getTitle, detectTheme } from "@/utils/util";
 
 const Error404 = () => {
-    const [colorScheme, setColorScheme] = useState();
+    const [theme, setTheme] = useState();
 
     useEffect(() => {
-        const colorScheme = detectColorScheme();
-        setColorScheme(colorScheme);
+        const theme = detectTheme();
+        setTheme(theme);
         document
             .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", SCHEMES[colorScheme].colors.primary);
+            .setAttribute("content", SCHEMES[theme].colors.primary);
     }, []);
     const error = useRouteError();
 
     useEffect(() => {
         // Set document with a `data-theme` attribute
-        document.documentElement.setAttribute("data-theme", colorScheme);
-    }, [colorScheme]);
+        document.documentElement.setAttribute("data-theme", theme);
+    }, [theme]);
 
     useEffect(() => {
         console.error(`Error: `, error);

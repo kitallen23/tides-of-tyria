@@ -3,12 +3,9 @@ import { Helmet } from "react-helmet";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import { useColorScheme } from "@/utils/color-scheme-provider";
 import { getTitle } from "@/utils/util";
 
 const Login = () => {
-    const { body: bodyColor } = useColorScheme();
-
     const navigate = useNavigate();
     const { pathname } = useLocation();
 
@@ -25,7 +22,7 @@ const Login = () => {
                 <title>{title}</title>
             </Helmet>
             <div className={`${globalStyles.pageContent}`}>
-                <h1 style={{ color: bodyColor }}>Log in</h1>
+                <h2>Log in</h2>
             </div>
         </>
     );
