@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useMemo } from "react";
 import "@/styles/globals.scss";
-import { ACCESS_TOKEN_KEY, COLORS, TITLE_SUFFIX } from "@/utils/constants";
+import { ACCESS_TOKEN_KEY, TITLE_SUFFIX } from "@/utils/constants";
 import { detectColorScheme } from "@/utils/util";
 import {
     AuthProvider,
@@ -21,6 +21,7 @@ import {
 import { Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ThemeProvider, createTheme } from "@mui/material";
+import { SCHEMES } from "./utils/color-schemes";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -31,16 +32,37 @@ const queryClient = new QueryClient({
 });
 
 const getDesignTokens = theme => ({
+    status: {
+        danger: theme.colors.danger,
+        warning: theme.colors.warning,
+        success: theme.colors.success,
+        info: theme.colors.info,
+    },
     palette: {
-        mode: theme?.colorScheme || "light",
+        mode: theme?.mode || "dark",
         primary: {
-            main: theme?.primary || COLORS.primary,
+            main: theme.colors.primary,
         },
         secondary: {
-            main: theme?.secondary || COLORS.secondary,
+            main: theme.colors.secondary,
+        },
+        body: {
+            main: theme.colors.body,
         },
         white: {
             main: "#FFFFFF",
+        },
+        success: {
+            main: theme.colors.success,
+        },
+        error: {
+            main: theme.colors.danger,
+        },
+        warning: {
+            main: theme.colors.warning,
+        },
+        info: {
+            main: theme.colors.info,
         },
     },
 });
@@ -52,10 +74,7 @@ function App({ renderLogin }) {
         DEFAULT_COLOR_SCHEME_STATE
     );
     const setColorScheme = colorScheme => {
-        localStorage.setItem(
-            "theme",
-            colorScheme === "dark" ? "dark" : "light"
-        );
+        localStorage.setItem("theme", colorScheme);
         dispatchColorScheme({
             key: "SET_COLOR_SCHEME",
             payload: colorScheme,
@@ -66,7 +85,7 @@ function App({ renderLogin }) {
         setColorScheme(colorScheme);
         document
             .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", COLORS.primary);
+            .setAttribute("content", SCHEMES[colorScheme].colors.primary);
     }, []);
 
     const colorScheme = useMemo(

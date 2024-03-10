@@ -2,13 +2,20 @@
     --max-width: 1100px;
     --border-radius: 12px;
     --font-regular: Inter, "Roboto", sans-serif;
-    --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
-        "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
-        "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+    --font-mono: "Roboto Mono", ui-monospace, Menlo, Monaco, "Cascadia Mono",
+        "Segoe UI Mono", "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace",
+        "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New",
+        monospace;
 
-    --foreground-rgb: 51, 51, 51;
-    --background-rgb: 245, 245, 245;
-    --nav-background-rgb: 255, 255, 255;
+    --primary-rgb: 126, 156, 216;
+    --secondary-rgb: 230, 195, 132;
+    --foreground-rgb: 220, 215, 186;
+    --background-rgb: 31, 31, 40;
+    --nav-background-rgb: 42, 42, 55;
+
+    --scrollbar-track-color: 22, 22, 29;
+    --scrollbar-thumb-color: 220, 215, 186;
+    --scrollbar-thumb-hover-color: 220, 215, 186;
 
     --transition: 0.25s ease-in-out;
 
@@ -31,12 +38,22 @@
     --status-danger: #e74c3c;
 }
 
-[data-theme="dark"]:root {
-    --foreground-rgb: 240, 242, 247;
-    --background-rgb: 20, 20, 20;
-    --nav-background-rgb: 30, 30, 30;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+[data-theme="kanagawa"]:root {
+    --primary-rgb: 126, 156, 216;
+    --secondary-rgb: 230, 195, 132;
+    --foreground-rgb: 220, 215, 186;
+    --background-rgb: 31, 31, 40;
+    --nav-background-rgb: 42, 42, 55;
+
+    --scrollbar-track-color: 22, 22, 29;
+    --scrollbar-thumb-color: 220, 215, 186;
+    --scrollbar-thumb-hover-color: 220, 215, 186;
+}
+
+[data-theme="light"]:root {
+    --foreground-rgb: 51, 51, 51;
+    --background-rgb: 245, 245, 245;
+    --nav-background-rgb: 255, 255, 255;
 }
 
 * {
@@ -61,15 +78,21 @@ a {
     text-decoration: none;
 }
 
-html[data-theme="dark"] {
+html[data-theme="kanagawa"] {
     color-scheme: dark;
 }
 
-$scrollbar-thickness: 4px;
-$scrollbar-track-color: #f1f1f180;
-$scrollbar-thumb-color: #a6a6a6;
-$scrollbar-thumb-border-radius: 4px;
-$scrollbar-thumb-hover-color: #9d9d9d;
+h1,
+h2,
+h3 {
+    color: rgb(var(--secondary-rgb));
+}
+
+$scrollbar-thickness: 5px;
+$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0.2);
+$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-hover-color), 0.2);
+$scrollbar-thumb-border-radius: 5px;
+$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-hover-color));
 
 $scrollbar-track-color-dark: #55555580;
 $scrollbar-thumb-color-dark: #808080;

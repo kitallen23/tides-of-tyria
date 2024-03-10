@@ -1,0 +1,51 @@
+@use "../variables/core-variables" as c;
+
+.pageWrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+}
+
+.schemeSelector {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    .schemeItem {
+        border-width: 4px;
+        border-radius: var(--border-radius);
+        border-style: solid;
+        padding: 0.5rem 0.25rem;
+        text-transform: capitalize;
+        position: relative;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        transition: transform 0.125s;
+
+        &:hover {
+            transform: scale(1.05);
+        }
+
+        .colorIndicators {
+            display: flex;
+            gap: 0.25rem;
+            position: absolute;
+            right: 1rem;
+
+            .colorIndicator {
+                border-radius: 50%;
+                width: 16px;
+                height: 16px;
+            }
+        }
+    }
+
+    @media (max-width: c.$media-lg) {
+        grid-template-columns: 1fr 1fr;
+    }
+    @media (max-width: c.$media-md) {
+        grid-template-columns: 1fr;
+    }
+}

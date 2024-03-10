@@ -1,28 +1,16 @@
 import { createContext, useContext } from "react";
-import { COLORS, STATUS_COLORS } from "./constants";
+import { SCHEMES } from "./color-schemes";
 
 export const DEFAULT_COLOR_SCHEME_STATE = {
-    ...STATUS_COLORS,
-    colorScheme: "light",
+    ...SCHEMES.kanagawa,
+    colorScheme: "kanagawa",
 };
 
 export const ColorSchemeContext = createContext(DEFAULT_COLOR_SCHEME_STATE);
 export const ColorSchemeProvider = ColorSchemeContext.Provider;
 
-const getColors = scheme => {
-    if (scheme === "dark") {
-        return {
-            primary: COLORS.primaryLight,
-            secondary: COLORS.secondaryLight,
-            body: COLORS.bodyLight,
-        };
-    } else {
-        return {
-            primary: COLORS.primary,
-            secondary: COLORS.secondary,
-            body: COLORS.body,
-        };
-    }
+const getScheme = schemeName => {
+    return SCHEMES[schemeName];
 };
 
 export function useColorScheme() {
@@ -38,11 +26,11 @@ export function useColorScheme() {
 export function ColorSchemeReducer(state, { key, payload }) {
     switch (key) {
         case "SET_COLOR_SCHEME": {
-            const scheme = payload;
-            const colors = getColors(scheme);
+            const schemeName = payload;
+            const schemeValues = getScheme(schemeName);
             return {
                 ...state,
-                ...colors,
+                ...schemeValues,
                 colorScheme: payload,
             };
         }

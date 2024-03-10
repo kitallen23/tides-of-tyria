@@ -8,6 +8,7 @@ import RootError from "@/views/errors/RootError";
 
 import Placeholder from "@/views/Placeholder";
 import Logout from "@/views/Logout";
+import Settings from "@/views/settings/Settings";
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
             {
                 path: "logout",
                 element: <Logout />,
+            },
+            {
+                path: "settings",
+                element: <Settings />,
             },
             {
                 path: "",

@@ -34,15 +34,16 @@ export function relativeDateFormat({
 // See here for details:
 // https://stackoverflow.com/questions/56300132/how-to-override-css-prefers-color-scheme-setting
 export function detectColorScheme() {
-    let theme = "light";
+    let theme = "kanagawa";
 
     if (localStorage.getItem("theme")) {
-        if (localStorage.getItem("theme") === "dark") {
-            theme = "dark";
+        if (localStorage.getItem("theme") === "light") {
+            // TODO: Set this to the "default" light scheme, not kanagawa
+            theme = "kanagawa";
         }
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark
-        theme = "dark";
+        theme = "kanagawa";
     }
 
     return theme;

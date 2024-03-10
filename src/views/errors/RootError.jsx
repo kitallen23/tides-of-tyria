@@ -5,10 +5,12 @@ import {
     // useNavigate,
     useRouteError,
 } from "react-router-dom";
-import styles from "@/styles/modules/errors.module.scss";
-import { getTitle, detectColorScheme } from "@/utils/util";
-import { COLORS /*, HOMEPAGE */ } from "@/utils/constants";
 import { Helmet } from "react-helmet";
+
+import styles from "@/styles/modules/errors.module.scss";
+import { SCHEMES } from "@/utils/color-schemes";
+import { getTitle, detectColorScheme } from "@/utils/util";
+import /* HOMEPAGE */ "@/utils/constants";
 
 const Error404 = () => {
     const [colorScheme, setColorScheme] = useState();
@@ -18,7 +20,7 @@ const Error404 = () => {
         setColorScheme(colorScheme);
         document
             .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", COLORS.primary);
+            .setAttribute("content", SCHEMES[colorScheme].colors.primary);
     }, []);
     const error = useRouteError();
 

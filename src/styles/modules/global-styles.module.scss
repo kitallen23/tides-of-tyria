@@ -1,5 +1,7 @@
+@use "../variables/core-variables" as c;
+
 .pageContent {
-    max-width: 1096px;
+    max-width: c.$content-width;
     margin: 0 auto;
 }
 
@@ -10,4 +12,3 @@
 .textMuted {
     color: var(--text-muted);
 }
-
