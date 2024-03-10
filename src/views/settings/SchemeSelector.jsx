@@ -1,6 +1,6 @@
 import { SCHEMES } from "@/utils/color-schemes";
 import styles from "@/styles/modules/settings.module.scss";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 const SchemeItem = ({ scheme, selected, onChange }) => (
     <div
@@ -20,21 +20,17 @@ const SchemeItem = ({ scheme, selected, onChange }) => (
             />
             <div
                 className={styles.colorIndicator}
-                style={{ background: scheme.colors.body }}
+                style={{ background: scheme.colors.secondary }}
             />
             <div
                 className={styles.colorIndicator}
-                style={{ background: scheme.colors.secondary }}
+                style={{ background: scheme.colors.body }}
             />
         </div>
     </div>
 );
 
 const SchemeSelector = ({ scheme, onChange }) => {
-    useEffect(() => {
-        console.log(`>>> Current scheme: `, scheme);
-    }, [scheme]);
-
     const schemes = useMemo(() => {
         let schemeArray = [];
         Object.keys(SCHEMES).forEach(key => {

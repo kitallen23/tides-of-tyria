@@ -37,10 +37,7 @@ export function detectColorScheme() {
     let theme = "kanagawa";
 
     if (localStorage.getItem("theme")) {
-        if (localStorage.getItem("theme") === "light") {
-            // TODO: Set this to the "default" light scheme, not kanagawa
-            theme = "kanagawa";
-        }
+        theme = localStorage.getItem("theme");
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark
         theme = "kanagawa";

@@ -17,10 +17,10 @@
     --scrollbar-thumb-color: 220, 215, 186;
     --scrollbar-thumb-hover-color: 220, 215, 186;
 
-    --transition: 0.25s ease-in-out;
+    --transition: 0.3s ease-in-out;
 
-    --text-muted: #9da0a8;
-    --muted: 157, 160, 168;
+    --text-muted: #53565a;
+    --muted-rgb: 83, 86, 90;
     --max-z: 2147483647;
 
     font-family: var(--font-mono);
@@ -40,7 +40,7 @@
 
 [data-theme="kanagawa"]:root {
     --primary-rgb: 126, 156, 216;
-    --secondary-rgb: 230, 195, 132;
+    --secondary-rgb: 84, 84, 109;
     --foreground-rgb: 220, 215, 186;
     --background-rgb: 31, 31, 40;
     --nav-background-rgb: 42, 42, 55;
@@ -48,11 +48,13 @@
     --scrollbar-track-color: 22, 22, 29;
     --scrollbar-thumb-color: 220, 215, 186;
     --scrollbar-thumb-hover-color: 220, 215, 186;
-}
 
+    --text-muted: #54546d;
+    --muted-rgb: 84, 84, 109;
+}
 [data-theme="gruvbox_dark"]:root {
     --primary-rgb: 184, 187, 38;
-    --secondary-rgb: 250, 189, 46;
+    --secondary-rgb: 102, 92, 84;
     --foreground-rgb: 235, 219, 178;
     --background-rgb: 40, 40, 40;
     --nav-background-rgb: 60, 56, 54;
@@ -60,6 +62,37 @@
     --scrollbar-track-color: 29, 32, 33;
     --scrollbar-thumb-color: 235, 219, 178;
     --scrollbar-thumb-hover-color: 235, 219, 178;
+
+    --text-muted: #665c54;
+    --muted-rgb: 102, 92, 84;
+}
+[data-theme="dracula"]:root {
+    --primary-rgb: 189, 147, 249;
+    --secondary-rgb: 80, 250, 123;
+    --foreground-rgb: 248, 248, 242;
+    --background-rgb: 40, 42, 54;
+    --nav-background-rgb: 68, 71, 90;
+
+    --scrollbar-track-color: 22, 23, 29;
+    --scrollbar-thumb-color: 248, 248, 242;
+    --scrollbar-thumb-hover-color: 248, 248, 242;
+
+    --text-muted: #585b74;
+    --muted-rgb: 88, 91, 116;
+}
+[data-theme="monokai"]:root {
+    --primary-rgb: 166, 226, 46;
+    --secondary-rgb: 253, 151, 31;
+    --foreground-rgb: 253, 255, 241;
+    --background-rgb: 39, 40, 34;
+    --nav-background-rgb: 29, 30, 25;
+
+    --scrollbar-track-color: 26, 28, 23;
+    --scrollbar-thumb-color: 253, 255, 241;
+    --scrollbar-thumb-hover-color: 253, 255, 241;
+
+    --text-muted: #57584f;
+    --muted-rgb: 87, 88, 79;
 }
 
 * {
@@ -86,12 +119,6 @@ a {
 
 html[data-theme="kanagawa"] {
     color-scheme: dark;
-}
-
-h1,
-h2,
-h3 {
-    color: rgb(var(--secondary-rgb));
 }
 
 $scrollbar-thickness: 5px;
@@ -158,6 +185,21 @@ code {
     border: 1px solid rgba(var(--foreground-rgb), 0.1);
     border-radius: 3px;
     padding: 0 4px;
+}
+
+.transition-color {
+    transition: color var(--transition);
+}
+
+h1,
+h2,
+h3 {
+    color: rgb(var(--secondary-rgb));
+    transition: color var(--transition);
+}
+
+.text-muted {
+    color: var(--text-muted);
 }
 
 // Library overrides

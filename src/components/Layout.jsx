@@ -5,33 +5,32 @@ import { Link } from "react-router-dom";
 
 import { useColorScheme } from "@/utils/color-scheme-provider";
 import { HOMEPAGE } from "@/utils/constants";
-import kanagawaLogo from "@/assets/TyriaTracker_kanagawa.png";
-import gruvboxDarkLogo from "@/assets/TyriaTracker_gruvbox_dark.png";
-
-const LOGOS = {
-    kanagawa: kanagawaLogo,
-    gruvbox_dark: gruvboxDarkLogo,
-};
+import Logo from "@/components/Logo";
 
 const Header = () => {
-    const { colorScheme } = useColorScheme();
+    const { colors } = useColorScheme();
 
     return (
         <div className={styles.header}>
             <div className={styles.content}>
                 <Link to={HOMEPAGE} className={styles.logoLink}>
-                    <img
-                        src={LOGOS?.[colorScheme] || LOGOS.kanagawa}
-                        alt="Logo"
-                        height={48}
-                    />
-                    <div>
-                        <div>Tyria</div>
-                        <div>Tracker</div>
+                    <Logo size={48} color={colors.primary} />
+                    <div className={`${styles.title} transition-color`}>
+                        <div>TIDES</div>
+                        <div
+                            css={{
+                                "&:before,&:after": {
+                                    backgroundColor: colors.primary,
+                                },
+                            }}
+                        >
+                            OF
+                        </div>
+                        <div>TYRIA</div>
                     </div>
                 </Link>
                 <Link to="/settings">
-                    <IconButton aria-label="settings" color="body">
+                    <IconButton aria-label="settings" color="secondary">
                         <SettingsSharp />
                     </IconButton>
                 </Link>

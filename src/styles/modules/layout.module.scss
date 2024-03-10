@@ -16,12 +16,14 @@ $topbar-height: 56px;
         padding: 1.6rem 2rem;
         box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.1);
         background: rgb(var(--background-rgb));
+        transition: background-color var(--transition);
         position: relative;
     }
 }
 
 .header {
     background-color: rgb(var(--nav-background-rgb));
+    transition: background-color var(--transition);
     position: relative;
     color: rgb(var(--primary-rgb));
 
@@ -39,6 +41,33 @@ $topbar-height: 56px;
             display: flex;
             align-items: center;
             gap: 0.25rem;
+
+            .title {
+                display: grid;
+                text-align: center;
+                div:nth-child(2) {
+                    position: relative;
+                    font-size: 0.6rem;
+                    margin-top: -0.3rem;
+                    margin-bottom: -0.3rem;
+                    &:before,
+                    &:after {
+                        content: "";
+                        position: absolute;
+                        top: 52%;
+                        transform: translateY(-50%);
+                        width: 12px;
+                        height: 1px;
+                        transition: background-color var(--transition);
+                    }
+                    &:before {
+                        transform: translateX(calc(-100% - 2px));
+                    }
+                    &:after {
+                        transform: translateX(2px);
+                    }
+                }
+            }
         }
     }
 }

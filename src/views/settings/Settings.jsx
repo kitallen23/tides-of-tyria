@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Helmet } from "react-helmet";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
@@ -27,14 +27,26 @@ const Settings = () => {
             <div
                 className={`${globalStyles.pageContent} ${styles.pageWrapper}`}
             >
-                <h3>
-                    <PaletteSharp
-                        fontSize="inherit"
-                        style={{ marginRight: "0.25rem" }}
-                    />
-                    Theme
-                </h3>
-                <SchemeSelector scheme={scheme} onChange={setScheme} />
+                <div className={styles.settingGroup}>
+                    <h3>
+                        <PaletteSharp
+                            fontSize="inherit"
+                            style={{ marginRight: "0.25rem" }}
+                        />
+                        Theme
+                    </h3>
+                    <SchemeSelector scheme={scheme} onChange={setScheme} />
+                </div>
+                <div className={styles.inlineSetting}>
+                    <h3>
+                        <PaletteSharp
+                            fontSize="inherit"
+                            style={{ marginRight: "0.25rem" }}
+                        />
+                        Font type
+                    </h3>
+                    <div></div>
+                </div>
             </div>
         </>
     );
