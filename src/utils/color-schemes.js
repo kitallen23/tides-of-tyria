@@ -67,4 +67,40 @@ export const SCHEMES = {
             info: "#66d9ef",
         },
     },
+    gruvbox_light: {
+        name: "Gruvbox Light",
+        mode: "light",
+        colors: {
+            primary: "#79740e",
+            secondary: "#a89984",
+            body: "#3c3836",
+            background: "#fbf1c7",
+            backgroundNav: "#ebdbb2",
+            muted: "#a89984",
+
+            // TODO
+            success: "#98971a",
+            danger: "#cc241d",
+            warning: "#d79921",
+            info: "#458588",
+        },
+    },
+    godspeed: {
+        name: "Godspeed",
+        mode: "light",
+        colors: {
+            primary: "#9abbcd",
+            secondary: "#adab98",
+            body: "#64666b",
+            background: "#e9e2cc",
+            backgroundNav: "#f0ebdb",
+            muted: "#adab98",
+
+            // TODO
+            success: "#98971a",
+            danger: "#cc241d",
+            warning: "#d79921",
+            info: "#458588",
+        },
+    },
 };

@@ -1,11 +1,8 @@
 :root {
     --max-width: 1100px;
     --border-radius: 12px;
-    --font-regular: Inter, "Roboto", sans-serif;
-    --font-mono: "Roboto Mono", ui-monospace, Menlo, Monaco, "Cascadia Mono",
-        "Segoe UI Mono", "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace",
-        "Source Code Pro", "Fira Mono", "Droid Sans Mono", "Courier New",
-        monospace;
+    --font-regular: "Inter", sans-serif;
+    --font-mono: "Noto Sans Mono", monospace;
 
     --primary-rgb: 126, 156, 216;
     --secondary-rgb: 230, 195, 132;
@@ -15,7 +12,6 @@
 
     --scrollbar-track-color: 22, 22, 29;
     --scrollbar-thumb-color: 220, 215, 186;
-    --scrollbar-thumb-hover-color: 220, 215, 186;
 
     --transition: 0.3s ease-in-out;
 
@@ -24,11 +20,11 @@
     --max-z: 2147483647;
 
     font-family: var(--font-mono);
+    font-optical-scaling: auto;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    -webkit-text-size-adjust: 100%;
     line-height: normal;
     font-weight: 400;
 
@@ -46,8 +42,7 @@
     --nav-background-rgb: 42, 42, 55;
 
     --scrollbar-track-color: 22, 22, 29;
-    --scrollbar-thumb-color: 220, 215, 186;
-    --scrollbar-thumb-hover-color: 220, 215, 186;
+    --scrollbar-thumb-color: 140, 140, 166;
 
     --text-muted: #54546d;
     --muted-rgb: 84, 84, 109;
@@ -61,7 +56,6 @@
 
     --scrollbar-track-color: 29, 32, 33;
     --scrollbar-thumb-color: 235, 219, 178;
-    --scrollbar-thumb-hover-color: 235, 219, 178;
 
     --text-muted: #665c54;
     --muted-rgb: 102, 92, 84;
@@ -75,7 +69,6 @@
 
     --scrollbar-track-color: 22, 23, 29;
     --scrollbar-thumb-color: 248, 248, 242;
-    --scrollbar-thumb-hover-color: 248, 248, 242;
 
     --text-muted: #585b74;
     --muted-rgb: 88, 91, 116;
@@ -89,10 +82,35 @@
 
     --scrollbar-track-color: 26, 28, 23;
     --scrollbar-thumb-color: 253, 255, 241;
-    --scrollbar-thumb-hover-color: 253, 255, 241;
 
     --text-muted: #57584f;
     --muted-rgb: 87, 88, 79;
+}
+[data-theme="gruvbox_light"]:root {
+    --primary-rgb: 121, 116, 14;
+    --secondary-rgb: 168, 153, 132;
+    --foreground-rgb: 60, 56, 54;
+    --background-rgb: 251, 241, 199;
+    --nav-background-rgb: 249, 245, 215;
+
+    --scrollbar-track-color: 213, 196, 161;
+    --scrollbar-thumb-color: 102, 92, 84;
+
+    --text-muted: #a89984;
+    --muted-rgb: 168, 153, 132;
+}
+[data-theme="godspeed"]:root {
+    --primary-rgb: 154, 187, 205;
+    --secondary-rgb: 173, 171, 152;
+    --foreground-rgb: 100, 102, 107;
+    --background-rgb: 233, 226, 204;
+    --nav-background-rgb: 240, 235, 219;
+
+    --scrollbar-track-color: 213, 196, 161;
+    --scrollbar-thumb-color: 102, 92, 84;
+
+    --text-muted: #adab98;
+    --muted-rgb: 173, 171, 152;
 }
 
 * {
@@ -121,15 +139,11 @@ html[data-theme="kanagawa"] {
     color-scheme: dark;
 }
 
-$scrollbar-thickness: 5px;
-$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0.2);
-$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-hover-color), 0.2);
-$scrollbar-thumb-border-radius: 5px;
-$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-hover-color));
-
-$scrollbar-track-color-dark: #55555580;
-$scrollbar-thumb-color-dark: #808080;
-$scrollbar-thumb-hover-color-dark: #b3b3b3;
+$scrollbar-thickness: 6px;
+$scrollbar-thumb-border-radius: 6px;
+$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0);
+$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2);
+$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color));
 
 /* scrollbar width */
 ::-webkit-scrollbar {
@@ -153,27 +167,15 @@ $scrollbar-thumb-hover-color-dark: #b3b3b3;
     background: $scrollbar-thumb-hover-color;
 }
 
-[data-theme="dark"] {
-    /* scrollbar width */
-    ::-webkit-scrollbar {
-        height: $scrollbar-thickness;
-        width: $scrollbar-thickness;
-    }
-
-    /* scrollbar Track */
-    ::-webkit-scrollbar-track {
-        background: $scrollbar-track-color-dark;
-    }
-
+[data-theme="gruvbox_light"] {
     /* scrollbar Handle */
     ::-webkit-scrollbar-thumb {
-        background: $scrollbar-thumb-color-dark;
-        border-radius: $scrollbar-thumb-border-radius;
+        background: rgba(var(--scrollbar-thumb-color), 0.6);
     }
 
     /* scrollbar Handle on hover */
     ::-webkit-scrollbar-thumb:hover {
-        background: $scrollbar-thumb-hover-color-dark;
+        background: $scrollbar-thumb-hover-color;
     }
 }
 

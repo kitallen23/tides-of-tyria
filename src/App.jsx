@@ -65,6 +65,18 @@ const getDesignTokens = theme => ({
             main: theme.colors.info,
         },
     },
+    typography: {
+        fontFamily: ["Noto Sans Mono"],
+    },
+    components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    textTransform: "none",
+                },
+            },
+        },
+    },
 });
 
 function App({ renderLogin }) {
