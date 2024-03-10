@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
@@ -7,11 +7,17 @@ import { getTitle } from "@/utils/util";
 
 import SchemeSelector from "./SchemeSelector";
 import { PaletteSharp } from "@mui/icons-material";
+import { useColorScheme } from "@/utils/color-scheme-provider";
 
 const Settings = () => {
     const title = useMemo(() => getTitle("Settings"), []);
+    const { colorScheme: scheme, setColorScheme } = useColorScheme();
 
-    const [scheme, setScheme] = useState("kanagawa");
+    const setScheme = key => {
+        if (key) {
+            setColorScheme(key);
+        }
+    };
 
     return (
         <>

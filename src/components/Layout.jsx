@@ -1,22 +1,20 @@
-// import classNames from "classnames";
 import styles from "@/styles/modules/layout.module.scss";
 import { IconButton } from "@mui/material";
 import { SettingsSharp } from "@mui/icons-material";
 import { Link } from "react-router-dom";
-import { useColorScheme } from "@/utils/color-scheme-provider";
-import kanagawaLogo from "@/assets/TyriaTracker_Kanagawa.png";
-import { HOMEPAGE } from "@/utils/constants";
 
-// import { useColorScheme } from "@/utils/color-scheme-provider";
-// import { Tooltip } from "@mui/material";
+import { useColorScheme } from "@/utils/color-scheme-provider";
+import { HOMEPAGE } from "@/utils/constants";
+import kanagawaLogo from "@/assets/TyriaTracker_kanagawa.png";
+import gruvboxDarkLogo from "@/assets/TyriaTracker_gruvbox_dark.png";
 
 const LOGOS = {
     kanagawa: kanagawaLogo,
+    gruvbox_dark: gruvboxDarkLogo,
 };
 
 const Header = () => {
     const { colorScheme } = useColorScheme();
-    // const navigate = useNavigate();
 
     return (
         <div className={styles.header}>

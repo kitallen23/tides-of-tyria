@@ -50,10 +50,16 @@
     --scrollbar-thumb-hover-color: 220, 215, 186;
 }
 
-[data-theme="light"]:root {
-    --foreground-rgb: 51, 51, 51;
-    --background-rgb: 245, 245, 245;
-    --nav-background-rgb: 255, 255, 255;
+[data-theme="gruvbox_dark"]:root {
+    --primary-rgb: 184, 187, 38;
+    --secondary-rgb: 250, 189, 46;
+    --foreground-rgb: 235, 219, 178;
+    --background-rgb: 40, 40, 40;
+    --nav-background-rgb: 60, 56, 54;
+
+    --scrollbar-track-color: 29, 32, 33;
+    --scrollbar-thumb-color: 235, 219, 178;
+    --scrollbar-thumb-hover-color: 235, 219, 178;
 }
 
 * {

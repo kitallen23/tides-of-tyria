@@ -1,18 +1,16 @@
 import { SCHEMES } from "@/utils/color-schemes";
 import styles from "@/styles/modules/settings.module.scss";
 import { useEffect, useMemo } from "react";
-import { CircleSharp } from "@mui/icons-material";
 
-const SchemeItem = ({ scheme, selected }) => (
+const SchemeItem = ({ scheme, selected, onChange }) => (
     <div
         className={styles.schemeItem}
         style={{
             color: scheme.colors.primary,
             background: scheme.colors.background,
-            borderColor: selected
-                ? scheme.colors.primary
-                : `rgba(${scheme.colors.primary}, 0.25)`,
+            borderColor: selected ? scheme.colors.primary : "transparent",
         }}
+        onClick={() => onChange(scheme.key)}
     >
         {scheme.name}
         <div className={styles.colorIndicators}>
@@ -33,29 +31,29 @@ const SchemeItem = ({ scheme, selected }) => (
 );
 
 const SchemeSelector = ({ scheme, onChange }) => {
+    useEffect(() => {
+        console.log(`>>> Current scheme: `, scheme);
+    }, [scheme]);
+
     const schemes = useMemo(() => {
         let schemeArray = [];
         Object.keys(SCHEMES).forEach(key => {
-            const scheme = SCHEMES[key];
             schemeArray.push({
-                ...scheme,
-                name: key,
+                ...SCHEMES[key],
+                key,
             });
         });
         return schemeArray;
     }, []);
 
-    useEffect(() => {
-        console.log(">>> Schemes: ", schemes);
-    }, [schemes]);
-
     return (
         <div className={styles.schemeSelector}>
             {schemes.map(item => (
                 <SchemeItem
-                    key={item.name}
+                    key={item.key}
                     scheme={item}
-                    selected={scheme === item.name}
+                    selected={scheme === item.key}
+                    onChange={onChange}
                 />
             ))}
         </div>

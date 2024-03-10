@@ -9,6 +9,7 @@
 .schemeSelector {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem;
 
     .schemeItem {
         border-width: 4px;
@@ -17,6 +18,7 @@
         padding: 0.5rem 0.25rem;
         text-transform: capitalize;
         position: relative;
+        cursor: pointer;
 
         display: flex;
         justify-content: center;
