@@ -20,12 +20,28 @@ $topbar-height: 56px;
         position: relative;
     }
 }
+[data-font-size="sm"]:root {
+    .layoutWrapper > .pageContent {
+        font-size: var(--font-size-sm);
+    }
+}
+[data-font-size="md"]:root {
+    .layoutWrapper > .pageContent {
+        font-size: var(--font-size-md);
+    }
+}
+[data-font-size="lg"]:root {
+    .layoutWrapper > .pageContent {
+        font-size: var(--font-size-lg);
+    }
+}
 
 .header {
     background-color: rgb(var(--nav-background-rgb));
     transition: background-color var(--transition);
     position: relative;
     color: rgb(var(--primary-rgb));
+    padding: 0 0.5rem;
 
     .content {
         display: flex;

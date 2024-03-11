@@ -21,6 +21,11 @@
         display: flex;
         gap: 0.5rem;
     }
+
+    .heading {
+        display: flex;
+        align-items: center;
+    }
 }
 
 .schemeSelector {

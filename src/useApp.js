@@ -4,7 +4,7 @@ import { createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
 import { ACCESS_TOKEN_KEY } from "@/utils/constants";
-import { detectTheme } from "@/utils/util";
+import { detectTheme, getLocalItem } from "@/utils/util";
 import { AuthReducer, DEFAULT_AUTH_STATE } from "@/utils/auth-provider";
 
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
@@ -45,7 +45,11 @@ const getDesignTokens = theme => ({
         },
     },
     typography: {
-        fontFamily: ["Noto Sans Mono"],
+        fontFamily: [
+            theme.fontType === "regular" ? "Noto Sans" : "Noto Sans Mono",
+        ],
+        fontSize:
+            theme.fontSize === "sm" ? 12 : theme.fontSize === "lg" ? 16 : 14,
     },
     components: {
         MuiButton: {
@@ -65,15 +69,20 @@ const useApp = () => {
         DEFAULT_THEME_STATE
     );
 
-    const initialiseTheme = ({ themeKey, fontType }) => {
+    const initialiseTheme = ({
+        themeKey,
+        fontType = "monospace",
+        fontSize = "md",
+    }) => {
         localStorage.setItem("theme", themeKey);
         localStorage.setItem(
             "font_type",
             fontType === "regular" ? "regular" : "monospace"
         );
+        localStorage.setItem("font_size", fontSize);
         dispatchTheme({
             key: "SET_THEME",
-            payload: { themeKey, fontType },
+            payload: { themeKey, fontType, fontSize },
         });
     };
     const setThemeKey = themeKey => {
@@ -93,11 +102,19 @@ const useApp = () => {
             payload: fontType,
         });
     };
+    const setFontSize = fontSize => {
+        localStorage.setItem("font_size", fontSize);
+        dispatchTheme({
+            key: "SET_FONT_SIZE",
+            payload: fontSize,
+        });
+    };
 
     useMemo(() => {
         const themeKey = detectTheme();
-        const fontType = localStorage.getItem("font_type");
-        initialiseTheme({ themeKey, fontType });
+        const fontType = getLocalItem("font_type", "monospace");
+        const fontSize = getLocalItem("font_size", "md");
+        initialiseTheme({ themeKey, fontType, fontSize });
         document
             .querySelector('meta[name="theme-color"]')
             .setAttribute("content", SCHEMES[themeKey].colors.primary);
@@ -108,6 +125,7 @@ const useApp = () => {
         [themeState?.colorScheme]
     );
     const fontType = useMemo(() => themeState.fontType, [themeState?.fontType]);
+    const fontSize = useMemo(() => themeState.fontSize, [themeState?.fontSize]);
 
     useMemo(() => {
         // Set document with a `data-theme` attribute
@@ -117,6 +135,10 @@ const useApp = () => {
         // Set document with a `data-font-type` attribute
         document.documentElement.setAttribute("data-font-type", fontType);
     }, [fontType]);
+    useMemo(() => {
+        // Set document with a `data-font-size` attribute
+        document.documentElement.setAttribute("data-font-size", fontSize);
+    }, [fontSize]);
 
     // Initialise auth state
     const [authState, dispatchAuth] = useReducer(
@@ -149,10 +171,12 @@ const useApp = () => {
     }, []);
 
     // MUI theme
-    const muiTheme = useMemo(
-        () => createTheme(getDesignTokens(themeState)),
-        [themeState]
-    );
+    const muiTheme = useMemo(() => {
+        // console.log(`>>> Theme state: `, themeState);
+        const theme = getDesignTokens(themeState);
+        // console.log(`>>> MUI theme: `, theme);
+        return createTheme(theme);
+    }, [themeState]);
 
     return {
         themeState,
@@ -161,6 +185,7 @@ const useApp = () => {
 
         setThemeKey,
         setFontType,
+        setFontSize,
         login,
         logout,
     };

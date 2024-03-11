@@ -29,6 +29,7 @@ function App({ renderLogin }) {
 
         setThemeKey,
         setFontType,
+        setFontSize,
         login,
         logout,
     } = useApp();
@@ -41,7 +42,12 @@ function App({ renderLogin }) {
             <QueryClientProvider client={queryClient}>
                 <MuiThemeProvider theme={muiTheme}>
                     <ThemeProvider
-                        value={{ ...themeState, setThemeKey, setFontType }}
+                        value={{
+                            ...themeState,
+                            setThemeKey,
+                            setFontType,
+                            setFontSize,
+                        }}
                     >
                         <AuthProvider
                             value={{

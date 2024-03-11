@@ -5,6 +5,7 @@ export const DEFAULT_THEME_STATE = {
     ...SCHEMES.kanagawa,
     colorScheme: "kanagawa",
     fontType: "monospace",
+    fontSize: "md",
 };
 
 export const ThemeContext = createContext(DEFAULT_THEME_STATE);
@@ -47,6 +48,12 @@ export function ThemeReducer(state, { key, payload }) {
             return {
                 ...state,
                 fontType: payload,
+            };
+        }
+        case "SET_FONT_SIZE": {
+            return {
+                ...state,
+                fontSize: payload,
             };
         }
         default: {
