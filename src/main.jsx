@@ -6,9 +6,9 @@ import "@/styles/globals.scss";
 import App from "@/App";
 import RootError from "@/views/errors/RootError";
 
-import Placeholder from "@/views/Placeholder";
 import Logout from "@/views/Logout";
 import Settings from "@/views/settings/Settings";
+import Home from "@/views/home/Home";
 
 const router = createBrowserRouter([
     {
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "",
-                element: <Placeholder />,
+                element: <Home />,
             },
         ],
     },

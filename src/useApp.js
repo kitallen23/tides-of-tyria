@@ -10,7 +10,7 @@ import { AuthReducer, DEFAULT_AUTH_STATE } from "@/utils/auth-provider";
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
 
-const getDesignTokens = theme => ({
+export const getDesignTokens = theme => ({
     status: {
         danger: theme.colors.danger,
         warning: theme.colors.warning,
@@ -56,6 +56,13 @@ const getDesignTokens = theme => ({
             styleOverrides: {
                 root: {
                     textTransform: "none",
+                },
+            },
+        },
+        MuiSvgIcon: {
+            styleOverrides: {
+                root: {
+                    fontSize: "1em",
                 },
             },
         },

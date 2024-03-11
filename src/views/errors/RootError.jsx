@@ -1,33 +1,79 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import {
     isRouteErrorResponse,
-    // useLocation,
-    // useNavigate,
     useRouteError,
+    Link,
 } from "react-router-dom";
 import { Helmet } from "react-helmet";
+import { Button, createTheme } from "@mui/material";
+import { ThemeProvider as MuiThemeProvider } from "@mui/material";
 
+import {
+    ThemeProvider,
+    ThemeReducer,
+    DEFAULT_THEME_STATE,
+} from "@/utils/theme-provider";
 import styles from "@/styles/modules/errors.module.scss";
 import { SCHEMES } from "@/utils/color-schemes";
-import { getTitle, detectTheme } from "@/utils/util";
+import { getTitle, detectTheme, getLocalItem } from "@/utils/util";
+import { getDesignTokens } from "@/useApp";
+import Logo from "@/components/Logo";
 
-const Error404 = () => {
-    const [theme, setTheme] = useState();
+const RootError = () => {
+    // Initialise color scheme
+    const [themeState, dispatchTheme] = useReducer(
+        ThemeReducer,
+        DEFAULT_THEME_STATE
+    );
 
-    useEffect(() => {
-        const theme = detectTheme();
-        setTheme(theme);
+    const initialiseTheme = ({
+        themeKey,
+        fontType = "monospace",
+        fontSize = "md",
+    }) => {
+        localStorage.setItem("theme", themeKey);
+        localStorage.setItem(
+            "font_type",
+            fontType === "regular" ? "regular" : "monospace"
+        );
+        localStorage.setItem("font_size", fontSize);
+        dispatchTheme({
+            key: "SET_THEME",
+            payload: { themeKey, fontType, fontSize },
+        });
+    };
+
+    useMemo(() => {
+        const themeKey = detectTheme();
+        const fontType = getLocalItem("font_type", "monospace");
+        const fontSize = getLocalItem("font_size", "md");
+        initialiseTheme({ themeKey, fontType, fontSize });
         document
             .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", SCHEMES[theme].colors.primary);
+            .setAttribute("content", SCHEMES[themeKey].colors.primary);
     }, []);
-    const error = useRouteError();
 
-    useEffect(() => {
+    const themeKey = useMemo(
+        () => themeState.colorScheme,
+        [themeState?.colorScheme]
+    );
+    const fontType = useMemo(() => themeState.fontType, [themeState?.fontType]);
+    const fontSize = useMemo(() => themeState.fontSize, [themeState?.fontSize]);
+
+    useMemo(() => {
         // Set document with a `data-theme` attribute
-        document.documentElement.setAttribute("data-theme", theme);
-    }, [theme]);
+        document.documentElement.setAttribute("data-theme", themeKey);
+    }, [themeKey]);
+    useMemo(() => {
+        // Set document with a `data-font-type` attribute
+        document.documentElement.setAttribute("data-font-type", fontType);
+    }, [fontType]);
+    useMemo(() => {
+        // Set document with a `data-font-size` attribute
+        document.documentElement.setAttribute("data-font-size", fontSize);
+    }, [fontSize]);
 
+    const error = useRouteError();
     useEffect(() => {
         console.error(`Error: `, error);
     }, [error]);
@@ -66,56 +112,50 @@ const Error404 = () => {
         [errorStatus]
     );
 
-    // const navigate = useNavigate();
-    // const location = useLocation();
-    // const goBack = () => {
-    //     if (location?.key !== "default") {
-    //         navigate(-1);
-    //     }
-    // };
-    // const goHome = () => {
-    //     navigate(`/${HOMEPAGE}`, {
-    //         replace: true,
-    //     });
-    // };
+    // MUI theme
+    const muiTheme = useMemo(() => {
+        const theme = getDesignTokens(themeState);
+        return createTheme(theme);
+    }, [themeState]);
 
     return (
         <>
             <Helmet>
                 <title>{title}</title>
             </Helmet>
-            <div className={styles.errorPage}>
-                <div className={styles.innerWrapper}>
-                    <div className={styles.text}>
-                        <div>{errorStatus || "Error"}</div>
-                        <div>{errorText || "Something went wrong."}</div>
+            <MuiThemeProvider theme={muiTheme}>
+                <ThemeProvider
+                    value={{
+                        ...themeState,
+                    }}
+                >
+                    <div className={styles.errorPage}>
+                        <div className={styles.innerWrapper}>
+                            <div className={styles.logo}>
+                                <Logo
+                                    color={themeState.colors.body}
+                                    size={100}
+                                />
+                            </div>
+                            <div className={styles.text}>
+                                <div>{errorStatus || "Error"}</div>
+                                <div>
+                                    {errorText || "Something went wrong."}
+                                </div>
+                            </div>
+                            <div className={styles.buttons}>
+                                <Link to="/">
+                                    <Button color="primary">
+                                        Return to homepage
+                                    </Button>
+                                </Link>
+                            </div>
+                        </div>
                     </div>
-                    {/*<div className={styles.buttons}>
-                        {(location?.key || "") === "default" ? null : (
-                            <Button onClick={goBack} color={COLORS.primary}>
-                                Go back
-                            </Button>
-                        )}
-                        <Button
-                            onClick={goHome}
-                            color={
-                                colorScheme === "dark"
-                                    ? COLORS.bodyLight
-                                    : COLORS.body
-                            }
-                            variant="outline"
-                            buttonStyle={{
-                                border: "transparent",
-                                borderFocus: "transparent",
-                            }}
-                        >
-                            Return to homepage
-                        </Button>
-                    </div>*/}
-                </div>
-            </div>
+                </ThemeProvider>
+            </MuiThemeProvider>
         </>
     );
 };
 
-export default Error404;
+export default RootError;

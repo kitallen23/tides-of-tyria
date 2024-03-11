@@ -36,7 +36,7 @@ export function relativeDateFormat({
 export function detectTheme() {
     let theme = "kanagawa";
 
-    if (localStorage.getItem("theme")) {
+    if (getLocalItem("theme", false)) {
         theme = localStorage.getItem("theme");
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark

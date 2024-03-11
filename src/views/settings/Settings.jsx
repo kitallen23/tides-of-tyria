@@ -42,7 +42,6 @@ const Settings = () => {
                 <div className={styles.settingGroup}>
                     <h3 className={styles.heading}>
                         <FormatColorFillSharp
-                            fontSize="inherit"
                             style={{ marginRight: "0.25rem" }}
                         />
                         Theme
@@ -51,10 +50,7 @@ const Settings = () => {
                 </div>
                 <div className={styles.inlineSetting}>
                     <h3 className={styles.heading}>
-                        <TextFormatSharp
-                            fontSize="inherit"
-                            style={{ marginRight: "0.25rem" }}
-                        />
+                        <TextFormatSharp style={{ marginRight: "0.25rem" }} />
                         Font type
                     </h3>
                     <div className={styles.settingsButtons}>
@@ -86,10 +82,7 @@ const Settings = () => {
                 </div>
                 <div className={styles.inlineSetting}>
                     <h3 className={styles.heading}>
-                        <FormatSizeSharp
-                            fontSize="inherit"
-                            style={{ marginRight: "0.25rem" }}
-                        />
+                        <FormatSizeSharp style={{ marginRight: "0.25rem" }} />
                         Text size
                     </h3>
                     <div className={styles.settingsButtons}>
@@ -129,9 +122,6 @@ const Settings = () => {
                         </Button>
                     </div>
                 </div>
-                {/*<div>Regular text</div>
-                <div className="text-muted">Muted text</div>
-                <div style={{ height: "2000px" }} />*/}
             </div>
         </>
     );
