@@ -10,6 +10,13 @@ import { AuthReducer, DEFAULT_AUTH_STATE } from "@/utils/auth-provider";
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
 
+const LOCAL_STORAGE_KEYS = {
+    theme: "theme",
+    fontSize: "font_size",
+    fontType: "font_type",
+    timeFormat: "time_format",
+};
+
 export const getDesignTokens = theme => ({
     status: {
         danger: theme.colors.danger,
@@ -80,20 +87,22 @@ const useApp = () => {
         themeKey,
         fontType = "monospace",
         fontSize = "md",
+        timeFormat = "12h",
     }) => {
-        localStorage.setItem("theme", themeKey);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.theme, themeKey);
         localStorage.setItem(
-            "font_type",
+            LOCAL_STORAGE_KEYS.fontType,
             fontType === "regular" ? "regular" : "monospace"
         );
-        localStorage.setItem("font_size", fontSize);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.fontSize, fontSize);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.timeFormat, timeFormat);
         dispatchTheme({
             key: "SET_THEME",
-            payload: { themeKey, fontType, fontSize },
+            payload: { themeKey, fontType, fontSize, timeFormat },
         });
     };
     const setThemeKey = themeKey => {
-        localStorage.setItem("theme", themeKey);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.theme, themeKey);
         dispatchTheme({
             key: "SET_THEME_KEY",
             payload: themeKey,
@@ -101,7 +110,7 @@ const useApp = () => {
     };
     const setFontType = fontType => {
         localStorage.setItem(
-            "font_type",
+            LOCAL_STORAGE_KEYS.fontType,
             fontType === "regular" ? "regular" : "monospace"
         );
         dispatchTheme({
@@ -110,18 +119,26 @@ const useApp = () => {
         });
     };
     const setFontSize = fontSize => {
-        localStorage.setItem("font_size", fontSize);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.fontSize, fontSize);
         dispatchTheme({
             key: "SET_FONT_SIZE",
             payload: fontSize,
         });
     };
+    const setTimeFormat = timeFormat => {
+        localStorage.setItem(LOCAL_STORAGE_KEYS.timeFormat, timeFormat);
+        dispatchTheme({
+            key: "SET_TIME_FORMAT",
+            payload: timeFormat,
+        });
+    };
 
     useMemo(() => {
         const themeKey = detectTheme();
-        const fontType = getLocalItem("font_type", "monospace");
-        const fontSize = getLocalItem("font_size", "md");
-        initialiseTheme({ themeKey, fontType, fontSize });
+        const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "monospace");
+        const fontSize = getLocalItem(LOCAL_STORAGE_KEYS.fontSize, "md");
+        const timeFormat = getLocalItem(LOCAL_STORAGE_KEYS.timeFormat, "md");
+        initialiseTheme({ themeKey, fontType, fontSize, timeFormat });
         document
             .querySelector('meta[name="theme-color"]')
             .setAttribute("content", SCHEMES[themeKey].colors.primary);
@@ -179,9 +196,9 @@ const useApp = () => {
 
     // MUI theme
     const muiTheme = useMemo(() => {
-        // console.log(`>>> Theme state: `, themeState);
+        console.log(`>>> Theme state: `, themeState);
         const theme = getDesignTokens(themeState);
-        // console.log(`>>> MUI theme: `, theme);
+        console.log(`>>> MUI theme: `, theme);
         return createTheme(theme);
     }, [themeState]);
 
@@ -193,6 +210,7 @@ const useApp = () => {
         setThemeKey,
         setFontType,
         setFontSize,
+        setTimeFormat,
         login,
         logout,
     };

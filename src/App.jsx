@@ -30,6 +30,7 @@ function App({ renderLogin }) {
         setThemeKey,
         setFontType,
         setFontSize,
+        setTimeFormat,
         login,
         logout,
     } = useApp();
@@ -47,6 +48,7 @@ function App({ renderLogin }) {
                             setThemeKey,
                             setFontType,
                             setFontSize,
+                            setTimeFormat,
                         }}
                     >
                         <AuthProvider

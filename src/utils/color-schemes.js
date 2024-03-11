@@ -8,7 +8,7 @@ export const SCHEMES = {
             body: "#dcd7ba",
             background: "#1f1f28",
             backgroundNav: "#16161d",
-            muted: "#53565a",
+            muted: "#54546d",
 
             success: "#98bb6c",
             danger: "#ff5d62",

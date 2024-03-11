@@ -1,6 +1,7 @@
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "@/styles/modules/home.module.scss";
-import { Helmet } from "react-helmet";
+import { HourglassTopSharp } from "@mui/icons-material";
+import EventTimers from "./EventTimers";
 
 const Home = () => {
     return (
@@ -10,12 +11,10 @@ const Home = () => {
             >
                 <div className={styles.group}>
                     <h3 className={styles.heading}>
-                        <TextFormatSharp
-                            fontSize="inherit"
-                            style={{ marginRight: "0.25rem" }}
-                        />
-                        Font type
+                        <HourglassTopSharp style={{ marginRight: "0.25rem" }} />
+                        Event Timers
                     </h3>
+                    <EventTimers />
                 </div>
             </div>
         </>

@@ -20,9 +20,12 @@ const Settings = () => {
         colorScheme: scheme,
         fontType,
         fontSize,
+        timeFormat,
+
         setThemeKey,
         setFontType,
         setFontSize,
+        setTimeFormat,
     } = useTheme();
 
     const setScheme = key => {
@@ -119,6 +122,32 @@ const Settings = () => {
                             }}
                         >
                             Large
+                        </Button>
+                    </div>
+                </div>
+                <div className={styles.inlineSetting}>
+                    <h3 className={styles.heading}>
+                        <FormatSizeSharp style={{ marginRight: "0.25rem" }} />
+                        Time format
+                    </h3>
+                    <div className={styles.settingsButtons}>
+                        <Button
+                            variant={
+                                timeFormat !== "24h" ? "contained" : "text"
+                            }
+                            onClick={() => setTimeFormat("12h")}
+                            disableElevation
+                        >
+                            12 hour
+                        </Button>
+                        <Button
+                            variant={
+                                timeFormat === "24h" ? "contained" : "text"
+                            }
+                            onClick={() => setTimeFormat("24h")}
+                            disableElevation
+                        >
+                            24 hour
                         </Button>
                     </div>
                 </div>

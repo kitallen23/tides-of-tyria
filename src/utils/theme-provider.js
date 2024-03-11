@@ -6,6 +6,7 @@ export const DEFAULT_THEME_STATE = {
     colorScheme: "kanagawa",
     fontType: "monospace",
     fontSize: "md",
+    timeFormat: "12h",
 };
 
 export const ThemeContext = createContext(DEFAULT_THEME_STATE);
@@ -54,6 +55,12 @@ export function ThemeReducer(state, { key, payload }) {
             return {
                 ...state,
                 fontSize: payload,
+            };
+        }
+        case "SET_TIME_FORMAT": {
+            return {
+                ...state,
+                timeFormat: payload,
             };
         }
         default: {

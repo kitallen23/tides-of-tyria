@@ -1,0 +1,56 @@
+.eventTimer {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+
+    // Note: right frame here can't be used to scroll horizontally,
+    // as we are using a sticky element inside it.
+    .rightFrame {
+        margin-bottom: 3000px;
+
+        .eventContainer {
+            width: 100%;
+            // TODO: Reduce this value
+            // min-width: 1500px;
+            min-height: 1000px;
+
+            .regions {
+                display: grid;
+                gap: 0.25rem;
+                margin-top: 0.25rem;
+
+                .region {
+                    display: grid;
+                    gap: 0.25rem;
+                }
+                .area {
+                    padding: 0.25rem;
+                }
+            }
+        }
+
+        .timeRow {
+            position: sticky;
+            top: -1.6rem;
+            z-index: 1000;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-bottom: 1px solid rgb(var(--muted-rgb));
+
+            // min-width: 1500px;
+
+            & > div {
+                border-left-width: 1px;
+                border-left-style: solid;
+                border-color: rgb(var(--muted-rgb));
+                transition: border-color var(--transition);
+
+                color: var(--text-muted);
+
+                .timeLabel {
+                    padding-left: 0.5rem;
+                    font-size: 0.875em;
+                }
+            }
+        }
+    }
+}
