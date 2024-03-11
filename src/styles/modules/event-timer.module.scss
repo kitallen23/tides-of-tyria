@@ -1,3 +1,6 @@
+@use "../variables/core-variables" as c;
+$min-area-width: 600px;
+
 .eventTimer {
     display: grid;
     grid-template-columns: 120px 1fr;
@@ -5,18 +8,21 @@
     // Note: right frame here can't be used to scroll horizontally,
     // as we are using a sticky element inside it.
     .rightFrame {
+        display: grid;
         margin-bottom: 3000px;
 
         .eventContainer {
-            width: 100%;
+            overflow-x: auto;
+            position: relative;
             // TODO: Reduce this value
-            // min-width: 1500px;
-            min-height: 1000px;
+            // min-height: 1000px;
 
             .regions {
+                min-width: $min-area-width;
                 display: grid;
                 gap: 0.25rem;
                 margin-top: 0.25rem;
+                margin-bottom: 0.25rem;
 
                 .region {
                     display: grid;
@@ -26,29 +32,55 @@
                     padding: 0.25rem;
                 }
             }
+
+            .currentTimeIndicator {
+                height: 100%;
+                left: 50px;
+                position: absolute;
+                border-left: 2px solid var(--red);
+            }
         }
 
         .timeRow {
             position: sticky;
-            top: -1.6rem;
-            z-index: 1000;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+            top: -1 * (c.$page-content-padding-vertical);
+            z-index: 10;
             border-bottom: 1px solid rgb(var(--muted-rgb));
+            overflow-x: auto;
 
-            // min-width: 1500px;
+            scrollbar-width: none; // Firefox
+            &::webkit-scrollbar {
+                display: none; // Chrome, Safari, Opera
+            }
 
-            & > div {
-                border-left-width: 1px;
-                border-left-style: solid;
-                border-color: rgb(var(--muted-rgb));
-                transition: border-color var(--transition);
+            .timeRowInnerWrapper {
+                display: grid;
+                grid-template-columns: repeat(8, 1fr);
+                min-width: $min-area-width;
 
-                color: var(--text-muted);
+                & > div {
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    align-items: end;
 
-                .timeLabel {
-                    padding-left: 0.5rem;
-                    font-size: 0.875em;
+                    color: var(--text-muted);
+
+                    .timeLabel {
+                        padding-left: 0.5rem;
+                        font-size: 0.875em;
+                    }
+
+                    .timeMarker {
+                        width: 2px;
+                        border-left-width: 1px;
+                        border-left-style: solid;
+                        border-color: rgb(var(--muted-rgb));
+                        transition: border-color var(--transition);
+                        height: 100%;
+                    }
+                }
+                & > div:nth-child(even) .timeMarker {
+                    height: 50%;
                 }
             }
         }

@@ -196,9 +196,7 @@ const useApp = () => {
 
     // MUI theme
     const muiTheme = useMemo(() => {
-        console.log(`>>> Theme state: `, themeState);
         const theme = getDesignTokens(themeState);
-        console.log(`>>> MUI theme: `, theme);
         return createTheme(theme);
     }, [themeState]);
 

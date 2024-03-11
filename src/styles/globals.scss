@@ -10,6 +10,8 @@
     --primary-rgb: 126, 156, 216;
     --secondary-rgb: 230, 195, 132;
     --foreground-rgb: 220, 215, 186;
+    --foreground-light-rgb: 220, 215, 186;
+    --foreground-dark-rgb: 42, 42, 55;
     --background-rgb: 31, 31, 40;
     --nav-background-rgb: 42, 42, 55;
 
@@ -31,10 +33,12 @@
     line-height: normal;
     font-weight: 400;
 
-    --status-success: #5aa897;
-    --status-info: #5bc0de;
-    --status-warning: #f0ad4e;
-    --status-danger: #e74c3c;
+    --status-success: #98bb6c;
+    --status-danger: #ff5d62;
+    --status-warning: #ffa066;
+    --status-info: #7fb4ca;
+
+    --red: #e82525;
 }
 
 [data-font-type="regular"]:root {
@@ -48,6 +52,8 @@
     --primary-rgb: 126, 156, 216;
     --secondary-rgb: 84, 84, 109;
     --foreground-rgb: 220, 215, 186;
+    --foreground-light-rgb: 220, 215, 186;
+    --foreground-dark-rgb: 42, 42, 55;
     --background-rgb: 31, 31, 40;
     --nav-background-rgb: 42, 42, 55;
 
@@ -56,11 +62,18 @@
 
     --text-muted: #54546d;
     --muted-rgb: 84, 84, 109;
+
+    --status-success: #98bb6c;
+    --status-danger: #ff5d62;
+    --status-warning: #ffa066;
+    --status-info: #7fb4ca;
 }
 [data-theme="gruvbox_dark"]:root {
     --primary-rgb: 184, 187, 38;
     --secondary-rgb: 102, 92, 84;
     --foreground-rgb: 235, 219, 178;
+    --foreground-light-rgb: 235, 219, 178;
+    --foreground-dark-rgb: 60, 56, 54;
     --background-rgb: 40, 40, 40;
     --nav-background-rgb: 60, 56, 54;
 
@@ -69,11 +82,18 @@
 
     --text-muted: #665c54;
     --muted-rgb: 102, 92, 84;
+
+    --status-success: #b8bb26;
+    --status-danger: #fb4934;
+    --status-warning: #fabd2e;
+    --status-info: #83a598;
 }
 [data-theme="dracula"]:root {
     --primary-rgb: 189, 147, 249;
     --secondary-rgb: 80, 250, 123;
     --foreground-rgb: 248, 248, 242;
+    --foreground-light-rgb: 248, 248, 242;
+    --foreground-dark-rgb: 68, 71, 90;
     --background-rgb: 40, 42, 54;
     --nav-background-rgb: 68, 71, 90;
 
@@ -82,11 +102,18 @@
 
     --text-muted: #585b74;
     --muted-rgb: 88, 91, 116;
+
+    --status-success: #50fa7b;
+    --status-danger: #ff5555;
+    --status-warning: #ffb86c;
+    --status-info: #8be9fd;
 }
 [data-theme="monokai"]:root {
     --primary-rgb: 166, 226, 46;
     --secondary-rgb: 253, 151, 31;
     --foreground-rgb: 253, 255, 241;
+    --foreground-light-rgb: 253, 255, 241;
+    --foreground-dark-rgb: 29, 30, 25;
     --background-rgb: 39, 40, 34;
     --nav-background-rgb: 29, 30, 25;
 
@@ -95,11 +122,18 @@
 
     --text-muted: #57584f;
     --muted-rgb: 87, 88, 79;
+
+    --status-success: #a6e22e;
+    --status-danger: #ff5555;
+    --status-warning: #fd971f;
+    --status-info: #66d9ef;
 }
 [data-theme="gruvbox_light"]:root {
     --primary-rgb: 121, 116, 14;
     --secondary-rgb: 168, 153, 132;
     --foreground-rgb: 60, 56, 54;
+    --foreground-light-rgb: 249, 245, 215;
+    --foreground-dark-rgb: 60, 56, 54;
     --background-rgb: 251, 241, 199;
     --nav-background-rgb: 249, 245, 215;
 
@@ -113,6 +147,8 @@
     --primary-rgb: 154, 187, 205;
     --secondary-rgb: 173, 171, 152;
     --foreground-rgb: 100, 102, 107;
+    --foreground-light-rgb: 240, 235, 219;
+    --foreground-dark-rgb: 100, 102, 107;
     --background-rgb: 233, 226, 204;
     --nav-background-rgb: 240, 235, 219;
 

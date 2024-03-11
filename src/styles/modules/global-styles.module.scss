@@ -8,6 +8,12 @@
 .textMuted {
     color: var(--text-muted);
 }
+.textLight {
+    color: rgb(var(--foreground-light-rgb));
+}
+.textDark {
+    color: rgb(var(--foreground-dark-rgb));
+}
 
 .fontTypeMono {
     font-family: var(--font-mono);

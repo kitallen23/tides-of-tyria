@@ -65,3 +65,60 @@ export function getStaleTime(key) {
         ? STALE_TIME_IN_SECONDS[key] * 1000
         : undefined;
 }
+
+const THRESHOLD = 156;
+
+// Taken from: https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+export function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function (_, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+        ? {
+              r: parseInt(result[1], 16),
+              g: parseInt(result[2], 16),
+              b: parseInt(result[3], 16),
+          }
+        : null;
+}
+
+// Taken from: https://awik.io/determine-color-bright-dark-using-javascript/
+export function isLight(color, threshold = THRESHOLD) {
+    // Variables for red, green, blue values
+    // let c: string | number | RegExp | RegExpMatchArray | boolean | null = color;
+    let c = color;
+    let r, g, b;
+
+    // Check the format of the color, HEX or RGB?
+    if (color.match(/^rgb/)) {
+        // If RGB --> store the red, green, blue values in separate variables
+        c = color.match(
+            /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
+        );
+
+        r = +color[1];
+        g = +color[2];
+        b = +color[3];
+    } else {
+        // If hex --> Convert it to RGB: NOT USED http://gist.github.com/983661
+
+        const rgb = hexToRgb(c);
+        r = (rgb && rgb.r) || 0;
+        g = (rgb && rgb.g) || 0;
+        b = (rgb && rgb.b) || 0;
+    }
+
+    // HSP equation from http://alienryderflex.com/hsp.html
+    const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+
+    // Using the HSP value, determine whether the color is light or dark
+    if (hsp > threshold) {
+        return true;
+    } else {
+        return false;
+    }
+}

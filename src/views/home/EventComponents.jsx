@@ -1,10 +1,12 @@
 import { useMemo } from "react";
 import { addMinutes, format } from "date-fns";
 import styles from "@/styles/modules/event-timer.module.scss";
+import globalStyles from "@/styles/modules/global-styles.module.scss";
 
 import { useTheme } from "@/utils/theme-provider";
+import { isLight } from "@/utils/util";
 
-export const TimeRow = ({ currentTimeBlock }) => {
+export const TimeRow = ({ currentTimeBlockStart }) => {
     const { timeFormat, colors } = useTheme();
     const formatString = useMemo(
         () => (timeFormat === "12h" ? "h:mm" : "H:mm"),
@@ -16,24 +18,51 @@ export const TimeRow = ({ currentTimeBlock }) => {
             className={styles.timeRow}
             style={{ background: colors.background }}
         >
-            <div>
-                <div className={styles.timeLabel}>
-                    {format(currentTimeBlock, formatString)}
+            <div className={styles.timeRowInnerWrapper}>
+                <div>
+                    <div className={styles.timeMarker} />
+                    <div className={styles.timeLabel}>
+                        {format(currentTimeBlockStart, formatString)}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <div className={styles.timeLabel}>
-                    {format(addMinutes(currentTimeBlock, 30), formatString)}
+                <div>
+                    <div className={styles.timeMarker} />
                 </div>
-            </div>
-            <div>
-                <div className={styles.timeLabel}>
-                    {format(addMinutes(currentTimeBlock, 60), formatString)}
+                <div>
+                    <div className={styles.timeMarker} />
+                    <div className={styles.timeLabel}>
+                        {format(
+                            addMinutes(currentTimeBlockStart, 30),
+                            formatString
+                        )}
+                    </div>
                 </div>
-            </div>
-            <div>
-                <div className={styles.timeLabel}>
-                    {format(addMinutes(currentTimeBlock, 90), formatString)}
+                <div>
+                    <div className={styles.timeMarker} />
+                </div>
+                <div>
+                    <div className={styles.timeMarker} />
+                    <div className={styles.timeLabel}>
+                        {format(
+                            addMinutes(currentTimeBlockStart, 60),
+                            formatString
+                        )}
+                    </div>
+                </div>
+                <div>
+                    <div className={styles.timeMarker} />
+                </div>
+                <div>
+                    <div className={styles.timeMarker} />
+                    <div className={styles.timeLabel}>
+                        {format(
+                            addMinutes(currentTimeBlockStart, 90),
+                            formatString
+                        )}
+                    </div>
+                </div>
+                <div>
+                    <div className={styles.timeMarker} />
                 </div>
             </div>
         </div>
@@ -46,10 +75,18 @@ const Area = ({ area }) => {
         () => colors[area.color],
         [area.color, colors]
     );
+    const isBackgroundLight = useMemo(
+        () => isLight(eventBackground),
+        [eventBackground]
+    );
 
     return (
         <div
-            className={styles.area}
+            className={`${styles.area} ${
+                isBackgroundLight
+                    ? globalStyles.textDark
+                    : globalStyles.textLight
+            }`}
             style={{
                 background: eventBackground,
             }}

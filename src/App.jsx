@@ -12,6 +12,7 @@ import Login from "@/views/Login";
 import Layout from "@/components/Layout";
 
 import useApp from "@/useApp";
+import { TimerProvider } from "./utils/timer-provider";
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -58,17 +59,19 @@ function App({ renderLogin }) {
                                 logout,
                             }}
                         >
-                            {!authState.isLoggedIn || renderLogin ? (
-                                <Login />
-                            ) : (
-                                <Layout>
-                                    <Outlet />
-                                </Layout>
-                            )}
-                            <ToastContainer
-                                autoClose={8000}
-                                hideProgressBar={true}
-                            />
+                            <TimerProvider>
+                                {!authState.isLoggedIn || renderLogin ? (
+                                    <Login />
+                                ) : (
+                                    <Layout>
+                                        <Outlet />
+                                    </Layout>
+                                )}
+                                <ToastContainer
+                                    autoClose={8000}
+                                    hideProgressBar={true}
+                                />
+                            </TimerProvider>
                         </AuthProvider>
                     </ThemeProvider>
                 </MuiThemeProvider>
