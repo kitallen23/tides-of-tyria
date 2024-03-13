@@ -1,138 +1,39 @@
-import { useEffect, useMemo, useRef } from "react";
-import styles from "@/styles/modules/event-timer.module.scss";
+import { useEffect, useRef, useState } from "react";
 import {
-    differenceInMinutes,
     getHours,
+    isEqual,
     setHours,
+    setMilliseconds,
     setMinutes,
     setSeconds,
 } from "date-fns";
-
-import EventRegion, { TimeRow } from "./EventComponents";
-import { useTimer } from "@/utils/hooks/useTimer";
-import useTimerValue from "@/utils/hooks/useTimerValue";
 import { useResizeDetector } from "react-resize-detector";
+import styles from "@/styles/modules/event-timer.module.scss";
 
-const META_EVENTS = [
-    {
-        key: "core_tyria",
-        name: "CORE",
-        color: "muted",
-        sub_areas: [
-            {
-                key: "world_bosses",
-                name: "World Bosses",
-                color: "muted",
-                phases: [
-                    {
-                        name: "Svanir Shaman Chief",
-                        start: 15,
-                        duration: 15,
-                        frequency: 120,
-                    },
-                ],
-            },
-            {
-                key: "ley_line_anomaly",
-                name: "Ley-Line Anomaly",
-                color: "muted",
-                phases: [
-                    {
-                        name: "Svanir Shaman Chief",
-                        start: 15,
-                        duration: 15,
-                        frequency: 120,
-                    },
-                ],
-            },
-            {
-                key: "primary-test",
-                name: "Primary Test",
-                color: "primary",
-                phases: [],
-            },
-            {
-                key: "secondary-test",
-                name: "Secondary Test",
-                color: "secondary",
-                phases: [],
-            },
-            {
-                key: "nav-background-test",
-                name: "Nav Background Test",
-                color: "backgroundNav",
-                phases: [],
-            },
-            {
-                key: "body-test",
-                name: "Body Test",
-                color: "body",
-                phases: [],
-            },
-            {
-                key: "success",
-                name: "Success",
-                color: "success",
-                phases: [],
-            },
-            {
-                key: "danger",
-                name: "Danger",
-                color: "danger",
-                phases: [],
-            },
-            {
-                key: "warning",
-                name: "Warning",
-                color: "warning",
-                phases: [],
-            },
-            {
-                key: "info",
-                name: "Info",
-                color: "info",
-                phases: [],
-            },
-        ],
-    },
-];
+import EventRegion, { CurrentTimeIndicator, TimeRow } from "./EventComponents";
+import META_EVENTS from "@/utils/meta_events";
+import { useTimer } from "@/utils/hooks/useTimer";
+import EventTimerContext from "./EventTimerContext";
 
+// Obtains the start time of a "time block"; a period of time, relative to the
+// local timezone, that started on the last 2-hour time window.
+// E.g. 12am, 2am, 4am, etc.
 const getCurrentTimeBlockStart = () => {
     const now = new Date();
     const hoursSinceMidnight = getHours(now);
     const hoursSinceLastBlock = hoursSinceMidnight % 2;
-    const timeBlockStart = setSeconds(
-        setMinutes(setHours(now, hoursSinceMidnight - hoursSinceLastBlock), 0),
+    const timeBlockStart = setMilliseconds(
+        setSeconds(
+            setMinutes(
+                setHours(now, hoursSinceMidnight - hoursSinceLastBlock),
+                0
+            ),
+            0
+        ),
         0
     );
 
     return timeBlockStart;
-};
-
-const CurrentTimeIndicator = ({ currentTimeBlockStart, parentWidth }) => {
-    const { now } = useTimer();
-
-    const leftPixels = useMemo(() => {
-        const totalMinutesInBlock = 120;
-        const minutesSinceStartOfBlock = differenceInMinutes(
-            now,
-            currentTimeBlockStart
-        );
-        const percentage = Number(
-            minutesSinceStartOfBlock / totalMinutesInBlock
-        ).toFixed(4);
-
-        return Math.round(parentWidth * percentage);
-    }, [now, currentTimeBlockStart, parentWidth]);
-
-    return (
-        <div
-            className={styles.currentTimeIndicator}
-            style={{
-                left: leftPixels,
-            }}
-        />
-    );
 };
 
 const EventTimers = () => {
@@ -140,10 +41,22 @@ const EventTimers = () => {
     const { ref: eventContainerRef } = useResizeDetector();
     const eventContainerWidth = eventContainerRef?.current?.scrollWidth || 0;
 
-    const currentTimeBlockStart = useTimerValue(
-        getCurrentTimeBlockStart(),
-        getCurrentTimeBlockStart
+    // Stores the start moment of the selected 2-hour time window
+    // (defaults to the current one)
+    // Note that this is relative to the local time, e.g. the first window of
+    // today is always 12:00am local time
+    const { key } = useTimer();
+    const [currentTimeBlockStart, setCurrentTimeBlockStart] = useState(
+        getCurrentTimeBlockStart()
     );
+
+    // Update the current time block, but only when necessary
+    useEffect(() => {
+        const newCurrentTimeBlockStart = getCurrentTimeBlockStart();
+        if (!isEqual(currentTimeBlockStart, newCurrentTimeBlockStart)) {
+            setCurrentTimeBlockStart(newCurrentTimeBlockStart);
+        }
+    }, [key, currentTimeBlockStart]);
 
     useEffect(() => {
         if (scrollParentRef?.current) {
@@ -175,24 +88,35 @@ const EventTimers = () => {
     }, [scrollParentRef]);
 
     return (
-        <div className={styles.eventTimer}>
-            <div className={styles.leftFrame}>Left</div>
-            <div className={styles.rightFrame} ref={scrollParentRef}>
-                <TimeRow currentTimeBlockStart={currentTimeBlockStart} />
-                <div className={styles.eventContainer} ref={eventContainerRef}>
-                    <CurrentTimeIndicator
-                        currentTimeBlockStart={currentTimeBlockStart}
-                        parentWidth={eventContainerWidth}
-                    />
+        <EventTimerContext.Provider value={{ eventContainerWidth, currentTimeBlockStart }}>
+            <div className={styles.eventTimer}>
+                <div className={styles.leftFrame}>Left</div>
+                <div className={styles.rightFrame} ref={scrollParentRef}>
+                    <TimeRow currentTimeBlockStart={currentTimeBlockStart} />
+                    <div
+                        className={styles.eventContainer}
+                        ref={eventContainerRef}
+                    >
+                        <CurrentTimeIndicator
+                            currentTimeBlockStart={currentTimeBlockStart}
+                            parentWidth={eventContainerWidth}
+                        />
 
-                    <div className={styles.regions}>
-                        {META_EVENTS.map(region => (
-                            <EventRegion key={region.key} region={region} />
-                        ))}
+                        <div className={styles.regions}>
+                            {META_EVENTS.map(region => (
+                                <EventRegion
+                                    key={region.key}
+                                    region={region}
+                                    currentTimeBlockStart={
+                                        currentTimeBlockStart
+                                    }
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </EventTimerContext.Provider>
     );
 };
 

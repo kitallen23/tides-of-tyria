@@ -1,7 +1,7 @@
 import styles from "@/styles/modules/layout.module.scss";
 import { IconButton } from "@mui/material";
 import { SettingsSharp } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import { useTheme } from "@/utils/theme-provider";
 import { HOMEPAGE } from "@/utils/constants";
@@ -9,6 +9,7 @@ import Logo from "@/components/Logo";
 
 const Header = () => {
     const { colors } = useTheme();
+    const { pathname } = useLocation();
 
     return (
         <div className={styles.header}>
@@ -29,7 +30,7 @@ const Header = () => {
                         <div>TYRIA</div>
                     </div>
                 </Link>
-                <Link to="/settings">
+                <Link to={pathname === "/settings" ? HOMEPAGE : "/settings"}>
                     <IconButton aria-label="settings" color="secondary">
                         <SettingsSharp />
                     </IconButton>

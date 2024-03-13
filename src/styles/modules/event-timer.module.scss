@@ -1,5 +1,6 @@
 @use "../variables/core-variables" as c;
 $min-area-width: 600px;
+$timer-gap: 0.25rem;
 
 .eventTimer {
     display: grid;
@@ -9,35 +10,47 @@ $min-area-width: 600px;
     // as we are using a sticky element inside it.
     .rightFrame {
         display: grid;
-        margin-bottom: 3000px;
+        margin-bottom: 3000px; // TODO: Remove me
 
+        // TODO: Fix this. The eventContainer seems to be getting a vertical
+        // scrollbar, which is just weird.
         .eventContainer {
             overflow-x: auto;
             position: relative;
-            // TODO: Reduce this value
-            // min-height: 1000px;
 
             .regions {
                 min-width: $min-area-width;
                 display: grid;
-                gap: 0.25rem;
-                margin-top: 0.25rem;
-                margin-bottom: 0.25rem;
+                gap: $timer-gap;
+                margin-bottom: $timer-gap;
 
                 .region {
                     display: grid;
-                    gap: 0.25rem;
+                    gap: $timer-gap;
                 }
                 .area {
-                    padding: 0.25rem;
+                    position: relative;
+                    min-height: 2rem;
+
+                    .phase {
+                        position: absolute;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+
+                        &.deadSpace {
+                            opacity: 0.4;
+                        }
+                    }
                 }
             }
 
             .currentTimeIndicator {
                 height: 100%;
-                left: 50px;
                 position: absolute;
                 border-left: 2px solid var(--red);
+                transition: left var(--transition);
+                z-index: 1;
             }
         }
 
@@ -45,7 +58,6 @@ $min-area-width: 600px;
             position: sticky;
             top: -1 * (c.$page-content-padding-vertical);
             z-index: 10;
-            border-bottom: 1px solid rgb(var(--muted-rgb));
             overflow-x: auto;
 
             scrollbar-width: none; // Firefox
@@ -53,15 +65,25 @@ $min-area-width: 600px;
                 display: none; // Chrome, Safari, Opera
             }
 
+            .currentTimeIndicator {
+                height: 100%;
+                position: absolute;
+                border-left: 2px solid var(--red);
+                z-index: 1;
+                transition: left var(--transition);
+            }
             .timeRowInnerWrapper {
                 display: grid;
                 grid-template-columns: repeat(8, 1fr);
                 min-width: $min-area-width;
+                border-bottom: 1px solid rgb(var(--muted-rgb));
+                z-index: 2;
 
                 & > div {
                     display: grid;
                     grid-template-columns: auto 1fr;
                     align-items: end;
+                    z-index: 2;
 
                     color: var(--text-muted);
 
@@ -82,6 +104,9 @@ $min-area-width: 600px;
                 & > div:nth-child(even) .timeMarker {
                     height: 50%;
                 }
+            }
+            .spacer {
+                height: $timer-gap;
             }
         }
     }
