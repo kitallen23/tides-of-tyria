@@ -20,6 +20,6 @@ module.exports = {
             { allowConstantExport: true },
         ],
         "react/no-unknown-property": ["error", { ignore: ["css"] }],
-        "no-console": "warn",
+        "no-console": ["warn", { allow: ["warn", "error", "info"] }],
     },
 };
