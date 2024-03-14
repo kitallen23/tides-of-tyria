@@ -1,6 +1,7 @@
 @use "../variables/core-variables" as c;
 $min-area-width: 600px;
 $timer-gap: 0.25rem;
+$line-height: var(--line-height);
 
 .eventTimer {
     display: grid;
@@ -10,7 +11,14 @@ $timer-gap: 0.25rem;
     // as we are using a sticky element inside it.
     .rightFrame {
         display: grid;
-        margin-bottom: 3000px; // TODO: Remove me
+
+        .widthRuler {
+            overflow-x: auto;
+            height: 0;
+            & > div {
+                min-width: $min-area-width;
+            }
+        }
 
         .eventContainer {
             overflow-x: auto;
@@ -33,11 +41,18 @@ $timer-gap: 0.25rem;
                     gap: 2px;
 
                     .phase {
+                        line-height: $line-height;
                         font-size: 0.875em;
                         border-radius: 0.25rem;
                         padding: 0.2em 0.4em;
                         display: grid;
-                        gap: 0.2em;
+
+                        // Text height of title, text height of time until,
+                        // padding * 2, gap
+                        min-height: calc(
+                            (1em * #{$line-height}) +
+                                (0.875em * #{$line-height}) + (0.2em * 2)
+                        );
 
                         &.deadSpace {
                             opacity: 0.2;
@@ -47,6 +62,13 @@ $timer-gap: 0.25rem;
                             white-space: nowrap;
                             overflow: hidden;
                             text-overflow: ellipsis;
+                        }
+                        .timeUntil {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+
+                            font-size: 0.875em;
                         }
                     }
                 }

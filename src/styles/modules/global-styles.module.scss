@@ -1,7 +1,8 @@
 @use "../variables/core-variables" as c;
 
-.pageContent {
+.centeredContent {
     max-width: c.$content-width;
+    width: 100%;
     margin: 0 auto;
 }
 

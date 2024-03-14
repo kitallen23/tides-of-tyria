@@ -5,6 +5,17 @@
     grid-template-columns: 1fr;
     gap: 2rem;
 
+    .headingRow {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .buttonGroup {
+            display: flex;
+            gap: 0.25rem;
+        }
+    }
+
     .heading {
         display: flex;
         align-items: center;

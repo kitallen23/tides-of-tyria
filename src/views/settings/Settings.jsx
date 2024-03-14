@@ -40,7 +40,7 @@ const Settings = () => {
                 <title>{title}</title>
             </Helmet>
             <div
-                className={`${globalStyles.pageContent} ${styles.pageWrapper}`}
+                className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}
             >
                 <div className={styles.settingGroup}>
                     <h3 className={styles.heading}>

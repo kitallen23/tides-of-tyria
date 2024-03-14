@@ -21,7 +21,7 @@ const Login = () => {
             <Helmet>
                 <title>{title}</title>
             </Helmet>
-            <div className={`${globalStyles.pageContent}`}>
+            <div className={`${globalStyles.centeredContent}`}>
                 <h2>Log in</h2>
             </div>
         </>

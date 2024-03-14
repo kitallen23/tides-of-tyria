@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useMemo } from "react";
 import {
     addMinutes,
     differenceInMinutes,
@@ -7,7 +7,6 @@ import {
     subMinutes,
 } from "date-fns";
 import { nanoid } from "nanoid";
-import { useResizeDetector } from "react-resize-detector";
 
 import styles from "@/styles/modules/event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
@@ -21,8 +20,9 @@ import classNames from "classnames";
 const ID_LENGTH = 6;
 export const TIME_BLOCK_MINS = 120;
 
-export const CurrentTimeIndicator = ({ parentWidth }) => {
-    const { currentTimeBlockStart } = useContext(EventTimerContext);
+export const CurrentTimeIndicator = () => {
+    const { currentTimeBlockStart, width: parentWidth } =
+        useContext(EventTimerContext);
     const { now } = useTimer();
 
     const leftPixels = useMemo(() => {
@@ -38,6 +38,20 @@ export const CurrentTimeIndicator = ({ parentWidth }) => {
         return Math.round(parentWidth * percentage);
     }, [now, currentTimeBlockStart, parentWidth]);
 
+    const shouldRender = useMemo(() => {
+        const currentTimeBlockEnd = addMinutes(
+            currentTimeBlockStart,
+            TIME_BLOCK_MINS
+        );
+        if (now >= currentTimeBlockStart && now <= currentTimeBlockEnd) {
+            return true;
+        }
+        return false;
+    }, [currentTimeBlockStart, now]);
+
+    if (!shouldRender) {
+        return null;
+    }
     return (
         <div
             className={styles.currentTimeIndicator}
@@ -48,17 +62,12 @@ export const CurrentTimeIndicator = ({ parentWidth }) => {
     );
 };
 
-export const TimeRow = ({ setWidth }) => {
+export const TimeRow = () => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
-    const { ref: timeRowRef } = useResizeDetector();
-    const timeRowWidth = timeRowRef?.current?.scrollWidth || 0;
-    useEffect(() => {
-        setWidth(timeRowWidth);
-    }, [timeRowWidth, setWidth]);
 
     const { timeFormat, colors } = useTheme();
     const formatString = useMemo(
-        () => (timeFormat === "12h" ? "h:mm" : "H:mm"),
+        () => (timeFormat === "12h" ? "h:mmaaa" : "H:mm"),
         [timeFormat]
     );
 
@@ -66,11 +75,9 @@ export const TimeRow = ({ setWidth }) => {
         <div
             className={styles.timeRow}
             style={{ background: colors.background }}
-            ref={timeRowRef}
         >
             <CurrentTimeIndicator
                 currentTimeBlockStart={currentTimeBlockStart}
-                parentWidth={timeRowWidth}
             />
             <div className={styles.timeRowInnerWrapper}>
                 <div>
@@ -230,8 +237,15 @@ const AreaEventPhase = ({
         >
             {item.key === "dead_space" ? null : (
                 <>
-                    <div className={styles.title}>{item.name}</div>
-                    <div>In x mins</div>
+                    <a
+                        href={item.wikiUrl}
+                        className={styles.title}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        {item.name}
+                    </a>
+                    <div className={styles.timeUntil}>in x mins</div>
                 </>
             )}
         </div>

@@ -7,27 +7,23 @@ import {
     setMinutes,
     setSeconds,
 } from "date-fns";
-import { useResizeDetector } from "react-resize-detector";
 import styles from "@/styles/modules/event-timer.module.scss";
 
 import EventRegion, { CurrentTimeIndicator, TimeRow } from "./EventComponents";
 import META_EVENTS from "@/utils/meta_events";
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
+import { useResizeDetector } from "react-resize-detector";
 
-// Obtains the start time of a "time block"; a period of time, relative to the
-// local timezone, that started on the last 2-hour time window.
-// E.g. 12am, 2am, 4am, etc.
-const getCurrentTimeBlockStart = () => {
+// Obtains the start time of a "time block"; a 2-hour period of time, relative to the
+// local timezone, that started on the last 1-hour time window.
+// A time block may be 1pm - 3pm, or 2am - 4am.
+const getCurrentTimeBlockStart = (offset = 0) => {
     const now = new Date();
     const hoursSinceMidnight = getHours(now);
-    const hoursSinceLastBlock = hoursSinceMidnight % 2;
     const timeBlockStart = setMilliseconds(
         setSeconds(
-            setMinutes(
-                setHours(now, hoursSinceMidnight - hoursSinceLastBlock),
-                0
-            ),
+            setMinutes(setHours(now, hoursSinceMidnight + offset), 0),
             0
         ),
         0
@@ -36,12 +32,14 @@ const getCurrentTimeBlockStart = () => {
     return timeBlockStart;
 };
 
-const EventTimers = () => {
+const EventTimers = ({ offset }) => {
     const scrollParentRef = useRef(null);
+
     // This is the width of the entire timer component.
-    // We calculate this in the time row (header) as this is more accurate,
-    // and has less content.
-    const [width, setWidth] = useState(0);
+    // We calculate this using a special "ruler" element, to ensure that its
+    // value is always correct (as this ruler never gains any content)
+    const { ref: widthRulerRef } = useResizeDetector();
+    const width = widthRulerRef?.current?.scrollWidth || 0;
 
     // Stores the start moment of the selected 2-hour time window
     // (defaults to the current one)
@@ -54,17 +52,17 @@ const EventTimers = () => {
 
     // Update the current time block, but only when necessary
     useEffect(() => {
-        const newCurrentTimeBlockStart = getCurrentTimeBlockStart();
+        const newCurrentTimeBlockStart = getCurrentTimeBlockStart(offset);
         if (!isEqual(currentTimeBlockStart, newCurrentTimeBlockStart)) {
             setCurrentTimeBlockStart(newCurrentTimeBlockStart);
         }
-    }, [key, currentTimeBlockStart]);
+    }, [key, currentTimeBlockStart, offset]);
 
     useEffect(() => {
         if (scrollParentRef?.current) {
             const children = scrollParentRef.current.children;
-            const container0 = children?.[0];
-            const container1 = children?.[1];
+            const container0 = children?.[1];
+            const container1 = children?.[2];
 
             if (!container0 || !container1) {
                 return;
@@ -94,9 +92,12 @@ const EventTimers = () => {
             <div className={styles.eventTimer}>
                 <div className={styles.leftFrame}>Left</div>
                 <div className={styles.rightFrame} ref={scrollParentRef}>
-                    <TimeRow setWidth={setWidth} />
+                    <div className={styles.widthRuler}>
+                        <div ref={widthRulerRef} />
+                    </div>
+                    <TimeRow />
                     <div className={styles.eventContainer}>
-                        <CurrentTimeIndicator parentWidth={width} />
+                        <CurrentTimeIndicator />
 
                         <div className={styles.regions}>
                             {META_EVENTS.map(region => (
