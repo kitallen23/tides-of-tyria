@@ -177,14 +177,6 @@ body {
     background: rgb(var(--background-rgb));
 }
 
-a {
-    color: inherit;
-    text-decoration: none;
-    &:hover {
-        text-decoration: underline;
-    }
-}
-
 html[data-theme="kanagawa"] {
     color-scheme: dark;
 }

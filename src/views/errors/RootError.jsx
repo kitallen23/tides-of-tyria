@@ -1,19 +1,16 @@
 import { useEffect, useMemo, useReducer } from "react";
-import {
-    isRouteErrorResponse,
-    useRouteError,
-    Link,
-} from "react-router-dom";
+import { isRouteErrorResponse, useRouteError, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Button, createTheme } from "@mui/material";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
+import globalStyles from "@/styles/modules/global-styles.module.scss";
+import styles from "@/styles/modules/errors.module.scss";
 
 import {
     ThemeProvider,
     ThemeReducer,
     DEFAULT_THEME_STATE,
 } from "@/utils/theme-provider";
-import styles from "@/styles/modules/errors.module.scss";
 import { SCHEMES } from "@/utils/color-schemes";
 import { getTitle, detectTheme, getLocalItem } from "@/utils/util";
 import { getDesignTokens } from "@/useApp";
@@ -144,7 +141,7 @@ const RootError = () => {
                                 </div>
                             </div>
                             <div className={styles.buttons}>
-                                <Link to="/">
+                                <Link to="/" className={globalStyles.internalLink}>
                                     <Button color="primary">
                                         Return to homepage
                                     </Button>

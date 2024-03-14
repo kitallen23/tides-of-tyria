@@ -1,5 +1,13 @@
 @use "../variables/core-variables" as c;
 
+a {
+    color: inherit;
+    text-decoration: none;
+    &:not(.internalLink):hover {
+        text-decoration: underline;
+    }
+}
+
 .centeredContent {
     max-width: c.$content-width;
     width: 100%;

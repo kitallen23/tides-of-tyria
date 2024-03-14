@@ -1,4 +1,5 @@
 import styles from "@/styles/modules/layout.module.scss";
+import globalStyles from "@/styles/modules/global-styles.module.scss";
 import { IconButton } from "@mui/material";
 import { SettingsSharp } from "@mui/icons-material";
 import { Link, useLocation } from "react-router-dom";
@@ -14,7 +15,10 @@ const Header = () => {
     return (
         <div className={styles.header}>
             <div className={styles.content}>
-                <Link to={HOMEPAGE} className={styles.logoLink}>
+                <Link
+                    to={HOMEPAGE}
+                    className={`${styles.logoLink} ${globalStyles.internalLink}`}
+                >
                     <Logo size={48} color={colors.primary} />
                     <div className={`${styles.title} transition-color`}>
                         <div>TIDES</div>
@@ -30,8 +34,17 @@ const Header = () => {
                         <div>TYRIA</div>
                     </div>
                 </Link>
-                <Link to={pathname === "/settings" ? HOMEPAGE : "/settings"}>
-                    <IconButton aria-label="settings" color="secondary">
+                <Link
+                    to={pathname === "/settings" ? HOMEPAGE : "/settings"}
+                    className={globalStyles.internalLink}
+                >
+                    <IconButton
+                        aria-label="settings"
+                        color="secondary"
+                        sx={{
+                            fontSize: "1.5rem",
+                        }}
+                    >
                         <SettingsSharp />
                     </IconButton>
                 </Link>
