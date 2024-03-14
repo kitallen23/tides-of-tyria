@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import {
     addMinutes,
     differenceInMinutes,
@@ -48,10 +48,13 @@ export const CurrentTimeIndicator = ({ parentWidth }) => {
     );
 };
 
-export const TimeRow = () => {
+export const TimeRow = ({ setWidth }) => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
     const { ref: timeRowRef } = useResizeDetector();
     const timeRowWidth = timeRowRef?.current?.scrollWidth || 0;
+    useEffect(() => {
+        setWidth(timeRowWidth);
+    }, [timeRowWidth, setWidth]);
 
     const { timeFormat, colors } = useTheme();
     const formatString = useMemo(
@@ -181,10 +184,15 @@ const getEventStartTimesWithinWindow = ({
     return eventStartTimes;
 };
 
-const AreaEventPhase = ({ item, eventBackground, isBackgroundLight }) => {
-    const { eventContainerWidth } = useContext(EventTimerContext);
+const AreaEventPhase = ({
+    item,
+    eventBackground,
+    isBackgroundLight,
+    isLast,
+}) => {
+    const { width: parentWidth } = useContext(EventTimerContext);
 
-    const { left, width } = useMemo(() => {
+    const width = useMemo(() => {
         const totalMinutesInBlock = TIME_BLOCK_MINS;
         const minutesSinceStartOfBlock = item.windowStartMinute;
         const minutesSinceEndOfBlock = item.windowEndMinute;
@@ -195,14 +203,15 @@ const AreaEventPhase = ({ item, eventBackground, isBackgroundLight }) => {
             minutesSinceEndOfBlock / totalMinutesInBlock
         ).toFixed(4);
 
-        return {
-            left: Math.round(eventContainerWidth * percentageLeft),
-            width:
-                Math.round(eventContainerWidth * percentageRight) -
-                Math.round(eventContainerWidth * percentageLeft) -
-                2,
-        };
-    }, [item, eventContainerWidth]);
+        // Percentage from right, minus percentage from left, gives us width.
+        // Subtract 2px to ensure we have space to the right before the next
+        // event block.
+        return (
+            Math.round(parentWidth * percentageRight) -
+            Math.round(parentWidth * percentageLeft) -
+            (isLast ? 0 : 2)
+        );
+    }, [item, parentWidth, isLast]);
 
     return (
         <div
@@ -216,13 +225,12 @@ const AreaEventPhase = ({ item, eventBackground, isBackgroundLight }) => {
             )}
             style={{
                 background: eventBackground,
-                left,
                 width,
             }}
         >
             {item.key === "dead_space" ? null : (
                 <>
-                    <div>{item.name}</div>
+                    <div className={styles.title}>{item.name}</div>
                     <div>In x mins</div>
                 </>
             )}
@@ -316,12 +324,13 @@ const Area = ({ area }) => {
 
     return (
         <div className={styles.area}>
-            {(minuteBlocks || []).map(item => (
+            {(minuteBlocks || []).map((item, i) => (
                 <AreaEventPhase
                     key={item.id}
                     item={item}
                     eventBackground={eventBackground}
                     isBackgroundLight={isBackgroundLight}
+                    isLast={i === minuteBlocks.length - 1}
                 />
             ))}
         </div>

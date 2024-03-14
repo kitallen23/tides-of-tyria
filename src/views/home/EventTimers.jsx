@@ -38,8 +38,10 @@ const getCurrentTimeBlockStart = () => {
 
 const EventTimers = () => {
     const scrollParentRef = useRef(null);
-    const { ref: eventContainerRef } = useResizeDetector();
-    const eventContainerWidth = eventContainerRef?.current?.scrollWidth || 0;
+    // This is the width of the entire timer component.
+    // We calculate this in the time row (header) as this is more accurate,
+    // and has less content.
+    const [width, setWidth] = useState(0);
 
     // Stores the start moment of the selected 2-hour time window
     // (defaults to the current one)
@@ -88,19 +90,13 @@ const EventTimers = () => {
     }, [scrollParentRef]);
 
     return (
-        <EventTimerContext.Provider value={{ eventContainerWidth, currentTimeBlockStart }}>
+        <EventTimerContext.Provider value={{ width, currentTimeBlockStart }}>
             <div className={styles.eventTimer}>
                 <div className={styles.leftFrame}>Left</div>
                 <div className={styles.rightFrame} ref={scrollParentRef}>
-                    <TimeRow currentTimeBlockStart={currentTimeBlockStart} />
-                    <div
-                        className={styles.eventContainer}
-                        ref={eventContainerRef}
-                    >
-                        <CurrentTimeIndicator
-                            currentTimeBlockStart={currentTimeBlockStart}
-                            parentWidth={eventContainerWidth}
-                        />
+                    <TimeRow setWidth={setWidth} />
+                    <div className={styles.eventContainer}>
+                        <CurrentTimeIndicator parentWidth={width} />
 
                         <div className={styles.regions}>
                             {META_EVENTS.map(region => (

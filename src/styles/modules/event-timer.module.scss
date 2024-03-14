@@ -12,8 +12,6 @@ $timer-gap: 0.25rem;
         display: grid;
         margin-bottom: 3000px; // TODO: Remove me
 
-        // TODO: Fix this. The eventContainer seems to be getting a vertical
-        // scrollbar, which is just weird.
         .eventContainer {
             overflow-x: auto;
             position: relative;
@@ -31,15 +29,24 @@ $timer-gap: 0.25rem;
                 .area {
                     position: relative;
                     min-height: 2rem;
+                    display: flex;
+                    gap: 2px;
 
                     .phase {
-                        position: absolute;
-                        white-space: nowrap;
-                        overflow: hidden;
-                        text-overflow: ellipsis;
+                        font-size: 0.875em;
+                        border-radius: 0.25rem;
+                        padding: 0.2em 0.4em;
+                        display: grid;
+                        gap: 0.2em;
 
                         &.deadSpace {
-                            opacity: 0.4;
+                            opacity: 0.2;
+                        }
+
+                        .title {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
                         }
                     }
                 }
