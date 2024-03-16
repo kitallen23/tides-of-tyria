@@ -85,6 +85,14 @@ export function hexToRgb(hex) {
           }
         : null;
 }
+export function rgbToHex(r, g, b) {
+    const toHex = c => {
+        const hex = c.toString(16);
+        return hex.length === 1 ? "0" + hex : hex;
+    };
+
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
 
 // Taken from: https://awik.io/determine-color-bright-dark-using-javascript/
 export function isLight(color, threshold = THRESHOLD) {
@@ -121,4 +129,23 @@ export function isLight(color, threshold = THRESHOLD) {
     } else {
         return false;
     }
+}
+
+export function opacityToHex(opacity) {
+    const value = Math.round(opacity * 255);
+    const hex = value.toString(16);
+    return hex.length === 1 ? "0" + hex : hex;
+}
+
+export function blendColors({ opacity, color, backgroundColor }) {
+    const color_rgb = hexToRgb(color);
+    const background_rgb = hexToRgb(backgroundColor);
+
+    const blendColor = (o, c1, c2) => Math.round(o * c1 + (1 - o) * c2);
+
+    const new_r = blendColor(opacity, color_rgb.r, background_rgb.r);
+    const new_g = blendColor(opacity, color_rgb.g, background_rgb.g);
+    const new_b = blendColor(opacity, color_rgb.b, background_rgb.b);
+
+    return rgbToHex(new_r, new_g, new_b);
 }

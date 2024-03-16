@@ -12,12 +12,14 @@ import styles from "@/styles/modules/event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 
 import { useTheme } from "@/utils/theme-provider";
-import { isLight } from "@/utils/util";
+import { blendColors, isLight, opacityToHex } from "@/utils/util";
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
 import classNames from "classnames";
 
 const ID_LENGTH = 6;
+const DOWNTIME_OPACITY = 0.2;
+const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 export const TIME_BLOCK_MINS = 120;
 
 export const CurrentTimeIndicator = () => {
@@ -195,6 +197,7 @@ const AreaEventPhase = ({
     item,
     eventBackground,
     isBackgroundLight,
+    isDowntimeBackgroundLight,
     isLast,
 }) => {
     const { width: parentWidth } = useContext(EventTimerContext);
@@ -224,18 +227,42 @@ const AreaEventPhase = ({
         <div
             className={classNames(
                 `${styles.phase} ${
-                    isBackgroundLight
+                    item.key === "downtime"
+                        ? isDowntimeBackgroundLight
+                            ? globalStyles.textDark
+                            : globalStyles.textLight
+                        : isBackgroundLight
                         ? globalStyles.textDark
                         : globalStyles.textLight
                 }`,
-                { [styles.deadSpace]: item.key === "dead_space" }
+                { [styles.downtime]: item.key === "downtime" }
             )}
             style={{
-                background: eventBackground,
+                background:
+                    item.key === "downtime"
+                        ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
+                        : eventBackground,
                 width,
             }}
         >
-            {item.key === "dead_space" ? null : (
+            {item.key === "downtime" ? (
+                item.wikiUrl ? (
+                    <>
+                        <>
+                            <a
+                                href={item.wikiUrl}
+                                className={styles.title}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                {item.name}
+                            </a>
+                        </>
+                    </>
+                ) : item.name ? (
+                    <div className={styles.title}>{item.name}</div>
+                ) : null
+            ) : (
                 <>
                     <a
                         href={item.wikiUrl}
@@ -257,7 +284,7 @@ const Area = ({ area }) => {
     const { dailyReset } = useTimer();
 
     // Calculate all events that must be rendered inside this time window
-    const areaEvents = useMemo(() => {
+    const [areaEvents, downtime] = useMemo(() => {
         const allEvents = [];
         area?.phases.forEach(phase => {
             const eventStartTimes = getEventStartTimesWithinWindow({
@@ -277,10 +304,10 @@ const Area = ({ area }) => {
             );
             allEvents[index].windowStartMinute = windowStartMinute;
         });
-        return allEvents;
+        return [allEvents, area.downtime || null];
     }, [dailyReset, area, currentTimeBlockStart]);
 
-    // Calculate all blocks to render, including "dead space".
+    // Calculate all blocks to render, including "downtime".
     // These are given minute numbers that represent their start and end.
     // Doing so makes rendering easy, as we know exactly when each block should
     // start and stop.
@@ -295,21 +322,23 @@ const Area = ({ area }) => {
             const nextEvent = areaEvents?.[eventIndex];
             if (!nextEvent) {
                 minuteBlocks.push({
+                    ...downtime,
                     id: nanoid(ID_LENGTH),
-                    key: "dead_space",
+                    key: "downtime",
                     windowStartMinute: mins,
                     windowEndMinute: TIME_BLOCK_MINS,
                 });
                 mins += TIME_BLOCK_MINS - mins;
             } else if (mins < nextEvent.windowStartMinute) {
                 minuteBlocks.push({
+                    ...downtime,
                     id: nanoid(ID_LENGTH),
-                    key: "dead_space",
+                    key: "downtime",
                     windowStartMinute: mins,
                     windowEndMinute: nextEvent.windowStartMinute,
                 });
 
-                // Advance mins by the duration of this dead space, up until the
+                // Advance mins by the duration of this downtime, up until the
                 // next event
                 mins += nextEvent.windowStartMinute - mins;
             } else {
@@ -324,7 +353,7 @@ const Area = ({ area }) => {
             }
         }
         return minuteBlocks;
-    }, [areaEvents]);
+    }, [areaEvents, downtime]);
 
     const { colors } = useTheme();
     const eventBackground = useMemo(
@@ -335,6 +364,14 @@ const Area = ({ area }) => {
         () => isLight(eventBackground),
         [eventBackground]
     );
+    const isDowntimeBackgroundLight = useMemo(() => {
+        const effectiveEventBackgroundColor = blendColors({
+            opacity: DOWNTIME_OPACITY,
+            color: eventBackground,
+            backgroundColor: colors.background,
+        });
+        return isLight(effectiveEventBackgroundColor);
+    }, [eventBackground, colors.background]);
 
     return (
         <div className={styles.area}>
@@ -344,6 +381,7 @@ const Area = ({ area }) => {
                     item={item}
                     eventBackground={eventBackground}
                     isBackgroundLight={isBackgroundLight}
+                    isDowntimeBackgroundLight={isDowntimeBackgroundLight}
                     isLast={i === minuteBlocks.length - 1}
                 />
             ))}

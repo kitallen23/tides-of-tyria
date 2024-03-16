@@ -47,15 +47,14 @@ $line-height: var(--line-height);
                         padding: 0.2em 0.4em;
                         display: grid;
 
-                        // Text height of title, text height of time until,
-                        // padding * 2, gap
+                        // Text height of title, text height of "time until",
+                        // padding * 2
                         min-height: calc(
                             (1em * #{$line-height}) +
                                 (0.875em * #{$line-height}) + (0.2em * 2)
                         );
 
-                        &.deadSpace {
-                            opacity: 0.2;
+                        &.downtime {
                         }
 
                         .title {

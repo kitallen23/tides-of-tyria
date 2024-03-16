@@ -102,6 +102,40 @@ const META_EVENTS = [
                 ],
             },
             {
+                key: "hard_bosses",
+                name: "Hard Bosses",
+                color: "muted",
+                phases: [
+                    // {
+                    //     key: "tequatl_the_sunless",
+                    //     name: "Tequatl the Sunless",
+                    //     wikiUrl:
+                    //         "https://wiki.guildwars2.com/wiki/Defeat_Tequatl_the_Sunless",
+                    //     start: 0,
+                    //     duration: 30,
+                    //     frequency: 360,
+                    // },
+                    // {
+                    //     key: "ley_line_anomaly__gendarran_fields",
+                    //     name: "Gendarran Fields",
+                    //     wikiUrl:
+                    //         "https://wiki.guildwars2.com/wiki/Defeat_the_Ley-Line_Anomaly_to_disperse_its_destructive_energy_before_it_overloads",
+                    //     start: 260,
+                    //     duration: 20,
+                    //     frequency: 360,
+                    // },
+                    // {
+                    //     key: "ley_line_anomaly__timberline_falls",
+                    //     name: "Timberline Falls",
+                    //     wikiUrl:
+                    //         "https://wiki.guildwars2.com/wiki/Defeat_the_Ley-Line_Anomaly_to_disperse_its_destructive_energy_before_it_overloads",
+                    //     start: 380,
+                    //     duration: 20,
+                    //     frequency: 360,
+                    // },
+                ],
+            },
+            {
                 key: "ley_line_anomaly",
                 name: "Ley-Line Anomaly",
                 color: "muted",
@@ -135,54 +169,59 @@ const META_EVENTS = [
                     },
                 ],
             },
-            // {
-            //     key: "primary-test",
-            //     name: "Primary Test",
-            //     color: "primary",
-            //     phases: [],
-            // },
-            // {
-            //     key: "secondary-test",
-            //     name: "Secondary Test",
-            //     color: "secondary",
-            //     phases: [],
-            // },
-            // {
-            //     key: "nav-background-test",
-            //     name: "Nav Background Test",
-            //     color: "backgroundNav",
-            //     phases: [],
-            // },
-            // {
-            //     key: "body-test",
-            //     name: "Body Test",
-            //     color: "body",
-            //     phases: [],
-            // },
-            // {
-            //     key: "success",
-            //     name: "Success",
-            //     color: "success",
-            //     phases: [],
-            // },
-            // {
-            //     key: "danger",
-            //     name: "Danger",
-            //     color: "danger",
-            //     phases: [],
-            // },
-            // {
-            //     key: "warning",
-            //     name: "Warning",
-            //     color: "warning",
-            //     phases: [],
-            // },
-            // {
-            //     key: "info",
-            //     name: "Info",
-            //     color: "info",
-            //     phases: [],
-            // },
+        ],
+    },
+    {
+        key: "living_world_season_2",
+        name: "LWS2",
+        color: "warning",
+        sub_areas: [
+            {
+                key: "dry_top",
+                name: "Dry Top",
+                color: "warning",
+                phases: [
+                    {
+                        key: "sandstorm",
+                        name: "Sandstorm",
+                        wikiUrl: "https://wiki.guildwars2.com/wiki/Sandstorm!",
+                        start: 40,
+                        duration: 20,
+                        frequency: 60,
+                    },
+                ],
+                downtime: {
+                    name: "Crash Site",
+                    wikiUrl:
+                        "https://wiki.guildwars2.com/wiki/Crash_Site_(meta_event)",
+                },
+            },
+        ],
+    },
+    {
+        key: "heart_of_thorns",
+        name: "HoT",
+        color: "success",
+        sub_areas: [
+            {
+                key: "verdant_brink",
+                name: "Verdant Brink",
+                color: "success",
+                phases: [
+                    {
+                        key: "verdant_brink__night_bosses",
+                        name: "Night Bosses",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Night_and_the_Enemy",
+                        start: 55,
+                        duration: 20,
+                        frequency: 75,
+                    },
+                ],
+                downtime: {
+                    name: "Day: Securing Verdant Brink",
+                },
+            },
         ],
     },
 ];
