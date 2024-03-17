@@ -189,12 +189,17 @@ const META_EVENTS = [
                         duration: 20,
                         frequency: 60,
                     },
+                    {
+                        key: "crash_site",
+                        name: "Crash Site",
+                        type: "downtime",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Crash_Site_(meta_event)",
+                        start: 0,
+                        duration: 40,
+                        frequency: 60,
+                    },
                 ],
-                downtime: {
-                    name: "Crash Site",
-                    wikiUrl:
-                        "https://wiki.guildwars2.com/wiki/Crash_Site_(meta_event)",
-                },
             },
         ],
     },
@@ -226,11 +231,54 @@ const META_EVENTS = [
                         duration: 20,
                         frequency: 120,
                     },
+                    {
+                        key: "verdant_brink__day",
+                        name: "Day: Securing Verdant Brink",
+                        type: "downtime",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Securing_Verdant_Brink",
+                        start: 30,
+                        duration: 75,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "auric_basin",
+                name: "Auric Basin",
+                color: "success",
+                phases: [
+                    {
+                        key: "auric_basin__challenges",
+                        name: "Challenges",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Battle_in_Tarir",
+                        start: 45,
+                        duration: 15,
+                        frequency: 120,
+                    },
+                    {
+                        key: "auric_basin__octovine",
+                        name: "Octovine",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Battle_in_Tarir",
+                        start: 60,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                    {
+                        key: "auric_basin__pylons",
+                        name: "Pylons",
+                        type: "downtime",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Defending_Tarir",
+                        start: 90,
+                        duration: 75,
+                        frequency: 120,
+                    },
                 ],
                 downtime: {
-                    name: "Day: Securing Verdant Brink",
-                    wikiUrl:
-                        "https://wiki.guildwars2.com/wiki/Securing_Verdant_Brink",
+                    name: "Reset",
                 },
             },
         ],

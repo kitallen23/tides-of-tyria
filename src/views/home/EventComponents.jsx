@@ -227,55 +227,59 @@ const AreaEventPhase = ({
         );
     }, [item, parentWidth, isLast]);
 
+    const isDowntime = useMemo(
+        () => item.key === "downtime" || item.type === "downtime",
+        [item.key, item.type]
+    );
+
     return (
         <div
             className={classNames(
                 `${styles.phase} ${
-                    item.key === "downtime"
+                    isDowntime
                         ? isDowntimeBackgroundLight
                             ? globalStyles.textDark
                             : globalStyles.textLight
                         : isBackgroundLight
                         ? globalStyles.textDark
                         : globalStyles.textLight
-                }`,
-                { [styles.downtime]: item.key === "downtime" }
+                }`
             )}
             style={{
-                background:
-                    item.key === "downtime"
-                        ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
-                        : eventBackground,
+                background: isDowntime
+                    ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
+                    : eventBackground,
                 width,
             }}
+            id={item.id}
         >
-            {item.key === "downtime" ? (
+            {isDowntime ? (
                 item.wikiUrl ? (
-                    <>
-                        <>
-                            <a
-                                href={item.wikiUrl}
-                                className={styles.title}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            >
-                                {item.name}
-                            </a>
-                        </>
-                    </>
+                    <div className={styles.title}>
+                        <a
+                            href={item.wikiUrl}
+                            className={styles.titleLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {item.name}
+                        </a>
+                    </div>
                 ) : item.name ? (
                     <div className={styles.title}>{item.name}</div>
                 ) : null
             ) : (
                 <>
-                    <a
-                        href={item.wikiUrl}
-                        className={styles.title}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        {item.name}
-                    </a>
+                    <div className={styles.title}>
+                        <a
+                            href={item.wikiUrl}
+                            className={styles.titleLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {item.name}
+                        </a>
+                    </div>
                     <div className={styles.timeUntil}>in x mins</div>
                 </>
             )}

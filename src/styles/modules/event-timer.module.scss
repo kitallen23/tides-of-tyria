@@ -54,9 +54,6 @@ $line-height: var(--line-height);
                                 (0.875em * #{$line-height}) + (0.2em * 2)
                         );
 
-                        &.downtime {
-                        }
-
                         .title {
                             white-space: nowrap;
                             overflow: hidden;
