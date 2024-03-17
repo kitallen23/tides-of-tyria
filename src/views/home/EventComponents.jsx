@@ -177,11 +177,15 @@ const getEventStartTimesWithinWindow = ({
         // Add event into our array if:
         // - Event's start time is in current time window, OR
         // - Event's end time is in current time window
+        // - Event's start is before the current time window, and the event's
+        //    end is after the current time window
         if (
             (eventStart >= currentTimeBlockStart &&
                 eventStart < currentTimeBlockEnd) ||
             (eventEnd > currentTimeBlockStart &&
-                eventEnd <= currentTimeBlockEnd)
+                eventEnd <= currentTimeBlockEnd) ||
+            (eventStart <= currentTimeBlockStart &&
+                eventEnd >= currentTimeBlockEnd)
         ) {
             eventStartTimes.push({
                 ...phase,
@@ -342,13 +346,21 @@ const Area = ({ area }) => {
                 // next event
                 mins += nextEvent.windowStartMinute - mins;
             } else {
+                const windowEndMinute =
+                    nextEvent.windowStartMinute + nextEvent.duration;
+
                 minuteBlocks.push({
                     ...nextEvent,
                     id: nanoid(ID_LENGTH),
-                    windowEndMinute:
-                        nextEvent.windowStartMinute + nextEvent.duration,
+                    windowEndMinute: Math.min(TIME_BLOCK_MINS, windowEndMinute),
+                    windowStartMinute: Math.max(nextEvent.windowStartMinute, 0),
+                    isContinued: nextEvent.windowStartMinute < 0,
+                    isCutOff: windowEndMinute > TIME_BLOCK_MINS,
                 });
-                mins += nextEvent.duration;
+                const durationInWindow =
+                    Math.min(TIME_BLOCK_MINS, windowEndMinute) -
+                    Math.max(nextEvent.windowStartMinute, 0);
+                mins += durationInWindow;
                 eventIndex++;
             }
         }

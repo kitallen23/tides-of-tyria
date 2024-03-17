@@ -163,7 +163,7 @@ const META_EVENTS = [
                         name: "Timberline Falls",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Defeat_the_Ley-Line_Anomaly_to_disperse_its_destructive_energy_before_it_overloads",
-                        start: 380,
+                        start: 20,
                         duration: 20,
                         frequency: 360,
                     },
@@ -209,17 +209,28 @@ const META_EVENTS = [
                 color: "success",
                 phases: [
                     {
+                        key: "verdant_brink__night_and_the_enemy",
+                        name: "Night: Night and the Enemy",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Night_and_the_Enemy",
+                        start: 105,
+                        duration: 25,
+                        frequency: 120,
+                    },
+                    {
                         key: "verdant_brink__night_bosses",
                         name: "Night Bosses",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Night_and_the_Enemy",
-                        start: 55,
+                        start: 10,
                         duration: 20,
-                        frequency: 75,
+                        frequency: 120,
                     },
                 ],
                 downtime: {
                     name: "Day: Securing Verdant Brink",
+                    wikiUrl:
+                        "https://wiki.guildwars2.com/wiki/Securing_Verdant_Brink",
                 },
             },
         ],
