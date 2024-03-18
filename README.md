@@ -1,8 +1,30 @@
-# React + Vite
+## Build docker image
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+To build the docker image, run the following command:
 
-Currently, two official plugins are available:
+```
+docker build -t tides-of-tyria .
+```
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Run the docker container
+
+To run the docker container, run the following command:
+
+```
+docker run -d -p 5174:80 --name tides-of-tyria tides-of-tyria
+```
+
+## Stop running the docker container
+
+To stop the docker container, first find it with:
+
+```
+docker ps
+```
+
+Then stop the container with:
+```
+docker stop <container-id-or-name>
+```
+
+
