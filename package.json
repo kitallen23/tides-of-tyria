@@ -1,41 +1,49 @@
 {
-  "name": "tides-of-tyria",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.11.4",
-    "@emotion/styled": "^11.11.0",
-    "@mui/icons-material": "^5.15.12",
-    "@mui/material": "^5.15.12",
-    "@tanstack/react-query": "^5.25.0",
-    "classnames": "^2.5.1",
-    "date-fns": "^3.3.1",
-    "jwt-decode": "^4.0.0",
-    "nanoid": "^5.0.6",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-helmet": "^6.1.0",
-    "react-resize-detector": "^10.0.1",
-    "react-router-dom": "^6.22.2",
-    "react-toastify": "^10.0.4"
-  },
-  "devDependencies": {
-    "@emotion/babel-plugin": "^11.11.0",
-    "@types/react": "^18.2.56",
-    "@types/react-dom": "^18.2.19",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react": "^7.33.2",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "sass": "^1.71.1",
-    "vite": "^5.1.4"
-  }
+    "name": "tides-of-tyria",
+    "private": true,
+    "version": "0.0.0",
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+        "preview": "vite preview",
+        "docker:build": "docker build -f Dockerfile.dev -t tides-of-tyria-dev .",
+        "docker:stop:rm": "docker stop tides-of-tyria-dev || true && docker rm -f tides-of-tyria-dev || true",
+        "docker:start": "docker run -d -p 5173:5173 --name tides-of-tyria-dev tides-of-tyria-dev",
+        "docker:dev": "yarn run docker:stop:rm && yarn docker:build && yarn docker:start",
+        "docker:build:prod": "docker build -t tides-of-tyria .",
+        "docker:stop:rm:prod": "docker stop tides-of-tyria || true && docker rm -f tides-of-tyria || true",
+        "docker:start:prod": "docker run -d -p 5174:80 --name tides-of-tyria tides-of-tyria",
+        "docker:prod": "yarn run docker:stop:rm:prod && yarn docker:build:prod && yarn docker:start:prod"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.11.4",
+        "@emotion/styled": "^11.11.0",
+        "@mui/icons-material": "^5.15.12",
+        "@mui/material": "^5.15.12",
+        "@tanstack/react-query": "^5.25.0",
+        "classnames": "^2.5.1",
+        "date-fns": "^3.3.1",
+        "jwt-decode": "^4.0.0",
+        "nanoid": "^5.0.6",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-helmet": "^6.1.0",
+        "react-resize-detector": "^10.0.1",
+        "react-router-dom": "^6.22.2",
+        "react-toastify": "^10.0.4"
+    },
+    "devDependencies": {
+        "@emotion/babel-plugin": "^11.11.0",
+        "@types/react": "^18.2.56",
+        "@types/react-dom": "^18.2.19",
+        "@vitejs/plugin-react": "^4.2.1",
+        "eslint": "^8.56.0",
+        "eslint-plugin-react": "^7.33.2",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.4.5",
+        "sass": "^1.71.1",
+        "vite": "^5.1.4"
+    }
 }
