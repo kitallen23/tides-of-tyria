@@ -133,7 +133,7 @@ export const TimeRow = () => {
     );
 };
 
-const getEventStartTimesWithinWindow = ({
+const getPeriodicEventStartTimesWithinWindow = ({
     phase,
     currentTimeBlockStart,
     dailyReset,
@@ -287,7 +287,7 @@ const AreaEventPhase = ({
     );
 };
 
-const Area = ({ area }) => {
+const PeriodicArea = ({ area }) => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
     const { dailyReset } = useTimer();
 
@@ -295,7 +295,157 @@ const Area = ({ area }) => {
     const [areaEvents, downtime] = useMemo(() => {
         const allEvents = [];
         area?.phases.forEach(phase => {
-            const eventStartTimes = getEventStartTimesWithinWindow({
+            const eventStartTimes = getPeriodicEventStartTimesWithinWindow({
+                phase,
+                dailyReset,
+                currentTimeBlockStart,
+            });
+            allEvents.push(...(eventStartTimes || []));
+        });
+        allEvents.sort((a, b) => a.startDate - b.startDate);
+
+        // Add "minutes from start of window" to each event
+        allEvents.forEach((event, index) => {
+            let windowStartMinute = differenceInMinutes(
+                event.startDate,
+                currentTimeBlockStart
+            );
+            allEvents[index].windowStartMinute = windowStartMinute;
+        });
+        return [allEvents, area.downtime || null];
+    }, [dailyReset, area, currentTimeBlockStart]);
+
+    // Calculate all blocks to render, including "downtime".
+    // These are given minute numbers that represent their start and end.
+    // Doing so makes rendering easy, as we know exactly when each block should
+    // start and stop.
+    // Note that if an event starts at 0 and ends at 30, that means that the
+    // event starts at the start of this time window, and ends just as the 30th
+    // minute starts.
+    const minuteBlocks = useMemo(() => {
+        const minuteBlocks = [];
+        let mins = 0;
+        let eventIndex = 0;
+        while (mins < TIME_BLOCK_MINS) {
+            const nextEvent = areaEvents?.[eventIndex];
+            if (!nextEvent) {
+                minuteBlocks.push({
+                    ...downtime,
+                    id: nanoid(ID_LENGTH),
+                    key: "downtime",
+                    windowStartMinute: mins,
+                    windowEndMinute: TIME_BLOCK_MINS,
+                });
+                mins += TIME_BLOCK_MINS - mins;
+            } else if (mins < nextEvent.windowStartMinute) {
+                minuteBlocks.push({
+                    ...downtime,
+                    id: nanoid(ID_LENGTH),
+                    key: "downtime",
+                    windowStartMinute: mins,
+                    windowEndMinute: nextEvent.windowStartMinute,
+                });
+
+                // Advance mins by the duration of this downtime, up until the
+                // next event
+                mins += nextEvent.windowStartMinute - mins;
+            } else {
+                const windowEndMinute =
+                    nextEvent.windowStartMinute + nextEvent.duration;
+
+                minuteBlocks.push({
+                    ...nextEvent,
+                    id: nanoid(ID_LENGTH),
+                    windowEndMinute: Math.min(TIME_BLOCK_MINS, windowEndMinute),
+                    windowStartMinute: Math.max(nextEvent.windowStartMinute, 0),
+                    isContinued: nextEvent.windowStartMinute < 0,
+                    isCutOff: windowEndMinute > TIME_BLOCK_MINS,
+                });
+                const durationInWindow =
+                    Math.min(TIME_BLOCK_MINS, windowEndMinute) -
+                    Math.max(nextEvent.windowStartMinute, 0);
+                mins += durationInWindow;
+                eventIndex++;
+            }
+        }
+        return minuteBlocks;
+    }, [areaEvents, downtime]);
+
+    const { colors } = useTheme();
+    const eventBackground = useMemo(
+        () => colors[area.color],
+        [area.color, colors]
+    );
+    const isBackgroundLight = useMemo(
+        () => isLight(eventBackground),
+        [eventBackground]
+    );
+    const isDowntimeBackgroundLight = useMemo(() => {
+        const effectiveEventBackgroundColor = blendColors({
+            opacity: DOWNTIME_OPACITY,
+            color: eventBackground,
+            backgroundColor: colors.background,
+        });
+        return isLight(effectiveEventBackgroundColor);
+    }, [eventBackground, colors.background]);
+
+    return (
+        <div className={styles.area}>
+            {(minuteBlocks || []).map((item, i) => (
+                <AreaEventPhase
+                    key={item.id}
+                    item={item}
+                    eventBackground={eventBackground}
+                    isBackgroundLight={isBackgroundLight}
+                    isDowntimeBackgroundLight={isDowntimeBackgroundLight}
+                    isLast={i === minuteBlocks.length - 1}
+                />
+            ))}
+        </div>
+    );
+};
+
+const getFixedTimeEventStartTimesWithinWindow = ({
+    phase,
+    currentTimeBlockStart,
+    dailyReset,
+}) => {
+    const { times, duration } = phase;
+
+    const currentTimeBlockEnd = addMinutes(
+        currentTimeBlockStart,
+        TIME_BLOCK_MINS
+    );
+
+    const windowStart = differenceInMinutes(currentTimeBlockStart, dailyReset);
+    const windowEnd = differenceInMinutes(currentTimeBlockEnd, dailyReset);
+
+    const eventStartTimes = times
+        .filter(eventStart => {
+            const eventEnd = eventStart + duration;
+            return (
+                (eventStart >= windowStart && eventStart < windowEnd) ||
+                (eventEnd > windowStart && eventEnd <= windowEnd) ||
+                (eventStart <= windowStart && eventEnd >= windowEnd)
+            );
+        })
+        .map(eventStartMinutes => ({
+            ...phase,
+            startDate: addMinutes(dailyReset, eventStartMinutes),
+        }));
+
+    return eventStartTimes;
+};
+
+const FixedTimeArea = ({ area }) => {
+    const { currentTimeBlockStart } = useContext(EventTimerContext);
+    const { dailyReset } = useTimer();
+
+    // Calculate all events that must be rendered inside this time window
+    const [areaEvents, downtime] = useMemo(() => {
+        const allEvents = [];
+        area?.phases.forEach(phase => {
+            const eventStartTimes = getFixedTimeEventStartTimesWithinWindow({
                 phase,
                 dailyReset,
                 currentTimeBlockStart,
@@ -408,9 +558,13 @@ const Area = ({ area }) => {
 const EventRegion = ({ region }) => {
     return (
         <div className={styles.region}>
-            {region.sub_areas.map(area => (
-                <Area key={area.key} area={area} />
-            ))}
+            {region.sub_areas.map(area =>
+                area.type === "fixed_time" ? (
+                    <FixedTimeArea key={area.key} area={area} />
+                ) : (
+                    <PeriodicArea key={area.key} area={area} />
+                )
+            )}
         </div>
     );
 };

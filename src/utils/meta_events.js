@@ -8,6 +8,7 @@ const META_EVENTS = [
                 key: "world_bosses",
                 name: "World Bosses",
                 color: "muted",
+                type: "periodic",
                 phases: [
                     {
                         key: "admiral_taidha_covington",
@@ -105,40 +106,39 @@ const META_EVENTS = [
                 key: "hard_bosses",
                 name: "Hard Bosses",
                 color: "muted",
+                type: "fixed_time",
                 phases: [
-                    // {
-                    //     key: "tequatl_the_sunless",
-                    //     name: "Tequatl the Sunless",
-                    //     wikiUrl:
-                    //         "https://wiki.guildwars2.com/wiki/Defeat_Tequatl_the_Sunless",
-                    //     start: 0,
-                    //     duration: 30,
-                    //     frequency: 360,
-                    // },
-                    // {
-                    //     key: "ley_line_anomaly__gendarran_fields",
-                    //     name: "Gendarran Fields",
-                    //     wikiUrl:
-                    //         "https://wiki.guildwars2.com/wiki/Defeat_the_Ley-Line_Anomaly_to_disperse_its_destructive_energy_before_it_overloads",
-                    //     start: 260,
-                    //     duration: 20,
-                    //     frequency: 360,
-                    // },
-                    // {
-                    //     key: "ley_line_anomaly__timberline_falls",
-                    //     name: "Timberline Falls",
-                    //     wikiUrl:
-                    //         "https://wiki.guildwars2.com/wiki/Defeat_the_Ley-Line_Anomaly_to_disperse_its_destructive_energy_before_it_overloads",
-                    //     start: 380,
-                    //     duration: 20,
-                    //     frequency: 360,
-                    // },
+                    {
+                        key: "tequatl_the_sunless",
+                        name: "Tequatl the Sunless",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Defeat_Tequatl_the_Sunless",
+                        times: [0, 180, 420, 690, 960, 1140],
+                        duration: 30,
+                    },
+                    {
+                        key: "triple_trouble",
+                        name: "Triple Trouble",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Triple_Trouble",
+                        times: [60, 240, 480, 750, 1020, 1200],
+                        duration: 30,
+                    },
+                    {
+                        key: "karka_queen",
+                        name: "Karka Queen",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Defeat_the_Karka_Queen_threatening_the_settlements",
+                        times: [120, 360, 630, 900, 1080, 1380],
+                        duration: 30,
+                    },
                 ],
             },
             {
                 key: "ley_line_anomaly",
                 name: "Ley-Line Anomaly",
                 color: "muted",
+                type: "periodic",
                 phases: [
                     {
                         key: "ley_line_anomaly__iron_marches",
@@ -180,6 +180,7 @@ const META_EVENTS = [
                 key: "dry_top",
                 name: "Dry Top",
                 color: "warning",
+                type: "periodic",
                 phases: [
                     {
                         key: "sandstorm",
@@ -212,6 +213,7 @@ const META_EVENTS = [
                 key: "verdant_brink",
                 name: "Verdant Brink",
                 color: "success",
+                type: "periodic",
                 phases: [
                     {
                         key: "verdant_brink__night_and_the_enemy",
@@ -247,6 +249,7 @@ const META_EVENTS = [
                 key: "auric_basin",
                 name: "Auric Basin",
                 color: "success",
+                type: "periodic",
                 phases: [
                     {
                         key: "auric_basin__challenges",
