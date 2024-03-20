@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "@/styles/modules/home.module.scss";
 import {
@@ -8,7 +8,6 @@ import {
     HourglassTopSharp,
 } from "@mui/icons-material";
 import {
-    addMinutes,
     getHours,
     isEqual,
     setHours,
@@ -20,7 +19,6 @@ import { Button } from "@mui/material";
 
 import EventTimers from "./EventTimers";
 import { useTimer } from "@/utils/hooks/useTimer";
-import { TIME_BLOCK_MINS } from "./EventComponents";
 import { useTheme } from "@/utils/theme-provider";
 
 // Obtains the start time of a "time block"; a 2-hour period of time, relative to the
@@ -41,7 +39,7 @@ const getCurrentTimeBlockStart = (offset = 0) => {
 };
 
 const Home = () => {
-    const { key, now } = useTimer();
+    const { key } = useTimer();
     const { colors } = useTheme();
     const [offset, setOffset] = useState(0);
 
@@ -60,17 +58,6 @@ const Home = () => {
             setCurrentTimeBlockStart(newCurrentTimeBlockStart);
         }
     }, [key, currentTimeBlockStart, offset]);
-
-    const timeBlockContainsNow = useMemo(() => {
-        const currentTimeBlockEnd = addMinutes(
-            currentTimeBlockStart,
-            TIME_BLOCK_MINS
-        );
-        if (now >= currentTimeBlockStart && now <= currentTimeBlockEnd) {
-            return true;
-        }
-        return false;
-    }, [currentTimeBlockStart, now]);
 
     return (
         <div className={styles.pageWrapper}>
@@ -102,7 +89,7 @@ const Home = () => {
                                 }}
                                 color="muted"
                                 onClick={() => setOffset(0)}
-                                disabled={timeBlockContainsNow}
+                                disabled={offset === 0}
                             >
                                 <HistorySharp />
                             </Button>
