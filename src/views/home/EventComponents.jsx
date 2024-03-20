@@ -1,4 +1,4 @@
-import { useContext, useMemo } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import {
     addMinutes,
     differenceInMinutes,
@@ -16,11 +16,53 @@ import { blendColors, isLight, opacityToHex } from "@/utils/util";
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
 import classNames from "classnames";
+import { useResizeDetector } from "react-resize-detector";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
 const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 export const TIME_BLOCK_MINS = 120;
+
+export const RegionIndicator = ({ region, isHovered }) => {
+    const { colors } = useTheme();
+    const highlightColor = useMemo(
+        () => (region.color === "muted" ? "primary" : region.color),
+        [region.color]
+    );
+    const highlightBorderColor = useMemo(
+        () => colors?.[highlightColor] || undefined,
+        [highlightColor, colors]
+    );
+
+    return (
+        <div
+            className={styles.regionIndicator}
+            id={`region-indicator-${region.key}`}
+            style={{
+                borderRightColor: isHovered ? highlightBorderColor : undefined,
+                color: isHovered ? highlightBorderColor : undefined,
+            }}
+        >
+            <div
+                className={styles.regionBorder}
+                style={{
+                    borderBottomColor: isHovered
+                        ? highlightBorderColor
+                        : undefined,
+                }}
+            />
+            <div className={styles.regionTitle}>{region.name}</div>
+            <div
+                className={styles.regionBorder}
+                style={{
+                    borderBottomColor: isHovered
+                        ? highlightBorderColor
+                        : undefined,
+                }}
+            />
+        </div>
+    );
+};
 
 export const CurrentTimeIndicator = () => {
     const { currentTimeBlockStart, width: parentWidth } =
@@ -555,9 +597,24 @@ const FixedTimeArea = ({ area }) => {
     );
 };
 
-const EventRegion = ({ region }) => {
+const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
+    const { height, ref } = useResizeDetector();
+    useEffect(() => {
+        if (height && indicatorWrapperRef.current) {
+            const regionIndicator = indicatorWrapperRef.current.querySelector(
+                `#region-indicator-${region.key}`
+            );
+            regionIndicator.style.height = `${height}px`;
+        }
+    }, [height, indicatorWrapperRef, region]);
+
     return (
-        <div className={styles.region}>
+        <div
+            className={styles.region}
+            ref={ref}
+            onMouseEnter={() => setHoveredRegion(region.key)}
+            onMouseLeave={() => setHoveredRegion("")}
+        >
             {region.sub_areas.map(area =>
                 area.type === "fixed_time" ? (
                     <FixedTimeArea key={area.key} area={area} />

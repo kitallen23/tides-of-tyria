@@ -1,13 +1,20 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "@/styles/modules/event-timer.module.scss";
 
-import EventRegion, { CurrentTimeIndicator, TimeRow } from "./EventComponents";
+import EventRegion, {
+    CurrentTimeIndicator,
+    RegionIndicator,
+    TimeRow,
+} from "./EventComponents";
 import META_EVENTS from "@/utils/meta_events";
 import EventTimerContext from "./EventTimerContext";
 import { useResizeDetector } from "react-resize-detector";
 
 const EventTimers = ({ currentTimeBlockStart }) => {
     const scrollParentRef = useRef(null);
+    const indicatorWrapperRef = useRef(null);
+
+    const [hoveredRegion, setHoveredRegion] = useState("");
 
     // This is the width of the entire timer component.
     // We calculate this using a special "ruler" element, to ensure that its
@@ -47,7 +54,18 @@ const EventTimers = ({ currentTimeBlockStart }) => {
     return (
         <EventTimerContext.Provider value={{ width, currentTimeBlockStart }}>
             <div className={styles.eventTimer}>
-                <div className={styles.leftFrame}>Left</div>
+                <div className={styles.leftFrame} ref={indicatorWrapperRef}>
+                    <div className={styles.spacer} />
+                    <div className={styles.regionIndicatorContainer}>
+                        {META_EVENTS.map(region => (
+                            <RegionIndicator
+                                key={region.key}
+                                region={region}
+                                isHovered={hoveredRegion === region.key}
+                            />
+                        ))}
+                    </div>
+                </div>
                 <div className={styles.rightFrame} ref={scrollParentRef}>
                     <div className={styles.widthRuler}>
                         <div ref={widthRulerRef} />
@@ -64,6 +82,8 @@ const EventTimers = ({ currentTimeBlockStart }) => {
                                     currentTimeBlockStart={
                                         currentTimeBlockStart
                                     }
+                                    indicatorWrapperRef={indicatorWrapperRef}
+                                    setHoveredRegion={setHoveredRegion}
                                 />
                             ))}
                         </div>

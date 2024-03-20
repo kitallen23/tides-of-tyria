@@ -2,10 +2,56 @@
 $min-area-width: 600px;
 $timer-gap: 0.25rem;
 $line-height: var(--line-height);
+$time-row-font-size: 0.875em;
 
 .eventTimer {
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 60px 1fr;
+
+    .leftFrame {
+        padding-right: $timer-gap;
+
+        .spacer {
+            height: $timer-gap;
+        }
+
+        .regionIndicatorContainer {
+            padding-top: calc((#{$time-row-font-size} * #{$line-height}) + 1px);
+            display: grid;
+            gap: $timer-gap;
+            margin-bottom: $timer-gap;
+
+            .regionIndicator {
+                color: var(--text-muted);
+                border-right: 1px solid red;
+
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: flex-end;
+
+                border: 0;
+                border-right: 1px solid rgb(var(--muted-rgb));
+                transition:
+                    border-color var(--transition),
+                    color var(--transition);
+
+                .regionTitle {
+                    margin-right: 0.25rem;
+                }
+                .regionBorder {
+                    border: 0;
+                    border-bottom: 1px solid rgb(var(--muted-rgb));
+                    transition: border-color var(--transition);
+
+                    width: calc(
+                        ((#{$time-row-font-size} * #{$line-height}) + 1px) / 2
+                    );
+                    height: 0;
+                }
+            }
+        }
+    }
 
     // Note: right frame here can't be used to scroll horizontally,
     // as we are using a sticky element inside it.
@@ -114,7 +160,7 @@ $line-height: var(--line-height);
 
                     .timeLabel {
                         padding-left: 0.5rem;
-                        font-size: 0.875em;
+                        font-size: $time-row-font-size;
                     }
 
                     .timeMarker {
