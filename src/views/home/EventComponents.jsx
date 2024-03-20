@@ -7,6 +7,8 @@ import {
     subMinutes,
 } from "date-fns";
 import { nanoid } from "nanoid";
+import classNames from "classnames";
+import { useResizeDetector } from "react-resize-detector";
 
 import styles from "@/styles/modules/event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
@@ -15,8 +17,6 @@ import { useTheme } from "@/utils/theme-provider";
 import { blendColors, isLight, opacityToHex } from "@/utils/util";
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
-import classNames from "classnames";
-import { useResizeDetector } from "react-resize-detector";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -246,6 +246,7 @@ const AreaEventPhase = ({
     isDowntimeBackgroundLight,
     isLast,
 }) => {
+    const { now } = useTimer();
     const { width: parentWidth } = useContext(EventTimerContext);
 
     const width = useMemo(() => {
@@ -273,6 +274,41 @@ const AreaEventPhase = ({
         () => item.key === "downtime" || item.type === "downtime",
         [item.key, item.type]
     );
+
+    const eventTimeText = useMemo(() => {
+        if (item.type === "downtime" || item.key === "downtime") {
+            return "";
+        }
+        if (addMinutes(item.startDate, 2) < now) {
+            return "";
+        }
+        if (item.startDate >= addMinutes(now, 120)) {
+            return "";
+        }
+
+        const isInFuture = item.startDate > now;
+        const minDiff = differenceInMinutes(item.startDate, now);
+
+        if (!isInFuture) {
+            if (minDiff === -1) {
+                return "1 min ago";
+            } else if (minDiff === 0) {
+                return "now";
+            } else {
+                return "";
+            }
+        } else {
+            if (minDiff + 1 >= 60) {
+                const hours = Math.floor((minDiff + 1) / 60);
+                const mins = (minDiff + 1) % 60;
+                return `in ${hours} hour${hours > 1 ? "s" : ""} ${
+                    mins ? `${mins} mins` : ""
+                }`;
+            } else {
+                return `in ${minDiff + 1} min${minDiff + 1 > 1 ? "s" : ""}`;
+            }
+        }
+    }, [now, item]);
 
     return (
         <div
@@ -327,7 +363,7 @@ const AreaEventPhase = ({
                             {item.name}
                         </a>
                     </div>
-                    <div className={styles.timeUntil}>in x mins</div>
+                    <div className={styles.timeUntil}>{eventTimeText}</div>
                 </>
             )}
         </div>
