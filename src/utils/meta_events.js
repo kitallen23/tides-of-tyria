@@ -286,6 +286,47 @@ const META_EVENTS = [
             },
         ],
     },
+    {
+        key: "living_world_season_3",
+        name: "LWS3",
+        color: "muted",
+        sub_areas: [
+            {
+                key: "lake_doric",
+                name: "Lake Doric",
+                color: "muted",
+                type: "periodic",
+                phases: [
+                    {
+                        key: "norans_homestead",
+                        name: "Noran's Homestead",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/White_Mantle_Control:_Noran's_Homestead",
+                        start: 30,
+                        duration: 30,
+                        frequency: 120,
+                    },
+                    {
+                        key: "saidras_haven",
+                        name: "Saidra's Haven",
+                        wikiUrl: "https://wiki.guildwars2.com/wiki/White_Mantle_Control:_Saidra's_Haven",
+                        start: 60,
+                        duration: 45,
+                        frequency: 120,
+                    },
+                    {
+                        key: "new_loamhurst",
+                        name: "New Loamhurst",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/White_Mantle_Control:_New_Loamhurst",
+                        start: 105,
+                        duration: 45,
+                        frequency: 120,
+                    },
+                ],
+            },
+        ],
+    },
 ];
 
 export default META_EVENTS;
