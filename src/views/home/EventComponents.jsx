@@ -304,11 +304,15 @@ const AreaEventPhase = ({
                             target="_blank"
                             rel="noopener noreferrer"
                         >
+                            {item.isContinued ? "…" : ""}
                             {item.name}
                         </a>
                     </div>
                 ) : item.name ? (
-                    <div className={styles.title}>{item.name}</div>
+                    <div className={styles.title}>
+                        {item.isContinued ? "…" : ""}
+                        {item.name}
+                    </div>
                 ) : null
             ) : (
                 <>
@@ -319,6 +323,7 @@ const AreaEventPhase = ({
                             target="_blank"
                             rel="noopener noreferrer"
                         >
+                            {item.isContinued ? "…" : ""}
                             {item.name}
                         </a>
                     </div>
