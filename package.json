@@ -9,13 +9,15 @@
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
         "docker:build": "docker build -f Dockerfile.dev -t tides-of-tyria-dev .",
-        "docker:stop:rm": "docker stop tides-of-tyria-dev || true && docker rm -f tides-of-tyria-dev || true",
-        "docker:start": "docker run -d -p 5173:5173 --name tides-of-tyria-dev tides-of-tyria-dev",
-        "docker:dev": "yarn run docker:stop:rm && yarn docker:build && yarn docker:start",
+        "docker:stop": "docker stop tides-of-tyria-dev || true",
+        "docker:rm": "docker rm -f tides-of-tyria-dev || true",
+        "docker:start": "docker run -d -p 5173:5173 -v $(pwd):/app --name tides-of-tyria-dev tides-of-tyria-dev",
+        "docker:dev": "yarn docker:stop && yarn docker:rm && yarn docker:build && yarn docker:start",
         "docker:build:prod": "docker build -t tides-of-tyria .",
-        "docker:stop:rm:prod": "docker stop tides-of-tyria || true && docker rm -f tides-of-tyria || true",
+        "docker:stop:prod": "docker stop tides-of-tyria || true",
+        "docker:rm:prod": "docker rm -f tides-of-tyria || true",
         "docker:start:prod": "docker run -d -p 5174:80 --name tides-of-tyria tides-of-tyria",
-        "docker:prod": "yarn run docker:stop:rm:prod && yarn docker:build:prod && yarn docker:start:prod"
+        "docker:prod": "yarn docker:stop:prod && yarn docker:rm:prod && yarn docker:build:prod && yarn docker:start:prod"
     },
     "dependencies": {
         "@emotion/react": "^11.11.4",
