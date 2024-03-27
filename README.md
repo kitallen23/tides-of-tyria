@@ -6,19 +6,35 @@ Ensure you are running the correct node version (`nvm use`).
 
 Simply run `yarn install` and `yarn dev`. I haven't yet successfully dockerized the app for dev.
 
-# Production
+# Staging
 
 All commands are included in the scripts section of package.json. Please see there for details.
 
-## Build & run the docker image
+## Build & run the docker image locally
 
-```
-yarn docker:prod
+```bash
+yarn docker:stage
 ```
 
 ## Stopping & cleanup
 
+```bash
+yarn docker:stop:stage
+yarn docker:rm:stage
 ```
-yarn docker:stop:prod
-yarn docker:rm:prod
+
+# Production (hosting on homelab)
+
+Build the image locally and copy it to the LXC:
+
+```bash
+yarn docker:build:prod
+yarn docker:save:prod
+scp tides-of-tyria.tar root@192.168.1.26:/root/tides-of-tyria/
+```
+
+SSH into the LXC and run:
+
+```bash
+docker load < tides-of-tyria.tar
 ```
