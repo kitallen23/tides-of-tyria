@@ -284,6 +284,54 @@ const META_EVENTS = [
                     name: "Reset",
                 },
             },
+            {
+                key: "tangled_depths",
+                name: "Tangled Depths",
+                color: "success",
+                type: "periodic",
+                phases: [
+                    {
+                        key: "tangled_depths__chak_gerent",
+                        name: "Prep",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/King_of_the_Jungle",
+                        start: 25,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "tangled_depths__chak_gerent",
+                        name: "Chak Gerent",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/King_of_the_Jungle",
+                        start: 30,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                ],
+                downtime: {
+                    name: "Help the Outposts",
+                    wikiUrl:
+                        "https://wiki.guildwars2.com/wiki/Advancing_Across_Tangled_Roots",
+                },
+            },
+            {
+                key: "dragons_stand",
+                name: "Dragon's Stand",
+                color: "success",
+                type: "periodic",
+                phases: [
+                    {
+                        key: "dragons_stand__blighting_towers",
+                        name: "Advancing on the Blighting Towers",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Advancing_on_the_Blighting_Towers",
+                        start: 90,
+                        duration: 120,
+                        frequency: 120,
+                    },
+                ],
+            },
         ],
     },
     {
@@ -309,7 +357,8 @@ const META_EVENTS = [
                     {
                         key: "saidras_haven",
                         name: "Saidra's Haven",
-                        wikiUrl: "https://wiki.guildwars2.com/wiki/White_Mantle_Control:_Saidra's_Haven",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/White_Mantle_Control:_Saidra's_Haven",
                         start: 60,
                         duration: 45,
                         frequency: 120,
@@ -321,6 +370,39 @@ const META_EVENTS = [
                             "https://wiki.guildwars2.com/wiki/White_Mantle_Control:_New_Loamhurst",
                         start: 105,
                         duration: 45,
+                        frequency: 120,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "path_of_fire",
+        name: "PoF",
+        color: "warning",
+        sub_areas: [
+            {
+                key: "crystal_oasis",
+                name: "Crystal Oasis",
+                color: "warning",
+                type: "periodic",
+                phases: [
+                    {
+                        key: "crystal_oasis__collect_coins",
+                        name: "Collect coins",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Casino_Blitz",
+                        start: 5,
+                        duration: 15,
+                        frequency: 120,
+                    },
+                    {
+                        key: "crystal_oasis__pinata",
+                        name: "Piñata",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Casino_Blitz",
+                        start: 20,
+                        duration: 10,
                         frequency: 120,
                     },
                 ],
