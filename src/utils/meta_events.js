@@ -407,6 +407,49 @@ const META_EVENTS = [
                     },
                 ],
             },
+            {
+                key: "desert_highlands",
+                name: "Desert Highlands",
+                color: "warning",
+                type: "periodic",
+                phases: [
+                    {
+                        key: "desert_highlands__buried_treasure",
+                        name: "Buried Treasure",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Search_for_Buried_Treasure",
+                        start: 60,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "elon_riverlands",
+                name: "Elon Riverlands",
+                color: "warning",
+                type: "periodic",
+                phases: [
+                    {
+                        key: "elon_riverlands__path_to_ascension",
+                        name: "The Path to Ascension",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Path_to_Ascension",
+                        start: 90,
+                        duration: 25,
+                        frequency: 120,
+                    },
+                    {
+                        key: "elon_riverlands__doppelganger",
+                        name: "Doppelganger",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Shift_beyond_reality_to_confront_the_crazed_doppelganger",
+                        start: 115,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                ],
+            },
         ],
     },
 ];
