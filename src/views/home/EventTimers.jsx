@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import { useResizeDetector } from "react-resize-detector";
 import styles from "@/styles/modules/event-timer.module.scss";
 
 import EventRegion, {
-    CurrentTimeIndicator,
-    HoveredEventIndicator,
     RegionIndicator,
     TimeRow,
 } from "./EventComponents";
 import META_EVENTS from "@/utils/meta_events";
 import EventTimerContext from "./EventTimerContext";
-import { useResizeDetector } from "react-resize-detector";
+import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import HoveredEventIndicator from "./HoveredEventIndicator";
 
 const EventTimers = ({ currentTimeBlockStart }) => {
     const scrollParentRef = useRef(null);

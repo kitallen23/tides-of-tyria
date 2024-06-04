@@ -1,11 +1,5 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import {
-    addMinutes,
-    differenceInMinutes,
-    differenceInSeconds,
-    format,
-    subMinutes,
-} from "date-fns";
+import { useContext, useEffect, useMemo } from "react";
+import { addMinutes, differenceInMinutes, format, subMinutes } from "date-fns";
 import { nanoid } from "nanoid";
 import classNames from "classnames";
 import { useResizeDetector } from "react-resize-detector";
@@ -17,11 +11,13 @@ import { useTheme } from "@/utils/theme-provider";
 import { blendColors, isLight, opacityToHex } from "@/utils/util";
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
+import HoveredEventIndicator from "./HoveredEventIndicator";
+import { TIME_BLOCK_MINS } from "./utils";
+import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
 const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
-export const TIME_BLOCK_MINS = 120;
 
 export const RegionIndicator = ({ region, isHovered }) => {
     const { colors } = useTheme();
@@ -64,101 +60,9 @@ export const RegionIndicator = ({ region, isHovered }) => {
     );
 };
 
-export const CurrentTimeIndicator = () => {
-    const { currentTimeBlockStart, width: parentWidth } =
-        useContext(EventTimerContext);
-    const { now } = useTimer();
-
-    const leftPixels = useMemo(() => {
-        const totalSecondsInBlock = TIME_BLOCK_MINS * 60;
-        const secondsSinceStartOfBlock = differenceInSeconds(
-            now,
-            currentTimeBlockStart
-        );
-        const percentage = Number(
-            secondsSinceStartOfBlock / totalSecondsInBlock
-        ).toFixed(4);
-
-        return Math.round(parentWidth * percentage);
-    }, [now, currentTimeBlockStart, parentWidth]);
-
-    const shouldRender = useMemo(() => {
-        const currentTimeBlockEnd = addMinutes(
-            currentTimeBlockStart,
-            TIME_BLOCK_MINS
-        );
-        if (now >= currentTimeBlockStart && now <= currentTimeBlockEnd) {
-            return true;
-        }
-        return false;
-    }, [currentTimeBlockStart, now]);
-
-    if (!shouldRender) {
-        return null;
-    }
-    return (
-        <div
-            className={styles.currentTimeIndicator}
-            style={{
-                left: leftPixels,
-            }}
-        />
-    );
-};
-
-export const HoveredEventIndicator = () => {
-    const { colors } = useTheme();
-    const { currentTimeBlockStart, eventWrapperRef } =
-        useContext(EventTimerContext);
-
-    const { hoveredEvent } = useContext(EventTimerContext);
-    const [hoveredEventLeftPixels, setHoveredEventLeftPixels] = useState(0);
-
-    const highlightThemeColor = useMemo(
-        () =>
-            hoveredEvent?.color === "muted"
-                ? "primary"
-                : hoveredEvent?.color ?? undefined,
-        [hoveredEvent]
-    );
-    const highlightColor = useMemo(
-        () => colors?.[highlightThemeColor] ?? undefined,
-        [highlightThemeColor, colors]
-    );
-
-    useEffect(() => {
-        if (hoveredEvent?.id && eventWrapperRef.current) {
-            const hoveredElement = eventWrapperRef.current.querySelector(
-                `#${hoveredEvent.id}`
-            );
-            if (hoveredElement) {
-                const distanceFromLeft = hoveredElement.offsetLeft;
-                setHoveredEventLeftPixels(distanceFromLeft);
-            }
-        }
-    }, [eventWrapperRef, currentTimeBlockStart, hoveredEvent?.id]);
-
-    const shouldRender = useMemo(
-        () => (hoveredEvent ? true : false),
-        [hoveredEvent]
-    );
-
-    if (!shouldRender) {
-        return null;
-    }
-    return (
-        <div
-            className={styles.hoveredEventIndicator}
-            style={{
-                left: hoveredEventLeftPixels,
-                borderColor: highlightColor,
-            }}
-        />
-    );
-};
-
 export const TimeRow = () => {
-    const { currentTimeBlockStart } = useContext(EventTimerContext);
+    const { currentTimeBlockStart, hoveredEvent } =
+        useContext(EventTimerContext);
 
     const { timeFormat, colors } = useTheme();
     const formatString = useMemo(
@@ -168,12 +72,11 @@ export const TimeRow = () => {
 
     return (
         <div
-            className={styles.timeRow}
+            className={classNames(styles.timeRow, {
+                [styles.isHoveringEvent]: !!hoveredEvent,
+            })}
             style={{ background: colors.background }}
         >
-            <CurrentTimeIndicator
-                currentTimeBlockStart={currentTimeBlockStart}
-            />
             <div className={styles.timeRowInnerWrapper}>
                 <div>
                     <div className={styles.timeMarker} />
@@ -220,6 +123,8 @@ export const TimeRow = () => {
                 <div>
                     <div className={styles.timeMarker} />
                 </div>
+                <CurrentTimeIndicator />
+                <HoveredEventIndicator showLabel={true} />
             </div>
             <div className={styles.spacer} />
         </div>

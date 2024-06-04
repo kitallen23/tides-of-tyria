@@ -140,7 +140,7 @@ const useApp = () => {
         const themeKey = detectTheme();
         const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "monospace");
         const fontSize = getLocalItem(LOCAL_STORAGE_KEYS.fontSize, "md");
-        const timeFormat = getLocalItem(LOCAL_STORAGE_KEYS.timeFormat, "md");
+        const timeFormat = getLocalItem(LOCAL_STORAGE_KEYS.timeFormat, "12h");
         initialiseTheme({ themeKey, fontType, fontSize, timeFormat });
         document
             .querySelector('meta[name="theme-color"]')
