@@ -3,6 +3,7 @@ import styles from "@/styles/modules/event-timer.module.scss";
 
 import EventRegion, {
     CurrentTimeIndicator,
+    HoveredEventIndicator,
     RegionIndicator,
     TimeRow,
 } from "./EventComponents";
@@ -13,8 +14,10 @@ import { useResizeDetector } from "react-resize-detector";
 const EventTimers = ({ currentTimeBlockStart }) => {
     const scrollParentRef = useRef(null);
     const indicatorWrapperRef = useRef(null);
+    const eventWrapperRef = useRef(null);
 
     const [hoveredRegion, setHoveredRegion] = useState("");
+    const [hoveredEvent, setHoveredEvent] = useState(null);
 
     // This is the width of the entire timer component.
     // We calculate this using a special "ruler" element, to ensure that its
@@ -52,7 +55,16 @@ const EventTimers = ({ currentTimeBlockStart }) => {
     }, [scrollParentRef]);
 
     return (
-        <EventTimerContext.Provider value={{ width, currentTimeBlockStart }}>
+        <EventTimerContext.Provider
+            value={{
+                width,
+                currentTimeBlockStart,
+                hoveredEvent,
+                setHoveredEvent,
+                eventWrapperRef,
+                widthRulerRef
+            }}
+        >
             <div className={styles.eventTimer}>
                 <div className={styles.leftFrame} ref={indicatorWrapperRef}>
                     <div className={styles.spacer} />
@@ -73,8 +85,9 @@ const EventTimers = ({ currentTimeBlockStart }) => {
                     <TimeRow />
                     <div className={styles.eventContainer}>
                         <CurrentTimeIndicator />
+                        <HoveredEventIndicator />
 
-                        <div className={styles.regions}>
+                        <div className={styles.regions} ref={eventWrapperRef}>
                             {META_EVENTS.map(region => (
                                 <EventRegion
                                     key={region.key}

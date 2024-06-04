@@ -112,6 +112,8 @@ $time-row-font-size: 0.875em;
 
                             font-size: 0.875em;
                         }
+
+                        transition: opacity var(--transition);
                     }
                 }
             }
@@ -120,6 +122,15 @@ $time-row-font-size: 0.875em;
                 height: 100%;
                 position: absolute;
                 border-left: 2px solid var(--red);
+                transition: left var(--transition);
+                z-index: 1;
+            }
+
+            .hoveredEventIndicator {
+                height: 100%;
+                position: absolute;
+                border-left-width: 1px;
+                border-left-style: solid;
                 transition: left var(--transition);
                 z-index: 1;
             }
@@ -142,6 +153,14 @@ $time-row-font-size: 0.875em;
                 border-left: 2px solid var(--red);
                 z-index: 1;
                 transition: left var(--transition);
+            }
+            .hoveredEventIndicator {
+                height: 100%;
+                position: absolute;
+                border-left-width: 1px;
+                border-left-style: solid;
+                transition: left var(--transition);
+                z-index: 1;
             }
             .timeRowInnerWrapper {
                 display: grid;

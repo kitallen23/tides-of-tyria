@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 import {
     addMinutes,
     differenceInMinutes,
@@ -101,6 +101,57 @@ export const CurrentTimeIndicator = () => {
             className={styles.currentTimeIndicator}
             style={{
                 left: leftPixels,
+            }}
+        />
+    );
+};
+
+export const HoveredEventIndicator = () => {
+    const { colors } = useTheme();
+    const { currentTimeBlockStart, eventWrapperRef } =
+        useContext(EventTimerContext);
+
+    const { hoveredEvent } = useContext(EventTimerContext);
+    const [hoveredEventLeftPixels, setHoveredEventLeftPixels] = useState(0);
+
+    const highlightThemeColor = useMemo(
+        () =>
+            hoveredEvent?.color === "muted"
+                ? "primary"
+                : hoveredEvent?.color ?? undefined,
+        [hoveredEvent]
+    );
+    const highlightColor = useMemo(
+        () => colors?.[highlightThemeColor] ?? undefined,
+        [highlightThemeColor, colors]
+    );
+
+    useEffect(() => {
+        if (hoveredEvent?.id && eventWrapperRef.current) {
+            const hoveredElement = eventWrapperRef.current.querySelector(
+                `#${hoveredEvent.id}`
+            );
+            if (hoveredElement) {
+                const distanceFromLeft = hoveredElement.offsetLeft;
+                setHoveredEventLeftPixels(distanceFromLeft);
+            }
+        }
+    }, [eventWrapperRef, currentTimeBlockStart, hoveredEvent?.id]);
+
+    const shouldRender = useMemo(
+        () => (hoveredEvent ? true : false),
+        [hoveredEvent]
+    );
+
+    if (!shouldRender) {
+        return null;
+    }
+    return (
+        <div
+            className={styles.hoveredEventIndicator}
+            style={{
+                left: hoveredEventLeftPixels,
+                borderColor: highlightColor,
             }}
         />
     );
@@ -247,7 +298,16 @@ const AreaEventPhase = ({
     isLast,
 }) => {
     const { now } = useTimer();
-    const { width: parentWidth } = useContext(EventTimerContext);
+    const {
+        width: parentWidth,
+        hoveredEvent,
+        setHoveredEvent,
+    } = useContext(EventTimerContext);
+
+    const isNotHovered = useMemo(
+        () => hoveredEvent && item.id !== hoveredEvent?.id,
+        [hoveredEvent, item.id]
+    );
 
     const width = useMemo(() => {
         const totalMinutesInBlock = TIME_BLOCK_MINS;
@@ -310,6 +370,26 @@ const AreaEventPhase = ({
         }
     }, [now, item]);
 
+    const onHoverIn = () => {
+        if (!isDowntime) {
+            setHoveredEvent(item);
+        }
+    };
+    const onHoverOut = () => {
+        setHoveredEvent(null);
+    };
+
+    const style = useMemo(
+        () => ({
+            opacity: isNotHovered ? 0.4 : undefined,
+            background: isDowntime
+                ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
+                : eventBackground,
+            width,
+        }),
+        [isNotHovered, isDowntime, width, eventBackground]
+    );
+
     return (
         <div
             className={classNames(
@@ -321,15 +401,13 @@ const AreaEventPhase = ({
                         : isBackgroundLight
                         ? globalStyles.textDark
                         : globalStyles.textLight
-                }`
+                }`,
+                { isHovered: hoveredEvent?.id === item.id }
             )}
-            style={{
-                background: isDowntime
-                    ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
-                    : eventBackground,
-                width,
-            }}
+            style={style}
             id={item.id}
+            onMouseEnter={onHoverIn}
+            onMouseLeave={onHoverOut}
         >
             {isDowntime ? (
                 item.wikiUrl ? (
@@ -414,19 +492,21 @@ const PeriodicArea = ({ area }) => {
             if (!nextEvent) {
                 minuteBlocks.push({
                     ...downtime,
-                    id: nanoid(ID_LENGTH),
+                    id: `d${nanoid(ID_LENGTH)}`,
                     key: "downtime",
                     windowStartMinute: mins,
                     windowEndMinute: TIME_BLOCK_MINS,
+                    color: area.color,
                 });
                 mins += TIME_BLOCK_MINS - mins;
             } else if (mins < nextEvent.windowStartMinute) {
                 minuteBlocks.push({
                     ...downtime,
-                    id: nanoid(ID_LENGTH),
+                    id: `d${nanoid(ID_LENGTH)}`,
                     key: "downtime",
                     windowStartMinute: mins,
                     windowEndMinute: nextEvent.windowStartMinute,
+                    color: area.color,
                 });
 
                 // Advance mins by the duration of this downtime, up until the
@@ -438,11 +518,12 @@ const PeriodicArea = ({ area }) => {
 
                 minuteBlocks.push({
                     ...nextEvent,
-                    id: nanoid(ID_LENGTH),
+                    id: `e${nanoid(ID_LENGTH)}`,
                     windowEndMinute: Math.min(TIME_BLOCK_MINS, windowEndMinute),
                     windowStartMinute: Math.max(nextEvent.windowStartMinute, 0),
                     isContinued: nextEvent.windowStartMinute < 0,
                     isCutOff: windowEndMinute > TIME_BLOCK_MINS,
+                    color: area.color,
                 });
                 const durationInWindow =
                     Math.min(TIME_BLOCK_MINS, windowEndMinute) -
@@ -452,7 +533,7 @@ const PeriodicArea = ({ area }) => {
             }
         }
         return minuteBlocks;
-    }, [areaEvents, downtime]);
+    }, [areaEvents, downtime, area.color]);
 
     const { colors } = useTheme();
     const eventBackground = useMemo(
@@ -564,19 +645,21 @@ const FixedTimeArea = ({ area }) => {
             if (!nextEvent) {
                 minuteBlocks.push({
                     ...downtime,
-                    id: nanoid(ID_LENGTH),
+                    id: `d${nanoid(ID_LENGTH)}`,
                     key: "downtime",
                     windowStartMinute: mins,
                     windowEndMinute: TIME_BLOCK_MINS,
+                    color: area.color,
                 });
                 mins += TIME_BLOCK_MINS - mins;
             } else if (mins < nextEvent.windowStartMinute) {
                 minuteBlocks.push({
                     ...downtime,
-                    id: nanoid(ID_LENGTH),
+                    id: `d${nanoid(ID_LENGTH)}`,
                     key: "downtime",
                     windowStartMinute: mins,
                     windowEndMinute: nextEvent.windowStartMinute,
+                    color: area.color,
                 });
 
                 // Advance mins by the duration of this downtime, up until the
@@ -588,11 +671,12 @@ const FixedTimeArea = ({ area }) => {
 
                 minuteBlocks.push({
                     ...nextEvent,
-                    id: nanoid(ID_LENGTH),
+                    id: `e${nanoid(ID_LENGTH)}`,
                     windowEndMinute: Math.min(TIME_BLOCK_MINS, windowEndMinute),
                     windowStartMinute: Math.max(nextEvent.windowStartMinute, 0),
                     isContinued: nextEvent.windowStartMinute < 0,
                     isCutOff: windowEndMinute > TIME_BLOCK_MINS,
+                    color: area.color,
                 });
                 const durationInWindow =
                     Math.min(TIME_BLOCK_MINS, windowEndMinute) -
@@ -602,7 +686,7 @@ const FixedTimeArea = ({ area }) => {
             }
         }
         return minuteBlocks;
-    }, [areaEvents, downtime]);
+    }, [areaEvents, downtime, area.color]);
 
     const { colors } = useTheme();
     const eventBackground = useMemo(
@@ -640,6 +724,7 @@ const FixedTimeArea = ({ area }) => {
 
 const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
     const { height, ref } = useResizeDetector();
+
     useEffect(() => {
         if (height && indicatorWrapperRef.current) {
             const regionIndicator = indicatorWrapperRef.current.querySelector(
