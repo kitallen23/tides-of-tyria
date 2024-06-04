@@ -1,3 +1,4 @@
+import { LOCAL_STORAGE_KEYS } from "@/useApp";
 import { STALE_TIME_IN_SECONDS, TITLE_SUFFIX } from "@/utils/constants";
 import {
     subHours as _subHours,
@@ -36,7 +37,7 @@ export function relativeDateFormat({
 export function detectTheme() {
     let theme = "kanagawa";
 
-    if (getLocalItem("tot-theme", false)) {
+    if (getLocalItem(LOCAL_STORAGE_KEYS.theme, false)) {
         theme = localStorage.getItem("tot-theme");
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark

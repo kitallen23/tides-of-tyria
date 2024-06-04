@@ -13,7 +13,7 @@ import {
 } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
 import { getTitle, detectTheme, getLocalItem } from "@/utils/util";
-import { getDesignTokens } from "@/useApp";
+import { LOCAL_STORAGE_KEYS, getDesignTokens } from "@/useApp";
 import Logo from "@/components/Logo";
 
 const RootError = () => {
@@ -28,12 +28,12 @@ const RootError = () => {
         fontType = "monospace",
         fontSize = "md",
     }) => {
-        localStorage.setItem("theme", themeKey);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.theme, themeKey);
         localStorage.setItem(
-            "font_type",
+            LOCAL_STORAGE_KEYS.fontType,
             fontType === "regular" ? "regular" : "monospace"
         );
-        localStorage.setItem("font_size", fontSize);
+        localStorage.setItem(LOCAL_STORAGE_KEYS.fontSize, fontSize);
         dispatchTheme({
             key: "SET_THEME",
             payload: { themeKey, fontType, fontSize },
@@ -141,7 +141,10 @@ const RootError = () => {
                                 </div>
                             </div>
                             <div className={styles.buttons}>
-                                <Link to="/" className={globalStyles.internalLink}>
+                                <Link
+                                    to="/"
+                                    className={globalStyles.internalLink}
+                                >
                                     <Button color="primary">
                                         Return to homepage
                                     </Button>

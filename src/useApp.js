@@ -10,11 +10,11 @@ import { AuthReducer, DEFAULT_AUTH_STATE } from "@/utils/auth-provider";
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
 
-const LOCAL_STORAGE_KEYS = {
-    theme: "theme",
-    fontSize: "font_size",
-    fontType: "font_type",
-    timeFormat: "time_format",
+export const LOCAL_STORAGE_KEYS = {
+    theme: "tot_theme",
+    fontSize: "tot_font_size",
+    fontType: "tot_font_type",
+    timeFormat: "tot_time_format",
 };
 
 export const getDesignTokens = theme => ({
