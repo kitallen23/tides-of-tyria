@@ -38,13 +38,13 @@ export function detectTheme() {
     let theme = "kanagawa";
 
     if (getLocalItem(LOCAL_STORAGE_KEYS.theme, false)) {
-        theme = localStorage.getItem("tot-theme");
+        theme = localStorage.getItem(LOCAL_STORAGE_KEYS.theme);
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark
         theme = "kanagawa";
     }
 
-    return theme;
+    return theme || "kanagawa";
 }
 
 export function getLocalItem(key, defaultValue = "") {
