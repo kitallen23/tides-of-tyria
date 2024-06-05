@@ -1,11 +1,8 @@
 import { useReducer, useMemo } from "react";
-import { jwtDecode } from "jwt-decode";
 import { createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
-import { ACCESS_TOKEN_KEY } from "@/utils/constants";
 import { detectTheme, getLocalItem } from "@/utils/util";
-import { AuthReducer, DEFAULT_AUTH_STATE } from "@/utils/auth-provider";
 
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
@@ -167,36 +164,6 @@ const useApp = () => {
         document.documentElement.setAttribute("data-font-size", fontSize);
     }, [fontSize]);
 
-    // Initialise auth state
-    const [authState, dispatchAuth] = useReducer(
-        AuthReducer,
-        DEFAULT_AUTH_STATE
-    );
-    const login = accessToken =>
-        dispatchAuth({
-            key: "LOGIN",
-            payload: accessToken,
-        });
-    const logout = () =>
-        dispatchAuth({
-            key: "LOGOUT",
-        });
-
-    useMemo(() => {
-        const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY) || "";
-        if (!accessToken) {
-            return;
-        }
-
-        const decodedToken = jwtDecode(accessToken);
-        const tokenExpiry = decodedToken.exp * 1000;
-        const now = new Date();
-
-        if (accessToken && now.getTime() < tokenExpiry) {
-            login(accessToken);
-        }
-    }, []);
-
     // MUI theme
     const muiTheme = useMemo(() => {
         const theme = getDesignTokens(themeState);
@@ -206,14 +173,11 @@ const useApp = () => {
     return {
         themeState,
         muiTheme,
-        authState,
 
         setThemeKey,
         setFontType,
         setFontSize,
         setTimeFormat,
-        login,
-        logout,
     };
 };
 

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 
 import styles from "@/styles/modules/event-timer.module.scss";
-import { addMinutes, format } from "date-fns";
+import { format } from "date-fns";
 import { useTheme } from "@/utils/theme-provider";
 import EventTimerContext from "./EventTimerContext";
 
