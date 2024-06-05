@@ -6,25 +6,15 @@ import "@/styles/globals.scss";
 import App from "@/App";
 import RootError from "@/views/errors/RootError";
 
-import Logout from "@/views/Logout";
 import Settings from "@/views/settings/Settings";
 import Home from "@/views/home/Home";
 
 const router = createBrowserRouter([
     {
-        path: "/login",
-        element: <App renderLogin={true} />,
-        errorElement: <RootError />,
-    },
-    {
         path: "/",
         element: <App />,
         errorElement: <RootError />,
         children: [
-            {
-                path: "logout",
-                element: <Logout />,
-            },
             {
                 path: "settings",
                 element: <Settings />,
