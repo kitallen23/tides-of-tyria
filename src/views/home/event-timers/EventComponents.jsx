@@ -251,7 +251,7 @@ const AreaEventPhase = ({
         return (
             Math.round(parentWidth * percentageRight) -
             Math.round(parentWidth * percentageLeft) -
-            (isLast ? 0 : 2)
+            (isLast ? 0 : 4)
         );
     }, [item, parentWidth, isLast]);
 
