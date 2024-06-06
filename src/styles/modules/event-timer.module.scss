@@ -89,8 +89,11 @@ $time-row-font-size: 0.875em;
                         line-height: $line-height;
                         font-size: 0.875em;
                         border-radius: 0.25rem;
-                        padding: 0.2em 0.4em;
+                        padding: 0 0.2em;
                         display: grid;
+                        border-width: 2px;
+                        border-style: solid;
+                        border-color: transparent;
 
                         // Text height of title, text height of "time until",
                         // padding * 2
