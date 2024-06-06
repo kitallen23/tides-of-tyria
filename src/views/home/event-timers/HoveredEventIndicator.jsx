@@ -4,9 +4,10 @@ import styles from "@/styles/modules/event-timer.module.scss";
 import { format } from "date-fns";
 import { useTheme } from "@/utils/theme-provider";
 import EventTimerContext from "./EventTimerContext";
+import { ensureContrast, isContrastEnough } from "@/utils/color";
 
 const HoveredEventIndicator = ({ showLabel }) => {
-    const { colors, timeFormat } = useTheme();
+    const { colors, timeFormat, mode } = useTheme();
     const { currentTimeBlockStart, eventWrapperRef } =
         useContext(EventTimerContext);
     const formatString = useMemo(
@@ -19,15 +20,28 @@ const HoveredEventIndicator = ({ showLabel }) => {
 
     const highlightThemeColor = useMemo(
         () =>
-            hoveredEvent?.color === "muted"
+            hoveredEvent?.color === "gray"
                 ? "primary"
                 : hoveredEvent?.color ?? undefined,
         [hoveredEvent]
     );
-    const highlightColor = useMemo(
-        () => colors?.[highlightThemeColor] ?? undefined,
-        [highlightThemeColor, colors]
-    );
+    const highlightColor = useMemo(() => {
+        const schemeColor = colors?.[highlightThemeColor] ?? undefined;
+        const background = colors.background;
+        if (schemeColor) {
+            const schemeColorHasEnoughContrast = isContrastEnough(
+                schemeColor,
+                colors.background
+            );
+            if (schemeColorHasEnoughContrast) {
+                return schemeColor;
+            } else {
+                return ensureContrast(schemeColor, background, mode === "light" ? "darken" : "lighten");
+            }
+        } else {
+            return undefined;
+        }
+    }, [highlightThemeColor, colors, mode]);
 
     useEffect(() => {
         if (hoveredEvent?.id && eventWrapperRef.current) {

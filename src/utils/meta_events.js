@@ -2,12 +2,12 @@ const META_EVENTS = [
     {
         key: "core_tyria",
         name: "CORE",
-        color: "muted",
+        color: "gray",
         sub_areas: [
             {
                 key: "world_bosses",
                 name: "World Bosses",
-                color: "muted",
+                color: "gray",
                 type: "periodic",
                 phases: [
                     {
@@ -105,7 +105,7 @@ const META_EVENTS = [
             {
                 key: "hard_bosses",
                 name: "Hard Bosses",
-                color: "muted",
+                color: "gray",
                 type: "fixed_time",
                 phases: [
                     {
@@ -137,7 +137,7 @@ const META_EVENTS = [
             {
                 key: "ley_line_anomaly",
                 name: "Ley-Line Anomaly",
-                color: "muted",
+                color: "gray",
                 type: "periodic",
                 phases: [
                     {
@@ -174,12 +174,12 @@ const META_EVENTS = [
     {
         key: "living_world_season_2",
         name: "LWS2",
-        color: "warning",
+        color: "yellow",
         sub_areas: [
             {
                 key: "dry_top",
                 name: "Dry Top",
-                color: "warning",
+                color: "yellow",
                 type: "periodic",
                 phases: [
                     {
@@ -207,12 +207,12 @@ const META_EVENTS = [
     {
         key: "heart_of_thorns",
         name: "HoT",
-        color: "success",
+        color: "green",
         sub_areas: [
             {
                 key: "verdant_brink",
                 name: "Verdant Brink",
-                color: "success",
+                color: "green",
                 type: "periodic",
                 phases: [
                     {
@@ -248,7 +248,7 @@ const META_EVENTS = [
             {
                 key: "auric_basin",
                 name: "Auric Basin",
-                color: "success",
+                color: "green",
                 type: "periodic",
                 phases: [
                     {
@@ -287,7 +287,7 @@ const META_EVENTS = [
             {
                 key: "tangled_depths",
                 name: "Tangled Depths",
-                color: "success",
+                color: "green",
                 type: "periodic",
                 phases: [
                     {
@@ -318,7 +318,7 @@ const META_EVENTS = [
             {
                 key: "dragons_stand",
                 name: "Dragon's Stand",
-                color: "success",
+                color: "green",
                 type: "periodic",
                 phases: [
                     {
@@ -337,12 +337,12 @@ const META_EVENTS = [
     {
         key: "living_world_season_3",
         name: "LWS3",
-        color: "muted",
+        color: "gray",
         sub_areas: [
             {
                 key: "lake_doric",
                 name: "Lake Doric",
-                color: "muted",
+                color: "gray",
                 type: "periodic",
                 phases: [
                     {
@@ -379,12 +379,12 @@ const META_EVENTS = [
     {
         key: "path_of_fire",
         name: "PoF",
-        color: "warning",
+        color: "orange",
         sub_areas: [
             {
                 key: "crystal_oasis",
                 name: "Crystal Oasis",
-                color: "warning",
+                color: "orange",
                 type: "periodic",
                 phases: [
                     {
@@ -410,7 +410,7 @@ const META_EVENTS = [
             {
                 key: "desert_highlands",
                 name: "Desert Highlands",
-                color: "warning",
+                color: "orange",
                 type: "periodic",
                 phases: [
                     {
@@ -427,7 +427,7 @@ const META_EVENTS = [
             {
                 key: "elon_riverlands",
                 name: "Elon Riverlands",
-                color: "warning",
+                color: "orange",
                 type: "periodic",
                 phases: [
                     {
