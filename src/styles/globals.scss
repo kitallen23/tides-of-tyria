@@ -130,8 +130,8 @@
     --status-info: 120, 220, 232;
 }
 [data-theme="gruvbox_light"]:root {
-    --primary-rgb: 121, 116, 14;
-    --secondary-rgb: 168, 153, 132;
+    --primary-rgb: 175, 58, 3;
+    --secondary-rgb: 124, 111, 100;
     --foreground-rgb: 60, 56, 54;
     --foreground-light-rgb: 249, 245, 215;
     --foreground-dark-rgb: 60, 56, 54;
@@ -139,10 +139,15 @@
     --nav-background-rgb: 249, 245, 215;
 
     --scrollbar-track-color: 213, 196, 161;
-    --scrollbar-thumb-color: 102, 92, 84;
+    --scrollbar-thumb-color: 60, 56, 54;
 
-    --text-muted: #a89984;
-    --muted-rgb: 168, 153, 132;
+    --text-muted: #7c6f64;
+    --muted-rgb: 124, 111, 100;
+
+    --status-success: 121, 116, 14;
+    --status-danger: 157, 0, 6;
+    --status-warning: 181, 118, 20;
+    --status-info: 7, 102, 120;
 }
 [data-theme="godspeed"]:root {
     --primary-rgb: 154, 187, 205;
