@@ -1,5 +1,6 @@
 export const SCHEMES = {
     kanagawa: {
+        // https://github.com/rebelot/kanagawa.nvim
         name: "Kanagawa",
         mode: "dark",
         colors: {
@@ -16,9 +17,19 @@ export const SCHEMES = {
             danger: "#ff5d62",
             warning: "#ffa066",
             info: "#7fb4ca",
+
+            orange: "#ffa066",
+            yellow: "#e6c384",
+            green: "#98bb6c",
+            aqua: "#7aa89f",
+            blue: "#a3d4d5",
+            purple: "#957fb8",
+            pink: "#d27e99",
+            gray: "#54546d",
         },
     },
     gruvbox_dark: {
+        // https://github.com/morhetz/gruvbox
         name: "Gruvbox Dark",
         mode: "dark",
         colors: {
@@ -35,9 +46,19 @@ export const SCHEMES = {
             danger: "#fb4934",
             warning: "#fabd2e",
             info: "#83a598",
+
+            orange: "#fe8019",
+            yellow: "#fabd2f",
+            green: "#b8bb26",
+            aqua: "#8ec07c",
+            blue: "#83a598",
+            purple: "#b16286",
+            pink: "#d3869b",
+            gray: "#928374",
         },
     },
     dracula: {
+        // https://github.com/dracula/dracula-theme
         name: "Dracula",
         mode: "dark",
         colors: {
@@ -54,28 +75,49 @@ export const SCHEMES = {
             danger: "#ff5555",
             warning: "#ffb86c",
             info: "#8be9fd",
+
+            orange: "#ffb86c",
+            yellow: "#f1fa8c",
+            green: "#50fa7b",
+            aqua: "#8be9fd",
+            blue: "#6272a4",
+            purple: "#bd93f9",
+            pink: "#ff79c6",
+            gray: "#585b74",
         },
     },
     monokai: {
-        name: "Monokai",
+        // Harder to find a palette, but here's where these were taken:
+        // https://github.com/loctvl842/monokai-pro.nvim/blob/master/lua/monokai-pro/colorscheme/palette/pro.lua
+        name: "Monokai Pro",
         mode: "dark",
         colors: {
-            primary: "#a6e22e",
-            secondary: "#fd971f",
-            body: "#fdfff1",
-            bodyLight: "#fdfff1",
-            bodyDark: "#1d1e19",
-            background: "#272822",
-            backgroundNav: "#1d1e19",
-            muted: "#57584f",
+            primary: "#ffd866",
+            secondary: "#ff6188",
+            body: "#fcfcfa",
+            bodyLight: "#fcfcfa",
+            bodyDark: "#3c393d",
+            background: "#2d2a2e",
+            backgroundNav: "#221f22",
+            muted: "#696769",
 
-            success: "#a6e22e",
-            danger: "#ff5555",
-            warning: "#fd971f",
-            info: "#66d9ef",
+            success: "#a9dc76",
+            danger: "#ff6188",
+            warning: "#fc9867",
+            info: "#78dce8",
+
+            orange: "#fc9867",
+            yellow: "#ffd866",
+            green: "#a9dc76",
+            aqua: "#78fad4",
+            blue: "#78dce8",
+            purple: "#ab9df2",
+            pink: "#ff6188",
+            gray: "#727072",
         },
     },
     gruvbox_light: {
+        // https://github.com/morhetz/gruvbox
         name: "Gruvbox Light",
         mode: "light",
         colors: {
@@ -88,11 +130,19 @@ export const SCHEMES = {
             backgroundNav: "#ebdbb2",
             muted: "#a89984",
 
-            // TODO
             success: "#98971a",
             danger: "#cc241d",
             warning: "#d79921",
             info: "#458588",
+
+            orange: "",
+            yellow: "",
+            green: "",
+            aqua: "",
+            blue: "",
+            purple: "",
+            pink: "",
+            gray: "",
         },
     },
     godspeed: {
@@ -108,11 +158,19 @@ export const SCHEMES = {
             backgroundNav: "#f0ebdb",
             muted: "#adab98",
 
-            // TODO
             success: "#98971a",
             danger: "#cc241d",
             warning: "#d79921",
             info: "#458588",
+
+            orange: "",
+            yellow: "",
+            green: "",
+            aqua: "",
+            blue: "",
+            purple: "",
+            pink: "",
+            gray: "",
         },
     },
 };

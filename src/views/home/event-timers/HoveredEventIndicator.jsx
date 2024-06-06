@@ -19,7 +19,7 @@ const HoveredEventIndicator = ({ showLabel }) => {
 
     const highlightThemeColor = useMemo(
         () =>
-            hoveredEvent?.color === "muted"
+            hoveredEvent?.color === "gray"
                 ? "primary"
                 : hoveredEvent?.color ?? undefined,
         [hoveredEvent]

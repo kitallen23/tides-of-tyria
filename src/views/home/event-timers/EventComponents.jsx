@@ -22,7 +22,7 @@ const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 export const RegionIndicator = ({ region, isHovered }) => {
     const { colors } = useTheme();
     const highlightColor = useMemo(
-        () => (region.color === "muted" ? "primary" : region.color),
+        () => (region.color === "gray" ? "primary" : region.color),
         [region.color]
     );
     const highlightBorderColor = useMemo(

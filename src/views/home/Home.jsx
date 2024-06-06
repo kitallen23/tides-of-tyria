@@ -17,7 +17,7 @@ import {
 } from "date-fns";
 import { Button } from "@mui/material";
 
-import EventTimers from "./EventTimers";
+import EventTimers from "./event-timers/";
 import { useTimer } from "@/utils/hooks/useTimer";
 import { useTheme } from "@/utils/theme-provider";
 
