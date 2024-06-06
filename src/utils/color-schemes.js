@@ -86,7 +86,7 @@ export const SCHEMES = {
             gray: "#585b74",
         },
     },
-    monokai: {
+    monokai_pro: {
         // Harder to find a palette, but here's where these were taken:
         // https://github.com/loctvl842/monokai-pro.nvim/blob/master/lua/monokai-pro/colorscheme/palette/pro.lua
         name: "Monokai Pro",

@@ -109,25 +109,25 @@
     --status-warning: #ffb86c;
     --status-info: #8be9fd;
 }
-[data-theme="monokai"]:root {
-    --primary-rgb: 166, 226, 46;
-    --secondary-rgb: 253, 151, 31;
-    --foreground-rgb: 253, 255, 241;
-    --foreground-light-rgb: 253, 255, 241;
-    --foreground-dark-rgb: 29, 30, 25;
-    --background-rgb: 39, 40, 34;
-    --nav-background-rgb: 29, 30, 25;
+[data-theme="monokai_pro"]:root {
+    --primary-rgb: 255, 216, 102;
+    --secondary-rgb: 255, 97, 136;
+    --foreground-rgb: 252, 252, 250;
+    --foreground-light-rgb: 252, 252, 250;
+    --foreground-dark-rgb: 60, 57, 61;
+    --background-rgb: 45, 42, 46;
+    --nav-background-rgb: 34, 31, 34;
 
-    --scrollbar-track-color: 26, 28, 23;
-    --scrollbar-thumb-color: 253, 255, 241;
+    --scrollbar-track-color: 22, 23, 29;
+    --scrollbar-thumb-color: 248, 248, 242;
 
-    --text-muted: #57584f;
-    --muted-rgb: 87, 88, 79;
+    --text-muted: #696769;
+    --muted-rgb: 105, 103, 105;
 
-    --status-success: #a6e22e;
-    --status-danger: #ff5555;
-    --status-warning: #fd971f;
-    --status-info: #66d9ef;
+    --status-success: 169, 220, 118;
+    --status-danger: 255, 97, 136;
+    --status-warning: 252, 152, 103;
+    --status-info: 120, 220, 232;
 }
 [data-theme="gruvbox_light"]:root {
     --primary-rgb: 121, 116, 14;
