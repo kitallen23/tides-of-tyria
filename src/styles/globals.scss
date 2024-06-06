@@ -124,10 +124,10 @@
     --text-muted: #696769;
     --muted-rgb: 105, 103, 105;
 
-    --status-success: 169, 220, 118;
-    --status-danger: 255, 97, 136;
-    --status-warning: 252, 152, 103;
-    --status-info: 120, 220, 232;
+    --status-success: #a9dc76;
+    --status-danger: #ff6188;
+    --status-warning: #fc9867;
+    --status-info: #78dce8;
 }
 [data-theme="gruvbox_light"]:root {
     --primary-rgb: 175, 58, 3;
@@ -144,25 +144,30 @@
     --text-muted: #7c6f64;
     --muted-rgb: 124, 111, 100;
 
-    --status-success: 121, 116, 14;
-    --status-danger: 157, 0, 6;
-    --status-warning: 181, 118, 20;
-    --status-info: 7, 102, 120;
+    --status-success: #79740e;
+    --status-danger: #9d0006;
+    --status-warning: #b57614;
+    --status-info: #076678;
 }
-[data-theme="godspeed"]:root {
-    --primary-rgb: 154, 187, 205;
-    --secondary-rgb: 173, 171, 152;
+[data-theme="pastel"]:root {
+    --primary-rgb: 121, 169, 209;
+    --secondary-rgb: 166, 166, 166;
     --foreground-rgb: 100, 102, 107;
     --foreground-light-rgb: 240, 235, 219;
     --foreground-dark-rgb: 100, 102, 107;
     --background-rgb: 233, 226, 204;
     --nav-background-rgb: 240, 235, 219;
 
-    --scrollbar-track-color: 213, 196, 161;
-    --scrollbar-thumb-color: 102, 92, 84;
+    --scrollbar-track-color: 233, 226, 204;
+    --scrollbar-thumb-color: 100, 102, 107;
 
-    --text-muted: #adab98;
-    --muted-rgb: 173, 171, 152;
+    --text-muted: #a6a6a6;
+    --muted-rgb: 166, 166, 166;
+
+    --status-success: #77dd77;
+    --status-danger: #ff6961;
+    --status-warning: #ffb347;
+    --status-info: #79a9d1;
 }
 
 * {

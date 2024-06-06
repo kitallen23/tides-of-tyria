@@ -8,7 +8,13 @@ import styles from "@/styles/modules/event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 
 import { useTheme } from "@/utils/theme-provider";
-import { blendColors, isLight, opacityToHex } from "@/utils/util";
+import {
+    blendColors,
+    ensureContrast,
+    isContrastEnough,
+    isLight,
+    opacityToHex,
+} from "@/utils/color";
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
@@ -20,40 +26,54 @@ const DOWNTIME_OPACITY = 0.2;
 const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 
 export const RegionIndicator = ({ region, isHovered }) => {
-    const { colors } = useTheme();
-    const highlightColor = useMemo(
+    const { colors, mode } = useTheme();
+    const schemeColorString = useMemo(
         () => (region.color === "gray" ? "primary" : region.color),
         [region.color]
     );
-    const highlightBorderColor = useMemo(
-        () => colors?.[highlightColor] || undefined,
-        [highlightColor, colors]
-    );
+
+    const highlightColor = useMemo(() => {
+        const schemeColor = colors?.[schemeColorString] ?? undefined;
+        const background = colors.background;
+        if (schemeColor) {
+            const schemeColorHasEnoughContrast = isContrastEnough(
+                schemeColor,
+                colors.background
+            );
+            if (schemeColorHasEnoughContrast) {
+                return schemeColor;
+            } else {
+                return ensureContrast(
+                    schemeColor,
+                    background,
+                    mode === "light" ? "darken" : "lighten"
+                );
+            }
+        } else {
+            return undefined;
+        }
+    }, [schemeColorString, colors, mode]);
 
     return (
         <div
             className={styles.regionIndicator}
             id={`region-indicator-${region.key}`}
             style={{
-                borderRightColor: isHovered ? highlightBorderColor : undefined,
-                color: isHovered ? highlightBorderColor : undefined,
+                borderRightColor: isHovered ? highlightColor : undefined,
+                color: isHovered ? highlightColor : undefined,
             }}
         >
             <div
                 className={styles.regionBorder}
                 style={{
-                    borderBottomColor: isHovered
-                        ? highlightBorderColor
-                        : undefined,
+                    borderBottomColor: isHovered ? highlightColor : undefined,
                 }}
             />
             <div className={styles.regionTitle}>{region.name}</div>
             <div
                 className={styles.regionBorder}
                 style={{
-                    borderBottomColor: isHovered
-                        ? highlightBorderColor
-                        : undefined,
+                    borderBottomColor: isHovered ? highlightColor : undefined,
                 }}
             />
         </div>

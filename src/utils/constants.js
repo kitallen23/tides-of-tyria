@@ -7,3 +7,6 @@ export const HOMEPAGE = "";
 export const LOGOS = {};
 
 export const STALE_TIME_IN_SECONDS = {};
+
+// WCAG minimum is 4.5m but this value looks nice!
+export const CONTRAST_RATIO = 2.5;
