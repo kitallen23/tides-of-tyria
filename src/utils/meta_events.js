@@ -612,6 +612,121 @@ const META_EVENTS = [
             },
         ],
     },
+    {
+        key: "the_icebrood_saga",
+        name: "IBS",
+        color: COLORS.blue,
+        sub_areas: [
+            {
+                key: "grothmar_valley",
+                name: "Grothmar Valley",
+                color: COLORS.blue,
+                type: "periodic",
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "grothmar_valley__effigy",
+                        name: "Effigy",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Ceremony_of_the_Sacred_Flame",
+                        start: 10,
+                        duration: 15,
+                        frequency: 120,
+                    },
+                    {
+                        key: "grothmar_valley__doomlore_shrine",
+                        name: "Doomlore Shrine",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Haunting_of_Doomlore_Shrine",
+                        start: 38,
+                        duration: 22,
+                        frequency: 120,
+                    },
+                    {
+                        key: "grothmar_valley__ooze_pits",
+                        name: "Ooze Pits",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Ooze_Pit_Trials",
+                        start: 65,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                    {
+                        key: "grothmar_valley__metal_concert",
+                        name: "Metal Concert",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/A_Concert_for_the_Ages",
+                        start: 100,
+                        duration: 15,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "bjora_marches",
+                name: "Bjora Marches",
+                color: COLORS.blue,
+                type: "periodic",
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "bjora_marches__drakkar",
+                        name: "Drakkar",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Champion_of_the_Ice_Dragon",
+                        start: 65,
+                        duration: 35,
+                        frequency: 120,
+                    },
+                    {
+                        key: "bjora_marches__storms_of_winter",
+                        name: "Defend Jora's Keep",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Storms_of_Winter",
+                        start: 105,
+                        duration: 15,
+                        frequency: 120,
+                    },
+                    {
+                        key: "bjora_marches__storms_of_winter",
+                        name: "Shards & Construct",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Storms_of_Winter",
+                        start: 0,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "bjora_marches__storms_of_winter",
+                        name: "Icebrood Champions",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Storms_of_Winter",
+                        start: 5,
+                        duration: 15,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "dragonstorm",
+                name: "Dragonstorm",
+                color: COLORS.blue,
+                type: "periodic",
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "dragonstorm",
+                        name: "Dragonstorm",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Dragonstorm",
+                        start: 60,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                ],
+            },
+        ],
+    },
 ];
 
 export default META_EVENTS;

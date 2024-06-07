@@ -69,6 +69,15 @@ const Home = () => {
                                 style={{ marginRight: "0.25rem" }}
                             />
                             Event Timers
+                            <span
+                                style={{
+                                    color: colors.muted,
+                                    fontSize: "1rem",
+                                    fontWeight: "normal",
+                                }}
+                            >
+                                &nbsp;| Click an event to see info
+                            </span>
                         </h3>
                         <div className={styles.buttonGroup}>
                             <Button
