@@ -21,7 +21,7 @@ export const SCHEMES = {
             orange: "#ffa066",
             yellow: "#e6c384",
             green: "#98bb6c",
-            aqua: "#7aa89f",
+            aqua: "#67d8c2",
             blue: "#a3d4d5",
             purple: "#957fb8",
             pink: "#d27e99",

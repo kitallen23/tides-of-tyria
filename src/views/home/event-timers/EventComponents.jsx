@@ -18,7 +18,7 @@ import {
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
-import { TIME_BLOCK_MINS } from "./utils";
+import { MINS_IN_DAY, TIME_BLOCK_MINS } from "./utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 const ID_LENGTH = 6;
@@ -251,7 +251,7 @@ const AreaEventPhase = ({
         return (
             Math.round(parentWidth * percentageRight) -
             Math.round(parentWidth * percentageLeft) -
-            (isLast ? 0 : 2)
+            (isLast ? 0 : 4)
         );
     }, [item, parentWidth, isLast]);
 
@@ -509,7 +509,27 @@ const getFixedTimeEventStartTimesWithinWindow = ({
     const windowStart = differenceInMinutes(currentTimeBlockStart, dailyReset);
     const windowEnd = differenceInMinutes(currentTimeBlockEnd, dailyReset);
 
-    const eventStartTimes = times
+    const _eventStartTimes = times
+        .map(eventStart => {
+            let _eventStart = eventStart;
+
+            if (
+                windowEnd > MINS_IN_DAY &&
+                eventStart + MINS_IN_DAY < windowEnd
+            ) {
+                // Window is wrapping to the next day, so add MINS_IN_DAY to
+                // event start time
+                _eventStart = eventStart + MINS_IN_DAY;
+            } else if (
+                windowStart < 0 &&
+                eventStart - MINS_IN_DAY >= windowStart
+            ) {
+                // Window is wrapping to the previous day, so subtract
+                // MINS_IN_DAY from event start time
+                _eventStart = eventStart - MINS_IN_DAY;
+            }
+            return _eventStart;
+        })
         .filter(eventStart => {
             const eventEnd = eventStart + duration;
             return (
@@ -517,11 +537,11 @@ const getFixedTimeEventStartTimesWithinWindow = ({
                 (eventEnd > windowStart && eventEnd <= windowEnd) ||
                 (eventStart <= windowStart && eventEnd >= windowEnd)
             );
-        })
-        .map(eventStartMinutes => ({
-            ...phase,
-            startDate: addMinutes(dailyReset, eventStartMinutes),
-        }));
+        });
+    const eventStartTimes = _eventStartTimes.map(eventStartMinutes => ({
+        ...phase,
+        startDate: addMinutes(dailyReset, eventStartMinutes),
+    }));
 
     return eventStartTimes;
 };
