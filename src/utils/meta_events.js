@@ -13,6 +13,10 @@ const ON_COMPLETE_TYPES = {
     completeArea: "complete_area",
     none: "none",
 };
+const TIME_TYPES = {
+    periodic: "periodic",
+    fixedTime: "fixed_time",
+};
 const META_EVENTS = [
     {
         key: "core_tyria",
@@ -23,7 +27,7 @@ const META_EVENTS = [
                 key: "world_bosses",
                 name: "World Bosses",
                 color: COLORS.gray,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
                     {
@@ -122,7 +126,7 @@ const META_EVENTS = [
                 key: "hard_bosses",
                 name: "Hard Bosses",
                 color: COLORS.gray,
-                type: "fixed_time",
+                type: TIME_TYPES.fixedTime,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
                     {
@@ -155,7 +159,7 @@ const META_EVENTS = [
                 key: "ley_line_anomaly",
                 name: "Ley-Line Anomaly",
                 color: COLORS.gray,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -198,7 +202,7 @@ const META_EVENTS = [
                 key: "dry_top",
                 name: "Dry Top",
                 color: COLORS.yellow,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
                     {
@@ -232,7 +236,7 @@ const META_EVENTS = [
                 key: "verdant_brink",
                 name: "Verdant Brink",
                 color: COLORS.green,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -269,7 +273,7 @@ const META_EVENTS = [
                 key: "auric_basin",
                 name: "Auric Basin",
                 color: COLORS.green,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -309,7 +313,7 @@ const META_EVENTS = [
                 key: "tangled_depths",
                 name: "Tangled Depths",
                 color: COLORS.green,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -341,7 +345,7 @@ const META_EVENTS = [
                 key: "dragons_stand",
                 name: "Dragon's Stand",
                 color: COLORS.green,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -366,7 +370,7 @@ const META_EVENTS = [
                 key: "lake_doric",
                 name: "Lake Doric",
                 color: COLORS.gray,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
                     {
@@ -409,7 +413,7 @@ const META_EVENTS = [
                 key: "crystal_oasis",
                 name: "Crystal Oasis",
                 color: COLORS.orange,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -436,7 +440,7 @@ const META_EVENTS = [
                 key: "desert_highlands",
                 name: "Desert Highlands",
                 color: COLORS.orange,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -454,7 +458,7 @@ const META_EVENTS = [
                 key: "elon_riverlands",
                 name: "Elon Riverlands",
                 color: COLORS.orange,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -481,7 +485,7 @@ const META_EVENTS = [
                 key: "the_desolation",
                 name: "The Desolation",
                 color: COLORS.orange,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -508,7 +512,7 @@ const META_EVENTS = [
                 key: "domain_of_vabbi",
                 name: "Domain of Vabbi",
                 color: COLORS.orange,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -542,7 +546,7 @@ const META_EVENTS = [
                 key: "domain_of_istan",
                 name: "Domain of Istan",
                 color: COLORS.purple,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -560,7 +564,7 @@ const META_EVENTS = [
                 key: "jahai_bluffs",
                 name: "Jahai Bluffs",
                 color: COLORS.purple,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -587,7 +591,7 @@ const META_EVENTS = [
                 key: "thunderhead_peaks",
                 name: "Thunderhead Peaks",
                 color: COLORS.purple,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
@@ -621,7 +625,7 @@ const META_EVENTS = [
                 key: "grothmar_valley",
                 name: "Grothmar Valley",
                 color: COLORS.blue,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
                     {
@@ -666,7 +670,7 @@ const META_EVENTS = [
                 key: "bjora_marches",
                 name: "Bjora Marches",
                 color: COLORS.blue,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
                     {
@@ -711,17 +715,121 @@ const META_EVENTS = [
                 key: "dragonstorm",
                 name: "Dragonstorm",
                 color: COLORS.blue,
-                type: "periodic",
+                type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
                         key: "dragonstorm",
                         name: "Dragonstorm",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Dragonstorm",
+                        wikiUrl: "https://wiki.guildwars2.com/wiki/Dragonstorm",
                         start: 60,
                         duration: 20,
                         frequency: 120,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "end_of_dragons",
+        name: "EoD",
+        color: COLORS.aqua,
+        sub_areas: [
+            {
+                key: "seitung_province",
+                name: "Seitung Province",
+                color: COLORS.aqua,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "seitung_province__aetherblade_assault",
+                        name: "Aetherblade Assault",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Aetherblade_Assault",
+                        start: 90,
+                        duration: 30,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "new_kaineng_city",
+                name: "New Kaineng City",
+                color: COLORS.aqua,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "new_kaineng_city__kaineng_blackout",
+                        name: "Kaineng Blackout",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Kaineng_Blackout",
+                        start: 0,
+                        duration: 40,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "the_echovald_wilds",
+                name: "The Echovald Wilds",
+                color: COLORS.aqua,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "the_echovald_wilds__aspenwood",
+                        name: "Aspenwood",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Use_the_siege_turtles_to_destroy_the_shield_generators_as_you_fight_through_the_fort",
+                        start: 100,
+                        duration: 20,
+                        frequency: 120,
+                    },
+                    {
+                        key: "the_echovald_wilds__gang_war",
+                        name: "Gang War",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Gang_War_of_Echovald",
+                        start: 30,
+                        duration: 35,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "dragons_end",
+                name: "Dragon's End",
+                color: COLORS.aqua,
+                type: TIME_TYPES.fixedTime,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                downtime: {
+                    name: "Preparations",
+                },
+                phases: [
+                    {
+                        key: "dragons_end__jade_maw",
+                        name: "Jade Maw",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Defeat_the_Void-corrupted_Jade_Maw",
+                        times: [
+                            5, 45, 125, 165, 245, 285, 365, 405, 485, 525, 605,
+                            645, 725, 765, 845, 885, 965, 1005, 1085, 1125,
+                            1205, 1245, 1325, 1365,
+                        ],
+                        duration: 8,
+                    },
+                    {
+                        key: "dragons_end__the_battle_for_the_jade_sea",
+                        name: "The Battle for the Jade Sea",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Battle_for_the_Jade_Sea",
+                        times: [
+                            60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140,
+                            1260, 1380,
+                        ],
+                        duration: 60,
                     },
                 ],
             },
