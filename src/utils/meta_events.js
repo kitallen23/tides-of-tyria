@@ -712,8 +712,8 @@ const META_EVENTS = [
                 ],
             },
             {
-                key: "dragonstorm",
-                name: "Dragonstorm",
+                key: "eye_of_the_north",
+                name: "Eye of the North (instance)",
                 color: COLORS.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
@@ -830,6 +830,67 @@ const META_EVENTS = [
                             1260, 1380,
                         ],
                         duration: 60,
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "secrets_of_the_obscure",
+        name: "SotO",
+        color: COLORS.yellow,
+        sub_areas: [
+            {
+                key: "skywatch_archipelago",
+                name: "Skywatch Archipelago",
+                color: COLORS.yellow,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "skywatch_archipelago__unlocking_the_wizards_tower",
+                        name: "Unlocking the Wizard's Tower",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Unlocking_the_Wizard's_Tower",
+                        start: 60,
+                        duration: 25,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "amnytas",
+                name: "Amnytas",
+                color: COLORS.yellow,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "amnytas__the_defense_of_amnytas",
+                        name: "Defense of Amnytas",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Defense_of_Amnytas",
+                        start: 0,
+                        duration: 25,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "the_wizards_tower",
+                name: "The Wizard's Tower (instance)",
+                color: COLORS.yellow,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "convergences",
+                        name: "Convergences",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergences",
+                        start: 90,
+                        duration: 10,
+                        frequency: 180,
                     },
                 ],
             },
