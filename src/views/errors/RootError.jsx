@@ -25,7 +25,7 @@ const RootError = () => {
 
     const initialiseTheme = ({
         themeKey,
-        fontType = "monospace",
+        fontType = "regular",
         fontSize = "md",
     }) => {
         localStorage.setItem(LOCAL_STORAGE_KEYS.theme, themeKey);
@@ -42,7 +42,7 @@ const RootError = () => {
 
     useMemo(() => {
         const themeKey = detectTheme();
-        const fontType = getLocalItem("font_type", "monospace");
+        const fontType = getLocalItem("font_type", "regular");
         const fontSize = getLocalItem("font_size", "md");
         initialiseTheme({ themeKey, fontType, fontSize });
         document

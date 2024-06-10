@@ -86,7 +86,7 @@ const useApp = () => {
 
     const initialiseTheme = ({
         themeKey,
-        fontType = "monospace",
+        fontType = "regular",
         fontSize = "md",
         timeFormat = "12h",
     }) => {
@@ -136,7 +136,7 @@ const useApp = () => {
 
     useMemo(() => {
         const themeKey = detectTheme();
-        const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "monospace");
+        const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "regular");
         const fontSize = getLocalItem(LOCAL_STORAGE_KEYS.fontSize, "md");
         const timeFormat = getLocalItem(LOCAL_STORAGE_KEYS.timeFormat, "12h");
         initialiseTheme({ themeKey, fontType, fontSize, timeFormat });
