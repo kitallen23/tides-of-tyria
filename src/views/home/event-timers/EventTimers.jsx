@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
+import classNames from "classnames";
 import styles from "@/styles/modules/event-timer.module.scss";
 
 import EventRegion, { RegionIndicator, TimeRow } from "./EventComponents";
@@ -8,7 +9,7 @@ import EventTimerContext from "./EventTimerContext";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import HoveredEventIndicator from "./HoveredEventIndicator";
 
-const EventTimers = ({ currentTimeBlockStart }) => {
+const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const scrollParentRef = useRef(null);
     const indicatorWrapperRef = useRef(null);
     const eventWrapperRef = useRef(null);
@@ -62,7 +63,11 @@ const EventTimers = ({ currentTimeBlockStart }) => {
                 widthRulerRef,
             }}
         >
-            <div className={styles.eventTimer}>
+            <div
+                className={classNames(styles.eventTimer, {
+                    [styles.isCollapsed]: isCollapsed,
+                })}
+            >
                 <div className={styles.leftFrame} ref={indicatorWrapperRef}>
                     <div className={styles.spacer} />
                     <div className={styles.regionIndicatorContainer}>

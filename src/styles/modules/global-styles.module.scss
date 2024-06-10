@@ -30,3 +30,14 @@ a {
 .fontTypeRegular {
     font-family: var(--font-regular);
 }
+
+.hideBelowMd {
+    @media (max-width: c.$media-md) {
+        display: none;
+    }
+}
+.hideBelowLg {
+    @media (max-width: c.$media-lg) {
+        display: none;
+    }
+}

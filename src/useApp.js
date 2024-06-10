@@ -12,6 +12,7 @@ export const LOCAL_STORAGE_KEYS = {
     fontSize: "tot_font_size",
     fontType: "tot_font_type",
     timeFormat: "tot_time_format",
+    isTimerCollapsed: "tot_is_timer_collapsed",
 };
 
 export const getDesignTokens = theme => ({
