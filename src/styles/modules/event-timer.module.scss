@@ -8,6 +8,19 @@ $time-row-font-size: 0.875em;
     display: grid;
     grid-template-columns: 60px 1fr;
 
+    @media (max-width: c.$media-md) {
+        grid-template-columns: 1fr;
+        .leftFrame {
+            display: none;
+        }
+    }
+
+    &.isCollapsed {
+        max-width: c.$content-width;
+        width: 100%;
+        margin: 0 auto;
+    }
+
     .leftFrame {
         padding-right: $timer-gap;
 

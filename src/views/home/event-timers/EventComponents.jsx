@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from "react";
+import { useContext, useEffect, useMemo, useRef } from "react";
 import { addMinutes, differenceInMinutes, format, subMinutes } from "date-fns";
 import { nanoid } from "nanoid";
 import classNames from "classnames";
@@ -18,7 +18,7 @@ import {
 import { useTimer } from "@/utils/hooks/useTimer";
 import EventTimerContext from "./EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
-import { MINS_IN_DAY, TIME_BLOCK_MINS } from "./utils";
+import { HOVER_DELAY, MINS_IN_DAY, TIME_BLOCK_MINS } from "./utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 const ID_LENGTH = 6;
@@ -295,12 +295,16 @@ const AreaEventPhase = ({
         }
     }, [now, item]);
 
+    const hoverTimeout = useRef(null);
     const onHoverIn = () => {
         if (!isDowntime) {
-            setHoveredEvent(item);
+            hoverTimeout.current = setTimeout(() => {
+                setHoveredEvent(item);
+            }, HOVER_DELAY);
         }
     };
     const onHoverOut = () => {
+        clearTimeout(hoverTimeout.current);
         setHoveredEvent(null);
     };
 

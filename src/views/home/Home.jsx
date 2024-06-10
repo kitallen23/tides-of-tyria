@@ -6,6 +6,8 @@ import {
     ChevronRightSharp,
     HistorySharp,
     HourglassTopSharp,
+    FullscreenSharp,
+    FullscreenExitSharp,
 } from "@mui/icons-material";
 import {
     getHours,
@@ -20,6 +22,8 @@ import { Button } from "@mui/material";
 import EventTimers from "./event-timers/";
 import { useTimer } from "@/utils/hooks/useTimer";
 import { useTheme } from "@/utils/theme-provider";
+import { getLocalItem } from "@/utils/util";
+import { LOCAL_STORAGE_KEYS } from "@/useApp";
 
 // Obtains the start time of a "time block"; a 2-hour period of time, relative to the
 // local timezone, that started on the last 1-hour time window.
@@ -59,6 +63,26 @@ const Home = () => {
         }
     }, [key, currentTimeBlockStart, offset]);
 
+    const [isTimerCollapsed, setIsTimerCollapsed] = useState(() => {
+        const isTimerCollapsed = getLocalItem(
+            LOCAL_STORAGE_KEYS.isTimerCollapsed,
+            "false"
+        );
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.isTimerCollapsed,
+            isTimerCollapsed
+        );
+        return isTimerCollapsed === "true";
+    });
+    const toggleIsTimerCollapsed = () => {
+        const _isTimerCollapsed = !isTimerCollapsed;
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.isTimerCollapsed,
+            _isTimerCollapsed
+        );
+        setIsTimerCollapsed(_isTimerCollapsed);
+    };
+
     return (
         <div className={styles.pageWrapper}>
             <div className={styles.group}>
@@ -72,14 +96,28 @@ const Home = () => {
                             <span
                                 style={{
                                     color: colors.muted,
-                                    fontSize: "1rem",
+                                    fontSize: "0.85em",
                                     fontWeight: "normal",
                                 }}
+                                className={globalStyles.hideBelowMd}
                             >
                                 &nbsp;| Click an event to see info
                             </span>
                         </h3>
                         <div className={styles.buttonGroup}>
+                            <Button
+                                variant="text"
+                                sx={{ minWidth: 0 }}
+                                color="muted"
+                                onClick={toggleIsTimerCollapsed}
+                                className={styles.fullscreenButton}
+                            >
+                                {isTimerCollapsed ? (
+                                    <FullscreenSharp />
+                                ) : (
+                                    <FullscreenExitSharp />
+                                )}
+                            </Button>
                             <Button
                                 variant="text"
                                 sx={{ minWidth: 0 }}
@@ -113,9 +151,12 @@ const Home = () => {
                         </div>
                     </div>
                 </div>
-                <EventTimers currentTimeBlockStart={currentTimeBlockStart} />
+                <EventTimers
+                    currentTimeBlockStart={currentTimeBlockStart}
+                    isCollapsed={isTimerCollapsed}
+                />
             </div>
-            <div className={styles.group}>
+            <div className={styles.group} style={{ display: "none" }}>
                 <div className={globalStyles.centeredContent}>
                     <div className={styles.headingRow}>
                         <h3 className={styles.heading}>

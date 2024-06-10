@@ -12,6 +12,7 @@ export const LOCAL_STORAGE_KEYS = {
     fontSize: "tot_font_size",
     fontType: "tot_font_type",
     timeFormat: "tot_time_format",
+    isTimerCollapsed: "tot_is_timer_collapsed",
 };
 
 export const getDesignTokens = theme => ({
@@ -85,7 +86,7 @@ const useApp = () => {
 
     const initialiseTheme = ({
         themeKey,
-        fontType = "monospace",
+        fontType = "regular",
         fontSize = "md",
         timeFormat = "12h",
     }) => {
@@ -135,7 +136,7 @@ const useApp = () => {
 
     useMemo(() => {
         const themeKey = detectTheme();
-        const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "monospace");
+        const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "regular");
         const fontSize = getLocalItem(LOCAL_STORAGE_KEYS.fontSize, "md");
         const timeFormat = getLocalItem(LOCAL_STORAGE_KEYS.timeFormat, "12h");
         initialiseTheme({ themeKey, fontType, fontSize, timeFormat });

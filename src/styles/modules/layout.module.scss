@@ -19,6 +19,11 @@ $topbar-height: 56px;
         background: rgb(var(--background-rgb));
         transition: background-color var(--transition);
         position: relative;
+
+        // @media (max-width: c.$media-md) {
+        //     padding: c.$page-content-padding-vertical-sm
+        //         c.$page-content-padding-horizontal-sm;
+        // }
     }
 }
 [data-font-size="sm"]:root {
