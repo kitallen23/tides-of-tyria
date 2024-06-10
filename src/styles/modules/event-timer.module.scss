@@ -108,6 +108,10 @@ $time-row-font-size: 0.875em;
                         border-style: solid;
                         border-color: transparent;
 
+                        &.isClickable {
+                            cursor: pointer;
+                        }
+
                         // Text height of title, text height of "time until",
                         // padding * 2
                         min-height: calc(
@@ -129,6 +133,10 @@ $time-row-font-size: 0.875em;
                         }
 
                         transition: opacity var(--transition);
+
+                        &.isSelected {
+                            border-color: white;
+                        }
                     }
                 }
             }

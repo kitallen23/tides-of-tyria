@@ -9,6 +9,7 @@ import globalStyles from "@/styles/modules/global-styles.module.scss";
 
 import { useTheme } from "@/utils/theme-provider";
 import {
+    adjustLuminance,
     blendColors,
     ensureContrast,
     isContrastEnough,
@@ -227,11 +228,19 @@ const AreaEventPhase = ({
         width: parentWidth,
         hoveredEvent,
         setHoveredEvent,
+        selectedEvent,
+        setSelectedEvent,
     } = useContext(EventTimerContext);
 
-    const isNotHovered = useMemo(
-        () => hoveredEvent && item.id !== hoveredEvent?.id,
-        [hoveredEvent, item.id]
+    const isDulled = useMemo(
+        () =>
+            (hoveredEvent && item.id !== hoveredEvent?.id) ||
+            (selectedEvent && selectedEvent.id !== item?.id),
+        [hoveredEvent, selectedEvent, item.id]
+    );
+    const isSelected = useMemo(
+        () => selectedEvent?.id === item.id,
+        [item.id, selectedEvent]
     );
 
     const width = useMemo(() => {
@@ -258,6 +267,10 @@ const AreaEventPhase = ({
     const isDowntime = useMemo(
         () => item.key === "downtime" || item.type === "downtime",
         [item.key, item.type]
+    );
+    const isClickable = useMemo(
+        () => !isDowntime || (isDowntime && !!item.wikiUrl),
+        [isDowntime, item.wikiUrl]
     );
 
     const eventTimeText = useMemo(() => {
@@ -308,15 +321,28 @@ const AreaEventPhase = ({
         setHoveredEvent(null);
     };
 
+    const onClick = () => {
+        if (!isClickable) {
+            return;
+        }
+        setSelectedEvent(item);
+    };
+
+    const borderColor = useMemo(
+        () => adjustLuminance(eventBackground, -40),
+        [eventBackground]
+    );
+
     const style = useMemo(
         () => ({
-            opacity: isNotHovered ? 0.4 : undefined,
+            opacity: isDulled ? 0.4 : undefined,
             background: isDowntime
                 ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
                 : eventBackground,
             width,
+            borderColor: isSelected ? borderColor : undefined,
         }),
-        [isNotHovered, isDowntime, width, eventBackground]
+        [isDulled, isDowntime, width, isSelected, borderColor, eventBackground]
     );
 
     return (
@@ -331,25 +357,25 @@ const AreaEventPhase = ({
                         ? globalStyles.textDark
                         : globalStyles.textLight
                 }`,
-                { isHovered: hoveredEvent?.id === item.id }
+                {
+                    [styles.isHovered]: hoveredEvent?.id === item.id,
+                    [styles.isSelected]: selectedEvent?.id === item.id,
+                    [styles.isDowntime]: isDowntime,
+                    [styles.isClickable]: isClickable,
+                    "event-phase": isClickable,
+                }
             )}
             style={style}
             id={item.id}
             onMouseEnter={onHoverIn}
             onMouseLeave={onHoverOut}
+            onClick={onClick}
         >
             {isDowntime ? (
                 item.wikiUrl ? (
                     <div className={styles.title}>
-                        <a
-                            href={item.wikiUrl}
-                            className={styles.titleLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {item.isContinued ? "…" : ""}
-                            {item.name}
-                        </a>
+                        {item.isContinued ? "…" : ""}
+                        {item.name}
                     </div>
                 ) : item.name ? (
                     <div className={styles.title}>
@@ -360,15 +386,8 @@ const AreaEventPhase = ({
             ) : (
                 <>
                     <div className={styles.title}>
-                        <a
-                            href={item.wikiUrl}
-                            className={styles.titleLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {item.isContinued ? "…" : ""}
-                            {item.name}
-                        </a>
+                        {item.isContinued ? "…" : ""}
+                        {item.name}
                     </div>
                     <div className={styles.timeUntil}>{eventTimeText}</div>
                 </>

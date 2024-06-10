@@ -334,12 +334,17 @@ const META_EVENTS = [
                         duration: 20,
                         frequency: 120,
                     },
+                    {
+                        key: "tangled_depths__help_the_outposts",
+                        name: "Help the Outposts",
+                        type: "downtime",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Advancing_Across_Tangled_Roots",
+                        start: 50,
+                        duration: 95,
+                        frequency: 120,
+                    },
                 ],
-                downtime: {
-                    name: "Help the Outposts",
-                    wikiUrl:
-                        "https://wiki.guildwars2.com/wiki/Advancing_Across_Tangled_Roots",
-                },
             },
             {
                 key: "dragons_stand",

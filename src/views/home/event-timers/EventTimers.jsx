@@ -16,6 +16,23 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
 
     const [hoveredRegion, setHoveredRegion] = useState("");
     const [hoveredEvent, setHoveredEvent] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const handleClickOutside = event => {
+        if (
+            !event.target.closest(".event-phase") &&
+            !event.target.closest(".event-phase-menu")
+        ) {
+            setSelectedEvent(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
 
     // This is the width of the entire timer component.
     // We calculate this using a special "ruler" element, to ensure that its
@@ -59,6 +76,8 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                 currentTimeBlockStart,
                 hoveredEvent,
                 setHoveredEvent,
+                selectedEvent,
+                setSelectedEvent,
                 eventWrapperRef,
                 widthRulerRef,
             }}

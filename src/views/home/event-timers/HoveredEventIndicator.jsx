@@ -15,15 +15,20 @@ const HoveredEventIndicator = ({ showLabel }) => {
         [timeFormat]
     );
 
-    const { hoveredEvent } = useContext(EventTimerContext);
+    const { hoveredEvent, selectedEvent } = useContext(EventTimerContext);
     const [hoveredEventLeftPixels, setHoveredEventLeftPixels] = useState(0);
+
+    const activeEvent = useMemo(
+        () => selectedEvent || hoveredEvent || undefined,
+        [selectedEvent, hoveredEvent]
+    );
 
     const highlightThemeColor = useMemo(
         () =>
-            hoveredEvent?.color === "gray"
+            activeEvent?.color === "gray"
                 ? "primary"
-                : hoveredEvent?.color ?? undefined,
-        [hoveredEvent]
+                : activeEvent?.color ?? undefined,
+        [activeEvent]
     );
     const highlightColor = useMemo(() => {
         const schemeColor = colors?.[highlightThemeColor] ?? undefined;
@@ -36,7 +41,11 @@ const HoveredEventIndicator = ({ showLabel }) => {
             if (schemeColorHasEnoughContrast) {
                 return schemeColor;
             } else {
-                return ensureContrast(schemeColor, background, mode === "light" ? "darken" : "lighten");
+                return ensureContrast(
+                    schemeColor,
+                    background,
+                    mode === "light" ? "darken" : "lighten"
+                );
             }
         } else {
             return undefined;
@@ -44,20 +53,20 @@ const HoveredEventIndicator = ({ showLabel }) => {
     }, [highlightThemeColor, colors, mode]);
 
     useEffect(() => {
-        if (hoveredEvent?.id && eventWrapperRef.current) {
+        if (activeEvent?.id && eventWrapperRef.current) {
             const hoveredElement = eventWrapperRef.current.querySelector(
-                `#${hoveredEvent.id}`
+                `#${activeEvent.id}`
             );
             if (hoveredElement) {
                 const distanceFromLeft = hoveredElement.offsetLeft;
                 setHoveredEventLeftPixels(distanceFromLeft);
             }
         }
-    }, [eventWrapperRef, currentTimeBlockStart, hoveredEvent?.id]);
+    }, [eventWrapperRef, currentTimeBlockStart, activeEvent?.id]);
 
     const shouldRender = useMemo(
-        () => (hoveredEvent ? true : false),
-        [hoveredEvent]
+        () => (activeEvent ? true : false),
+        [activeEvent]
     );
 
     if (!shouldRender) {
@@ -76,8 +85,8 @@ const HoveredEventIndicator = ({ showLabel }) => {
                     className={styles.timeLabel}
                     style={{ color: highlightColor }}
                 >
-                    {hoveredEvent?.isContinued ? "…" : ""}
-                    {format(hoveredEvent?.startDate, formatString)}
+                    {activeEvent?.isContinued ? "…" : ""}
+                    {format(activeEvent?.startDate, formatString)}
                 </div>
             ) : undefined}
         </div>

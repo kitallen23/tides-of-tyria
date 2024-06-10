@@ -83,7 +83,7 @@ function rgbToHex(r, g, b) {
  * @param {number} amount - The amount to adjust the luminance by.
  * @returns {string} - The adjusted HEX color string.
  */
-function adjustLuminance(hex, amount) {
+export function adjustLuminance(hex, amount) {
     let [r, g, b] = hexToRgb(hex);
     r = Math.max(0, Math.min(255, r + amount));
     g = Math.max(0, Math.min(255, g + amount));
