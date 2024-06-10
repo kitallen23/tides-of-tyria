@@ -2,10 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import styles from "@/styles/modules/event-timer.module.scss";
 
-import EventRegion, {
-    RegionIndicator,
-    TimeRow,
-} from "./EventComponents";
+import EventRegion, { RegionIndicator, TimeRow } from "./EventComponents";
 import META_EVENTS from "@/utils/meta_events";
 import EventTimerContext from "./EventTimerContext";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
@@ -62,7 +59,7 @@ const EventTimers = ({ currentTimeBlockStart }) => {
                 hoveredEvent,
                 setHoveredEvent,
                 eventWrapperRef,
-                widthRulerRef
+                widthRulerRef,
             }}
         >
             <div className={styles.eventTimer}>
