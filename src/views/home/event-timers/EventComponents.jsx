@@ -28,6 +28,7 @@ const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 
 export const RegionIndicator = ({ region, isHovered }) => {
     const { colors, mode } = useTheme();
+    const { selectedEvent } = useContext(EventTimerContext);
     const schemeColorString = useMemo(
         () => (region.color === "gray" ? "primary" : region.color),
         [region.color]
@@ -55,26 +56,31 @@ export const RegionIndicator = ({ region, isHovered }) => {
         }
     }, [schemeColorString, colors, mode]);
 
+    const isActive = useMemo(
+        () => isHovered || selectedEvent?.region?.key === region?.key,
+        [selectedEvent?.region?.key, region?.key, isHovered]
+    );
+
     return (
         <div
             className={styles.regionIndicator}
             id={`region-indicator-${region.key}`}
             style={{
-                borderRightColor: isHovered ? highlightColor : undefined,
-                color: isHovered ? highlightColor : undefined,
+                borderRightColor: isActive ? highlightColor : undefined,
+                color: isActive ? highlightColor : undefined,
             }}
         >
             <div
                 className={styles.regionBorder}
                 style={{
-                    borderBottomColor: isHovered ? highlightColor : undefined,
+                    borderBottomColor: isActive ? highlightColor : undefined,
                 }}
             />
             <div className={styles.regionTitle}>{region.name}</div>
             <div
                 className={styles.regionBorder}
                 style={{
-                    borderBottomColor: isHovered ? highlightColor : undefined,
+                    borderBottomColor: isActive ? highlightColor : undefined,
                 }}
             />
         </div>
@@ -234,8 +240,10 @@ const AreaEventPhase = ({
 
     const isDulled = useMemo(
         () =>
-            (hoveredEvent && item.id !== hoveredEvent?.id) ||
-            (selectedEvent && selectedEvent.id !== item?.id),
+            selectedEvent?.id === item.id
+                ? false
+                : (hoveredEvent && item.id !== hoveredEvent?.id) ||
+                  (selectedEvent && selectedEvent.id !== item?.id),
         [hoveredEvent, selectedEvent, item.id]
     );
     const isSelected = useMemo(
@@ -396,7 +404,7 @@ const AreaEventPhase = ({
     );
 };
 
-const PeriodicArea = ({ area }) => {
+const PeriodicArea = ({ area, region }) => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
     const { dailyReset } = useTimer();
 
@@ -409,7 +417,13 @@ const PeriodicArea = ({ area }) => {
                 dailyReset,
                 currentTimeBlockStart,
             });
-            allEvents.push(...(eventStartTimes || []));
+            allEvents.push(
+                ...(eventStartTimes || []).map(item => ({
+                    ...item,
+                    area: { ...area, phases: undefined },
+                    region,
+                }))
+            );
         });
         allEvents.sort((a, b) => a.startDate - b.startDate);
 
@@ -422,7 +436,7 @@ const PeriodicArea = ({ area }) => {
             allEvents[index].windowStartMinute = windowStartMinute;
         });
         return [allEvents, area.downtime || null];
-    }, [dailyReset, area, currentTimeBlockStart]);
+    }, [dailyReset, currentTimeBlockStart, area, region]);
 
     // Calculate all blocks to render, including "downtime".
     // These are given minute numbers that represent their start and end.
@@ -569,7 +583,7 @@ const getFixedTimeEventStartTimesWithinWindow = ({
     return eventStartTimes;
 };
 
-const FixedTimeArea = ({ area }) => {
+const FixedTimeArea = ({ area, region }) => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
     const { dailyReset } = useTimer();
 
@@ -582,7 +596,13 @@ const FixedTimeArea = ({ area }) => {
                 dailyReset,
                 currentTimeBlockStart,
             });
-            allEvents.push(...(eventStartTimes || []));
+            allEvents.push(
+                ...(eventStartTimes || []).map(item => ({
+                    ...item,
+                    area: { ...area, phases: undefined },
+                    region,
+                }))
+            );
         });
         allEvents.sort((a, b) => a.startDate - b.startDate);
 
@@ -595,7 +615,7 @@ const FixedTimeArea = ({ area }) => {
             allEvents[index].windowStartMinute = windowStartMinute;
         });
         return [allEvents, area.downtime || null];
-    }, [dailyReset, area, currentTimeBlockStart]);
+    }, [dailyReset, currentTimeBlockStart, area, region]);
 
     // Calculate all blocks to render, including "downtime".
     // These are given minute numbers that represent their start and end.
@@ -702,6 +722,11 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
         }
     }, [height, indicatorWrapperRef, region]);
 
+    const regionData = useMemo(
+        () => ({ ...region, sub_areas: undefined }),
+        [region]
+    );
+
     return (
         <div
             className={styles.region}
@@ -711,9 +736,17 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
         >
             {region.sub_areas.map(area =>
                 area.type === "fixed_time" ? (
-                    <FixedTimeArea key={area.key} area={area} />
+                    <FixedTimeArea
+                        key={area.key}
+                        area={area}
+                        region={regionData}
+                    />
                 ) : (
-                    <PeriodicArea key={area.key} area={area} />
+                    <PeriodicArea
+                        key={area.key}
+                        area={area}
+                        region={regionData}
+                    />
                 )
             )}
         </div>
