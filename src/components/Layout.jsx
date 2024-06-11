@@ -54,7 +54,11 @@ const Header = () => {
 };
 
 const PageContent = ({ children }) => {
-    return <div className={styles.pageContent}>{children}</div>;
+    return (
+        <div className={styles.pageContent} id="page-content">
+            {children}
+        </div>
+    );
 };
 
 const Layout = ({ children }) => {

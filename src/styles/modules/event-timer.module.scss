@@ -1,24 +1,34 @@
 @use "../variables/core-variables" as c;
 $min-area-width: 600px;
-$timer-gap: 0.25rem;
+$timer-gap: 4px;
 $line-height: var(--line-height);
 $time-row-font-size: 0.875em;
 
 .eventTimer {
     display: grid;
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
 
-    @media (max-width: c.$media-md) {
-        grid-template-columns: 1fr;
-        .leftFrame {
-            display: none;
+    .innerWrapper {
+        max-width: 100%;
+        width: 100%;
+        transition: max-width 0.1s;
+        display: grid;
+        grid-template-columns: 60px 1fr;
+
+        @media (max-width: c.$media-md) {
+            grid-template-columns: 1fr;
+            .leftFrame {
+                display: none;
+            }
         }
     }
 
     &.isCollapsed {
-        max-width: c.$content-width;
-        width: 100%;
-        margin: 0 auto;
+        .innerWrapper {
+            max-width: c.$content-width;
+            width: 100%;
+        }
     }
 
     .leftFrame {
@@ -110,6 +120,9 @@ $time-row-font-size: 0.875em;
 
                         &.isClickable {
                             cursor: pointer;
+                        }
+                        &:not(.isClickable) {
+                            cursor: default;
                         }
 
                         // Text height of title, text height of "time until",
@@ -239,5 +252,44 @@ $time-row-font-size: 0.875em;
                 opacity: 0;
             }
         }
+    }
+}
+
+.eventPhaseMenu {
+    position: absolute;
+    background: rgb(var(--nav-background-rgb));
+    border-radius: 0.25rem;
+
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.5em 1.5em 0.5em 1em;
+
+    .closeButtonWrapper {
+        position: absolute;
+        cursor: pointer;
+
+        width: 1em;
+        text-align: center;
+        top: 0;
+        right: 0;
+
+        color: var(--text-muted);
+        transition: color var(--transition);
+
+        &:hover {
+            color: rgb(var(--foreground-rgb));
+        }
+    }
+
+    .eventAreaName {
+        font-size: 0.875em;
     }
 }

@@ -8,7 +8,7 @@ import { ensureContrast, isContrastEnough } from "@/utils/color";
 
 const HoveredEventIndicator = ({ showLabel }) => {
     const { colors, timeFormat, mode } = useTheme();
-    const { currentTimeBlockStart, eventWrapperRef } =
+    const { currentTimeBlockStart, eventWrapperRef, width: parentWidth } =
         useContext(EventTimerContext);
     const formatString = useMemo(
         () => (timeFormat === "12h" ? "h:mmaaa" : "H:mm"),
@@ -62,7 +62,7 @@ const HoveredEventIndicator = ({ showLabel }) => {
                 setHoveredEventLeftPixels(distanceFromLeft);
             }
         }
-    }, [eventWrapperRef, currentTimeBlockStart, activeEvent?.id]);
+    }, [eventWrapperRef, currentTimeBlockStart, activeEvent?.id, parentWidth]);
 
     const shouldRender = useMemo(
         () => (activeEvent ? true : false),
