@@ -19,6 +19,14 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const [hoveredEvent, setHoveredEvent] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
+    const _setSelectedEvent = event => {
+        if (selectedEvent?.id === event?.id) {
+            setSelectedEvent(null);
+        } else {
+            setSelectedEvent(event);
+        }
+    };
+
     const handleClickOutside = event => {
         if (
             !event.target.closest(".event-phase") &&
@@ -86,7 +94,7 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                 hoveredEvent,
                 setHoveredEvent,
                 selectedEvent,
-                setSelectedEvent,
+                setSelectedEvent: _setSelectedEvent,
                 eventWrapperRef,
                 widthRulerRef,
             }}
