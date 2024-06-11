@@ -88,7 +88,7 @@ export const RegionIndicator = ({ region, isHovered }) => {
 };
 
 export const TimeRow = () => {
-    const { currentTimeBlockStart, hoveredEvent } =
+    const { currentTimeBlockStart, hoveredEvent, selectedEvent } =
         useContext(EventTimerContext);
 
     const { timeFormat, colors } = useTheme();
@@ -97,10 +97,12 @@ export const TimeRow = () => {
         [timeFormat]
     );
 
+    const shouldHide = !!hoveredEvent || !!selectedEvent;
+
     return (
         <div
             className={classNames(styles.timeRow, {
-                [styles.isHoveringEvent]: !!hoveredEvent,
+                [styles.hideLabels]: shouldHide,
             })}
             style={{ background: colors.background }}
         >
