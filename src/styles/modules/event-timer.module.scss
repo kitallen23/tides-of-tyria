@@ -175,7 +175,7 @@ $time-row-font-size: 0.875em;
         .timeRow {
             position: sticky;
             top: -1 * (c.$page-content-padding-vertical);
-            z-index: 10;
+            z-index: 12;
             overflow-x: auto;
 
             scrollbar-width: none; // Firefox
