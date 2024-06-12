@@ -1,8 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from "@/useApp";
-import {
-    STALE_TIME_IN_SECONDS,
-    TITLE_SUFFIX,
-} from "@/utils/constants";
+import { STALE_TIME_IN_SECONDS, TITLE_SUFFIX } from "@/utils/constants";
 import {
     subHours as _subHours,
     format as _format,
@@ -64,3 +61,14 @@ export function getStaleTime(key) {
         : undefined;
 }
 
+export function copyToClipboard(text, options) {
+    try {
+        navigator.clipboard.writeText(text);
+        options?.onSuccess?.();
+        return true;
+    } catch (e) {
+        console.error("Error writing text to clipboard: ", e);
+        options?.onError?.();
+        return false;
+    }
+}

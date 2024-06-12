@@ -12,6 +12,7 @@ export const SCHEMES = {
             background: "#1f1f28",
             backgroundNav: "#2a2a37",
             muted: "#54546d",
+            menu: "#1f1f28",
 
             success: "#98bb6c",
             danger: "#ff5d62",
@@ -42,6 +43,7 @@ export const SCHEMES = {
             background: "#2d2a2e",
             backgroundNav: "#221f22",
             muted: "#696769",
+            menu: "#221f22",
 
             success: "#a9dc76",
             danger: "#ff6188",
@@ -71,6 +73,7 @@ export const SCHEMES = {
             background: "#282a36",
             backgroundNav: "#44475a",
             muted: "#585b74",
+            menu: "#282a36",
 
             success: "#50fa7b",
             danger: "#ff5555",
@@ -100,6 +103,7 @@ export const SCHEMES = {
             background: "#282828",
             backgroundNav: "#3c3836",
             muted: "#727169",
+            menu: "#282828",
 
             success: "#b8bb26",
             danger: "#fb4934",
@@ -129,6 +133,7 @@ export const SCHEMES = {
             background: "#fbf1c7",
             backgroundNav: "#f9f5d7",
             muted: "#7c6f64",
+            menu: "#f9f5d7",
 
             success: "#79740e",
             danger: "#9d0006",
@@ -158,6 +163,7 @@ export const SCHEMES = {
             background: "#e9e2cc",
             backgroundNav: "#f0ebdb",
             muted: "#a6a6a6",
+            menu: "#f0ebdb",
 
             success: "#77dd77",
             danger: "#ff6961",

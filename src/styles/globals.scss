@@ -14,6 +14,7 @@
     --foreground-dark-rgb: 42, 42, 55;
     --background-rgb: 31, 31, 40;
     --nav-background-rgb: 42, 42, 55;
+    --menu-background-rgb: 31, 31, 40;
 
     --scrollbar-track-color: 22, 22, 29;
     --scrollbar-thumb-color: 220, 215, 186;
@@ -25,7 +26,7 @@
     --max-z: 2147483647;
     --line-height: 1.35;
 
-    font-family: var(--font-mono);
+    font-family: var(--font-regular);
     font-optical-scaling: auto;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
@@ -57,6 +58,7 @@
     --foreground-dark-rgb: 42, 42, 55;
     --background-rgb: 31, 31, 40;
     --nav-background-rgb: 42, 42, 55;
+    --menu-background-rgb: 31, 31, 40;
 
     --scrollbar-track-color: 22, 22, 29;
     --scrollbar-thumb-color: 140, 140, 166;
@@ -77,6 +79,7 @@
     --foreground-dark-rgb: 60, 56, 54;
     --background-rgb: 40, 40, 40;
     --nav-background-rgb: 60, 56, 54;
+    --menu-background-rgb: 40, 40, 40;
 
     --scrollbar-track-color: 29, 32, 33;
     --scrollbar-thumb-color: 235, 219, 178;
@@ -97,6 +100,7 @@
     --foreground-dark-rgb: 68, 71, 90;
     --background-rgb: 40, 42, 54;
     --nav-background-rgb: 68, 71, 90;
+    --menu-background-rgb: 40, 42, 54;
 
     --scrollbar-track-color: 22, 23, 29;
     --scrollbar-thumb-color: 248, 248, 242;
@@ -117,6 +121,7 @@
     --foreground-dark-rgb: 60, 57, 61;
     --background-rgb: 45, 42, 46;
     --nav-background-rgb: 34, 31, 34;
+    --menu-background-rgb: 34, 31, 34;
 
     --scrollbar-track-color: 29, 32, 33;
     --scrollbar-thumb-color: 252, 252, 250;
@@ -137,6 +142,7 @@
     --foreground-dark-rgb: 60, 56, 54;
     --background-rgb: 251, 241, 199;
     --nav-background-rgb: 249, 245, 215;
+    --menu-background-rgb: 249, 245, 215;
 
     --scrollbar-track-color: 213, 196, 161;
     --scrollbar-thumb-color: 60, 56, 54;
@@ -157,6 +163,7 @@
     --foreground-dark-rgb: 100, 102, 107;
     --background-rgb: 233, 226, 204;
     --nav-background-rgb: 240, 235, 219;
+    --menu-background-rgb: 240, 235, 219;
 
     --scrollbar-track-color: 233, 226, 204;
     --scrollbar-thumb-color: 100, 102, 107;
@@ -254,21 +261,4 @@ h3 {
 
 .text-muted {
     color: var(--text-muted);
-}
-
-// Library overrides
-
-:root {
-    --toastify-icon-color-success: var(--status-success);
-    --toastify-icon-color-info: var(--status-info);
-    --toastify-icon-color-warning: var(--status-warning);
-    --toastify-icon-color-danger: var(--status-danger);
-}
-.Toastify__toast {
-    border: 2px solid rgb(var(--background-rgb));
-    background: rgb(var(--nav-background-rgb));
-    color: rgb(var(--foreground-rgb));
-}
-.Toastify__close-button {
-    color: rgb(var(--foreground-rgb));
 }

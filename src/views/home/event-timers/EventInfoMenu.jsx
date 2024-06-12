@@ -17,6 +17,9 @@ import {
     LocationOnSharp,
 } from "@mui/icons-material";
 import { Button, ButtonGroup } from "@mui/material";
+import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
+import { copyToClipboard } from "@/utils/util";
+import { toast } from "react-hot-toast";
 
 const MENU_WIDTH = 250;
 
@@ -136,6 +139,42 @@ const EventInfoMenu = () => {
         }
     }, [schemeColorString, colors, mode]);
 
+    const highlightColorDark = useMemo(
+        () =>
+            highlightColor ? adjustLuminance(highlightColor, -20) : undefined,
+        [highlightColor]
+    );
+
+    const buttonSx = useMemo(
+        () => ({
+            borderColor: highlightColor,
+            color: highlightColor,
+            "&:hover": {
+                borderColor: highlightColorDark,
+                background: `${highlightColor}26`,
+            },
+        }),
+        [highlightColor, highlightColorDark]
+    );
+
+    const [buttonIsHovered, setButtonIsHovered] = useState(false);
+    const [hoveredText, setHoveredText] = useState("");
+
+    const copyWaypointToClipboard = () => {
+        if (selectedEvent.waypoint) {
+            copyToClipboard(selectedEvent.waypoint, {
+                onSuccess: () => toast.success("Waypoint copied to clipboard!"),
+                onError: () => toast.error("Something went wrong when copying to clipboard."),
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (!anchor) {
+            setButtonIsHovered(false);
+        }
+    }, [anchor]);
+
     if (!anchor || !selectedEvent) {
         return null;
     }
@@ -170,18 +209,60 @@ const EventInfoMenu = () => {
                     {selectedEvent.area.name}
                 </div>
                 <div className={styles.buttonArea}>
-                    <div className={styles.buttonText}></div>
+                    <div
+                        className={styles.buttonText}
+                        style={{
+                            opacity: buttonIsHovered ? 1 : 0,
+                        }}
+                    >
+                        {hoveredText || ""}
+                    </div>
                     <div className={styles.buttonRow}>
                         <ButtonGroup fullWidth>
-                            <Button color={selectedEvent.color}>
-                                <LocationOnSharp />
-                            </Button>
-                            <Button color={selectedEvent.color}>
+                            {selectedEvent.waypoint ? (
+                                <Button
+                                    sx={buttonSx}
+                                    onMouseEnter={() => {
+                                        setButtonIsHovered(true);
+                                        setHoveredText(
+                                            "Copy waypoint to clipboard"
+                                        );
+                                    }}
+                                    onMouseLeave={() =>
+                                        setButtonIsHovered(false)
+                                    }
+                                    onClick={copyWaypointToClipboard}
+                                >
+                                    <LocationOnSharp />
+                                </Button>
+                            ) : null}
+                            <Button
+                                sx={buttonSx}
+                                component="a"
+                                href={selectedEvent.wikiUrl}
+                                onMouseEnter={() => {
+                                    setButtonIsHovered(true);
+                                    setHoveredText("Open wiki page");
+                                }}
+                                onMouseLeave={() => setButtonIsHovered(false)}
+                            >
                                 <LaunchSharp />
                             </Button>
-                            <Button color={selectedEvent.color}>
-                                <DoneSharp />
-                            </Button>
+                            {selectedEvent.area.onComplete ===
+                            ON_COMPLETE_TYPES.none ? null : (
+                                <Button
+                                    sx={buttonSx}
+                                    onMouseEnter={() => {
+                                        setButtonIsHovered(true);
+                                        setHoveredText("Mark as complete");
+                                    }}
+                                    onMouseLeave={() =>
+                                        setButtonIsHovered(false)
+                                    }
+                                >
+                                    <DoneSharp />
+                                </Button>
+                            )}
                         </ButtonGroup>
                     </div>
                 </div>

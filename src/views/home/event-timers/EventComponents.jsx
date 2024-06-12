@@ -21,6 +21,8 @@ import EventTimerContext from "./EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
 import { HOVER_DELAY, MINS_IN_DAY, TIME_BLOCK_MINS } from "./utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import { copyToClipboard } from "@/utils/util";
+import { toast } from "react-hot-toast";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -338,6 +340,15 @@ const AreaEventPhase = ({
         setSelectedEvent(item);
     };
 
+    const onDoubleClick = () => {
+        if (item.waypoint) {
+            copyToClipboard(item.waypoint, {
+                onSuccess: () => toast.success("Waypoint copied to clipboard!"),
+                onError: () => toast.error("Something went wrong when copying to clipboard."),
+            });
+        }
+    };
+
     const borderColor = useMemo(
         () => adjustLuminance(eventBackground, -40),
         [eventBackground]
@@ -380,6 +391,7 @@ const AreaEventPhase = ({
             onMouseEnter={onHoverIn}
             onMouseLeave={onHoverOut}
             onClick={onClick}
+            onDoubleClick={onDoubleClick}
         >
             {isDowntime ? (
                 item.wikiUrl ? (

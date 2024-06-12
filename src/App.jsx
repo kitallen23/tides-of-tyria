@@ -1,5 +1,4 @@
 import "@/styles/globals.scss";
-import { ToastContainer } from "react-toastify";
 import { Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
@@ -10,6 +9,7 @@ import Layout from "@/components/Layout";
 
 import useApp from "@/useApp";
 import { TimerProvider } from "./utils/timer-provider";
+import { Toaster } from "react-hot-toast";
 
 function App() {
     const {
@@ -41,9 +41,33 @@ function App() {
                         <Layout>
                             <Outlet />
                         </Layout>
-                        <ToastContainer
-                            autoClose={8000}
-                            hideProgressBar={true}
+                        <Toaster
+                            position="top-center"
+                            reverseOrder={false}
+                            containerStyle={{
+                                top: 66,
+                            }}
+                            toastOptions={{
+                                className: "toaster",
+                                style: {
+                                    background: themeState.colors.backgroundNav,
+                                    color: themeState.colors.body,
+                                },
+                                success: {
+                                    iconTheme: {
+                                        primary: themeState.colors.success,
+                                        secondary:
+                                            themeState.colors.backgroundNav,
+                                    },
+                                },
+                                error: {
+                                    iconTheme: {
+                                        primary: themeState.colors.error,
+                                        secondary:
+                                            themeState.colors.backgroundNav,
+                                    },
+                                },
+                            }}
                         />
                     </TimerProvider>
                 </ThemeProvider>

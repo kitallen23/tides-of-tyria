@@ -4,6 +4,22 @@ $timer-gap: 4px;
 $line-height: var(--line-height);
 $time-row-font-size: 0.875em;
 
+[data-font-size="sm"]:root {
+    .eventTimer {
+        font-size: var(--font-size-sm);
+    }
+}
+[data-font-size="md"]:root {
+    .eventTimer {
+        font-size: var(--font-size-md);
+    }
+}
+[data-font-size="lg"]:root {
+    .eventTimer {
+        font-size: var(--font-size-lg);
+    }
+}
+
 .eventTimer {
     display: grid;
     grid-template-columns: 1fr;
@@ -257,7 +273,7 @@ $time-row-font-size: 0.875em;
 
 .eventPhaseMenu {
     position: absolute;
-    background: rgb(var(--nav-background-rgb));
+    background: rgb(var(--menu-background-rgb));
     border-radius: 0.25rem;
     width: 250px;
 
@@ -290,7 +306,25 @@ $time-row-font-size: 0.875em;
         }
     }
 
+    .eventTitle {
+        font-size: 1.17em;
+    }
+
     .eventAreaName {
-        font-size: 0.875em;
+        /* font-size: 0.875em; */
+    }
+
+    .buttonArea {
+        display: grid;
+        gap: 0.5rem;
+
+        .buttonText {
+            text-align: center;
+            font-size: 0.875em;
+            opacity: 0;
+            color: var(--text-muted);
+            transition: opacity var(--transition);
+            min-height: calc((1em * #{$line-height}));
+        }
     }
 }
