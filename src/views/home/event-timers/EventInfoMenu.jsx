@@ -10,9 +10,15 @@ import {
     ensureContrast,
     isContrastEnough,
 } from "@/utils/color";
-import { ClearSharp } from "@mui/icons-material";
+import {
+    ClearSharp,
+    DoneSharp,
+    LaunchSharp,
+    LocationOnSharp,
+} from "@mui/icons-material";
+import { Button, ButtonGroup } from "@mui/material";
 
-const MENU_WIDTH = 200;
+const MENU_WIDTH = 250;
 
 const EventInfoMenu = () => {
     const {
@@ -27,11 +33,14 @@ const EventInfoMenu = () => {
     // Find & store information we need to position the menu
     useEffect(() => {
         const pageContentElement = document.getElementById("page-content");
+        const style = window.getComputedStyle(pageContentElement);
+        const paddingHorizontal = parseFloat(style.paddingRight);
         const pageContentBoundingBox =
             pageContentElement.getBoundingClientRect();
         setContainerDimensions({
             ...pageContentBoundingBox.toJSON(),
             scrollTop: pageContentElement.scrollTop,
+            paddingRight: paddingHorizontal,
         });
     }, [selectedEvent]);
 
@@ -48,9 +57,12 @@ const EventInfoMenu = () => {
             }
             const boundingBox = selectedElement.getBoundingClientRect();
 
-            if (boundingBox.left + MENU_WIDTH > containerDimensions.right) {
-            // This means that the menu is "poking out" of the right side of the
-            // event area, so anchor it to the right of the bounding box
+            if (
+                boundingBox.left + MENU_WIDTH >
+                containerDimensions.right - containerDimensions.paddingRight
+            ) {
+                // This means that the menu is "poking out" of the right side of the
+                // event area, so anchor it to the right of the bounding box
                 setAnchor({
                     top: `${
                         boundingBox.bottom -
@@ -156,6 +168,22 @@ const EventInfoMenu = () => {
                     style={{ color: colors.muted }}
                 >
                     {selectedEvent.area.name}
+                </div>
+                <div className={styles.buttonArea}>
+                    <div className={styles.buttonText}></div>
+                    <div className={styles.buttonRow}>
+                        <ButtonGroup fullWidth>
+                            <Button color={selectedEvent.color}>
+                                <LocationOnSharp />
+                            </Button>
+                            <Button color={selectedEvent.color}>
+                                <LaunchSharp />
+                            </Button>
+                            <Button color={selectedEvent.color}>
+                                <DoneSharp />
+                            </Button>
+                        </ButtonGroup>
+                    </div>
                 </div>
             </div>
         </Portal>

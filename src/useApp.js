@@ -51,6 +51,30 @@ export const getDesignTokens = theme => ({
         info: {
             main: theme.colors.info,
         },
+        orange: {
+            main: theme.colors.orange,
+        },
+        yellow: {
+            main: theme.colors.yellow,
+        },
+        green: {
+            main: theme.colors.green,
+        },
+        aqua: {
+            main: theme.colors.aqua,
+        },
+        blue: {
+            main: theme.colors.blue,
+        },
+        purple: {
+            main: theme.colors.purple,
+        },
+        pink: {
+            main: theme.colors.pink,
+        },
+        gray: {
+            main: theme.colors.gray,
+        },
     },
     typography: {
         fontFamily: [
