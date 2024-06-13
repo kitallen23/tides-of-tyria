@@ -328,3 +328,25 @@ $time-row-font-size: 0.875em;
         }
     }
 }
+.eventPhaseModal {
+    display: grid;
+    gap: 0.5rem;
+
+    .eventTitle {
+        font-size: 1.17em;
+    }
+
+    .buttonArea {
+        display: grid;
+        gap: 0.5rem;
+
+        .buttonText {
+            text-align: center;
+            font-size: 0.875em;
+            opacity: 0;
+            color: var(--text-muted);
+            transition: opacity var(--transition);
+            min-height: calc((1em * #{$line-height}));
+        }
+    }
+}

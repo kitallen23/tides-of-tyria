@@ -41,7 +41,11 @@ const Modal = ({
         [style, colors]
     );
     return (
-        <_Modal className={classNames(styles.modal, className)} {...rest}>
+        <_Modal
+            className={classNames(styles.modal, className)}
+            onClose={onClose}
+            {...rest}
+        >
             <>
                 <Box sx={_style}>
                     {closeButton && onClose ? (

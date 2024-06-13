@@ -21,10 +21,16 @@ import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { copyToClipboard } from "@/utils/util";
 import { toast } from "react-hot-toast";
 import Modal from "@/components/Modal";
+import { format } from "date-fns";
 
 const MENU_WIDTH = 250;
 
 const EventInfoMenu = () => {
+    const { colors, timeFormat, mode } = useTheme();
+    const formatString = useMemo(
+        () => (timeFormat === "12h" ? "h:mmaaa" : "H:mm"),
+        [timeFormat]
+    );
     const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
     const {
@@ -101,7 +107,6 @@ const EventInfoMenu = () => {
     ]);
 
     // Color calculations
-    const { colors, mode } = useTheme();
     const eventBackground = useMemo(
         () => colors?.[selectedEvent?.color] ?? undefined,
         [selectedEvent?.color, colors]
@@ -188,15 +193,89 @@ const EventInfoMenu = () => {
         <Portal targetId="page-content">
             {isSmallScreen ? (
                 <Modal
-                    className={classNames(
-                        styles.eventPhaseModal,
-                        "event-phase-menu"
-                    )}
+                    className="event-phase-menu"
                     open={true}
                     onClose={() => setSelectedEvent(null)}
                     closeButton={true}
                 >
-                    <div>Hello, world!</div>
+                    <div className={styles.eventPhaseModal}>
+                        <div
+                            className={styles.eventTitle}
+                            style={{ color: highlightColor }}
+                        >
+                            {selectedEvent.name}
+                        </div>
+                        <div
+                            className={styles.eventAreaName}
+                            style={{ color: colors.muted }}
+                        >
+                            {format(selectedEvent.startDate, formatString)}
+                            &nbsp;|&nbsp;
+                            {selectedEvent.area.name}
+                        </div>
+                        <div className={styles.buttonArea}>
+                            <div
+                                className={styles.buttonText}
+                                style={{
+                                    opacity: buttonIsHovered ? 1 : 0,
+                                }}
+                            >
+                                {hoveredText || ""}
+                            </div>
+                            <div className={styles.buttonRow}>
+                                <ButtonGroup fullWidth>
+                                    {selectedEvent.waypoint ? (
+                                        <Button
+                                            sx={buttonSx}
+                                            onMouseEnter={() => {
+                                                setButtonIsHovered(true);
+                                                setHoveredText(
+                                                    "Copy waypoint to clipboard"
+                                                );
+                                            }}
+                                            onMouseLeave={() =>
+                                                setButtonIsHovered(false)
+                                            }
+                                            onClick={copyWaypointToClipboard}
+                                        >
+                                            <LocationOnSharp />
+                                        </Button>
+                                    ) : null}
+                                    <Button
+                                        sx={buttonSx}
+                                        component="a"
+                                        href={selectedEvent.wikiUrl}
+                                        onMouseEnter={() => {
+                                            setButtonIsHovered(true);
+                                            setHoveredText("Open wiki page");
+                                        }}
+                                        onMouseLeave={() =>
+                                            setButtonIsHovered(false)
+                                        }
+                                    >
+                                        <LaunchSharp />
+                                    </Button>
+                                    {selectedEvent.area.onComplete ===
+                                    ON_COMPLETE_TYPES.none ? null : (
+                                        <Button
+                                            sx={buttonSx}
+                                            onMouseEnter={() => {
+                                                setButtonIsHovered(true);
+                                                setHoveredText(
+                                                    "Mark as complete"
+                                                );
+                                            }}
+                                            onMouseLeave={() =>
+                                                setButtonIsHovered(false)
+                                            }
+                                        >
+                                            <DoneSharp />
+                                        </Button>
+                                    )}
+                                </ButtonGroup>
+                            </div>
+                        </div>
+                    </div>
                 </Modal>
             ) : (
                 <div
@@ -225,6 +304,8 @@ const EventInfoMenu = () => {
                         className={styles.eventAreaName}
                         style={{ color: colors.muted }}
                     >
+                        {format(selectedEvent.startDate, formatString)}
+                        &nbsp;|&nbsp;
                         {selectedEvent.area.name}
                     </div>
                     <div className={styles.buttonArea}>
