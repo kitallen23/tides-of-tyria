@@ -1,74 +1,18 @@
-import { useEffect, useMemo, useReducer } from "react";
+import { useEffect, useMemo } from "react";
 import { isRouteErrorResponse, useRouteError, Link } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import { Button, createTheme } from "@mui/material";
+import { Button } from "@mui/material";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "@/styles/modules/errors.module.scss";
 
-import {
-    ThemeProvider,
-    ThemeReducer,
-    DEFAULT_THEME_STATE,
-} from "@/utils/theme-provider";
-import { SCHEMES } from "@/utils/color-schemes";
-import { getTitle, detectTheme, getLocalItem } from "@/utils/util";
-import { LOCAL_STORAGE_KEYS, getDesignTokens } from "@/useApp";
+import { ThemeProvider } from "@/utils/theme-provider";
+import { getTitle } from "@/utils/util";
+import useApp from "@/useApp";
 import Logo from "@/components/Logo";
 
 const RootError = () => {
-    // Initialise color scheme
-    const [themeState, dispatchTheme] = useReducer(
-        ThemeReducer,
-        DEFAULT_THEME_STATE
-    );
-
-    const initialiseTheme = ({
-        themeKey,
-        fontType = "regular",
-        fontSize = "md",
-    }) => {
-        localStorage.setItem(LOCAL_STORAGE_KEYS.theme, themeKey);
-        localStorage.setItem(
-            LOCAL_STORAGE_KEYS.fontType,
-            fontType === "regular" ? "regular" : "monospace"
-        );
-        localStorage.setItem(LOCAL_STORAGE_KEYS.fontSize, fontSize);
-        dispatchTheme({
-            key: "SET_THEME",
-            payload: { themeKey, fontType, fontSize },
-        });
-    };
-
-    useMemo(() => {
-        const themeKey = detectTheme();
-        const fontType = getLocalItem("font_type", "regular");
-        const fontSize = getLocalItem("font_size", "md");
-        initialiseTheme({ themeKey, fontType, fontSize });
-        document
-            .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", SCHEMES[themeKey].colors.primary);
-    }, []);
-
-    const themeKey = useMemo(
-        () => themeState.colorScheme,
-        [themeState?.colorScheme]
-    );
-    const fontType = useMemo(() => themeState.fontType, [themeState?.fontType]);
-    const fontSize = useMemo(() => themeState.fontSize, [themeState?.fontSize]);
-
-    useMemo(() => {
-        // Set document with a `data-theme` attribute
-        document.documentElement.setAttribute("data-theme", themeKey);
-    }, [themeKey]);
-    useMemo(() => {
-        // Set document with a `data-font-type` attribute
-        document.documentElement.setAttribute("data-font-type", fontType);
-    }, [fontType]);
-    useMemo(() => {
-        // Set document with a `data-font-size` attribute
-        document.documentElement.setAttribute("data-font-size", fontSize);
-    }, [fontSize]);
+    const { themeState, muiTheme } = useApp();
 
     const error = useRouteError();
     useEffect(() => {
@@ -108,12 +52,6 @@ const RootError = () => {
         () => getTitle(errorStatus || "Error"),
         [errorStatus]
     );
-
-    // MUI theme
-    const muiTheme = useMemo(() => {
-        const theme = getDesignTokens(themeState);
-        return createTheme(theme);
-    }, [themeState]);
 
     return (
         <>

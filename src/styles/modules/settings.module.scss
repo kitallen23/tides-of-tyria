@@ -15,6 +15,12 @@
         grid-template-columns: 1fr auto;
         gap: 1rem;
         align-items: center;
+
+        .colorInputWithIndicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+        }
     }
 
     .settingsButtons {

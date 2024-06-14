@@ -1,4 +1,4 @@
-import { useReducer, useMemo } from "react";
+import { useReducer, useMemo, useEffect } from "react";
 import { alpha, createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
@@ -13,6 +13,7 @@ export const LOCAL_STORAGE_KEYS = {
     fontType: "tot_font_type",
     timeFormat: "tot_time_format",
     isTimerCollapsed: "tot_is_timer_collapsed",
+    primaryColor: "tot_primary_color",
 };
 
 export const getDesignTokens = theme => ({
@@ -131,6 +132,7 @@ const useApp = () => {
         fontType = "regular",
         fontSize = "md",
         timeFormat = "12h",
+        primaryColor = "",
     }) => {
         localStorage.setItem(LOCAL_STORAGE_KEYS.theme, themeKey);
         localStorage.setItem(
@@ -139,6 +141,9 @@ const useApp = () => {
         );
         localStorage.setItem(LOCAL_STORAGE_KEYS.fontSize, fontSize);
         localStorage.setItem(LOCAL_STORAGE_KEYS.timeFormat, timeFormat);
+        if (themeKey === "light" || themeKey === "dark") {
+            localStorage.setItem(LOCAL_STORAGE_KEYS.primaryColor, primaryColor);
+        }
         dispatchTheme({
             key: "SET_THEME",
             payload: { themeKey, fontType, fontSize, timeFormat },
@@ -175,16 +180,36 @@ const useApp = () => {
             payload: timeFormat,
         });
     };
+    const setPrimaryColor = color => {
+        localStorage.setItem(LOCAL_STORAGE_KEYS.primaryColor, color);
+        dispatchTheme({
+            key: "SET_PRIMARY_COLOR",
+            payload: color || SCHEMES[themeState.colorScheme].colors.primary,
+        });
+    };
 
     useMemo(() => {
         const themeKey = detectTheme();
         const fontType = getLocalItem(LOCAL_STORAGE_KEYS.fontType, "regular");
         const fontSize = getLocalItem(LOCAL_STORAGE_KEYS.fontSize, "md");
         const timeFormat = getLocalItem(LOCAL_STORAGE_KEYS.timeFormat, "12h");
-        initialiseTheme({ themeKey, fontType, fontSize, timeFormat });
+        let primaryColor;
+        if (themeKey === "dark" || themeKey === "light") {
+            primaryColor = getLocalItem(LOCAL_STORAGE_KEYS.primaryColor, "");
+        }
+        initialiseTheme({
+            themeKey,
+            fontType,
+            fontSize,
+            timeFormat,
+            primaryColor,
+        });
         document
             .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", SCHEMES[themeKey].colors.primary);
+            .setAttribute(
+                "content",
+                primaryColor || SCHEMES[themeKey].colors.primary
+            );
     }, []);
 
     const themeKey = useMemo(
@@ -221,6 +246,7 @@ const useApp = () => {
         setFontType,
         setFontSize,
         setTimeFormat,
+        setPrimaryColor,
     };
 };
 

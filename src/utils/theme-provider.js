@@ -1,5 +1,7 @@
 import { createContext, useContext } from "react";
 import { SCHEMES } from "./color-schemes";
+import { getLocalItem } from "./util";
+import { LOCAL_STORAGE_KEYS } from "@/useApp";
 
 export const DEFAULT_THEME_STATE = {
     ...SCHEMES.dark,
@@ -13,7 +15,18 @@ export const ThemeContext = createContext(DEFAULT_THEME_STATE);
 export const ThemeProvider = ThemeContext.Provider;
 
 const getTheme = themeName => {
-    return SCHEMES[themeName];
+    const theme = SCHEMES[themeName];
+    let primary;
+    if (themeName === "dark" || themeName === "light") {
+        primary = getLocalItem(LOCAL_STORAGE_KEYS.primaryColor);
+    }
+    return {
+        ...theme,
+        colors: {
+            ...theme.colors,
+            primary: primary || theme.colors.primary,
+        },
+    };
 };
 
 export function useTheme() {
@@ -34,6 +47,16 @@ export function ThemeReducer(state, { key, payload }) {
                 ...rest,
                 ...themeValues,
                 colorScheme: themeKey,
+            };
+        }
+        case "SET_PRIMARY_COLOR": {
+            const color = payload;
+            return {
+                ...state,
+                colors: {
+                    ...state.colors,
+                    primary: color,
+                },
             };
         }
         case "SET_THEME_KEY": {

@@ -1,18 +1,21 @@
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "@/styles/modules/settings.module.scss";
-import { getTitle } from "@/utils/util";
+import { getLocalItem, getTitle, isHexValid } from "@/utils/util";
 
 import SchemeSelector from "./SchemeSelector";
 import {
+    CheckCircleSharp,
     FormatColorFillSharp,
     FormatSizeSharp,
     TextFormatSharp,
 } from "@mui/icons-material";
 import { useTheme } from "@/utils/theme-provider";
 import { Button, TextField } from "@mui/material";
+import { SCHEMES } from "@/utils/color-schemes";
+import { LOCAL_STORAGE_KEYS } from "@/useApp";
 
 const Settings = () => {
     const title = useMemo(() => getTitle("Settings"), []);
@@ -27,11 +30,31 @@ const Settings = () => {
         setFontType,
         setFontSize,
         setTimeFormat,
+        setPrimaryColor,
     } = useTheme();
 
     const setScheme = key => {
         if (key) {
             setThemeKey(key);
+        }
+    };
+
+    const [localPrimaryColor, setLocalPrimaryColor] = useState(
+        getLocalItem(LOCAL_STORAGE_KEYS.primaryColor, "")
+    );
+    const isPrimaryColorValid = useMemo(
+        () => isHexValid(localPrimaryColor),
+        [localPrimaryColor]
+    );
+
+    const onPrimaryColorChange = e => {
+        let value = e.target.value;
+        if (value && !value.startsWith("#")) {
+            value = `#${value}`;
+        }
+        setLocalPrimaryColor(value);
+        if (isHexValid(value) || value === "") {
+            setPrimaryColor(value);
         }
     };
 
@@ -52,25 +75,41 @@ const Settings = () => {
                     </h3>
                     <SchemeSelector scheme={scheme} onChange={setScheme} />
                 </div>
-                <div className={styles.inlineSetting}>
-                    <h3 className={styles.heading}>
-                        <TextFormatSharp style={{ marginRight: "0.25rem" }} />
-                        Primary color
-                    </h3>
-                    <div className={styles.settingsText}>
-                        <TextField
-                            id="theme-primary-color"
-                            variant="outlined"
-                            placeholder={colors.primary}
-                            size="small"
-                            color="primary"
-                            sx={{
-                                maxWidth: "7em",
-                            }}
-                            // onChange={setThemeColor}
-                        />
+                {scheme === "dark" || scheme === "light" ? (
+                    <div className={styles.inlineSetting}>
+                        <h3 className={styles.heading}>
+                            <TextFormatSharp
+                                style={{ marginRight: "0.25rem" }}
+                            />
+                            Primary color
+                        </h3>
+                        <div className={styles.colorInputWithIndicator}>
+                            {colors.primary && isPrimaryColorValid ? (
+                                <CheckCircleSharp
+                                    color="primary"
+                                    sx={{ fontSize: "1.17em" }}
+                                />
+                            ) : null}
+                            <div className={styles.settingsTextInput}>
+                                <TextField
+                                    id="theme-primary-color"
+                                    value={localPrimaryColor}
+                                    variant="outlined"
+                                    placeholder={
+                                        SCHEMES?.[scheme]?.colors?.primary || ""
+                                    }
+                                    size="small"
+                                    color="primary"
+                                    sx={{
+                                        maxWidth: "7em",
+                                    }}
+                                    onChange={onPrimaryColorChange}
+                                />
+                            </div>
+                        </div>
                     </div>
-                </div>
+                ) : null}
+
                 <div className={styles.inlineSetting}>
                     <h3 className={styles.heading}>
                         <TextFormatSharp style={{ marginRight: "0.25rem" }} />
