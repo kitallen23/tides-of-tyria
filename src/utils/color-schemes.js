@@ -4,20 +4,20 @@ export const SCHEMES = {
         name: "Dark",
         mode: "dark",
         colors: {
-            primary: "#5FA8D3", // 95, 168, 211
+            primary: "#5fa8d3", // 95, 168, 211
             secondary: "#555555", // 85, 85, 85
-            body: "#E0E0E0", // 224, 224, 224
-            bodyLight: "#E0E0E0", // 224, 224, 224
-            bodyDark: "#1A1A1A", // 26, 26, 26
+            body: "#e0e0e0", // 224, 224, 224
+            bodyLight: "#e0e0e0", // 224, 224, 224
+            bodyDark: "#1a1a1a", // 26, 26, 26
             background: "#191919", // 25, 25, 25
             backgroundNav: "#202020", // 32, 32, 32
             muted: "#555555", // 85, 85, 85
             menu: "#191919", // 25, 25, 25
 
-            success: "#5BAE70", // 91, 174, 112
-            danger: "#D76363", // 215, 99, 99
-            warning: "#D9A063", // 217, 160, 99
-            info: "#63B1D9", // 99, 177, 217
+            success: "#5bae70", // 91, 174, 112
+            danger: "#d76363", // 215, 99, 99
+            warning: "#d9a063", // 217, 160, 99
+            info: "#63b1d9", // 99, 177, 217
 
             orange: "#fe9c66", // 254, 156, 102
             yellow: "#f2ce75", // 242, 206, 117
@@ -155,29 +155,29 @@ export const SCHEMES = {
         name: "Light",
         mode: "light",
         colors: {
-            primary: "#5A8AA2", // 90, 138, 162
-            secondary: "#AAAAAA", // 170, 170, 170
-            body: "#1A1A1A", // 26, 26, 26
-            bodyLight: "#E0E0E0", // 224, 224, 224
-            bodyDark: "#1A1A1A", // 26, 26, 26
-            background: "#FFFFFF", // 255, 255, 255
-            backgroundNav: "#F5F5F5", // 245, 245, 245
-            muted: "#AAAAAA", // 170, 170, 170
-            menu: "#FFFFFF", // 255, 255, 255
+            primary: "#5a8aa2", // 90, 138, 162
+            secondary: "#aaaaaa", // 170, 170, 170
+            body: "#1a1a1a", // 26, 26, 26
+            bodyLight: "#e0e0e0", // 224, 224, 224
+            bodyDark: "#1a1a1a", // 26, 26, 26
+            background: "#ffffff", // 255, 255, 255
+            backgroundNav: "#f5f5f5", // 245, 245, 245
+            muted: "#aaaaaa", // 170, 170, 170
+            menu: "#ffffff", // 255, 255, 255
 
-            success: "#3B824E", // 59, 130, 78
-            danger: "#993D3D", // 153, 61, 61
-            warning: "#996A3D", // 153, 106, 61
-            info: "#3D7999", // 61, 121, 153
+            success: "#3b824e", // 59, 130, 78
+            danger: "#993d3d", // 153, 61, 61
+            warning: "#996a3d", // 153, 106, 61
+            info: "#3d7999", // 61, 121, 153
 
-            orange: "#E58650", // 229, 134, 80
-            yellow: "#E6B85A", // 230, 184, 90
-            green: "#7D9E57", // 125, 158, 87
-            aqua: "#50D1A7", // 80, 209, 167
-            blue: "#6FB0B7", // 111, 176, 183
-            purple: "#8570B5", // 133, 112, 181
-            pink: "#B3506A", // 179, 80, 106
-            gray: "#9E9DA6", // 158, 157, 166
+            orange: "#e58650", // 229, 134, 80
+            yellow: "#e6b85a", // 230, 184, 90
+            green: "#7d9e57", // 125, 158, 87
+            aqua: "#50d1a7", // 80, 209, 167
+            blue: "#6fb0b7", // 111, 176, 183
+            purple: "#8570b5", // 133, 112, 181
+            pink: "#b3506a", // 179, 80, 106
+            gray: "#9e9da6", // 158, 157, 166
         },
     },
     gruvbox_light: {

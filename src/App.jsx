@@ -20,6 +20,7 @@ function App() {
         setFontType,
         setFontSize,
         setTimeFormat,
+        setPrimaryColor,
     } = useApp();
 
     return (
@@ -35,6 +36,7 @@ function App() {
                         setFontType,
                         setFontSize,
                         setTimeFormat,
+                        setPrimaryColor,
                     }}
                 >
                     <TimerProvider>

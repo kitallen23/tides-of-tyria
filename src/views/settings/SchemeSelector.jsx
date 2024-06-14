@@ -1,6 +1,9 @@
 import { SCHEMES } from "@/utils/color-schemes";
 import styles from "@/styles/modules/settings.module.scss";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { LOCAL_STORAGE_KEYS } from "@/useApp";
+import { getLocalItem } from "@/utils/util";
+import { useTheme } from "@/utils/theme-provider";
 
 const SchemeItem = ({ scheme, selected, onChange }) => (
     <div
@@ -31,16 +34,28 @@ const SchemeItem = ({ scheme, selected, onChange }) => (
 );
 
 const SchemeSelector = ({ scheme, onChange }) => {
+    const { colors } = useTheme();
+
+    const primaryColor = useMemo(
+        () => getLocalItem(LOCAL_STORAGE_KEYS.primaryColor || ""),
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
+        [colors]
+    );
     const schemes = useMemo(() => {
         let schemeArray = [];
         Object.keys(SCHEMES).forEach(key => {
+            let colors = { ...SCHEMES[key].colors };
+            if (key === "dark" || key === "light") {
+                colors.primary = primaryColor || colors.primary;
+            }
             schemeArray.push({
                 ...SCHEMES[key],
+                colors,
                 key,
             });
         });
         return schemeArray;
-    }, []);
+    }, [primaryColor]);
 
     return (
         <div className={styles.schemeSelector}>

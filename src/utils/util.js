@@ -72,3 +72,7 @@ export function copyToClipboard(text, options) {
         return false;
     }
 }
+export function isHexValid(c) {
+    const hexPattern = /^#[0-9A-Fa-f]{6}$/;
+    return hexPattern.test(c);
+}
