@@ -108,6 +108,11 @@ export const getDesignTokens = theme => ({
                             0.5
                         ),
                     },
+                    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                        borderColor:
+                            theme.palette[ownerState.color]?.main ||
+                            theme.palette.primary.main,
+                    },
                 }),
             },
         },
