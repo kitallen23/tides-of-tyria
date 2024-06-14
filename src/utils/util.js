@@ -35,16 +35,16 @@ export function relativeDateFormat({
 // See here for details:
 // https://stackoverflow.com/questions/56300132/how-to-override-css-prefers-color-scheme-setting
 export function detectTheme() {
-    let theme = "kanagawa";
+    let theme = "dark";
 
     if (getLocalItem(LOCAL_STORAGE_KEYS.theme, false)) {
         theme = localStorage.getItem(LOCAL_STORAGE_KEYS.theme);
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark
-        theme = "kanagawa";
+        theme = "dark";
     }
 
-    return theme || "kanagawa";
+    return theme || "dark";
 }
 
 export function getLocalItem(key, defaultValue = "") {

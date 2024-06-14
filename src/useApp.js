@@ -1,5 +1,5 @@
 import { useReducer, useMemo } from "react";
-import { createTheme } from "@mui/material";
+import { alpha, createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
 import { detectTheme, getLocalItem } from "@/utils/util";
@@ -96,6 +96,19 @@ export const getDesignTokens = theme => ({
                 root: {
                     fontSize: "1em",
                 },
+            },
+        },
+        MuiOutlinedInput: {
+            styleOverrides: {
+                root: ({ ownerState, theme }) => ({
+                    "&:hover .MuiOutlinedInput-notchedOutline": {
+                        borderColor: alpha(
+                            theme.palette[ownerState.color]?.main ||
+                                theme.palette.primary.main,
+                            0.5
+                        ),
+                    },
+                }),
             },
         },
     },
