@@ -176,6 +176,48 @@
     --status-warning: #ffb347;
     --status-info: #79a9d1;
 }
+[data-theme="dark"]:root {
+    --primary-rgb: 95, 168, 211;
+    --secondary-rgb: 85, 85, 85;
+    --foreground-rgb: 224, 224, 224;
+    --foreground-light-rgb: 224, 224, 224;
+    --foreground-dark-rgb: 26, 26, 26;
+    --background-rgb: 25, 25, 25;
+    --nav-background-rgb: 32, 32, 32;
+    --menu-background-rgb: 25, 25, 25;
+
+    --scrollbar-track-color: 32, 32, 32;
+    --scrollbar-thumb-color: 215, 215, 215;
+
+    --text-muted: #555555;
+    --muted-rgb: 85, 85, 85;
+
+    --status-success: #5BAE70;
+    --status-danger: #D76363;
+    --status-warning: #D9A063;
+    --status-info: #63B1D9;
+}
+[data-theme="light"]:root {
+    --primary-rgb: 90, 138, 162;
+    --secondary-rgb: 170, 170, 170;
+    --foreground-rgb: 26, 26, 26;
+    --foreground-light-rgb: 224, 224, 224;
+    --foreground-dark-rgb: 26, 26, 26;
+    --background-rgb: 255, 255, 255;
+    --nav-background-rgb: 245, 245, 245;
+    --menu-background-rgb: 255, 255, 255;
+
+    --scrollbar-track-color: 226, 226, 226;
+    --scrollbar-thumb-color: 104, 104, 104;
+
+    --text-muted: #AAAAAA;
+    --muted-rgb: 170, 170, 170;
+
+    --status-success: #3B824E;
+    --status-danger: #993D3D;
+    --status-warning: #996A3D;
+    --status-info: #3D7999;
+}
 
 * {
     box-sizing: border-box;
