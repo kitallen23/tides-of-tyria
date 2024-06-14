@@ -9,6 +9,7 @@ import globalStyles from "@/styles/modules/global-styles.module.scss";
 
 import { useTheme } from "@/utils/theme-provider";
 import {
+    adjustLuminance,
     blendColors,
     ensureContrast,
     isContrastEnough,
@@ -20,6 +21,8 @@ import EventTimerContext from "./EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
 import { HOVER_DELAY, MINS_IN_DAY, TIME_BLOCK_MINS } from "./utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import { copyToClipboard } from "@/utils/util";
+import { toast } from "react-hot-toast";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -27,6 +30,7 @@ const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 
 export const RegionIndicator = ({ region, isHovered }) => {
     const { colors, mode } = useTheme();
+    const { selectedEvent } = useContext(EventTimerContext);
     const schemeColorString = useMemo(
         () => (region.color === "gray" ? "primary" : region.color),
         [region.color]
@@ -54,26 +58,31 @@ export const RegionIndicator = ({ region, isHovered }) => {
         }
     }, [schemeColorString, colors, mode]);
 
+    const isActive = useMemo(
+        () => isHovered || selectedEvent?.region?.key === region?.key,
+        [selectedEvent?.region?.key, region?.key, isHovered]
+    );
+
     return (
         <div
             className={styles.regionIndicator}
             id={`region-indicator-${region.key}`}
             style={{
-                borderRightColor: isHovered ? highlightColor : undefined,
-                color: isHovered ? highlightColor : undefined,
+                borderRightColor: isActive ? highlightColor : undefined,
+                color: isActive ? highlightColor : undefined,
             }}
         >
             <div
                 className={styles.regionBorder}
                 style={{
-                    borderBottomColor: isHovered ? highlightColor : undefined,
+                    borderBottomColor: isActive ? highlightColor : undefined,
                 }}
             />
             <div className={styles.regionTitle}>{region.name}</div>
             <div
                 className={styles.regionBorder}
                 style={{
-                    borderBottomColor: isHovered ? highlightColor : undefined,
+                    borderBottomColor: isActive ? highlightColor : undefined,
                 }}
             />
         </div>
@@ -81,7 +90,7 @@ export const RegionIndicator = ({ region, isHovered }) => {
 };
 
 export const TimeRow = () => {
-    const { currentTimeBlockStart, hoveredEvent } =
+    const { currentTimeBlockStart, hoveredEvent, selectedEvent } =
         useContext(EventTimerContext);
 
     const { timeFormat, colors } = useTheme();
@@ -90,10 +99,12 @@ export const TimeRow = () => {
         [timeFormat]
     );
 
+    const shouldHide = !!hoveredEvent || !!selectedEvent;
+
     return (
         <div
             className={classNames(styles.timeRow, {
-                [styles.isHoveringEvent]: !!hoveredEvent,
+                [styles.hideLabels]: shouldHide,
             })}
             style={{ background: colors.background }}
         >
@@ -227,11 +238,21 @@ const AreaEventPhase = ({
         width: parentWidth,
         hoveredEvent,
         setHoveredEvent,
+        selectedEvent,
+        setSelectedEvent,
     } = useContext(EventTimerContext);
 
-    const isNotHovered = useMemo(
-        () => hoveredEvent && item.id !== hoveredEvent?.id,
-        [hoveredEvent, item.id]
+    const isDulled = useMemo(
+        () =>
+            selectedEvent?.id === item.id
+                ? false
+                : (hoveredEvent && item.id !== hoveredEvent?.id) ||
+                  (selectedEvent && selectedEvent.id !== item?.id),
+        [hoveredEvent, selectedEvent, item.id]
+    );
+    const isSelected = useMemo(
+        () => selectedEvent?.id === item.id,
+        [item.id, selectedEvent]
     );
 
     const width = useMemo(() => {
@@ -258,6 +279,10 @@ const AreaEventPhase = ({
     const isDowntime = useMemo(
         () => item.key === "downtime" || item.type === "downtime",
         [item.key, item.type]
+    );
+    const isClickable = useMemo(
+        () => !isDowntime || (isDowntime && !!item.wikiUrl),
+        [isDowntime, item.wikiUrl]
     );
 
     const eventTimeText = useMemo(() => {
@@ -308,15 +333,37 @@ const AreaEventPhase = ({
         setHoveredEvent(null);
     };
 
+    const onClick = () => {
+        if (!isClickable) {
+            return;
+        }
+        setSelectedEvent(item);
+    };
+
+    const onDoubleClick = () => {
+        if (item.waypoint) {
+            copyToClipboard(item.waypoint, {
+                onSuccess: () => toast.success("Waypoint copied to clipboard!"),
+                onError: () => toast.error("Something went wrong when copying to clipboard."),
+            });
+        }
+    };
+
+    const borderColor = useMemo(
+        () => adjustLuminance(eventBackground, -40),
+        [eventBackground]
+    );
+
     const style = useMemo(
         () => ({
-            opacity: isNotHovered ? 0.4 : undefined,
+            opacity: isDulled ? 0.4 : undefined,
             background: isDowntime
                 ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
                 : eventBackground,
             width,
+            borderColor: isSelected ? borderColor : undefined,
         }),
-        [isNotHovered, isDowntime, width, eventBackground]
+        [isDulled, isDowntime, width, isSelected, borderColor, eventBackground]
     );
 
     return (
@@ -331,25 +378,26 @@ const AreaEventPhase = ({
                         ? globalStyles.textDark
                         : globalStyles.textLight
                 }`,
-                { isHovered: hoveredEvent?.id === item.id }
+                {
+                    [styles.isHovered]: hoveredEvent?.id === item.id,
+                    [styles.isSelected]: selectedEvent?.id === item.id,
+                    [styles.isDowntime]: isDowntime,
+                    [styles.isClickable]: isClickable,
+                    "event-phase": isClickable,
+                }
             )}
             style={style}
             id={item.id}
             onMouseEnter={onHoverIn}
             onMouseLeave={onHoverOut}
+            onClick={onClick}
+            onDoubleClick={onDoubleClick}
         >
             {isDowntime ? (
                 item.wikiUrl ? (
                     <div className={styles.title}>
-                        <a
-                            href={item.wikiUrl}
-                            className={styles.titleLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {item.isContinued ? "…" : ""}
-                            {item.name}
-                        </a>
+                        {item.isContinued ? "…" : ""}
+                        {item.name}
                     </div>
                 ) : item.name ? (
                     <div className={styles.title}>
@@ -360,15 +408,8 @@ const AreaEventPhase = ({
             ) : (
                 <>
                     <div className={styles.title}>
-                        <a
-                            href={item.wikiUrl}
-                            className={styles.titleLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {item.isContinued ? "…" : ""}
-                            {item.name}
-                        </a>
+                        {item.isContinued ? "…" : ""}
+                        {item.name}
                     </div>
                     <div className={styles.timeUntil}>{eventTimeText}</div>
                 </>
@@ -377,7 +418,7 @@ const AreaEventPhase = ({
     );
 };
 
-const PeriodicArea = ({ area }) => {
+const PeriodicArea = ({ area, region }) => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
     const { dailyReset } = useTimer();
 
@@ -390,7 +431,13 @@ const PeriodicArea = ({ area }) => {
                 dailyReset,
                 currentTimeBlockStart,
             });
-            allEvents.push(...(eventStartTimes || []));
+            allEvents.push(
+                ...(eventStartTimes || []).map(item => ({
+                    ...item,
+                    area: { ...area, phases: undefined },
+                    region,
+                }))
+            );
         });
         allEvents.sort((a, b) => a.startDate - b.startDate);
 
@@ -403,7 +450,7 @@ const PeriodicArea = ({ area }) => {
             allEvents[index].windowStartMinute = windowStartMinute;
         });
         return [allEvents, area.downtime || null];
-    }, [dailyReset, area, currentTimeBlockStart]);
+    }, [dailyReset, currentTimeBlockStart, area, region]);
 
     // Calculate all blocks to render, including "downtime".
     // These are given minute numbers that represent their start and end.
@@ -550,7 +597,7 @@ const getFixedTimeEventStartTimesWithinWindow = ({
     return eventStartTimes;
 };
 
-const FixedTimeArea = ({ area }) => {
+const FixedTimeArea = ({ area, region }) => {
     const { currentTimeBlockStart } = useContext(EventTimerContext);
     const { dailyReset } = useTimer();
 
@@ -563,7 +610,13 @@ const FixedTimeArea = ({ area }) => {
                 dailyReset,
                 currentTimeBlockStart,
             });
-            allEvents.push(...(eventStartTimes || []));
+            allEvents.push(
+                ...(eventStartTimes || []).map(item => ({
+                    ...item,
+                    area: { ...area, phases: undefined },
+                    region,
+                }))
+            );
         });
         allEvents.sort((a, b) => a.startDate - b.startDate);
 
@@ -576,7 +629,7 @@ const FixedTimeArea = ({ area }) => {
             allEvents[index].windowStartMinute = windowStartMinute;
         });
         return [allEvents, area.downtime || null];
-    }, [dailyReset, area, currentTimeBlockStart]);
+    }, [dailyReset, currentTimeBlockStart, area, region]);
 
     // Calculate all blocks to render, including "downtime".
     // These are given minute numbers that represent their start and end.
@@ -683,6 +736,11 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
         }
     }, [height, indicatorWrapperRef, region]);
 
+    const regionData = useMemo(
+        () => ({ ...region, sub_areas: undefined }),
+        [region]
+    );
+
     return (
         <div
             className={styles.region}
@@ -692,9 +750,17 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
         >
             {region.sub_areas.map(area =>
                 area.type === "fixed_time" ? (
-                    <FixedTimeArea key={area.key} area={area} />
+                    <FixedTimeArea
+                        key={area.key}
+                        area={area}
+                        region={regionData}
+                    />
                 ) : (
-                    <PeriodicArea key={area.key} area={area} />
+                    <PeriodicArea
+                        key={area.key}
+                        area={area}
+                        region={regionData}
+                    />
                 )
             )}
         </div>

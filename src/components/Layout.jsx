@@ -20,7 +20,12 @@ const Header = () => {
                     className={`${styles.logoLink} ${globalStyles.internalLink}`}
                 >
                     <Logo size={48} color={colors.primary} />
-                    <div className={`${styles.title} transition-color`}>
+                    <div
+                        className={`${styles.title} transition-color`}
+                        style={{
+                            color: colors.primary,
+                        }}
+                    >
                         <div>TIDES</div>
                         <div
                             css={{
@@ -54,7 +59,11 @@ const Header = () => {
 };
 
 const PageContent = ({ children }) => {
-    return <div className={styles.pageContent}>{children}</div>;
+    return (
+        <div className={styles.pageContent} id="page-content">
+            {children}
+        </div>
+    );
 };
 
 const Layout = ({ children }) => {

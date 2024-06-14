@@ -1,24 +1,50 @@
 @use "../variables/core-variables" as c;
 $min-area-width: 600px;
-$timer-gap: 0.25rem;
+$timer-gap: 4px;
 $line-height: var(--line-height);
 $time-row-font-size: 0.875em;
 
+[data-font-size="sm"]:root {
+    .eventTimer {
+        font-size: var(--font-size-sm);
+    }
+}
+[data-font-size="md"]:root {
+    .eventTimer {
+        font-size: var(--font-size-md);
+    }
+}
+[data-font-size="lg"]:root {
+    .eventTimer {
+        font-size: var(--font-size-lg);
+    }
+}
+
 .eventTimer {
     display: grid;
-    grid-template-columns: 60px 1fr;
+    grid-template-columns: 1fr;
+    justify-items: center;
 
-    @media (max-width: c.$media-md) {
-        grid-template-columns: 1fr;
-        .leftFrame {
-            display: none;
+    .innerWrapper {
+        max-width: 100%;
+        width: 100%;
+        transition: max-width 0.1s;
+        display: grid;
+        grid-template-columns: 60px 1fr;
+
+        @media (max-width: c.$media-md) {
+            grid-template-columns: 1fr;
+            .leftFrame {
+                display: none;
+            }
         }
     }
 
     &.isCollapsed {
-        max-width: c.$content-width;
-        width: 100%;
-        margin: 0 auto;
+        .innerWrapper {
+            max-width: c.$content-width;
+            width: 100%;
+        }
     }
 
     .leftFrame {
@@ -108,6 +134,13 @@ $time-row-font-size: 0.875em;
                         border-style: solid;
                         border-color: transparent;
 
+                        &.isClickable {
+                            cursor: pointer;
+                        }
+                        &:not(.isClickable) {
+                            cursor: default;
+                        }
+
                         // Text height of title, text height of "time until",
                         // padding * 2
                         min-height: calc(
@@ -129,6 +162,10 @@ $time-row-font-size: 0.875em;
                         }
 
                         transition: opacity var(--transition);
+
+                        &.isSelected {
+                            border-color: white;
+                        }
                     }
                 }
             }
@@ -154,7 +191,7 @@ $time-row-font-size: 0.875em;
         .timeRow {
             position: sticky;
             top: -1 * (c.$page-content-padding-vertical);
-            z-index: 10;
+            z-index: 12;
             overflow-x: auto;
 
             scrollbar-width: none; // Firefox
@@ -224,12 +261,92 @@ $time-row-font-size: 0.875em;
             .spacer {
                 height: $timer-gap;
             }
-            &.isHoveringEvent
+            &.hideLabels
                 .timeRowInnerWrapper
                 > div:not(.hoveredEventIndicator)
                 .timeLabel {
                 opacity: 0;
             }
+        }
+    }
+}
+
+.eventPhaseMenu {
+    position: absolute;
+    background: rgb(var(--menu-background-rgb));
+    border-radius: 0.25rem;
+    width: 250px;
+
+    z-index: 10;
+    top: 0;
+    left: 0;
+
+    border-width: 2px;
+    border-style: solid;
+    border-color: transparent;
+
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.5em 1.5em 0.5em 1em;
+
+    .closeButtonWrapper {
+        position: absolute;
+        cursor: pointer;
+
+        width: 1em;
+        text-align: center;
+        top: 0;
+        right: 0;
+
+        color: var(--text-muted);
+        transition: color var(--transition);
+
+        &:hover {
+            color: rgb(var(--foreground-rgb));
+        }
+    }
+
+    .eventTitle {
+        font-size: 1.17em;
+    }
+
+    .eventAreaName {
+        /* font-size: 0.875em; */
+    }
+
+    .buttonArea {
+        display: grid;
+        gap: 0.5rem;
+
+        .buttonText {
+            text-align: center;
+            font-size: 0.875em;
+            opacity: 0;
+            color: var(--text-muted);
+            transition: opacity var(--transition);
+            min-height: calc((1em * #{$line-height}));
+        }
+    }
+}
+.eventPhaseModal {
+    display: grid;
+    gap: 0.5rem;
+
+    .eventTitle {
+        font-size: 1.17em;
+    }
+
+    .buttonArea {
+        display: grid;
+        gap: 0.5rem;
+
+        .buttonText {
+            text-align: center;
+            font-size: 0.875em;
+            opacity: 0;
+            color: var(--text-muted);
+            transition: opacity var(--transition);
+            min-height: calc((1em * #{$line-height}));
         }
     }
 }

@@ -1,4 +1,4 @@
-const COLORS = {
+export const COLOR_TYPES = {
     orange: "orange",
     yellow: "yellow",
     green: "green",
@@ -8,12 +8,12 @@ const COLORS = {
     pink: "pink",
     gray: "gray",
 };
-const ON_COMPLETE_TYPES = {
+export const ON_COMPLETE_TYPES = {
     completeEvent: "complete_event",
     completeArea: "complete_area",
     none: "none",
 };
-const TIME_TYPES = {
+export const TIME_TYPES = {
     periodic: "periodic",
     fixedTime: "fixed_time",
 };
@@ -21,12 +21,12 @@ const META_EVENTS = [
     {
         key: "core_tyria",
         name: "CORE",
-        color: COLORS.gray,
+        color: COLOR_TYPES.gray,
         sub_areas: [
             {
                 key: "world_bosses",
                 name: "World Bosses",
-                color: COLORS.gray,
+                color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
@@ -38,6 +38,7 @@ const META_EVENTS = [
                         start: 0,
                         duration: 15,
                         frequency: 180,
+                        waypoint: "[&BKgBAAA=]",
                     },
                     {
                         key: "svanir_shaman_chief",
@@ -47,6 +48,7 @@ const META_EVENTS = [
                         start: 15,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BMIDAAA=]",
                     },
                     {
                         key: "megadestroyer",
@@ -56,6 +58,7 @@ const META_EVENTS = [
                         start: 30,
                         duration: 15,
                         frequency: 180,
+                        waypoint: "[&BM0CAAA=]",
                     },
                     {
                         key: "fire_elemental",
@@ -65,6 +68,7 @@ const META_EVENTS = [
                         start: 45,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BEcAAAA=]",
                     },
                     {
                         key: "the_shatterer",
@@ -74,6 +78,7 @@ const META_EVENTS = [
                         start: 60,
                         duration: 15,
                         frequency: 180,
+                        waypoint: "[&BE4DAAA=]",
                     },
                     {
                         key: "great_jungle_wurm",
@@ -83,6 +88,7 @@ const META_EVENTS = [
                         start: 75,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BEEFAAA=]",
                     },
                     {
                         key: "modniir_ulgoth",
@@ -92,6 +98,7 @@ const META_EVENTS = [
                         start: 90,
                         duration: 15,
                         frequency: 180,
+                        waypoint: "[&BLAAAAA=]",
                     },
                     {
                         key: "shadow_behemoth",
@@ -101,6 +108,7 @@ const META_EVENTS = [
                         start: 105,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BPcAAAA=]",
                     },
                     {
                         key: "golem_mark_ii",
@@ -110,6 +118,7 @@ const META_EVENTS = [
                         start: 120,
                         duration: 15,
                         frequency: 180,
+                        waypoint: "[&BNQCAAA=]",
                     },
                     {
                         key: "claw_of_jormag",
@@ -119,13 +128,14 @@ const META_EVENTS = [
                         start: 150,
                         duration: 15,
                         frequency: 180,
+                        waypoint: "[&BHoCAAA=]",
                     },
                 ],
             },
             {
                 key: "hard_bosses",
                 name: "Hard Bosses",
-                color: COLORS.gray,
+                color: COLOR_TYPES.gray,
                 type: TIME_TYPES.fixedTime,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
@@ -136,6 +146,7 @@ const META_EVENTS = [
                             "https://wiki.guildwars2.com/wiki/Defeat_Tequatl_the_Sunless",
                         times: [0, 180, 420, 690, 960, 1140],
                         duration: 30,
+                        waypoint: "[&BNABAAA=]",
                     },
                     {
                         key: "triple_trouble",
@@ -144,6 +155,7 @@ const META_EVENTS = [
                             "https://wiki.guildwars2.com/wiki/Triple_Trouble",
                         times: [60, 240, 480, 750, 1020, 1200],
                         duration: 30,
+                        waypoint: "[&BKoBAAA=]",
                     },
                     {
                         key: "karka_queen",
@@ -152,13 +164,14 @@ const META_EVENTS = [
                             "https://wiki.guildwars2.com/wiki/Defeat_the_Karka_Queen_threatening_the_settlements",
                         times: [120, 360, 630, 900, 1080, 1380],
                         duration: 30,
+                        waypoint: "[&BNUGAAA=]",
                     },
                 ],
             },
             {
                 key: "ley_line_anomaly",
                 name: "Ley-Line Anomaly",
-                color: COLORS.gray,
+                color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -170,6 +183,7 @@ const META_EVENTS = [
                         start: 140,
                         duration: 20,
                         frequency: 360,
+                        waypoint: "[&BOcBAAA=]",
                     },
                     {
                         key: "ley_line_anomaly__gendarran_fields",
@@ -179,6 +193,7 @@ const META_EVENTS = [
                         start: 260,
                         duration: 20,
                         frequency: 360,
+                        waypoint: "[&BOQAAAA=]",
                     },
                     {
                         key: "ley_line_anomaly__timberline_falls",
@@ -188,6 +203,7 @@ const META_EVENTS = [
                         start: 20,
                         duration: 20,
                         frequency: 360,
+                        waypoint: "[&BEwCAAA=]",
                     },
                 ],
             },
@@ -196,12 +212,12 @@ const META_EVENTS = [
     {
         key: "living_world_season_2",
         name: "LWS2",
-        color: COLORS.yellow,
+        color: COLOR_TYPES.yellow,
         sub_areas: [
             {
                 key: "dry_top",
                 name: "Dry Top",
-                color: COLORS.yellow,
+                color: COLOR_TYPES.yellow,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
@@ -212,6 +228,7 @@ const META_EVENTS = [
                         start: 40,
                         duration: 20,
                         frequency: 60,
+                        waypoint: "[&BIAHAAA=]",
                     },
                     {
                         key: "crash_site",
@@ -222,6 +239,7 @@ const META_EVENTS = [
                         start: 0,
                         duration: 40,
                         frequency: 60,
+                        waypoint: "[&BIAHAAA=]",
                     },
                 ],
             },
@@ -230,12 +248,12 @@ const META_EVENTS = [
     {
         key: "heart_of_thorns",
         name: "HoT",
-        color: COLORS.green,
+        color: COLOR_TYPES.green,
         sub_areas: [
             {
                 key: "verdant_brink",
                 name: "Verdant Brink",
-                color: COLORS.green,
+                color: COLOR_TYPES.green,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -247,6 +265,7 @@ const META_EVENTS = [
                         start: 105,
                         duration: 25,
                         frequency: 120,
+                        waypoint: "[&BAgIAAA=]",
                     },
                     {
                         key: "verdant_brink__night_bosses",
@@ -256,6 +275,7 @@ const META_EVENTS = [
                         start: 10,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BAgIAAA=]",
                     },
                     {
                         key: "verdant_brink__day",
@@ -266,13 +286,14 @@ const META_EVENTS = [
                         start: 30,
                         duration: 75,
                         frequency: 120,
+                        waypoint: "[&BN4HAAA=]",
                     },
                 ],
             },
             {
                 key: "auric_basin",
                 name: "Auric Basin",
-                color: COLORS.green,
+                color: COLOR_TYPES.green,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -284,6 +305,7 @@ const META_EVENTS = [
                         start: 45,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BGwIAAA=]",
                     },
                     {
                         key: "auric_basin__octovine",
@@ -293,6 +315,7 @@ const META_EVENTS = [
                         start: 60,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BAIIAAA=]",
                     },
                     {
                         key: "auric_basin__pylons",
@@ -303,6 +326,7 @@ const META_EVENTS = [
                         start: 90,
                         duration: 75,
                         frequency: 120,
+                        waypoint: "[&BN0HAAA=]",
                     },
                 ],
                 downtime: {
@@ -312,7 +336,7 @@ const META_EVENTS = [
             {
                 key: "tangled_depths",
                 name: "Tangled Depths",
-                color: COLORS.green,
+                color: COLOR_TYPES.green,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -324,6 +348,7 @@ const META_EVENTS = [
                         start: 25,
                         duration: 5,
                         frequency: 120,
+                        waypoint: "[&BPUHAAA=]",
                     },
                     {
                         key: "tangled_depths__chak_gerent",
@@ -333,18 +358,25 @@ const META_EVENTS = [
                         start: 30,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BPUHAAA=]",
+                    },
+                    {
+                        key: "tangled_depths__help_the_outposts",
+                        name: "Help the Outposts",
+                        type: "downtime",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Advancing_Across_Tangled_Roots",
+                        start: 50,
+                        duration: 95,
+                        frequency: 120,
+                        waypoint: "[&BA4IAAA=]",
                     },
                 ],
-                downtime: {
-                    name: "Help the Outposts",
-                    wikiUrl:
-                        "https://wiki.guildwars2.com/wiki/Advancing_Across_Tangled_Roots",
-                },
             },
             {
                 key: "dragons_stand",
                 name: "Dragon's Stand",
-                color: COLORS.green,
+                color: COLOR_TYPES.green,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -356,6 +388,7 @@ const META_EVENTS = [
                         start: 90,
                         duration: 120,
                         frequency: 120,
+                        waypoint: "[&BBAIAAA=]",
                     },
                 ],
             },
@@ -364,12 +397,12 @@ const META_EVENTS = [
     {
         key: "living_world_season_3",
         name: "LWS3",
-        color: COLORS.gray,
+        color: COLOR_TYPES.gray,
         sub_areas: [
             {
                 key: "lake_doric",
                 name: "Lake Doric",
-                color: COLORS.gray,
+                color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
@@ -381,6 +414,7 @@ const META_EVENTS = [
                         start: 30,
                         duration: 30,
                         frequency: 120,
+                        waypoint: "[&BK8JAAA=]",
                     },
                     {
                         key: "saidras_haven",
@@ -390,6 +424,7 @@ const META_EVENTS = [
                         start: 60,
                         duration: 45,
                         frequency: 120,
+                        waypoint: "[&BK0JAAA=]",
                     },
                     {
                         key: "new_loamhurst",
@@ -399,6 +434,7 @@ const META_EVENTS = [
                         start: 105,
                         duration: 45,
                         frequency: 120,
+                        waypoint: "[&BLQJAAA=]",
                     },
                 ],
             },
@@ -407,12 +443,12 @@ const META_EVENTS = [
     {
         key: "path_of_fire",
         name: "PoF",
-        color: COLORS.orange,
+        color: COLOR_TYPES.orange,
         sub_areas: [
             {
                 key: "crystal_oasis",
                 name: "Crystal Oasis",
-                color: COLORS.orange,
+                color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -424,6 +460,7 @@ const META_EVENTS = [
                         start: 5,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BLsKAAA=]",
                     },
                     {
                         key: "crystal_oasis__pinata",
@@ -433,13 +470,14 @@ const META_EVENTS = [
                         start: 20,
                         duration: 10,
                         frequency: 120,
+                        waypoint: "[&BLsKAAA=]",
                     },
                 ],
             },
             {
                 key: "desert_highlands",
                 name: "Desert Highlands",
-                color: COLORS.orange,
+                color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -451,13 +489,14 @@ const META_EVENTS = [
                         start: 60,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BGsKAAA=]",
                     },
                 ],
             },
             {
                 key: "elon_riverlands",
                 name: "Elon Riverlands",
-                color: COLORS.orange,
+                color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -469,6 +508,7 @@ const META_EVENTS = [
                         start: 90,
                         duration: 25,
                         frequency: 120,
+                        waypoint: "[&BFMKAAA=]",
                     },
                     {
                         key: "elon_riverlands__doppelganger",
@@ -478,13 +518,14 @@ const META_EVENTS = [
                         start: 115,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BFMKAAA=]",
                     },
                 ],
             },
             {
                 key: "the_desolation",
                 name: "The Desolation",
-                color: COLORS.orange,
+                color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -496,6 +537,7 @@ const META_EVENTS = [
                         start: 30,
                         duration: 20,
                         frequency: 60,
+                        waypoint: "[&BMEKAAA=]",
                     },
                     {
                         key: "the_desolation__maws_of_torment",
@@ -505,13 +547,14 @@ const META_EVENTS = [
                         start: 60,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BKMKAAA=]",
                     },
                 ],
             },
             {
                 key: "domain_of_vabbi",
                 name: "Domain of Vabbi",
-                color: COLORS.orange,
+                color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -523,6 +566,7 @@ const META_EVENTS = [
                         start: 60,
                         duration: 30,
                         frequency: 60,
+                        waypoint: "[&BO0KAAA=]",
                     },
                     {
                         key: "domain_of_vabbi__serpents_ire",
@@ -532,6 +576,7 @@ const META_EVENTS = [
                         start: 30,
                         duration: 30,
                         frequency: 120,
+                        waypoint: "[&BHQKAAA=]",
                     },
                 ],
             },
@@ -540,12 +585,12 @@ const META_EVENTS = [
     {
         key: "living_world_season_4",
         name: "LWS4",
-        color: COLORS.purple,
+        color: COLOR_TYPES.purple,
         sub_areas: [
             {
                 key: "domain_of_istan",
                 name: "Domain of Istan",
-                color: COLORS.purple,
+                color: COLOR_TYPES.purple,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -557,13 +602,14 @@ const META_EVENTS = [
                         start: 105,
                         duration: 30,
                         frequency: 120,
+                        waypoint: "[&BAkLAAA=]",
                     },
                 ],
             },
             {
                 key: "jahai_bluffs",
                 name: "Jahai Bluffs",
-                color: COLORS.purple,
+                color: COLOR_TYPES.purple,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -575,6 +621,7 @@ const META_EVENTS = [
                         start: 60,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BIMLAAA=]",
                     },
                     {
                         key: "jahai_bluffs__death_branded_shatterer",
@@ -584,13 +631,14 @@ const META_EVENTS = [
                         start: 75,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BJMLAAA=]",
                     },
                 ],
             },
             {
                 key: "thunderhead_peaks",
                 name: "Thunderhead Peaks",
-                color: COLORS.purple,
+                color: COLOR_TYPES.purple,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -602,6 +650,7 @@ const META_EVENTS = [
                         start: 45,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BKYLAAA=]",
                     },
                     {
                         key: "thunderhead_peaks__thunderhead_keep",
@@ -611,6 +660,7 @@ const META_EVENTS = [
                         start: 105,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BLsLAAA=]",
                     },
                 ],
             },
@@ -619,12 +669,12 @@ const META_EVENTS = [
     {
         key: "the_icebrood_saga",
         name: "IBS",
-        color: COLORS.blue,
+        color: COLOR_TYPES.blue,
         sub_areas: [
             {
                 key: "grothmar_valley",
                 name: "Grothmar Valley",
-                color: COLORS.blue,
+                color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
@@ -636,6 +686,7 @@ const META_EVENTS = [
                         start: 10,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BA4MAAA=]",
                     },
                     {
                         key: "grothmar_valley__doomlore_shrine",
@@ -645,6 +696,7 @@ const META_EVENTS = [
                         start: 38,
                         duration: 22,
                         frequency: 120,
+                        waypoint: "[&BA4MAAA=]",
                     },
                     {
                         key: "grothmar_valley__ooze_pits",
@@ -654,6 +706,7 @@ const META_EVENTS = [
                         start: 65,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BPgLAAA=]",
                     },
                     {
                         key: "grothmar_valley__metal_concert",
@@ -663,13 +716,14 @@ const META_EVENTS = [
                         start: 100,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BPgLAAA=]",
                     },
                 ],
             },
             {
                 key: "bjora_marches",
                 name: "Bjora Marches",
-                color: COLORS.blue,
+                color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
@@ -681,6 +735,7 @@ const META_EVENTS = [
                         start: 65,
                         duration: 35,
                         frequency: 120,
+                        waypoint: "[&BDkMAAA=]",
                     },
                     {
                         key: "bjora_marches__storms_of_winter",
@@ -690,6 +745,7 @@ const META_EVENTS = [
                         start: 105,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BCcMAAA=]",
                     },
                     {
                         key: "bjora_marches__storms_of_winter",
@@ -699,6 +755,7 @@ const META_EVENTS = [
                         start: 0,
                         duration: 5,
                         frequency: 120,
+                        waypoint: "[&BCcMAAA=]",
                     },
                     {
                         key: "bjora_marches__storms_of_winter",
@@ -708,13 +765,14 @@ const META_EVENTS = [
                         start: 5,
                         duration: 15,
                         frequency: 120,
+                        waypoint: "[&BCcMAAA=]",
                     },
                 ],
             },
             {
                 key: "eye_of_the_north",
                 name: "Eye of the North (instance)",
-                color: COLORS.blue,
+                color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -725,6 +783,7 @@ const META_EVENTS = [
                         start: 60,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BAkMAAA=]",
                     },
                 ],
             },
@@ -733,12 +792,12 @@ const META_EVENTS = [
     {
         key: "end_of_dragons",
         name: "EoD",
-        color: COLORS.aqua,
+        color: COLOR_TYPES.aqua,
         sub_areas: [
             {
                 key: "seitung_province",
                 name: "Seitung Province",
-                color: COLORS.aqua,
+                color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -750,13 +809,14 @@ const META_EVENTS = [
                         start: 90,
                         duration: 30,
                         frequency: 120,
+                        waypoint: "[&BGUNAAA=]",
                     },
                 ],
             },
             {
                 key: "new_kaineng_city",
                 name: "New Kaineng City",
-                color: COLORS.aqua,
+                color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -768,13 +828,14 @@ const META_EVENTS = [
                         start: 0,
                         duration: 40,
                         frequency: 120,
+                        waypoint: "[&BBkNAAA=]",
                     },
                 ],
             },
             {
                 key: "the_echovald_wilds",
                 name: "The Echovald Wilds",
-                color: COLORS.aqua,
+                color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
                 phases: [
@@ -786,6 +847,7 @@ const META_EVENTS = [
                         start: 100,
                         duration: 20,
                         frequency: 120,
+                        waypoint: "[&BPkMAAA=]",
                     },
                     {
                         key: "the_echovald_wilds__gang_war",
@@ -795,13 +857,14 @@ const META_EVENTS = [
                         start: 30,
                         duration: 35,
                         frequency: 120,
+                        waypoint: "[&BMwMAAA=]",
                     },
                 ],
             },
             {
                 key: "dragons_end",
                 name: "Dragon's End",
-                color: COLORS.aqua,
+                color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.fixedTime,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 downtime: {
@@ -819,6 +882,7 @@ const META_EVENTS = [
                             1205, 1245, 1325, 1365,
                         ],
                         duration: 8,
+                        waypoint: "[&BKIMAAA=]",
                     },
                     {
                         key: "dragons_end__the_battle_for_the_jade_sea",
@@ -830,6 +894,7 @@ const META_EVENTS = [
                             1260, 1380,
                         ],
                         duration: 60,
+                        waypoint: "[&BKIMAAA=]",
                     },
                 ],
             },
@@ -838,12 +903,12 @@ const META_EVENTS = [
     {
         key: "secrets_of_the_obscure",
         name: "SotO",
-        color: COLORS.yellow,
+        color: COLOR_TYPES.yellow,
         sub_areas: [
             {
                 key: "skywatch_archipelago",
                 name: "Skywatch Archipelago",
-                color: COLORS.yellow,
+                color: COLOR_TYPES.yellow,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -855,13 +920,14 @@ const META_EVENTS = [
                         start: 60,
                         duration: 25,
                         frequency: 120,
+                        waypoint: "[&BL4NAAA=]",
                     },
                 ],
             },
             {
                 key: "amnytas",
                 name: "Amnytas",
-                color: COLORS.yellow,
+                color: COLOR_TYPES.yellow,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -873,13 +939,14 @@ const META_EVENTS = [
                         start: 0,
                         duration: 25,
                         frequency: 120,
+                        waypoint: "[&BDQOAAA=]",
                     },
                 ],
             },
             {
                 key: "the_wizards_tower",
                 name: "The Wizard's Tower (instance)",
-                color: COLORS.yellow,
+                color: COLOR_TYPES.yellow,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
@@ -891,6 +958,7 @@ const META_EVENTS = [
                         start: 90,
                         duration: 10,
                         frequency: 180,
+                        waypoint: "[&BB8OAAA=]",
                     },
                 ],
             },

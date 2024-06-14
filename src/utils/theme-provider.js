@@ -2,8 +2,8 @@ import { createContext, useContext } from "react";
 import { SCHEMES } from "./color-schemes";
 
 export const DEFAULT_THEME_STATE = {
-    ...SCHEMES.kanagawa,
-    colorScheme: "kanagawa",
+    ...SCHEMES.dark,
+    colorScheme: "dark",
     fontType: "monospace",
     fontSize: "md",
     timeFormat: "12h",

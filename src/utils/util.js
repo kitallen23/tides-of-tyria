@@ -1,8 +1,5 @@
 import { LOCAL_STORAGE_KEYS } from "@/useApp";
-import {
-    STALE_TIME_IN_SECONDS,
-    TITLE_SUFFIX,
-} from "@/utils/constants";
+import { STALE_TIME_IN_SECONDS, TITLE_SUFFIX } from "@/utils/constants";
 import {
     subHours as _subHours,
     format as _format,
@@ -38,16 +35,16 @@ export function relativeDateFormat({
 // See here for details:
 // https://stackoverflow.com/questions/56300132/how-to-override-css-prefers-color-scheme-setting
 export function detectTheme() {
-    let theme = "kanagawa";
+    let theme = "dark";
 
     if (getLocalItem(LOCAL_STORAGE_KEYS.theme, false)) {
         theme = localStorage.getItem(LOCAL_STORAGE_KEYS.theme);
     } else if (window?.matchMedia("(prefers-color-scheme: dark)")?.matches) {
         // OS theme setting detected as dark
-        theme = "kanagawa";
+        theme = "dark";
     }
 
-    return theme || "kanagawa";
+    return theme || "dark";
 }
 
 export function getLocalItem(key, defaultValue = "") {
@@ -64,3 +61,14 @@ export function getStaleTime(key) {
         : undefined;
 }
 
+export function copyToClipboard(text, options) {
+    try {
+        navigator.clipboard.writeText(text);
+        options?.onSuccess?.();
+        return true;
+    } catch (e) {
+        console.error("Error writing text to clipboard: ", e);
+        options?.onError?.();
+        return false;
+    }
+}

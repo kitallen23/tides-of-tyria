@@ -12,12 +12,13 @@ import {
     TextFormatSharp,
 } from "@mui/icons-material";
 import { useTheme } from "@/utils/theme-provider";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 
 const Settings = () => {
     const title = useMemo(() => getTitle("Settings"), []);
     const {
         colorScheme: scheme,
+        colors,
         fontType,
         fontSize,
         timeFormat,
@@ -50,6 +51,25 @@ const Settings = () => {
                         Theme
                     </h3>
                     <SchemeSelector scheme={scheme} onChange={setScheme} />
+                </div>
+                <div className={styles.inlineSetting}>
+                    <h3 className={styles.heading}>
+                        <TextFormatSharp style={{ marginRight: "0.25rem" }} />
+                        Primary color
+                    </h3>
+                    <div className={styles.settingsText}>
+                        <TextField
+                            id="theme-primary-color"
+                            variant="outlined"
+                            placeholder={colors.primary}
+                            size="small"
+                            color="primary"
+                            sx={{
+                                maxWidth: "7em",
+                            }}
+                            // onChange={setThemeColor}
+                        />
+                    </div>
                 </div>
                 <div className={styles.inlineSetting}>
                     <h3 className={styles.heading}>

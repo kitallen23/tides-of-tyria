@@ -8,6 +8,7 @@ import META_EVENTS from "@/utils/meta_events";
 import EventTimerContext from "./EventTimerContext";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import HoveredEventIndicator from "./HoveredEventIndicator";
+import EventInfoMenu from "./EventInfoMenu";
 
 const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const scrollParentRef = useRef(null);
@@ -16,6 +17,39 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
 
     const [hoveredRegion, setHoveredRegion] = useState("");
     const [hoveredEvent, setHoveredEvent] = useState(null);
+    const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const _setSelectedEvent = event => {
+        if (selectedEvent?.id === event?.id) {
+            setSelectedEvent(null);
+        } else {
+            setSelectedEvent(event);
+        }
+    };
+
+    const handleClickOutside = event => {
+        if (
+            !event.target.closest(".event-phase") &&
+            !event.target.closest(".event-phase-menu")
+        ) {
+            setSelectedEvent(null);
+        }
+    };
+
+    useEffect(() => {
+        const handleKeydown = event => {
+            if (event.key === "Escape") {
+                setSelectedEvent(null);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("keydown", handleKeydown);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("keydown", handleKeydown);
+        };
+    }, []);
 
     // This is the width of the entire timer component.
     // We calculate this using a special "ruler" element, to ensure that its
@@ -59,6 +93,8 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                 currentTimeBlockStart,
                 hoveredEvent,
                 setHoveredEvent,
+                selectedEvent,
+                setSelectedEvent: _setSelectedEvent,
                 eventWrapperRef,
                 widthRulerRef,
             }}
@@ -68,43 +104,51 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                     [styles.isCollapsed]: isCollapsed,
                 })}
             >
-                <div className={styles.leftFrame} ref={indicatorWrapperRef}>
-                    <div className={styles.spacer} />
-                    <div className={styles.regionIndicatorContainer}>
-                        {META_EVENTS.map(region => (
-                            <RegionIndicator
-                                key={region.key}
-                                region={region}
-                                isHovered={hoveredRegion === region.key}
-                            />
-                        ))}
-                    </div>
-                </div>
-                <div className={styles.rightFrame} ref={scrollParentRef}>
-                    <div className={styles.widthRuler}>
-                        <div ref={widthRulerRef} />
-                    </div>
-                    <TimeRow />
-                    <div className={styles.eventContainer}>
-                        <CurrentTimeIndicator />
-                        <HoveredEventIndicator />
-
-                        <div className={styles.regions} ref={eventWrapperRef}>
+                <div className={styles.innerWrapper}>
+                    <div className={styles.leftFrame} ref={indicatorWrapperRef}>
+                        <div className={styles.spacer} />
+                        <div className={styles.regionIndicatorContainer}>
                             {META_EVENTS.map(region => (
-                                <EventRegion
+                                <RegionIndicator
                                     key={region.key}
                                     region={region}
-                                    currentTimeBlockStart={
-                                        currentTimeBlockStart
-                                    }
-                                    indicatorWrapperRef={indicatorWrapperRef}
-                                    setHoveredRegion={setHoveredRegion}
+                                    isHovered={hoveredRegion === region.key}
                                 />
                             ))}
                         </div>
                     </div>
+                    <div className={styles.rightFrame} ref={scrollParentRef}>
+                        <div className={styles.widthRuler}>
+                            <div ref={widthRulerRef} />
+                        </div>
+                        <TimeRow />
+                        <div className={styles.eventContainer}>
+                            <CurrentTimeIndicator />
+                            <HoveredEventIndicator />
+
+                            <div
+                                className={styles.regions}
+                                ref={eventWrapperRef}
+                            >
+                                {META_EVENTS.map(region => (
+                                    <EventRegion
+                                        key={region.key}
+                                        region={region}
+                                        currentTimeBlockStart={
+                                            currentTimeBlockStart
+                                        }
+                                        indicatorWrapperRef={
+                                            indicatorWrapperRef
+                                        }
+                                        setHoveredRegion={setHoveredRegion}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+            <EventInfoMenu />
         </EventTimerContext.Provider>
     );
 };
