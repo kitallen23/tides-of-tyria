@@ -1,4 +1,11 @@
-import { useContext, useEffect, useMemo, useState, useRef } from "react";
+import {
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+    useRef,
+    useCallback,
+} from "react";
 import styles from "@/styles/modules/event-timer.module.scss";
 
 import Portal from "@/components/Portal";
@@ -21,7 +28,8 @@ import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { copyToClipboard } from "@/utils/util";
 import { toast } from "react-hot-toast";
 import Modal from "@/components/Modal";
-import { format } from "date-fns";
+import { addHours, format, isBefore } from "date-fns";
+import { useTimer } from "@/utils/hooks/useTimer";
 
 const MENU_WIDTH = 250;
 
@@ -33,13 +41,38 @@ const EventInfoMenu = () => {
         [timeFormat]
     );
     const isSmallScreen = useMediaQuery("(max-width: 768px)");
+    const { dailyReset } = useTimer();
 
     const {
         selectedEvent,
         setSelectedEvent,
         eventWrapperRef,
         width: eventContainerWidth,
+        onComplete: _onComplete,
     } = useContext(EventTimerContext);
+
+    const isEventComplete = useMemo(() => {
+        if (!selectedEvent) {
+            return false;
+        }
+        if (
+            selectedEvent.area.lastCompletion &&
+            !isBefore(selectedEvent.area.lastCompletion, dailyReset) &&
+            isBefore(
+                selectedEvent.area.lastCompletion,
+                addHours(dailyReset, 24)
+            )
+        ) {
+            return true;
+        } else if (
+            selectedEvent.lastCompletion &&
+            !isBefore(selectedEvent.lastCompletion, dailyReset) &&
+            isBefore(selectedEvent.lastCompletion, addHours(dailyReset, 24))
+        ) {
+            return true;
+        }
+        return false;
+    }, [selectedEvent, dailyReset]);
 
     const [containerDimensions, setContainerDimensions] = useState(null);
 
@@ -212,6 +245,12 @@ const EventInfoMenu = () => {
         }
     };
 
+    const onComplete = useCallback(() => {
+        if (selectedEvent) {
+            _onComplete(selectedEvent);
+        }
+    }, [selectedEvent, _onComplete]);
+
     useEffect(() => {
         if (!anchor) {
             setButtonIsHovered(false);
@@ -300,6 +339,8 @@ const EventInfoMenu = () => {
                                             onMouseLeave={() =>
                                                 setButtonIsHovered(false)
                                             }
+                                            onClick={onComplete}
+                                            disabled={isEventComplete}
                                         >
                                             <DoneSharp />
                                         </Button>
@@ -394,6 +435,8 @@ const EventInfoMenu = () => {
                                         onMouseLeave={() =>
                                             setButtonIsHovered(false)
                                         }
+                                        onClick={onComplete}
+                                        disabled={isEventComplete}
                                     >
                                         <DoneSharp />
                                     </Button>

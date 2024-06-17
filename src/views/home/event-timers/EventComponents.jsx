@@ -1,5 +1,12 @@
 import { useContext, useEffect, useMemo, useRef } from "react";
-import { addMinutes, differenceInMinutes, format, subMinutes } from "date-fns";
+import {
+    addHours,
+    addMinutes,
+    differenceInMinutes,
+    format,
+    isBefore,
+    subMinutes,
+} from "date-fns";
 import { nanoid } from "nanoid";
 import classNames from "classnames";
 import { useResizeDetector } from "react-resize-detector";
@@ -232,8 +239,9 @@ const AreaEventPhase = ({
     isBackgroundLight,
     isDowntimeBackgroundLight,
     isLast,
+    isAreaComplete,
 }) => {
-    const { now } = useTimer();
+    const { now, dailyReset } = useTimer();
     const {
         width: parentWidth,
         hoveredEvent,
@@ -242,14 +250,6 @@ const AreaEventPhase = ({
         setSelectedEvent,
     } = useContext(EventTimerContext);
 
-    const isDulled = useMemo(
-        () =>
-            selectedEvent?.id === item.id
-                ? false
-                : (hoveredEvent && item.id !== hoveredEvent?.id) ||
-                  (selectedEvent && selectedEvent.id !== item?.id),
-        [hoveredEvent, selectedEvent, item.id]
-    );
     const isSelected = useMemo(
         () => selectedEvent?.id === item.id,
         [item.id, selectedEvent]
@@ -275,6 +275,19 @@ const AreaEventPhase = ({
             (isLast ? 0 : 4)
         );
     }, [item, parentWidth, isLast]);
+
+    const isComplete = useMemo(() => {
+        if (isAreaComplete) {
+            return true;
+        } else if (
+            item.lastCompletion &&
+            !isBefore(item.lastCompletion, dailyReset) &&
+            isBefore(item.lastCompletion, addHours(dailyReset, 24))
+        ) {
+            return true;
+        }
+        return false;
+    }, [item, isAreaComplete, dailyReset]);
 
     const isDowntime = useMemo(
         () => item.key === "downtime" || item.type === "downtime",
@@ -359,6 +372,16 @@ const AreaEventPhase = ({
         [eventBackground]
     );
 
+    const isDulled = useMemo(
+        () =>
+            isComplete
+                ? true
+                : selectedEvent?.id === item.id
+                  ? false
+                  : (hoveredEvent && item.id !== hoveredEvent?.id) ||
+                    (selectedEvent && selectedEvent.id !== item?.id),
+        [hoveredEvent, selectedEvent, item.id, isComplete]
+    );
     const style = useMemo(
         () => ({
             opacity: isDulled ? 0.4 : undefined,
@@ -380,8 +403,8 @@ const AreaEventPhase = ({
                             ? globalStyles.textDark
                             : globalStyles.textLight
                         : isBackgroundLight
-                        ? globalStyles.textDark
-                        : globalStyles.textLight
+                          ? globalStyles.textDark
+                          : globalStyles.textLight
                 }`,
                 {
                     [styles.isHovered]: hoveredEvent?.id === item.id,
@@ -412,7 +435,14 @@ const AreaEventPhase = ({
                 ) : null
             ) : (
                 <>
-                    <div className={styles.title}>
+                    <div
+                        className={styles.title}
+                        style={{
+                            textDecoration: isComplete
+                                ? "line-through"
+                                : undefined,
+                        }}
+                    >
                         {item.isContinued ? "…" : ""}
                         {item.name}
                     </div>
@@ -534,6 +564,17 @@ const PeriodicArea = ({ area, region }) => {
         return isLight(effectiveEventBackgroundColor);
     }, [eventBackground, colors.background]);
 
+    const isComplete = useMemo(() => {
+        if (
+            area.lastCompletion &&
+            !isBefore(area.lastCompletion, dailyReset) &&
+            isBefore(area.lastCompletion, addHours(dailyReset, 24))
+        ) {
+            return true;
+        }
+        return false;
+    }, [area, dailyReset]);
+
     return (
         <div className={styles.area}>
             {(minuteBlocks || []).map((item, i) => (
@@ -544,6 +585,7 @@ const PeriodicArea = ({ area, region }) => {
                     isBackgroundLight={isBackgroundLight}
                     isDowntimeBackgroundLight={isDowntimeBackgroundLight}
                     isLast={i === minuteBlocks.length - 1}
+                    isAreaComplete={isComplete}
                 />
             ))}
         </div>
