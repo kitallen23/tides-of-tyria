@@ -1,5 +1,8 @@
-import { LOCAL_STORAGE_KEYS } from "@/useApp";
-import { STALE_TIME_IN_SECONDS, TITLE_SUFFIX } from "@/utils/constants";
+import {
+    LOCAL_STORAGE_KEYS,
+    STALE_TIME_IN_SECONDS,
+    TITLE_SUFFIX,
+} from "@/utils/constants";
 import {
     subHours as _subHours,
     format as _format,

@@ -15,7 +15,7 @@ import {
 import { useTheme } from "@/utils/theme-provider";
 import { Button, TextField } from "@mui/material";
 import { SCHEMES } from "@/utils/color-schemes";
-import { LOCAL_STORAGE_KEYS } from "@/useApp";
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 
 const Settings = () => {
     const title = useMemo(() => getTitle("Settings"), []);

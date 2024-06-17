@@ -6,15 +6,7 @@ import { detectTheme, getLocalItem } from "@/utils/util";
 
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
-
-export const LOCAL_STORAGE_KEYS = {
-    theme: "tot_theme",
-    fontSize: "tot_font_size",
-    fontType: "tot_font_type",
-    timeFormat: "tot_time_format",
-    isTimerCollapsed: "tot_is_timer_collapsed",
-    primaryColor: "tot_primary_color",
-};
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 
 export const getDesignTokens = theme => ({
     status: {
