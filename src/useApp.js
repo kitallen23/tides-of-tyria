@@ -1,4 +1,4 @@
-import { useReducer, useMemo, useEffect } from "react";
+import { useReducer, useMemo } from "react";
 import { alpha, createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
