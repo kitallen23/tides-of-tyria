@@ -9,6 +9,7 @@ import EventTimerContext from "./EventTimerContext";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import HoveredEventIndicator from "./HoveredEventIndicator";
 import EventInfoMenu from "./EventInfoMenu";
+import { addMinutes } from "date-fns";
 
 const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const scrollParentRef = useRef(null);
@@ -18,6 +19,18 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const [hoveredRegion, setHoveredRegion] = useState("");
     const [hoveredEvent, setHoveredEvent] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
+
+    useEffect(() => {
+        if (selectedEvent && currentTimeBlockStart) {
+            const eventEnd = addMinutes(
+                selectedEvent.startDate,
+                selectedEvent.duration
+            );
+            if (eventEnd <= currentTimeBlockStart) {
+                setSelectedEvent(null);
+            }
+        }
+    }, [selectedEvent, currentTimeBlockStart]);
 
     const _setSelectedEvent = event => {
         if (selectedEvent?.id === event?.id) {
