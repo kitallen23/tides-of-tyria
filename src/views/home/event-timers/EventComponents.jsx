@@ -289,9 +289,11 @@ const AreaEventPhase = ({
         if (item.type === "downtime" || item.key === "downtime") {
             return "";
         }
-        if (addMinutes(item.startDate, 2) < now) {
+        // 5 mins ago
+        if (addMinutes(item.startDate, 5 + 1) < now) {
             return "";
         }
+        // 120 mins in the future
         if (item.startDate >= addMinutes(now, 120)) {
             return "";
         }
@@ -300,8 +302,8 @@ const AreaEventPhase = ({
         const minDiff = differenceInMinutes(item.startDate, now);
 
         if (!isInFuture) {
-            if (minDiff === -1) {
-                return "1 min ago";
+            if (minDiff < 0) {
+                return `${minDiff * -1} min${minDiff === -1 ? "" : "s"} ago`;
             } else if (minDiff === 0) {
                 return "now";
             } else {
@@ -344,7 +346,10 @@ const AreaEventPhase = ({
         if (item.waypoint) {
             copyToClipboard(item.waypoint, {
                 onSuccess: () => toast.success("Waypoint copied to clipboard!"),
-                onError: () => toast.error("Something went wrong when copying to clipboard."),
+                onError: () =>
+                    toast.error(
+                        "Something went wrong when copying to clipboard."
+                    ),
             });
         }
     };
