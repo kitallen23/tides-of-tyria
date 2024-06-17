@@ -8,20 +8,7 @@
         "build": "vite build",
         "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "docker:build": "docker build -f Dockerfile.dev -t tides-of-tyria-dev .",
-        "docker:stop": "docker stop tides-of-tyria-dev || true",
-        "docker:rm": "docker rm -f tides-of-tyria-dev || true",
-        "docker:start": "docker run -d -p 5173:5173 -v $(pwd):/app --name tides-of-tyria-dev tides-of-tyria-dev",
-        "docker:dev": "yarn docker:stop && yarn docker:rm && yarn docker:build && yarn docker:start",
-        "docker:build:prod": "docker build --platform linux/amd64 -t tides-of-tyria .",
-        "docker:save:prod": "docker save tides-of-tyria:latest -o docker_images/tides-of-tyria_$(date \"+%Y%m%d-%H%M\").tar",
-        "docker:stop:prod": "docker stop tides-of-tyria || true",
-        "docker:rm:prod": "docker rm -f tides-of-tyria || true",
-        "docker:stop:stage": "docker stop tides-of-tyria-staging || true",
-        "docker:rm:stage": "docker rm -f tides-of-tyria-staging || true",
-        "docker:build:stage": "docker build -t tides-of-tyria-staging .",
-        "docker:start:stage": "docker run -d -p 5174:80 --name tides-of-tyria-staging tides-of-tyria-staging",
-        "docker:stage": "yarn docker:stop:stage && yarn docker:rm:stage && yarn docker:build:stage && yarn docker:start:stage"
+        "prepare": "husky"
     },
     "dependencies": {
         "@emotion/react": "^11.11.4",
@@ -47,7 +34,16 @@
         "eslint-plugin-react": "^7.33.2",
         "eslint-plugin-react-hooks": "^4.6.0",
         "eslint-plugin-react-refresh": "^0.4.5",
+        "husky": "^9.0.11",
+        "lint-staged": "^15.2.7",
+        "prettier": "^3.3.2",
         "sass": "^1.71.1",
         "vite": "^5.1.4"
+    },
+    "lint-staged": {
+        "*.{js,jsx,ts,tsx}": [
+            "eslint --fix",
+            "prettier --write"
+        ]
     }
 }
