@@ -1,4 +1,11 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import {
+    useContext,
+    useEffect,
+    useMemo,
+    useState,
+    useRef,
+    useCallback,
+} from "react";
 import styles from "@/styles/modules/event-timer.module.scss";
 
 import Portal from "@/components/Portal";
@@ -21,24 +28,51 @@ import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { copyToClipboard } from "@/utils/util";
 import { toast } from "react-hot-toast";
 import Modal from "@/components/Modal";
-import { format } from "date-fns";
+import { addHours, format, isBefore } from "date-fns";
+import { useTimer } from "@/utils/hooks/useTimer";
 
 const MENU_WIDTH = 250;
 
 const EventInfoMenu = () => {
+    const eventPhaseMenuRef = useRef(null);
     const { colors, timeFormat, mode } = useTheme();
     const formatString = useMemo(
         () => (timeFormat === "12h" ? "h:mmaaa" : "H:mm"),
         [timeFormat]
     );
     const isSmallScreen = useMediaQuery("(max-width: 768px)");
+    const { dailyReset } = useTimer();
 
     const {
         selectedEvent,
         setSelectedEvent,
         eventWrapperRef,
         width: eventContainerWidth,
+        onComplete: _onComplete,
     } = useContext(EventTimerContext);
+
+    const isEventComplete = useMemo(() => {
+        if (!selectedEvent) {
+            return false;
+        }
+        if (
+            selectedEvent.area.lastCompletion &&
+            !isBefore(selectedEvent.area.lastCompletion, dailyReset) &&
+            isBefore(
+                selectedEvent.area.lastCompletion,
+                addHours(dailyReset, 24)
+            )
+        ) {
+            return true;
+        } else if (
+            selectedEvent.lastCompletion &&
+            !isBefore(selectedEvent.lastCompletion, dailyReset) &&
+            isBefore(selectedEvent.lastCompletion, addHours(dailyReset, 24))
+        ) {
+            return true;
+        }
+        return false;
+    }, [selectedEvent, dailyReset]);
 
     const [containerDimensions, setContainerDimensions] = useState(null);
 
@@ -57,6 +91,15 @@ const EventInfoMenu = () => {
     }, [selectedEvent]);
 
     const [anchor, setAnchor] = useState(null);
+    const [eventMenuHeight, setEventMenuHeight] = useState(0);
+
+    useEffect(() => {
+        let eventMenuHeight = 0;
+        if (eventPhaseMenuRef.current) {
+            eventMenuHeight = eventPhaseMenuRef.current.offsetHeight;
+        }
+        setEventMenuHeight(eventMenuHeight);
+    }, [eventPhaseMenuRef, anchor]);
 
     // Find the position to place the menu
     useEffect(() => {
@@ -68,6 +111,35 @@ const EventInfoMenu = () => {
                 throw new Error();
             }
             const boundingBox = selectedElement.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            let top =
+                boundingBox.bottom -
+                containerDimensions.top +
+                containerDimensions.scrollTop +
+                4;
+            // These values allow us to compare top & bottom against window's
+            // innerHeight
+            const topRelativeToViewport = boundingBox.bottom + 4;
+            const bottomRelativeToViewport =
+                topRelativeToViewport + eventMenuHeight;
+
+            // Anchor to top of event instead of bottom, as there's not enough
+            // screen space below the event. The user can still scroll down, but
+            // this means the event menu will always be on the screen without
+            // the user needing to scroll.
+            if (
+                bottomRelativeToViewport &&
+                bottomRelativeToViewport > windowHeight
+            ) {
+                top = `${
+                    boundingBox.top -
+                    containerDimensions.top +
+                    containerDimensions.scrollTop -
+                    4 -
+                    eventMenuHeight
+                }px`;
+            }
 
             if (
                 boundingBox.left + MENU_WIDTH >
@@ -76,24 +148,16 @@ const EventInfoMenu = () => {
                 // This means that the menu is "poking out" of the right side of the
                 // event area, so anchor it to the right of the bounding box
                 setAnchor({
-                    top: `${
-                        boundingBox.bottom -
-                        containerDimensions.top +
-                        containerDimensions.scrollTop +
-                        4
-                    }px`,
+                    top,
                     left: `${boundingBox.right - MENU_WIDTH}px`,
+                    opacity: eventMenuHeight ? 1 : 0,
                 });
             } else {
                 // Menu can fit, so attach it left-aligned as usual
                 setAnchor({
-                    top: `${
-                        boundingBox.bottom -
-                        containerDimensions.top +
-                        containerDimensions.scrollTop +
-                        4
-                    }px`,
+                    top,
                     left: `${boundingBox.left}px`,
+                    opacity: eventMenuHeight ? 1 : 0,
                 });
             }
         } catch {
@@ -104,6 +168,7 @@ const EventInfoMenu = () => {
         eventWrapperRef,
         containerDimensions,
         eventContainerWidth,
+        eventMenuHeight,
     ]);
 
     // Color calculations
@@ -179,6 +244,12 @@ const EventInfoMenu = () => {
             });
         }
     };
+
+    const onComplete = useCallback(() => {
+        if (selectedEvent) {
+            _onComplete(selectedEvent);
+        }
+    }, [selectedEvent, _onComplete]);
 
     useEffect(() => {
         if (!anchor) {
@@ -268,6 +339,8 @@ const EventInfoMenu = () => {
                                             onMouseLeave={() =>
                                                 setButtonIsHovered(false)
                                             }
+                                            onClick={onComplete}
+                                            disabled={isEventComplete}
                                         >
                                             <DoneSharp />
                                         </Button>
@@ -287,6 +360,7 @@ const EventInfoMenu = () => {
                         ...anchor,
                         borderColor,
                     }}
+                    ref={eventPhaseMenuRef}
                 >
                     <div
                         className={styles.closeButtonWrapper}
@@ -361,6 +435,8 @@ const EventInfoMenu = () => {
                                         onMouseLeave={() =>
                                             setButtonIsHovered(false)
                                         }
+                                        onClick={onComplete}
+                                        disabled={isEventComplete}
                                     >
                                         <DoneSharp />
                                     </Button>

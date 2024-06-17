@@ -9,15 +9,82 @@ import EventTimerContext from "./EventTimerContext";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import HoveredEventIndicator from "./HoveredEventIndicator";
 import EventInfoMenu from "./EventInfoMenu";
+import { getLocalItem } from "@/utils/util";
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import { useTimer } from "@/utils/hooks/useTimer";
+import { cleanEventConfig, markEventComplete } from "./utils";
+import { addMinutes, min } from "date-fns";
 
 const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const scrollParentRef = useRef(null);
     const indicatorWrapperRef = useRef(null);
     const eventWrapperRef = useRef(null);
+    const { now, dailyReset } = useTimer();
 
     const [hoveredRegion, setHoveredRegion] = useState("");
     const [hoveredEvent, setHoveredEvent] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
+
+    const [eventConfig, setEventConfig] = useState(null);
+
+    // Take event config from local storage, clean it, set in state, then save
+    // back to local storage
+    const initialiseEventConfig = (eventConfigString, dailyReset) => {
+        try {
+            let eventConfig = JSON.parse(eventConfigString);
+            eventConfig = cleanEventConfig(eventConfig, dailyReset);
+            setEventConfig(eventConfig);
+            localStorage.setItem(
+                LOCAL_STORAGE_KEYS.eventConfig,
+                JSON.stringify(eventConfig)
+            );
+        } catch (err) {
+            console.error(
+                `Error parsing event configuration from local storage: `,
+                err
+            );
+            localStorage.setItem(
+                LOCAL_STORAGE_KEYS.eventConfig,
+                JSON.stringify(META_EVENTS)
+            );
+            setEventConfig(META_EVENTS);
+        }
+    };
+
+    useEffect(() => {
+        const eventConfigString = getLocalItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            ""
+        );
+        initialiseEventConfig(eventConfigString, dailyReset);
+        // console.log(
+        //     `Minutes until next reset: `,
+        //     differenceInMinutes(addHours(dailyReset, 24), new Date())
+        // );
+    }, [dailyReset]);
+
+    const onComplete = event => {
+        const eventEnd = addMinutes(event.startDate, event.duration);
+        const completionDate = min([eventEnd, now]);
+        const _eventConfig = markEventComplete(
+            eventConfig,
+            event,
+            completionDate
+        );
+        setEventConfig(_eventConfig);
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            JSON.stringify(_eventConfig)
+        );
+        setSelectedEvent(null);
+    };
+
+    // Unset the selected event whenever the current time block changes
+    useEffect(() => {
+        if (currentTimeBlockStart) {
+            setSelectedEvent(null);
+        }
+    }, [currentTimeBlockStart]);
 
     const _setSelectedEvent = event => {
         if (selectedEvent?.id === event?.id) {
@@ -86,6 +153,10 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
         }
     }, [scrollParentRef]);
 
+    if (!eventConfig) {
+        return null;
+    }
+
     return (
         <EventTimerContext.Provider
             value={{
@@ -97,6 +168,7 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                 setSelectedEvent: _setSelectedEvent,
                 eventWrapperRef,
                 widthRulerRef,
+                onComplete,
             }}
         >
             <div
@@ -108,7 +180,7 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                     <div className={styles.leftFrame} ref={indicatorWrapperRef}>
                         <div className={styles.spacer} />
                         <div className={styles.regionIndicatorContainer}>
-                            {META_EVENTS.map(region => (
+                            {eventConfig.map(region => (
                                 <RegionIndicator
                                     key={region.key}
                                     region={region}
@@ -130,7 +202,7 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                                 className={styles.regions}
                                 ref={eventWrapperRef}
                             >
-                                {META_EVENTS.map(region => (
+                                {eventConfig.map(region => (
                                     <EventRegion
                                         key={region.key}
                                         region={region}

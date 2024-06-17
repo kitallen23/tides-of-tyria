@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { SCHEMES } from "./color-schemes";
-import { getLocalItem } from "./util";
-import { LOCAL_STORAGE_KEYS } from "@/useApp";
+import { getLocalItem } from "@/utils/util";
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 
 export const DEFAULT_THEME_STATE = {
     ...SCHEMES.dark,

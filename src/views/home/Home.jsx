@@ -23,7 +23,7 @@ import EventTimers from "./event-timers/";
 import { useTimer } from "@/utils/hooks/useTimer";
 import { useTheme } from "@/utils/theme-provider";
 import { getLocalItem } from "@/utils/util";
-import { LOCAL_STORAGE_KEYS } from "@/useApp";
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 
 // Obtains the start time of a "time block"; a 2-hour period of time, relative to the
 // local timezone, that started on the last 1-hour time window.
