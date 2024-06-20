@@ -134,6 +134,8 @@ $time-row-font-size: 0.875em;
                         border-style: solid;
                         border-color: transparent;
 
+                        user-select: none;
+
                         &.isClickable {
                             cursor: pointer;
                         }
