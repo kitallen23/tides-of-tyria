@@ -1,15 +1,19 @@
 import { useContext, useEffect, useMemo, useState } from "react";
+import { format } from "date-fns";
 
 import styles from "@/styles/modules/event-timer.module.scss";
-import { format } from "date-fns";
 import { useTheme } from "@/utils/theme-provider";
-import EventTimerContext from "./EventTimerContext";
 import { ensureContrast, isContrastEnough } from "@/utils/color";
+
+import EventTimerContext from "../EventTimerContext";
 
 const HoveredEventIndicator = ({ showLabel }) => {
     const { colors, timeFormat, mode } = useTheme();
-    const { currentTimeBlockStart, eventWrapperRef, width: parentWidth } =
-        useContext(EventTimerContext);
+    const {
+        currentTimeBlockStart,
+        eventWrapperRef,
+        width: parentWidth,
+    } = useContext(EventTimerContext);
     const formatString = useMemo(
         () => (timeFormat === "12h" ? "h:mmaaa" : "H:mm"),
         [timeFormat]

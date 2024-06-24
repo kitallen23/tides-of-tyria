@@ -109,6 +109,14 @@ export const getDesignTokens = theme => ({
                 }),
             },
         },
+        MuiMenu: {
+            styleOverrides: {
+                paper: {
+                    backgroundColor: theme.colors.backgroundNav,
+                    backgroundImage: "none",
+                },
+            },
+        },
     },
 });
 

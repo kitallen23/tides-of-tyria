@@ -43,11 +43,4 @@
             }
         }
     }
-
-    .fullscreenButton {
-        display: none;
-        @media (min-width: calc(#{c.$content-width} + 2 * #{c.$page-content-padding-horizontal})) {
-            display: inline-flex;
-        }
-    }
 }

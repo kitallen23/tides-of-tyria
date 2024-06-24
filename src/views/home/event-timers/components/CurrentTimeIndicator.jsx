@@ -2,10 +2,10 @@ import { useContext, useMemo } from "react";
 import { addMinutes, differenceInSeconds } from "date-fns";
 
 import styles from "@/styles/modules/event-timer.module.scss";
-
 import { useTimer } from "@/utils/hooks/useTimer";
-import EventTimerContext from "./EventTimerContext";
-import { TIME_BLOCK_MINS } from "./utils";
+
+import EventTimerContext from "../EventTimerContext";
+import { TIME_BLOCK_MINS } from "../utils";
 
 const CurrentTimeIndicator = () => {
     const { currentTimeBlockStart, width: parentWidth } =

@@ -2,20 +2,67 @@ import { useEffect, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import classNames from "classnames";
 import styles from "@/styles/modules/event-timer.module.scss";
+import globalStyles from "@/styles/modules/global-styles.module.scss";
+import layoutStyles from "@/styles/modules/home.module.scss";
+import { Button } from "@mui/material";
+import {
+    ChevronLeftSharp,
+    ChevronRightSharp,
+    HistorySharp,
+    HourglassTopSharp,
+    MoreVertSharp,
+} from "@mui/icons-material";
+import {
+    getHours,
+    isEqual,
+    setHours,
+    setMilliseconds,
+    setMinutes,
+    setSeconds,
+    addMinutes,
+    min,
+} from "date-fns";
 
-import EventRegion, { RegionIndicator, TimeRow } from "./EventComponents";
 import META_EVENTS from "@/utils/meta_events";
-import EventTimerContext from "./EventTimerContext";
-import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import HoveredEventIndicator from "./HoveredEventIndicator";
-import EventInfoMenu from "./EventInfoMenu";
 import { getLocalItem } from "@/utils/util";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import { useTimer } from "@/utils/hooks/useTimer";
-import { cleanEventConfig, markEventComplete } from "./utils";
-import { addMinutes, min } from "date-fns";
+import { useTheme } from "@/utils/theme-provider";
 
-const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
+import EventRegion, {
+    RegionIndicator,
+    TimeRow,
+} from "./components/EventComponents";
+import {
+    cleanEventConfig,
+    markAllEventsIncomplete,
+    markEventComplete,
+} from "./utils";
+import EventTimerContext from "./EventTimerContext";
+import OptionsMenu from "./components/OptionsMenu";
+import CurrentTimeIndicator from "./components/CurrentTimeIndicator";
+import HoveredEventIndicator from "./components/HoveredEventIndicator";
+import EventInfoMenu from "./components/EventInfoMenu";
+
+// Obtains the start time of a "time block"; a 2-hour period of time, relative to the
+// local timezone, that started on the last 1-hour time window.
+// A time block may be 1pm - 3pm, or 2am - 4am.
+const getCurrentTimeBlockStart = (offset = 0) => {
+    const now = new Date();
+    const hoursSinceMidnight = getHours(now);
+    const timeBlockStart = setMilliseconds(
+        setSeconds(
+            setMinutes(setHours(now, hoursSinceMidnight + offset), 0),
+            0
+        ),
+        0
+    );
+
+    return timeBlockStart;
+};
+
+const EventTimers = () => {
+    const { colors } = useTheme();
     const scrollParentRef = useRef(null);
     const indicatorWrapperRef = useRef(null);
     const eventWrapperRef = useRef(null);
@@ -26,6 +73,25 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     const [eventConfig, setEventConfig] = useState(null);
+
+    const { key } = useTimer();
+    const [offset, setOffset] = useState(0);
+
+    // Stores the start moment of the selected 2-hour time window
+    // (defaults to the current one)
+    // Note that this is relative to the local time, e.g. the first window of
+    // today is always 12:00am local time
+    const [currentTimeBlockStart, setCurrentTimeBlockStart] = useState(
+        getCurrentTimeBlockStart()
+    );
+
+    // Update the current time block, but only when necessary
+    useEffect(() => {
+        const newCurrentTimeBlockStart = getCurrentTimeBlockStart(offset);
+        if (!isEqual(currentTimeBlockStart, newCurrentTimeBlockStart)) {
+            setCurrentTimeBlockStart(newCurrentTimeBlockStart);
+        }
+    }, [key, currentTimeBlockStart, offset]);
 
     // Take event config from local storage, clean it, set in state, then save
     // back to local storage
@@ -71,6 +137,16 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
             event,
             completionDate
         );
+        setEventConfig(_eventConfig);
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            JSON.stringify(_eventConfig)
+        );
+        setSelectedEvent(null);
+    };
+
+    const onResetCompletedEvents = () => {
+        const _eventConfig = markAllEventsIncomplete(eventConfig);
         setEventConfig(_eventConfig);
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.eventConfig,
@@ -151,77 +227,190 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                 container1.removeEventListener("scroll", handleScroll1);
             };
         }
-    }, [scrollParentRef]);
+    }, [scrollParentRef, width]);
+
+    const [isTimerCollapsed, _setIsTimerCollapsed] = useState(() => {
+        const isTimerCollapsed = getLocalItem(
+            LOCAL_STORAGE_KEYS.isTimerCollapsed,
+            "false"
+        );
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.isTimerCollapsed,
+            isTimerCollapsed
+        );
+        return isTimerCollapsed === "true";
+    });
+
+    const toggleIsTimerCollapsed = () => {
+        const _isTimerCollapsed = !isTimerCollapsed;
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.isTimerCollapsed,
+            _isTimerCollapsed
+        );
+        _setIsTimerCollapsed(_isTimerCollapsed);
+    };
+
+    const [menuAnchor, setMenuAnchor] = useState(null);
+    const isMenuOpen = Boolean(menuAnchor);
+
+    const onMenuButtonClick = event => {
+        setMenuAnchor(event.currentTarget);
+    };
+    const onMenuClose = () => {
+        setMenuAnchor(null);
+    };
 
     if (!eventConfig) {
         return null;
     }
 
     return (
-        <EventTimerContext.Provider
-            value={{
-                width,
-                currentTimeBlockStart,
-                hoveredEvent,
-                setHoveredEvent,
-                selectedEvent,
-                setSelectedEvent: _setSelectedEvent,
-                eventWrapperRef,
-                widthRulerRef,
-                onComplete,
-            }}
-        >
-            <div
-                className={classNames(styles.eventTimer, {
-                    [styles.isCollapsed]: isCollapsed,
-                })}
-            >
-                <div className={styles.innerWrapper}>
-                    <div className={styles.leftFrame} ref={indicatorWrapperRef}>
-                        <div className={styles.spacer} />
-                        <div className={styles.regionIndicatorContainer}>
-                            {eventConfig.map(region => (
-                                <RegionIndicator
-                                    key={region.key}
-                                    region={region}
-                                    isHovered={hoveredRegion === region.key}
-                                />
-                            ))}
-                        </div>
+        <div className={layoutStyles.group}>
+            <div className={globalStyles.centeredContent}>
+                <div className={layoutStyles.headingRow}>
+                    <h3 className={layoutStyles.heading}>
+                        <HourglassTopSharp style={{ marginRight: "0.25rem" }} />
+                        Event Timers
+                        <span
+                            style={{
+                                color: colors.muted,
+                                fontSize: "0.85em",
+                                fontWeight: "normal",
+                            }}
+                            className={globalStyles.hideBelowMd}
+                        >
+                            &nbsp;| Click an event to see info
+                        </span>
+                    </h3>
+                    <div className={layoutStyles.buttonGroup}>
+                        <Button
+                            variant="text"
+                            sx={{ minWidth: 0 }}
+                            color="muted"
+                            onClick={onMenuButtonClick}
+                        >
+                            <MoreVertSharp sx={{ fontSize: "1.17em" }} />
+                        </Button>
+                        <OptionsMenu
+                            anchorEl={menuAnchor}
+                            open={isMenuOpen}
+                            isTimerCollapsed={isTimerCollapsed}
+                            onClose={onMenuClose}
+                            onReset={onResetCompletedEvents}
+                            onToggleIsTimerCollapsed={toggleIsTimerCollapsed}
+                            anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "right",
+                            }}
+                            transformOrigin={{
+                                vertical: "top",
+                                horizontal: "right",
+                            }}
+                        />
+                        <Button
+                            variant="text"
+                            sx={{ minWidth: 0 }}
+                            color="muted"
+                            onClick={() => setOffset(offset - 1)}
+                        >
+                            <ChevronLeftSharp sx={{ fontSize: "1.17em" }} />
+                        </Button>
+                        <Button
+                            variant="text"
+                            sx={{
+                                minWidth: 0,
+                                ":disabled": {
+                                    color: `${colors.muted}80`,
+                                },
+                            }}
+                            color="muted"
+                            onClick={() => setOffset(0)}
+                            disabled={offset === 0}
+                        >
+                            <HistorySharp sx={{ fontSize: "1.17em" }} />
+                        </Button>
+                        <Button
+                            variant="text"
+                            sx={{ minWidth: 0 }}
+                            color="muted"
+                            onClick={() => setOffset(offset + 1)}
+                        >
+                            <ChevronRightSharp sx={{ fontSize: "1.17em" }} />
+                        </Button>
                     </div>
-                    <div className={styles.rightFrame} ref={scrollParentRef}>
-                        <div className={styles.widthRuler}>
-                            <div ref={widthRulerRef} />
-                        </div>
-                        <TimeRow />
-                        <div className={styles.eventContainer}>
-                            <CurrentTimeIndicator />
-                            <HoveredEventIndicator />
-
-                            <div
-                                className={styles.regions}
-                                ref={eventWrapperRef}
-                            >
+                </div>
+            </div>
+            <EventTimerContext.Provider
+                value={{
+                    width,
+                    currentTimeBlockStart,
+                    hoveredEvent,
+                    setHoveredEvent,
+                    selectedEvent,
+                    setSelectedEvent: _setSelectedEvent,
+                    eventWrapperRef,
+                    widthRulerRef,
+                    onComplete,
+                }}
+            >
+                <div
+                    className={classNames(styles.eventTimer, {
+                        [styles.isCollapsed]: isTimerCollapsed,
+                    })}
+                >
+                    <div className={styles.innerWrapper}>
+                        <div
+                            className={styles.leftFrame}
+                            ref={indicatorWrapperRef}
+                        >
+                            <div className={styles.spacer} />
+                            <div className={styles.regionIndicatorContainer}>
                                 {eventConfig.map(region => (
-                                    <EventRegion
+                                    <RegionIndicator
                                         key={region.key}
                                         region={region}
-                                        currentTimeBlockStart={
-                                            currentTimeBlockStart
-                                        }
-                                        indicatorWrapperRef={
-                                            indicatorWrapperRef
-                                        }
-                                        setHoveredRegion={setHoveredRegion}
+                                        isHovered={hoveredRegion === region.key}
                                     />
                                 ))}
                             </div>
                         </div>
+                        <div
+                            className={styles.rightFrame}
+                            ref={scrollParentRef}
+                        >
+                            <div className={styles.widthRuler}>
+                                <div ref={widthRulerRef} />
+                            </div>
+                            <TimeRow />
+                            <div className={styles.eventContainer}>
+                                <CurrentTimeIndicator />
+                                <HoveredEventIndicator />
+
+                                <div
+                                    className={styles.regions}
+                                    ref={eventWrapperRef}
+                                >
+                                    {eventConfig.map(region => (
+                                        <EventRegion
+                                            key={region.key}
+                                            region={region}
+                                            currentTimeBlockStart={
+                                                currentTimeBlockStart
+                                            }
+                                            indicatorWrapperRef={
+                                                indicatorWrapperRef
+                                            }
+                                            setHoveredRegion={setHoveredRegion}
+                                        />
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <EventInfoMenu />
-        </EventTimerContext.Provider>
+                <EventInfoMenu />
+            </EventTimerContext.Provider>
+        </div>
     );
 };
 

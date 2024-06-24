@@ -234,6 +234,7 @@ body {
 body {
     color: rgb(var(--foreground-rgb));
     background: rgb(var(--background-rgb));
+    -webkit-text-size-adjust: none;
 }
 
 html[data-theme="kanagawa"] {

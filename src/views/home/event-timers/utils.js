@@ -58,3 +58,18 @@ export const markEventComplete = (eventConfig, event, completionDate) => {
         }),
     }));
 };
+
+export const markAllEventsIncomplete = eventConfig => {
+    const _eventConfig = structuredClone(eventConfig);
+    return _eventConfig.map(region => ({
+        ...region,
+        sub_areas: region.sub_areas.map(subArea => {
+            subArea.lastCompletion = undefined;
+            subArea.phases = subArea.phases.map(phase => {
+                phase.lastCompletion = undefined;
+                return phase;
+            });
+            return subArea;
+        }),
+    }));
+};

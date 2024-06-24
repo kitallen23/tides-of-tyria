@@ -1,5 +1,5 @@
 @use "../variables/core-variables" as c;
-$min-area-width: 600px;
+$min-area-width: 768px;
 $timer-gap: 4px;
 $line-height: var(--line-height);
 $time-row-font-size: 0.875em;
@@ -98,6 +98,7 @@ $time-row-font-size: 0.875em;
 
         .widthRuler {
             overflow-x: auto;
+            overscroll-behaviour: none;
             height: 0;
             & > div {
                 min-width: $min-area-width;
@@ -106,6 +107,7 @@ $time-row-font-size: 0.875em;
 
         .eventContainer {
             overflow-x: auto;
+            overscroll-behaviour: none;
             position: relative;
 
             .regions {
@@ -133,6 +135,9 @@ $time-row-font-size: 0.875em;
                         border-width: 2px;
                         border-style: solid;
                         border-color: transparent;
+
+                        user-select: none;
+                        -webkit-user-select: none;
 
                         &.isClickable {
                             cursor: pointer;
@@ -193,6 +198,7 @@ $time-row-font-size: 0.875em;
             top: -1 * (c.$page-content-padding-vertical);
             z-index: 12;
             overflow-x: auto;
+            overscroll-behaviour: none;
 
             scrollbar-width: none; // Firefox
             &::webkit-scrollbar {
@@ -310,10 +316,6 @@ $time-row-font-size: 0.875em;
         font-size: 1.17em;
     }
 
-    .eventAreaName {
-        /* font-size: 0.875em; */
-    }
-
     .buttonArea {
         display: grid;
         gap: 0.5rem;
@@ -347,6 +349,19 @@ $time-row-font-size: 0.875em;
             color: var(--text-muted);
             transition: opacity var(--transition);
             min-height: calc((1em * #{$line-height}));
+        }
+    }
+}
+.eventOptionsMenuModal {
+    display: grid;
+    gap: 1rem;
+}
+
+.eventOptionsMenu {
+    .eventOptions__fullscreenOption {
+        display: none;
+        @media (min-width: calc(#{c.$content-width} + 2 * #{c.$page-content-padding-horizontal})) {
+            display: flex;
         }
     }
 }
