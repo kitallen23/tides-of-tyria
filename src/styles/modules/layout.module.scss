@@ -8,7 +8,7 @@ $topbar-height: 56px;
     overflow: hidden;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: $topbar-height auto;
+    grid-template-rows: auto;
     background-color: rgb(var(--nav-background-rgb));
 
     & > .pageContent {
@@ -19,6 +19,7 @@ $topbar-height: 56px;
         background: rgb(var(--background-rgb));
         transition: background-color var(--transition);
         position: relative;
+        margin-top: $topbar-height;
     }
 }
 [data-font-size="sm"]:root {
@@ -40,7 +41,12 @@ $topbar-height: 56px;
 .header {
     background-color: rgb(var(--nav-background-rgb));
     transition: background-color var(--transition);
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $topbar-height;
+    z-index: var(--max-z);
     padding: 0 0.5rem;
 
     .content {

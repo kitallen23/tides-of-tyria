@@ -1,5 +1,5 @@
 @use "../variables/core-variables" as c;
-$min-area-width: 600px;
+$min-area-width: 768px;
 $timer-gap: 4px;
 $line-height: var(--line-height);
 $time-row-font-size: 0.875em;
@@ -98,6 +98,7 @@ $time-row-font-size: 0.875em;
 
         .widthRuler {
             overflow-x: auto;
+            overscroll-behaviour: none;
             height: 0;
             & > div {
                 min-width: $min-area-width;
@@ -106,6 +107,7 @@ $time-row-font-size: 0.875em;
 
         .eventContainer {
             overflow-x: auto;
+            overscroll-behaviour: none;
             position: relative;
 
             .regions {
@@ -195,6 +197,7 @@ $time-row-font-size: 0.875em;
             top: -1 * (c.$page-content-padding-vertical);
             z-index: 12;
             overflow-x: auto;
+            overscroll-behaviour: none;
 
             scrollbar-width: none; // Firefox
             &::webkit-scrollbar {

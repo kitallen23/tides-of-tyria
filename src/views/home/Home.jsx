@@ -170,7 +170,7 @@ const Home = () => {
                     isCollapsed={isTimerCollapsed}
                 />
             </div>
-            <div className={styles.group} style={{ display: "none" }}>
+            <div className={styles.group} /*style={{ display: "none" }}*/>
                 <div className={globalStyles.centeredContent}>
                     <div className={styles.headingRow}>
                         <h3 className={styles.heading}>
@@ -188,145 +188,145 @@ const Home = () => {
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                     <div className={styles.scratchpadPlaceholder}>
                         <div />
                         <div
-                            style={{ width: `${100 + Math.random() * 400}px` }}
+                            style={{ width: `${100 + Math.random() * 200}px` }}
                         />
                     </div>
                 </div>
