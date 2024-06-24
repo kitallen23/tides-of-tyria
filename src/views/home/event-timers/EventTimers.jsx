@@ -151,7 +151,7 @@ const EventTimers = ({ currentTimeBlockStart, isCollapsed }) => {
                 container1.removeEventListener("scroll", handleScroll1);
             };
         }
-    }, [scrollParentRef]);
+    }, [scrollParentRef, width]);
 
     if (!eventConfig) {
         return null;
