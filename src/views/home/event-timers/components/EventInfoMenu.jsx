@@ -6,17 +6,6 @@ import {
     useRef,
     useCallback,
 } from "react";
-import styles from "@/styles/modules/event-timer.module.scss";
-
-import Portal from "@/components/Portal";
-import EventTimerContext from "./EventTimerContext";
-import classNames from "classnames";
-import { useTheme } from "@/utils/theme-provider";
-import {
-    adjustLuminance,
-    ensureContrast,
-    isContrastEnough,
-} from "@/utils/color";
 import {
     ClearSharp,
     DoneSharp,
@@ -24,12 +13,24 @@ import {
     LocationOnSharp,
 } from "@mui/icons-material";
 import { Button, ButtonGroup, useMediaQuery } from "@mui/material";
+import classNames from "classnames";
+import { toast } from "react-hot-toast";
+import { addHours, format, isBefore } from "date-fns";
+
+import styles from "@/styles/modules/event-timer.module.scss";
+import Portal from "@/components/Portal";
+import { useTheme } from "@/utils/theme-provider";
+import {
+    adjustLuminance,
+    ensureContrast,
+    isContrastEnough,
+} from "@/utils/color";
 import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { copyToClipboard } from "@/utils/util";
-import { toast } from "react-hot-toast";
 import Modal from "@/components/Modal";
-import { addHours, format, isBefore } from "date-fns";
 import { useTimer } from "@/utils/hooks/useTimer";
+
+import EventTimerContext from "../EventTimerContext";
 
 const MENU_WIDTH = 250;
 

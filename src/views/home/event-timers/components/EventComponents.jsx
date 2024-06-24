@@ -10,10 +10,10 @@ import {
 import { nanoid } from "nanoid";
 import classNames from "classnames";
 import { useResizeDetector } from "react-resize-detector";
+import { toast } from "react-hot-toast";
 
 import styles from "@/styles/modules/event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-
 import { useTheme } from "@/utils/theme-provider";
 import {
     adjustLuminance,
@@ -24,12 +24,12 @@ import {
     opacityToHex,
 } from "@/utils/color";
 import { useTimer } from "@/utils/hooks/useTimer";
-import EventTimerContext from "./EventTimerContext";
-import HoveredEventIndicator from "./HoveredEventIndicator";
-import { HOVER_DELAY, MINS_IN_DAY, TIME_BLOCK_MINS } from "./utils";
-import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import { copyToClipboard } from "@/utils/util";
-import { toast } from "react-hot-toast";
+
+import EventTimerContext from "../EventTimerContext";
+import HoveredEventIndicator from "./HoveredEventIndicator";
+import { HOVER_DELAY, MINS_IN_DAY, TIME_BLOCK_MINS } from "../utils";
+import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
