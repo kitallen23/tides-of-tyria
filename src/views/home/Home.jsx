@@ -8,6 +8,7 @@ import {
     HourglassTopSharp,
     FullscreenSharp,
     FullscreenExitSharp,
+    MoreVertSharp,
 } from "@mui/icons-material";
 import {
     getHours,
@@ -63,7 +64,7 @@ const Home = () => {
         }
     }, [key, currentTimeBlockStart, offset]);
 
-    const [isTimerCollapsed, setIsTimerCollapsed] = useState(() => {
+    const [isTimerCollapsed, _setIsTimerCollapsed] = useState(() => {
         const isTimerCollapsed = getLocalItem(
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
             "false"
@@ -80,8 +81,13 @@ const Home = () => {
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
             _isTimerCollapsed
         );
-        setIsTimerCollapsed(_isTimerCollapsed);
+        _setIsTimerCollapsed(_isTimerCollapsed);
     };
+
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    useEffect(() => {
+        // TODO: Remove this UE hook
+    }, [isMenuOpen]);
 
     return (
         <div className={styles.pageWrapper}>
@@ -105,6 +111,14 @@ const Home = () => {
                             </span>
                         </h3>
                         <div className={styles.buttonGroup}>
+                            <Button
+                                variant="text"
+                                sx={{ minWidth: 0 }}
+                                color="muted"
+                                onClick={() => setIsMenuOpen(true)}
+                            >
+                                <MoreVertSharp />
+                            </Button>
                             <Button
                                 variant="text"
                                 sx={{ minWidth: 0 }}
