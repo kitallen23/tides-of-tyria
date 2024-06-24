@@ -316,6 +316,7 @@ const EventInfoMenu = () => {
                                         sx={buttonSx}
                                         component="a"
                                         href={selectedEvent.wikiUrl}
+                                        target="_blank"
                                         onMouseEnter={() => {
                                             setButtonIsHovered(true);
                                             setHoveredText("Open wiki page");
@@ -414,6 +415,7 @@ const EventInfoMenu = () => {
                                     sx={buttonSx}
                                     component="a"
                                     href={selectedEvent.wikiUrl}
+                                    target="_blank"
                                     onMouseEnter={() => {
                                         setButtonIsHovered(true);
                                         setHoveredText("Open wiki page");
