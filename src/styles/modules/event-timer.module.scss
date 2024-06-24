@@ -316,10 +316,6 @@ $time-row-font-size: 0.875em;
         font-size: 1.17em;
     }
 
-    .eventAreaName {
-        /* font-size: 0.875em; */
-    }
-
     .buttonArea {
         display: grid;
         gap: 0.5rem;
@@ -353,6 +349,19 @@ $time-row-font-size: 0.875em;
             color: var(--text-muted);
             transition: opacity var(--transition);
             min-height: calc((1em * #{$line-height}));
+        }
+    }
+}
+.eventOptionsMenuModal {
+    display: grid;
+    gap: 1rem;
+}
+
+.eventOptionsMenu {
+    .eventOptions__fullscreenOption {
+        display: none;
+        @media (min-width: calc(#{c.$content-width} + 2 * #{c.$page-content-padding-horizontal})) {
+            display: flex;
         }
     }
 }

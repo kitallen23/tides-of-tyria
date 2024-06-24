@@ -10,8 +10,6 @@ import {
     ChevronRightSharp,
     HistorySharp,
     HourglassTopSharp,
-    FullscreenSharp,
-    FullscreenExitSharp,
     MoreVertSharp,
 } from "@mui/icons-material";
 import {
@@ -35,7 +33,11 @@ import EventRegion, {
     RegionIndicator,
     TimeRow,
 } from "./components/EventComponents";
-import { cleanEventConfig, markEventComplete } from "./utils";
+import {
+    cleanEventConfig,
+    markAllEventsIncomplete,
+    markEventComplete,
+} from "./utils";
 import EventTimerContext from "./EventTimerContext";
 import OptionsMenu from "./components/OptionsMenu";
 import CurrentTimeIndicator from "./components/CurrentTimeIndicator";
@@ -135,6 +137,16 @@ const EventTimers = () => {
             event,
             completionDate
         );
+        setEventConfig(_eventConfig);
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            JSON.stringify(_eventConfig)
+        );
+        setSelectedEvent(null);
+    };
+
+    const onResetCompletedEvents = () => {
+        const _eventConfig = markAllEventsIncomplete(eventConfig);
         setEventConfig(_eventConfig);
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.eventConfig,
@@ -277,12 +289,15 @@ const EventTimers = () => {
                             color="muted"
                             onClick={onMenuButtonClick}
                         >
-                            <MoreVertSharp />
+                            <MoreVertSharp sx={{ fontSize: "1.17em" }} />
                         </Button>
                         <OptionsMenu
                             anchorEl={menuAnchor}
                             open={isMenuOpen}
+                            isTimerCollapsed={isTimerCollapsed}
                             onClose={onMenuClose}
+                            onReset={onResetCompletedEvents}
+                            onToggleIsTimerCollapsed={toggleIsTimerCollapsed}
                             anchorOrigin={{
                                 vertical: "bottom",
                                 horizontal: "right",
@@ -296,22 +311,9 @@ const EventTimers = () => {
                             variant="text"
                             sx={{ minWidth: 0 }}
                             color="muted"
-                            onClick={toggleIsTimerCollapsed}
-                            className={layoutStyles.fullscreenButton}
-                        >
-                            {isTimerCollapsed ? (
-                                <FullscreenSharp />
-                            ) : (
-                                <FullscreenExitSharp />
-                            )}
-                        </Button>
-                        <Button
-                            variant="text"
-                            sx={{ minWidth: 0 }}
-                            color="muted"
                             onClick={() => setOffset(offset - 1)}
                         >
-                            <ChevronLeftSharp />
+                            <ChevronLeftSharp sx={{ fontSize: "1.17em" }} />
                         </Button>
                         <Button
                             variant="text"
@@ -325,7 +327,7 @@ const EventTimers = () => {
                             onClick={() => setOffset(0)}
                             disabled={offset === 0}
                         >
-                            <HistorySharp />
+                            <HistorySharp sx={{ fontSize: "1.17em" }} />
                         </Button>
                         <Button
                             variant="text"
@@ -333,7 +335,7 @@ const EventTimers = () => {
                             color="muted"
                             onClick={() => setOffset(offset + 1)}
                         >
-                            <ChevronRightSharp />
+                            <ChevronRightSharp sx={{ fontSize: "1.17em" }} />
                         </Button>
                     </div>
                 </div>
