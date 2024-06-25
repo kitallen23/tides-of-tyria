@@ -34,6 +34,7 @@ import EventRegion, {
     TimeRow,
 } from "./components/EventComponents";
 import {
+    HIGHLIGHT_SCHEMES,
     cleanEventConfig,
     markAllEventsIncomplete,
     markEventComplete,
@@ -229,7 +230,7 @@ const EventTimers = () => {
         }
     }, [scrollParentRef, width]);
 
-    const [isTimerCollapsed, _setIsTimerCollapsed] = useState(() => {
+    const [isTimerCollapsed, setIsTimerCollapsed] = useState(() => {
         const isTimerCollapsed = getLocalItem(
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
             "false"
@@ -247,7 +248,38 @@ const EventTimers = () => {
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
             _isTimerCollapsed
         );
-        _setIsTimerCollapsed(_isTimerCollapsed);
+        setIsTimerCollapsed(_isTimerCollapsed);
+    };
+
+    const [highlightScheme, setHighlightScheme] = useState(() => {
+        const highlightScheme = getLocalItem(
+            LOCAL_STORAGE_KEYS.highlightScheme,
+            HIGHLIGHT_SCHEMES.all
+        );
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.highlightScheme,
+            highlightScheme
+        );
+        return highlightScheme;
+    });
+
+    const onHighlightSchemeChange = scheme => {
+        localStorage.setItem(LOCAL_STORAGE_KEYS.highlightScheme, scheme);
+        setHighlightScheme(scheme);
+    };
+
+    const [showCompleted, setShowCompleted] = useState(() => {
+        const showCompleted = getLocalItem(
+            LOCAL_STORAGE_KEYS.showCompleted,
+            "false"
+        );
+        localStorage.setItem(LOCAL_STORAGE_KEYS.showCompleted, showCompleted);
+        return showCompleted === "true";
+    });
+    const toggleShowCompleted = () => {
+        const _showCompleted = !showCompleted;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.showCompleted, _showCompleted);
+        setShowCompleted(_showCompleted);
     };
 
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -297,7 +329,7 @@ const EventTimers = () => {
                             isTimerCollapsed={isTimerCollapsed}
                             onClose={onMenuClose}
                             onReset={onResetCompletedEvents}
-                            onToggleIsTimerCollapsed={toggleIsTimerCollapsed}
+                            toggleIsTimerCollapsed={toggleIsTimerCollapsed}
                             anchorOrigin={{
                                 vertical: "bottom",
                                 horizontal: "right",
@@ -306,6 +338,10 @@ const EventTimers = () => {
                                 vertical: "top",
                                 horizontal: "right",
                             }}
+                            highlightScheme={highlightScheme}
+                            onHighlightSchemeChange={onHighlightSchemeChange}
+                            showCompleted={showCompleted}
+                            toggleShowCompleted={toggleShowCompleted}
                         />
                         <Button
                             variant="text"
@@ -351,6 +387,7 @@ const EventTimers = () => {
                     eventWrapperRef,
                     widthRulerRef,
                     onComplete,
+                    highlightScheme,
                 }}
             >
                 <div

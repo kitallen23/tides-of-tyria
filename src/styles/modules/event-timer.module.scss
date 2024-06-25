@@ -166,7 +166,7 @@ $time-row-font-size: 0.875em;
                             font-size: 0.875em;
                         }
 
-                        transition: opacity var(--transition);
+                        transition: background var(--transition);
 
                         &.isSelected {
                             border-color: white;
