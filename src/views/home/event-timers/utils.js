@@ -4,6 +4,12 @@ import { isBefore } from "date-fns";
 export const TIME_BLOCK_MINS = 120;
 export const MINS_IN_DAY = 60 * 24;
 export const HOVER_DELAY = 500;
+export const HIGHLIGHT_SCHEMES = {
+    all: "all",
+    future: "future",
+    upcoming: "upcoming",
+};
+export const UPCOMING_MINS = 30;
 
 export const cleanEventConfig = (eventConfig, reset) => {
     const _eventConfig = structuredClone(eventConfig);

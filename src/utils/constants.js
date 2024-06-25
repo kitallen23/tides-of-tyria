@@ -19,4 +19,6 @@ export const LOCAL_STORAGE_KEYS = {
     isTimerCollapsed: "tot_is_timer_collapsed",
     primaryColor: "tot_primary_color",
     eventConfig: "tot_event_config",
+    highlightScheme: "tot_highlight_scheme",
+    showCompleted: "tot_show_completed",
 };

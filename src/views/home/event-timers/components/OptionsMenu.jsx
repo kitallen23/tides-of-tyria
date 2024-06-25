@@ -5,26 +5,35 @@ import {
     FullscreenExitSharp,
     FullscreenSharp,
     RestartAltSharp,
+    VisibilityOffSharp,
+    VisibilitySharp,
 } from "@mui/icons-material";
 import {
     Button,
     Divider,
     ListItemIcon,
     ListItemText,
+    ListSubheader,
     Menu,
     MenuItem,
+    Typography,
 } from "@mui/material";
 import { toast } from "react-hot-toast";
 
 import { useTheme } from "@/utils/theme-provider";
 import styles from "@/styles/modules/event-timer.module.scss";
 import Modal from "@/components/Modal";
+import { HIGHLIGHT_SCHEMES, UPCOMING_MINS } from "../utils";
 
 const OptionsMenu = ({
     onClose,
     onReset,
     isTimerCollapsed,
-    onToggleIsTimerCollapsed,
+    toggleIsTimerCollapsed,
+    highlightScheme,
+    onHighlightSchemeChange,
+    showCompleted,
+    toggleShowCompleted,
     ...rest
 }) => {
     const { colors } = useTheme();
@@ -42,7 +51,11 @@ const OptionsMenu = ({
     };
 
     const onCollapsedClick = () => {
-        onToggleIsTimerCollapsed();
+        toggleIsTimerCollapsed();
+        onClose();
+    };
+    const onShowCompletedClick = () => {
+        toggleShowCompleted();
         onClose();
     };
 
@@ -55,13 +68,24 @@ const OptionsMenu = ({
                 className={styles.eventOptionsMenu}
                 {...rest}
             >
-                <MenuItem onClick={onClose}>
+                <MenuItem onClick={onShowCompletedClick}>
                     <ListItemIcon>
-                        <DoneSharp />
+                        {showCompleted ? (
+                            <VisibilityOffSharp />
+                        ) : (
+                            <VisibilitySharp />
+                        )}
                     </ListItemIcon>
                     <ListItemText>
-                        Hide completed&nbsp;&nbsp;
-                        <span style={{ color: colors.muted }}>(H)</span>
+                        <Typography variant="inherit" noWrap>
+                            {showCompleted ? (
+                                <>Hide completed&nbsp;&nbsp;</>
+                            ) : (
+                                <>Show completed&nbsp;&nbsp;</>
+                            )}
+
+                            <span style={{ color: colors.muted }}>(H)</span>
+                        </Typography>
                     </ListItemText>
                 </MenuItem>
                 <MenuItem
@@ -76,37 +100,101 @@ const OptionsMenu = ({
                         )}
                     </ListItemIcon>
                     <ListItemText>
-                        {isTimerCollapsed
-                            ? "Expand to full width"
-                            : "Fit to content width"}
-                        &nbsp;&nbsp;
-                        <span style={{ color: colors.muted }}>(F)</span>
+                        <Typography variant="inherit" noWrap>
+                            {isTimerCollapsed
+                                ? "Expand to full width"
+                                : "Fit to content width"}
+                            &nbsp;&nbsp;
+                            <span style={{ color: colors.muted }}>(F)</span>
+                        </Typography>
                     </ListItemText>
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={onClose}>
-                    <ListItemText inset>Hightlight past events</ListItemText>
-                </MenuItem>
-                <MenuItem onClick={onClose}>
-                    <ListItemText inset>
-                        Hightlight upcoming events
+                <ListSubheader
+                    sx={{
+                        lineHeight: "1.43",
+                        backgroundColor: "transparent",
+                        paddingTop: 0.5,
+                        paddingBottom: 0.5,
+                    }}
+                >
+                    Highlight scheme
+                </ListSubheader>
+                <MenuItem
+                    onClick={() =>
+                        onHighlightSchemeChange(HIGHLIGHT_SCHEMES.upcoming)
+                    }
+                >
+                    {highlightScheme === HIGHLIGHT_SCHEMES.upcoming ? (
+                        <ListItemIcon>
+                            <DoneSharp />
+                        </ListItemIcon>
+                    ) : null}
+                    <ListItemText
+                        inset={highlightScheme !== HIGHLIGHT_SCHEMES.upcoming}
+                    >
+                        <Typography variant="inherit" noWrap>
+                            Highlight current & upcoming events ({UPCOMING_MINS}{" "}
+                            mins)
+                        </Typography>
                     </ListItemText>
                 </MenuItem>
-                <MenuItem onClick={onClose}>
-                    <ListItemText inset>Hightlight all events</ListItemText>
+                <MenuItem
+                    onClick={() =>
+                        onHighlightSchemeChange(HIGHLIGHT_SCHEMES.future)
+                    }
+                >
+                    {highlightScheme === HIGHLIGHT_SCHEMES.future ? (
+                        <ListItemIcon>
+                            <DoneSharp />
+                        </ListItemIcon>
+                    ) : null}
+                    <ListItemText
+                        inset={highlightScheme !== HIGHLIGHT_SCHEMES.future}
+                    >
+                        <Typography variant="inherit" noWrap>
+                            Highlight all current & future events
+                        </Typography>
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem
+                    onClick={() =>
+                        onHighlightSchemeChange(HIGHLIGHT_SCHEMES.all)
+                    }
+                >
+                    {highlightScheme === HIGHLIGHT_SCHEMES.all ? (
+                        <ListItemIcon>
+                            <DoneSharp />
+                        </ListItemIcon>
+                    ) : null}
+                    <ListItemText
+                        inset={highlightScheme !== HIGHLIGHT_SCHEMES.all}
+                    >
+                        <Typography variant="inherit" noWrap>
+                            Highlight all events
+                        </Typography>
+                    </ListItemText>
                 </MenuItem>
                 <Divider />
                 <MenuItem onClick={onClose}>
                     <ListItemIcon>
                         <EditSharp />
                     </ListItemIcon>
-                    <ListItemText>Edit list</ListItemText>
+                    <ListItemText>
+                        <Typography variant="inherit" noWrap>
+                            Edit list
+                        </Typography>
+                    </ListItemText>
                 </MenuItem>
                 <MenuItem onClick={onResetClick}>
                     <ListItemIcon>
                         <RestartAltSharp />
                     </ListItemIcon>
-                    <ListItemText>Reset completed</ListItemText>
+                    <ListItemText>
+                        <Typography variant="inherit" noWrap>
+                            Reset completed
+                        </Typography>
+                    </ListItemText>
                 </MenuItem>
             </Menu>
             <Modal

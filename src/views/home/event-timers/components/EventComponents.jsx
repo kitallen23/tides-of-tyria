@@ -4,6 +4,7 @@ import {
     addMinutes,
     differenceInMinutes,
     format,
+    isAfter,
     isBefore,
     subMinutes,
 } from "date-fns";
@@ -13,7 +14,6 @@ import { useResizeDetector } from "react-resize-detector";
 import { toast } from "react-hot-toast";
 
 import styles from "@/styles/modules/event-timer.module.scss";
-import globalStyles from "@/styles/modules/global-styles.module.scss";
 import { useTheme } from "@/utils/theme-provider";
 import {
     adjustLuminance,
@@ -21,19 +21,23 @@ import {
     ensureContrast,
     isContrastEnough,
     isLight,
-    opacityToHex,
 } from "@/utils/color";
 import { useTimer } from "@/utils/hooks/useTimer";
 import { copyToClipboard } from "@/utils/util";
 
 import EventTimerContext from "../EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
-import { HOVER_DELAY, MINS_IN_DAY, TIME_BLOCK_MINS } from "../utils";
+import {
+    HIGHLIGHT_SCHEMES,
+    HOVER_DELAY,
+    MINS_IN_DAY,
+    TIME_BLOCK_MINS,
+    UPCOMING_MINS,
+} from "../utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
-const DOWNTIME_OPACITY_HEX = opacityToHex(DOWNTIME_OPACITY);
 
 export const RegionIndicator = ({ region, isHovered }) => {
     const { colors, mode } = useTheme();
@@ -237,10 +241,11 @@ const AreaEventPhase = ({
     item,
     eventBackground,
     isBackgroundLight,
-    isDowntimeBackgroundLight,
+    isDulledBackgroundLight,
     isLast,
     isAreaComplete,
 }) => {
+    const { colors } = useTheme();
     const { now, dailyReset } = useTimer();
     const {
         width: parentWidth,
@@ -248,6 +253,7 @@ const AreaEventPhase = ({
         setHoveredEvent,
         selectedEvent,
         setSelectedEvent,
+        highlightScheme,
     } = useContext(EventTimerContext);
 
     const isSelected = useMemo(
@@ -372,48 +378,85 @@ const AreaEventPhase = ({
         [eventBackground]
     );
 
-    const isDulled = useMemo(
-        () =>
-            isComplete
-                ? true
-                : selectedEvent?.id === item.id
-                  ? false
-                  : (hoveredEvent && item.id !== hoveredEvent?.id) ||
-                    (selectedEvent && selectedEvent.id !== item?.id),
-        [hoveredEvent, selectedEvent, item.id, isComplete]
-    );
+    const isDulledBecauseOfScheme = useMemo(() => {
+        if (highlightScheme === HIGHLIGHT_SCHEMES.upcoming) {
+            let start = new Date(item.startDate);
+            let end = addMinutes(start, item.duration);
+
+            const horizon = addMinutes(now, UPCOMING_MINS);
+            if (isBefore(end, now)) {
+                return true;
+            } else if (isAfter(start, horizon)) {
+                return true;
+            }
+            return false;
+        } else if (highlightScheme === HIGHLIGHT_SCHEMES.future) {
+            let start = new Date(item.startDate);
+            let end = addMinutes(start, item.duration);
+
+            if (isBefore(end, now)) {
+                return true;
+            }
+            return false;
+        }
+    }, [highlightScheme, now, item]);
+
+    const isDulled = useMemo(() => {
+        return isDowntime
+            ? true
+            : hoveredEvent && item.id === hoveredEvent?.id
+              ? false
+              : selectedEvent?.id === item.id
+                ? false
+                : (hoveredEvent && item.id !== hoveredEvent?.id) ||
+                    (selectedEvent && selectedEvent.id !== item?.id)
+                  ? true
+                  : isComplete
+                    ? true
+                    : isDulledBecauseOfScheme;
+    }, [
+        isDowntime,
+        hoveredEvent,
+        selectedEvent,
+        item.id,
+        isComplete,
+        isDulledBecauseOfScheme,
+    ]);
+
     const style = useMemo(
         () => ({
-            opacity: isDulled ? 0.4 : undefined,
-            background: isDowntime
-                ? `${eventBackground}${DOWNTIME_OPACITY_HEX}`
-                : eventBackground,
+            background: `${eventBackground}${isDulled ? "33" : ""}`,
             width,
             borderColor: isSelected ? borderColor : undefined,
+            color: `${
+                isDulled
+                    ? isDulledBackgroundLight
+                        ? colors.bodyDark
+                        : colors.bodyLight
+                    : isBackgroundLight
+                      ? colors.bodyDark
+                      : colors.bodyLight
+            }${isDulled ? "66" : ""}`,
         }),
-        [isDulled, isDowntime, width, isSelected, borderColor, eventBackground]
+        [
+            isDulled,
+            width,
+            isSelected,
+            borderColor,
+            colors,
+            isBackgroundLight,
+            isDulledBackgroundLight,
+            eventBackground,
+        ]
     );
 
     return (
         <div
-            className={classNames(
-                `${styles.phase} ${
-                    isDowntime
-                        ? isDowntimeBackgroundLight
-                            ? globalStyles.textDark
-                            : globalStyles.textLight
-                        : isBackgroundLight
-                          ? globalStyles.textDark
-                          : globalStyles.textLight
-                }`,
-                {
-                    [styles.isHovered]: hoveredEvent?.id === item.id,
-                    [styles.isSelected]: selectedEvent?.id === item.id,
-                    [styles.isDowntime]: isDowntime,
-                    [styles.isClickable]: isClickable,
-                    "event-phase": isClickable,
-                }
-            )}
+            className={classNames(`${styles.phase}`, {
+                [styles.isSelected]: selectedEvent?.id === item.id,
+                [styles.isClickable]: isClickable,
+                "event-phase": isClickable,
+            })}
             style={style}
             id={item.id}
             onMouseEnter={onHoverIn}
@@ -423,12 +466,26 @@ const AreaEventPhase = ({
         >
             {isDowntime ? (
                 item.wikiUrl ? (
-                    <div className={styles.title}>
+                    <div
+                        className={styles.title}
+                        style={{
+                            textDecoration: isComplete
+                                ? "line-through"
+                                : undefined,
+                        }}
+                    >
                         {item.isContinued ? "…" : ""}
                         {item.name}
                     </div>
                 ) : item.name ? (
-                    <div className={styles.title}>
+                    <div
+                        className={styles.title}
+                        style={{
+                            textDecoration: isComplete
+                                ? "line-through"
+                                : undefined,
+                        }}
+                    >
                         {item.isContinued ? "…" : ""}
                         {item.name}
                     </div>
@@ -555,7 +612,7 @@ const PeriodicArea = ({ area, region }) => {
         () => isLight(eventBackground),
         [eventBackground]
     );
-    const isDowntimeBackgroundLight = useMemo(() => {
+    const isDulledBackgroundLight = useMemo(() => {
         const effectiveEventBackgroundColor = blendColors({
             opacity: DOWNTIME_OPACITY,
             color: eventBackground,
@@ -583,7 +640,7 @@ const PeriodicArea = ({ area, region }) => {
                     item={item}
                     eventBackground={eventBackground}
                     isBackgroundLight={isBackgroundLight}
-                    isDowntimeBackgroundLight={isDowntimeBackgroundLight}
+                    isDulledBackgroundLight={isDulledBackgroundLight}
                     isLast={i === minuteBlocks.length - 1}
                     isAreaComplete={isComplete}
                 />
@@ -746,7 +803,7 @@ const FixedTimeArea = ({ area, region }) => {
         () => isLight(eventBackground),
         [eventBackground]
     );
-    const isDowntimeBackgroundLight = useMemo(() => {
+    const isDulledBackgroundLight = useMemo(() => {
         const effectiveEventBackgroundColor = blendColors({
             opacity: DOWNTIME_OPACITY,
             color: eventBackground,
@@ -763,7 +820,7 @@ const FixedTimeArea = ({ area, region }) => {
                     item={item}
                     eventBackground={eventBackground}
                     isBackgroundLight={isBackgroundLight}
-                    isDowntimeBackgroundLight={isDowntimeBackgroundLight}
+                    isDulledBackgroundLight={isDulledBackgroundLight}
                     isLast={i === minuteBlocks.length - 1}
                 />
             ))}
