@@ -390,6 +390,14 @@ const AreaEventPhase = ({
                 return true;
             }
             return false;
+        } else if (highlightScheme === HIGHLIGHT_SCHEMES.future) {
+            let start = new Date(item.startDate);
+            let end = addMinutes(start, item.duration);
+
+            if (isBefore(end, now)) {
+                return true;
+            }
+            return false;
         }
     }, [highlightScheme, now, item]);
 

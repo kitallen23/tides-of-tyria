@@ -134,7 +134,8 @@ const OptionsMenu = ({
                         inset={highlightScheme !== HIGHLIGHT_SCHEMES.upcoming}
                     >
                         <Typography variant="inherit" noWrap>
-                            Highlight upcoming events ({UPCOMING_MINS} mins)
+                            Highlight current & upcoming events ({UPCOMING_MINS}{" "}
+                            mins)
                         </Typography>
                     </ListItemText>
                 </MenuItem>
@@ -152,7 +153,7 @@ const OptionsMenu = ({
                         inset={highlightScheme !== HIGHLIGHT_SCHEMES.future}
                     >
                         <Typography variant="inherit" noWrap>
-                            Highlight all future events
+                            Highlight all current & future events
                         </Typography>
                     </ListItemText>
                 </MenuItem>
