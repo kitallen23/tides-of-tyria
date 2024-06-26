@@ -812,6 +812,17 @@ const FixedTimeArea = ({ area, region }) => {
         return isLight(effectiveEventBackgroundColor);
     }, [eventBackground, colors.background]);
 
+    const isComplete = useMemo(() => {
+        if (
+            area.lastCompletion &&
+            !isBefore(area.lastCompletion, dailyReset) &&
+            isBefore(area.lastCompletion, addHours(dailyReset, 24))
+        ) {
+            return true;
+        }
+        return false;
+    }, [area, dailyReset]);
+
     return (
         <div className={styles.area}>
             {(minuteBlocks || []).map((item, i) => (
@@ -822,6 +833,7 @@ const FixedTimeArea = ({ area, region }) => {
                     isBackgroundLight={isBackgroundLight}
                     isDulledBackgroundLight={isDulledBackgroundLight}
                     isLast={i === minuteBlocks.length - 1}
+                    isAreaComplete={isComplete}
                 />
             ))}
         </div>
