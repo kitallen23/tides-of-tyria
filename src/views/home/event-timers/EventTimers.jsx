@@ -290,13 +290,13 @@ const EventTimers = () => {
                   : HIGHLIGHT_SCHEMES.upcoming;
         localStorage.setItem(LOCAL_STORAGE_KEYS.highlightScheme, nextScheme);
         setHighlightScheme(nextScheme);
-        const s =
+        const infoString =
             nextScheme === HIGHLIGHT_SCHEMES.upcoming
                 ? `current & upcoming events (next ${UPCOMING_MINS} mins)`
                 : nextScheme === HIGHLIGHT_SCHEMES.future
                   ? "all current & future events"
                   : "all events";
-        toast(`Highlighting ${s}`, {
+        toast(`Highlighting ${infoString}`, {
             icon: <InfoIcon />,
         });
     };
