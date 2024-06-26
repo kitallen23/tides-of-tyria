@@ -100,6 +100,13 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
+        MuiListSubheader: {
+            styleOverrides: {
+                root: {
+                    color: theme.colors.muted,
+                },
+            },
+        },
         MuiListItemIcon: {
             styleOverrides: {
                 root: {
