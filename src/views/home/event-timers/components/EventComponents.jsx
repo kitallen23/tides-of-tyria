@@ -74,6 +74,9 @@ export const RegionIndicator = ({ region, isHovered }) => {
         [selectedEvent?.region?.key, region?.key, isHovered]
     );
 
+    if (!region.shouldRender) {
+        return null;
+    }
     return (
         <div
             className={styles.regionIndicator}
@@ -632,6 +635,9 @@ const PeriodicArea = ({ area, region }) => {
         return false;
     }, [area, dailyReset]);
 
+    if (!area.shouldRender) {
+        return null;
+    }
     return (
         <div className={styles.area}>
             {(minuteBlocks || []).map((item, i) => (
@@ -823,6 +829,9 @@ const FixedTimeArea = ({ area, region }) => {
         return false;
     }, [area, dailyReset]);
 
+    if (!area.shouldRender) {
+        return null;
+    }
     return (
         <div className={styles.area}>
             {(minuteBlocks || []).map((item, i) => (
@@ -848,7 +857,9 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
             const regionIndicator = indicatorWrapperRef.current.querySelector(
                 `#region-indicator-${region.key}`
             );
-            regionIndicator.style.height = `${height}px`;
+            if (regionIndicator) {
+                regionIndicator.style.height = `${height}px`;
+            }
         }
     }, [height, indicatorWrapperRef, region]);
 
@@ -857,6 +868,9 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
         [region]
     );
 
+    if (!region.shouldRender) {
+        return null;
+    }
     return (
         <div
             className={styles.region}
