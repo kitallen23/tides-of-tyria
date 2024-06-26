@@ -98,6 +98,14 @@ const EventTimers = () => {
     // back to local storage
     const initialiseEventConfig = (eventConfigString, dailyReset) => {
         try {
+            if (!eventConfigString) {
+                localStorage.setItem(
+                    LOCAL_STORAGE_KEYS.eventConfig,
+                    JSON.stringify(META_EVENTS)
+                );
+                setEventConfig(META_EVENTS);
+                return;
+            }
             let eventConfig = JSON.parse(eventConfigString);
             eventConfig = cleanEventConfig(eventConfig, dailyReset);
             setEventConfig(eventConfig);
