@@ -16,6 +16,7 @@ import { useTheme } from "@/utils/theme-provider";
 import { Button, TextField } from "@mui/material";
 import { SCHEMES } from "@/utils/color-schemes";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import Modal from "@/components/Modal";
 
 const Settings = () => {
     const title = useMemo(() => getTitle("Settings"), []);
@@ -56,6 +57,15 @@ const Settings = () => {
         if (isHexValid(value) || value === "") {
             setPrimaryColor(value);
         }
+    };
+
+    const [isClearDataModalOpen, setIsClearDataModalOpen] = useState(false);
+
+    const clearLocalData = () => {
+        Object.values(LOCAL_STORAGE_KEYS).forEach(key =>
+            localStorage.removeItem(key)
+        );
+        location.reload();
     };
 
     return (
@@ -210,7 +220,51 @@ const Settings = () => {
                         </Button>
                     </div>
                 </div>
+                <div
+                    style={{
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        alignItems: "center",
+                    }}
+                >
+                    <Button
+                        variant="text"
+                        onClick={() => setIsClearDataModalOpen(true)}
+                        color="error"
+                        disableElevation
+                    >
+                        Clear local data
+                    </Button>
+                </div>
             </div>
+            <Modal
+                open={isClearDataModalOpen}
+                onClose={() => setIsClearDataModalOpen(false)}
+                closeButton={true}
+                style={{ maxWidth: 400 }}
+            >
+                <div className={styles.clearLocalDataModal}>
+                    <h3>Clear local data</h3>
+                    <p>
+                        Are you sure you wish to clear all local data? This
+                        will:
+                    </p>
+                    <ul>
+                        <li>Reset all settings back to their default</li>
+                        <li>Clear your timer configuration & completions</li>
+                        <li>Remove all checklist items</li>
+                    </ul>
+                    <div style={{ textAlign: "center" }}>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={clearLocalData}
+                        >
+                            Yes, reset everything
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
 };
