@@ -88,7 +88,7 @@ const OptionsMenu = ({
                                 <>
                                     &nbsp;&nbsp;
                                     <span style={{ color: colors.muted }}>
-                                        (H)
+                                        <code>H</code>
                                     </span>
                                 </>
                             )}
@@ -115,7 +115,7 @@ const OptionsMenu = ({
                                 <>
                                     &nbsp;&nbsp;
                                     <span style={{ color: colors.muted }}>
-                                        (F)
+                                        <code>F</code>
                                     </span>
                                 </>
                             )}
@@ -132,6 +132,12 @@ const OptionsMenu = ({
                     }}
                 >
                     Highlight scheme
+                    {isSmallScreen ? null : (
+                        <>
+                            &nbsp;&nbsp;
+                            <code>S</code>
+                        </>
+                    )}
                 </ListSubheader>
                 <MenuItem
                     onClick={() =>
