@@ -267,7 +267,7 @@ const EventTimers = () => {
     const [highlightScheme, setHighlightScheme] = useState(() => {
         const highlightScheme = getLocalItem(
             LOCAL_STORAGE_KEYS.highlightScheme,
-            HIGHLIGHT_SCHEMES.all
+            HIGHLIGHT_SCHEMES.future
         );
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.highlightScheme,
