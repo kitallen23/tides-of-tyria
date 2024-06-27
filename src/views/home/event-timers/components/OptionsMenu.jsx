@@ -17,6 +17,7 @@ import {
     Menu,
     MenuItem,
     Typography,
+    useMediaQuery,
 } from "@mui/material";
 import { toast } from "react-hot-toast";
 
@@ -38,6 +39,7 @@ const OptionsMenu = ({
 }) => {
     const { colors } = useTheme();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+    const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
     const onResetClick = () => {
         setIsResetModalOpen(true);
@@ -78,13 +80,18 @@ const OptionsMenu = ({
                     </ListItemIcon>
                     <ListItemText>
                         <Typography variant="inherit" noWrap>
-                            {showCompleted ? (
-                                <>Hide completed&nbsp;&nbsp;</>
-                            ) : (
-                                <>Show completed&nbsp;&nbsp;</>
-                            )}
+                            {showCompleted
+                                ? "Hide completed"
+                                : "Show completed"}
 
-                            <span style={{ color: colors.muted }}>(H)</span>
+                            {isSmallScreen ? null : (
+                                <>
+                                    &nbsp;&nbsp;
+                                    <span style={{ color: colors.muted }}>
+                                        <code>H</code>
+                                    </span>
+                                </>
+                            )}
                         </Typography>
                     </ListItemText>
                 </MenuItem>
@@ -104,8 +111,14 @@ const OptionsMenu = ({
                             {isTimerCollapsed
                                 ? "Expand to full width"
                                 : "Fit to content width"}
-                            &nbsp;&nbsp;
-                            <span style={{ color: colors.muted }}>(F)</span>
+                            {isSmallScreen ? null : (
+                                <>
+                                    &nbsp;&nbsp;
+                                    <span style={{ color: colors.muted }}>
+                                        <code>F</code>
+                                    </span>
+                                </>
+                            )}
                         </Typography>
                     </ListItemText>
                 </MenuItem>
@@ -119,6 +132,12 @@ const OptionsMenu = ({
                     }}
                 >
                     Highlight scheme
+                    {isSmallScreen ? null : (
+                        <>
+                            &nbsp;&nbsp;
+                            <code>S</code>
+                        </>
+                    )}
                 </ListSubheader>
                 <MenuItem
                     onClick={() =>

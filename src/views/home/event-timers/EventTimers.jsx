@@ -35,6 +35,7 @@ import EventRegion, {
 } from "./components/EventComponents";
 import {
     HIGHLIGHT_SCHEMES,
+    UPCOMING_MINS,
     cleanEventConfig,
     markAllEventsIncomplete,
     markEventComplete,
@@ -44,6 +45,10 @@ import OptionsMenu from "./components/OptionsMenu";
 import CurrentTimeIndicator from "./components/CurrentTimeIndicator";
 import HoveredEventIndicator from "./components/HoveredEventIndicator";
 import EventInfoMenu from "./components/EventInfoMenu";
+import useEventConfig from "./useEventConfig";
+import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
+import { toast } from "react-hot-toast";
+import InfoIcon from "@/components/InfoIcon";
 
 // Obtains the start time of a "time block"; a 2-hour period of time, relative to the
 // local timezone, that started on the last 1-hour time window.
@@ -73,7 +78,7 @@ const EventTimers = () => {
     const [hoveredEvent, setHoveredEvent] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
-    const [eventConfig, setEventConfig] = useState(null);
+    const [_eventConfig, set_eventConfig] = useState(null);
 
     const { key } = useTimer();
     const [offset, setOffset] = useState(0);
@@ -98,9 +103,17 @@ const EventTimers = () => {
     // back to local storage
     const initialiseEventConfig = (eventConfigString, dailyReset) => {
         try {
+            if (!eventConfigString) {
+                localStorage.setItem(
+                    LOCAL_STORAGE_KEYS.eventConfig,
+                    JSON.stringify(META_EVENTS)
+                );
+                set_eventConfig(META_EVENTS);
+                return;
+            }
             let eventConfig = JSON.parse(eventConfigString);
             eventConfig = cleanEventConfig(eventConfig, dailyReset);
-            setEventConfig(eventConfig);
+            set_eventConfig(eventConfig);
             localStorage.setItem(
                 LOCAL_STORAGE_KEYS.eventConfig,
                 JSON.stringify(eventConfig)
@@ -114,7 +127,7 @@ const EventTimers = () => {
                 LOCAL_STORAGE_KEYS.eventConfig,
                 JSON.stringify(META_EVENTS)
             );
-            setEventConfig(META_EVENTS);
+            set_eventConfig(META_EVENTS);
         }
     };
 
@@ -133,25 +146,25 @@ const EventTimers = () => {
     const onComplete = event => {
         const eventEnd = addMinutes(event.startDate, event.duration);
         const completionDate = min([eventEnd, now]);
-        const _eventConfig = markEventComplete(
-            eventConfig,
+        const eventConfigWithCompletedEvent = markEventComplete(
+            _eventConfig,
             event,
             completionDate
         );
-        setEventConfig(_eventConfig);
+        set_eventConfig(eventConfigWithCompletedEvent);
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.eventConfig,
-            JSON.stringify(_eventConfig)
+            JSON.stringify(eventConfigWithCompletedEvent)
         );
         setSelectedEvent(null);
     };
 
     const onResetCompletedEvents = () => {
-        const _eventConfig = markAllEventsIncomplete(eventConfig);
-        setEventConfig(_eventConfig);
+        const eventConfigAfterReset = markAllEventsIncomplete(_eventConfig);
+        set_eventConfig(eventConfigAfterReset);
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.eventConfig,
-            JSON.stringify(_eventConfig)
+            JSON.stringify(eventConfigAfterReset)
         );
         setSelectedEvent(null);
     };
@@ -268,6 +281,26 @@ const EventTimers = () => {
         setHighlightScheme(scheme);
     };
 
+    const cycleHighlightScheme = () => {
+        const nextScheme =
+            highlightScheme === HIGHLIGHT_SCHEMES.upcoming
+                ? HIGHLIGHT_SCHEMES.future
+                : highlightScheme === HIGHLIGHT_SCHEMES.future
+                  ? HIGHLIGHT_SCHEMES.all
+                  : HIGHLIGHT_SCHEMES.upcoming;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.highlightScheme, nextScheme);
+        setHighlightScheme(nextScheme);
+        const infoString =
+            nextScheme === HIGHLIGHT_SCHEMES.upcoming
+                ? `current & upcoming events (next ${UPCOMING_MINS} mins)`
+                : nextScheme === HIGHLIGHT_SCHEMES.future
+                  ? "all current & future events"
+                  : "all events";
+        toast(`Highlighting ${infoString}`, {
+            icon: <InfoIcon />,
+        });
+    };
+
     const [showCompleted, setShowCompleted] = useState(() => {
         const showCompleted = getLocalItem(
             LOCAL_STORAGE_KEYS.showCompleted,
@@ -280,6 +313,21 @@ const EventTimers = () => {
         const _showCompleted = !showCompleted;
         localStorage.setItem(LOCAL_STORAGE_KEYS.showCompleted, _showCompleted);
         setShowCompleted(_showCompleted);
+        setSelectedEvent(null);
+    };
+    const toggleShowCompletedWithToast = () => {
+        const _showCompleted = !showCompleted;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.showCompleted, _showCompleted);
+        setShowCompleted(_showCompleted);
+        setSelectedEvent(null);
+        toast(
+            _showCompleted
+                ? "Completed events shown"
+                : "Completed events hidden",
+            {
+                icon: <InfoIcon />,
+            }
+        );
     };
 
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -291,6 +339,17 @@ const EventTimers = () => {
     const onMenuClose = () => {
         setMenuAnchor(null);
     };
+
+    useGlobalHotkeys({
+        h: toggleShowCompletedWithToast,
+        f: toggleIsTimerCollapsed,
+        s: cycleHighlightScheme,
+    });
+
+    const eventConfig = useEventConfig({
+        eventConfig: _eventConfig,
+        showCompleted,
+    });
 
     if (!eventConfig) {
         return null;

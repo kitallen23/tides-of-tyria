@@ -302,6 +302,10 @@ h3 {
     transition: color var(--transition);
 }
 
+ul {
+    list-style-position: inside;
+}
+
 .text-muted {
     color: var(--text-muted);
 }

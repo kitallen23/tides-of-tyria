@@ -68,6 +68,9 @@ export const getDesignTokens = theme => ({
         gray: {
             main: theme.colors.gray,
         },
+        text: {
+            primary: theme.colors.body,
+        },
     },
     typography: {
         fontFamily: [
@@ -75,6 +78,9 @@ export const getDesignTokens = theme => ({
         ],
         fontSize:
             theme.fontSize === "sm" ? 12 : theme.fontSize === "lg" ? 16 : 14,
+        allVariants: {
+            color: theme.colors.body,
+        },
     },
     components: {
         MuiButton: {
@@ -85,9 +91,26 @@ export const getDesignTokens = theme => ({
             },
         },
         MuiSvgIcon: {
+            defaultProps: {
+                color: "inherit",
+            },
             styleOverrides: {
                 root: {
                     fontSize: "1em",
+                },
+            },
+        },
+        MuiListSubheader: {
+            styleOverrides: {
+                root: {
+                    color: theme.colors.muted,
+                },
+            },
+        },
+        MuiListItemIcon: {
+            styleOverrides: {
+                root: {
+                    color: "inherit",
                 },
             },
         },
