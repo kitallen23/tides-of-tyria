@@ -135,16 +135,12 @@ $time-row-font-size: 0.875em;
                         border-width: 2px;
                         border-style: solid;
                         border-color: transparent;
+                        transition:
+                            background var(--transition),
+                            border-color var(--transition);
 
                         user-select: none;
                         -webkit-user-select: none;
-
-                        &.isClickable {
-                            cursor: pointer;
-                        }
-                        &:not(.isClickable) {
-                            cursor: default;
-                        }
 
                         // Text height of title, text height of "time until",
                         // padding * 2
@@ -152,6 +148,13 @@ $time-row-font-size: 0.875em;
                             (1em * #{$line-height}) +
                                 (0.875em * #{$line-height}) + (0.2em * 2)
                         );
+
+                        &.isClickable {
+                            cursor: pointer;
+                        }
+                        &:not(.isClickable) {
+                            cursor: default;
+                        }
 
                         .title {
                             white-space: nowrap;
@@ -164,12 +167,6 @@ $time-row-font-size: 0.875em;
                             text-overflow: ellipsis;
 
                             font-size: 0.875em;
-                        }
-
-                        transition: background var(--transition);
-
-                        &.isSelected {
-                            border-color: white;
                         }
                     }
                 }

@@ -75,7 +75,6 @@ const EventTimers = () => {
     const { now, dailyReset } = useTimer();
 
     const [hoveredRegion, setHoveredRegion] = useState("");
-    const [hoveredEvent, setHoveredEvent] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     const [_eventConfig, set_eventConfig] = useState(null);
@@ -439,8 +438,6 @@ const EventTimers = () => {
                 value={{
                     width,
                     currentTimeBlockStart,
-                    hoveredEvent,
-                    setHoveredEvent,
                     selectedEvent,
                     setSelectedEvent: _setSelectedEvent,
                     eventWrapperRef,
