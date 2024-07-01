@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useRef } from "react";
+import { useContext, useEffect, useMemo } from "react";
 import {
     addHours,
     addMinutes,
@@ -29,12 +29,12 @@ import EventTimerContext from "../EventTimerContext";
 import HoveredEventIndicator from "./HoveredEventIndicator";
 import {
     HIGHLIGHT_SCHEMES,
-    HOVER_DELAY,
     MINS_IN_DAY,
     TIME_BLOCK_MINS,
     UPCOMING_MINS,
 } from "../utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import { css } from "@emotion/react";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -104,7 +104,7 @@ export const RegionIndicator = ({ region, isHovered }) => {
 };
 
 export const TimeRow = () => {
-    const { currentTimeBlockStart, hoveredEvent, selectedEvent } =
+    const { currentTimeBlockStart, selectedEvent } =
         useContext(EventTimerContext);
 
     const { timeFormat, colors } = useTheme();
@@ -113,12 +113,12 @@ export const TimeRow = () => {
         [timeFormat]
     );
 
-    const shouldHide = !!hoveredEvent || !!selectedEvent;
+    const shouldHideLabels = !!selectedEvent;
 
     return (
         <div
             className={classNames(styles.timeRow, {
-                [styles.hideLabels]: shouldHide,
+                [styles.hideLabels]: shouldHideLabels,
             })}
             style={{ background: colors.background }}
         >
@@ -252,8 +252,6 @@ const AreaEventPhase = ({
     const { now, dailyReset } = useTimer();
     const {
         width: parentWidth,
-        hoveredEvent,
-        setHoveredEvent,
         selectedEvent,
         setSelectedEvent,
         highlightScheme,
@@ -344,19 +342,6 @@ const AreaEventPhase = ({
         }
     }, [now, item]);
 
-    const hoverTimeout = useRef(null);
-    const onHoverIn = () => {
-        if (!isDowntime) {
-            hoverTimeout.current = setTimeout(() => {
-                setHoveredEvent(item);
-            }, HOVER_DELAY);
-        }
-    };
-    const onHoverOut = () => {
-        clearTimeout(hoverTimeout.current);
-        setHoveredEvent(null);
-    };
-
     const onClick = () => {
         if (!isClickable) {
             return;
@@ -407,23 +392,19 @@ const AreaEventPhase = ({
     const isDulled = useMemo(() => {
         return isDowntime
             ? true
-            : hoveredEvent && item.id === hoveredEvent?.id
+            : isSelected
               ? false
-              : selectedEvent?.id === item.id
-                ? false
-                : (hoveredEvent && item.id !== hoveredEvent?.id) ||
-                    (selectedEvent && selectedEvent.id !== item?.id)
+              : selectedEvent && !isSelected
+                ? true
+                : isComplete
                   ? true
-                  : isComplete
-                    ? true
-                    : isDulledBecauseOfScheme;
+                  : isDulledBecauseOfScheme;
     }, [
         isDowntime,
-        hoveredEvent,
-        selectedEvent,
-        item.id,
+        isSelected,
         isComplete,
         isDulledBecauseOfScheme,
+        selectedEvent,
     ]);
 
     const style = useMemo(
@@ -442,8 +423,8 @@ const AreaEventPhase = ({
             }${isDulled ? "66" : ""}`,
         }),
         [
-            isDulled,
             width,
+            isDulled,
             isSelected,
             borderColor,
             colors,
@@ -453,6 +434,18 @@ const AreaEventPhase = ({
         ]
     );
 
+    const styleClass = useMemo(
+        () =>
+            css({
+                "&:hover": {
+                    borderColor: isClickable
+                        ? `${borderColor} !important`
+                        : undefined,
+                },
+            }),
+        [isClickable, borderColor]
+    );
+
     return (
         <div
             className={classNames(`${styles.phase}`, {
@@ -460,10 +453,9 @@ const AreaEventPhase = ({
                 [styles.isClickable]: isClickable,
                 "event-phase": isClickable,
             })}
+            css={styleClass}
             style={style}
             id={item.id}
-            onMouseEnter={onHoverIn}
-            onMouseLeave={onHoverOut}
             onClick={onClick}
             onDoubleClick={onDoubleClick}
         >

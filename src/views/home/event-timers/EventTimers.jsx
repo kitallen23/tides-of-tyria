@@ -75,7 +75,6 @@ const EventTimers = () => {
     const { now, dailyReset } = useTimer();
 
     const [hoveredRegion, setHoveredRegion] = useState("");
-    const [hoveredEvent, setHoveredEvent] = useState(null);
     const [selectedEvent, setSelectedEvent] = useState(null);
 
     const [_eventConfig, set_eventConfig] = useState(null);
@@ -267,7 +266,7 @@ const EventTimers = () => {
     const [highlightScheme, setHighlightScheme] = useState(() => {
         const highlightScheme = getLocalItem(
             LOCAL_STORAGE_KEYS.highlightScheme,
-            HIGHLIGHT_SCHEMES.all
+            HIGHLIGHT_SCHEMES.future
         );
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.highlightScheme,
@@ -296,8 +295,10 @@ const EventTimers = () => {
                 : nextScheme === HIGHLIGHT_SCHEMES.future
                   ? "all current & future events"
                   : "all events";
+
         toast(`Highlighting ${infoString}`, {
             icon: <InfoIcon />,
+            id: "highlight-scheme",
         });
     };
 
@@ -326,6 +327,7 @@ const EventTimers = () => {
                 : "Completed events hidden",
             {
                 icon: <InfoIcon />,
+                id: "completed-event-visibility",
             }
         );
     };
@@ -439,8 +441,6 @@ const EventTimers = () => {
                 value={{
                     width,
                     currentTimeBlockStart,
-                    hoveredEvent,
-                    setHoveredEvent,
                     selectedEvent,
                     setSelectedEvent: _setSelectedEvent,
                     eventWrapperRef,

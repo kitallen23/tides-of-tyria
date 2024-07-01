@@ -2,14 +2,17 @@ import "@/styles/globals.scss";
 import { Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
+import { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 import { TITLE_SUFFIX } from "@/utils/constants";
 import { ThemeProvider } from "@/utils/theme-provider";
-import Layout from "@/components/Layout";
+import { TimerProvider } from "@/utils/timer-provider";
+import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 
 import useApp from "@/useApp";
-import { TimerProvider } from "./utils/timer-provider";
-import { Toaster } from "react-hot-toast";
+import Layout from "@/components/Layout";
+import HelpModal from "@/components/HelpModal";
 
 function App() {
     const {
@@ -22,6 +25,12 @@ function App() {
         setTimeFormat,
         setPrimaryColor,
     } = useApp();
+
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState();
+
+    useGlobalHotkeys({
+        "?": () => setIsHelpModalOpen(true),
+    });
 
     return (
         <>
@@ -70,6 +79,10 @@ function App() {
                                     },
                                 },
                             }}
+                        />
+                        <HelpModal
+                            isOpen={isHelpModalOpen}
+                            onClose={() => setIsHelpModalOpen(false)}
                         />
                     </TimerProvider>
                 </ThemeProvider>

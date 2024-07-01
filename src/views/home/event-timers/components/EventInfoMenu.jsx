@@ -84,10 +84,13 @@ const EventInfoMenu = () => {
         const paddingHorizontal = parseFloat(style.paddingRight);
         const pageContentBoundingBox =
             pageContentElement.getBoundingClientRect();
+        const bodyStyle = window.getComputedStyle(document.body);
+        const bodyMarginTopWithUnits = bodyStyle.marginTop;
         setContainerDimensions({
             ...pageContentBoundingBox.toJSON(),
             scrollTop: pageContentElement.scrollTop,
             paddingRight: paddingHorizontal,
+            bodyMarginTopWithUnits,
         });
     }, [selectedEvent]);
 
@@ -114,11 +117,12 @@ const EventInfoMenu = () => {
             const boundingBox = selectedElement.getBoundingClientRect();
             const windowHeight = window.innerHeight;
 
-            let top =
+            let top = `${
                 boundingBox.bottom -
                 containerDimensions.top +
                 containerDimensions.scrollTop +
-                4;
+                4
+            }px`;
             // These values allow us to compare top & bottom against window's
             // innerHeight
             const topRelativeToViewport = boundingBox.bottom + 4;
@@ -149,14 +153,14 @@ const EventInfoMenu = () => {
                 // This means that the menu is "poking out" of the right side of the
                 // event area, so anchor it to the right of the bounding box
                 setAnchor({
-                    top,
+                    top: `calc(${top} + ${containerDimensions.bodyMarginTopWithUnits})`,
                     left: `${boundingBox.right - MENU_WIDTH}px`,
                     opacity: eventMenuHeight ? 1 : 0,
                 });
             } else {
                 // Menu can fit, so attach it left-aligned as usual
                 setAnchor({
-                    top,
+                    top: `calc(${top} + ${containerDimensions.bodyMarginTopWithUnits})`,
                     left: `${boundingBox.left}px`,
                     opacity: eventMenuHeight ? 1 : 0,
                 });

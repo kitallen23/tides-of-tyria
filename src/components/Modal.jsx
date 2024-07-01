@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Box, Modal as _Modal } from "@mui/material";
 import { ClearSharp } from "@mui/icons-material";
 import classNames from "classnames";
@@ -40,10 +40,25 @@ const Modal = ({
                 : undefined,
         [style, colors]
     );
+
+    useEffect(() => {
+        const handleKeydown = event => {
+            if (event.key === "Escape") {
+                onClose();
+            }
+        };
+
+        document.addEventListener("keydown", handleKeydown);
+        return () => {
+            document.removeEventListener("keydown", handleKeydown);
+        };
+    }, [onClose]);
+
     return (
         <_Modal
             className={classNames(styles.modal, className)}
             onClose={onClose}
+            disableEscapeKeyDown={true}
             {...rest}
         >
             <>
