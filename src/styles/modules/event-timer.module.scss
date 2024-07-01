@@ -192,7 +192,7 @@ $time-row-font-size: 0.875em;
 
         .timeRow {
             position: sticky;
-            top: -1 * (c.$page-content-padding-vertical);
+            top: c.$topbar-height;
             z-index: 12;
             overflow-x: auto;
             overscroll-behaviour: none;

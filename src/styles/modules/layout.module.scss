@@ -1,7 +1,5 @@
 @use "../variables/core-variables" as c;
 
-$topbar-height: 56px;
-
 .layoutWrapper {
     height: 100vh;
     width: 100vw;
@@ -19,7 +17,7 @@ $topbar-height: 56px;
         background: rgb(var(--background-rgb));
         transition: background-color var(--transition);
         position: relative;
-        margin-top: $topbar-height;
+        margin-top: c.$topbar-height;
     }
 }
 [data-font-size="sm"]:root {
@@ -45,8 +43,8 @@ $topbar-height: 56px;
     top: 0;
     left: 0;
     width: 100%;
-    height: $topbar-height;
-    z-index: var(--max-z);
+    height: c.$topbar-height;
+    z-index: 12;
     padding: 0 0.5rem;
 
     .content {
