@@ -295,8 +295,10 @@ const EventTimers = () => {
                 : nextScheme === HIGHLIGHT_SCHEMES.future
                   ? "all current & future events"
                   : "all events";
+
         toast(`Highlighting ${infoString}`, {
             icon: <InfoIcon />,
+            id: "highlight-scheme",
         });
     };
 
@@ -325,6 +327,7 @@ const EventTimers = () => {
                 : "Completed events hidden",
             {
                 icon: <InfoIcon />,
+                id: "completed-event-visibility",
             }
         );
     };
