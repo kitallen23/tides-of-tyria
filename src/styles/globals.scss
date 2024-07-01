@@ -223,15 +223,13 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+    /* outline: 1px solid green; */
 }
 
 html,
 body {
     width: 100%;
     max-width: 100vw;
-    overflow-x: hidden;
-    height: 100%;
-    overflow-y: auto;
 }
 
 body {
@@ -244,11 +242,11 @@ html[data-theme="kanagawa"] {
     color-scheme: dark;
 }
 
-$scrollbar-thickness: 6px;
-$scrollbar-thumb-border-radius: 6px;
-$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0);
-$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2);
-$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color));
+/* $scrollbar-thickness: 6px; */
+/* $scrollbar-thumb-border-radius: 6px; */
+/* $scrollbar-track-color: rgba(var(--scrollbar-track-color), 0); */
+/* $scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2); */
+/* $scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color)); */
 
 /* scrollbar width */
 /* ::-webkit-scrollbar { */

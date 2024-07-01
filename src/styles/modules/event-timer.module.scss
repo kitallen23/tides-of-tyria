@@ -98,7 +98,6 @@ $time-row-font-size: 0.875em;
 
         .widthRuler {
             overflow-x: auto;
-            overscroll-behaviour: none;
             height: 0;
             & > div {
                 min-width: $min-area-width;
@@ -107,7 +106,6 @@ $time-row-font-size: 0.875em;
 
         .eventContainer {
             overflow-x: auto;
-            overscroll-behaviour: none;
             position: relative;
 
             .regions {
@@ -186,16 +184,15 @@ $time-row-font-size: 0.875em;
                 border-left-width: 2px;
                 border-left-style: solid;
                 transition: left var(--transition);
-                z-index: 3;
+                z-index: 1;
             }
         }
 
         .timeRow {
             position: sticky;
             top: c.$topbar-height;
-            z-index: 12;
+            z-index: 1;
             overflow-x: auto;
-            overscroll-behaviour: none;
 
             scrollbar-width: none; // Firefox
             &::webkit-scrollbar {
@@ -215,7 +212,7 @@ $time-row-font-size: 0.875em;
                 border-left-width: 2px;
                 border-left-style: solid;
                 transition: left var(--transition);
-                z-index: 3;
+                z-index: 1;
 
                 display: flex;
 
@@ -229,13 +226,11 @@ $time-row-font-size: 0.875em;
                 grid-template-columns: repeat(8, 1fr);
                 min-width: $min-area-width;
                 border-bottom: 1px solid rgb(var(--muted-rgb));
-                z-index: 2;
 
                 & > div:not(.hoveredEventIndicator) {
                     display: grid;
                     grid-template-columns: auto 1fr;
                     align-items: end;
-                    z-index: 2;
 
                     color: var(--text-muted);
 
@@ -280,7 +275,6 @@ $time-row-font-size: 0.875em;
     border-radius: 0.25rem;
     width: 250px;
 
-    z-index: 10;
     top: 0;
     left: 0;
 
