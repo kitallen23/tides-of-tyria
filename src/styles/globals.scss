@@ -223,12 +223,13 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+    /* outline: 1px solid green; */
 }
 
 html,
 body {
+    width: 100%;
     max-width: 100vw;
-    overflow-x: hidden;
 }
 
 body {
@@ -241,45 +242,45 @@ html[data-theme="kanagawa"] {
     color-scheme: dark;
 }
 
-$scrollbar-thickness: 6px;
-$scrollbar-thumb-border-radius: 6px;
-$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0);
-$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2);
-$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color));
+/* $scrollbar-thickness: 6px; */
+/* $scrollbar-thumb-border-radius: 6px; */
+/* $scrollbar-track-color: rgba(var(--scrollbar-track-color), 0); */
+/* $scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2); */
+/* $scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color)); */
 
 /* scrollbar width */
-::-webkit-scrollbar {
-    height: $scrollbar-thickness;
-    width: $scrollbar-thickness;
-}
+/* ::-webkit-scrollbar { */
+/*     height: $scrollbar-thickness; */
+/*     width: $scrollbar-thickness; */
+/* } */
 
 /* scrollbar Track */
-::-webkit-scrollbar-track {
-    background: $scrollbar-track-color;
-}
+/* ::-webkit-scrollbar-track { */
+/*     background: $scrollbar-track-color; */
+/* } */
 
 /* scrollbar Handle */
-::-webkit-scrollbar-thumb {
-    background: $scrollbar-thumb-color;
-    border-radius: $scrollbar-thumb-border-radius;
-}
+/* ::-webkit-scrollbar-thumb { */
+/*     background: $scrollbar-thumb-color; */
+/*     border-radius: $scrollbar-thumb-border-radius; */
+/* } */
 
 /* scrollbar Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-    background: $scrollbar-thumb-hover-color;
-}
+/* ::-webkit-scrollbar-thumb:hover { */
+/*     background: $scrollbar-thumb-hover-color; */
+/* } */
 
-[data-theme="gruvbox_light"] {
-    /* scrollbar Handle */
-    ::-webkit-scrollbar-thumb {
-        background: rgba(var(--scrollbar-thumb-color), 0.6);
-    }
+/* [data-theme="gruvbox_light"] { */
+/* scrollbar Handle */
+/* ::-webkit-scrollbar-thumb { */
+/*     background: rgba(var(--scrollbar-thumb-color), 0.6); */
+/* } */
 
-    /* scrollbar Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: $scrollbar-thumb-hover-color;
-    }
-}
+/* scrollbar Handle on hover */
+/* ::-webkit-scrollbar-thumb:hover { */
+/*     background: $scrollbar-thumb-hover-color; */
+/* } */
+/* } */
 
 button {
     outline: none !important;

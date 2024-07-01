@@ -228,7 +228,11 @@ const OptionsMenu = ({
                         Are you sure you wish to reset all completed events?
                     </p>
                     <div style={{ textAlign: "center" }}>
-                        <Button variant="contained" onClick={_onReset}>
+                        <Button
+                            variant="contained"
+                            onClick={_onReset}
+                            color="error"
+                        >
                             Yes, reset them
                         </Button>
                     </div>

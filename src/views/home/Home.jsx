@@ -7,7 +7,7 @@ const Home = () => {
     return (
         <div className={styles.pageWrapper}>
             <EventTimers />
-            <div className={styles.group} style={{ display: "none" }}>
+            <div className={styles.group} /*style={{ display: "none" }}*/>
                 <div className={globalStyles.centeredContent}>
                     <div className={styles.headingRow}>
                         <h3 className={styles.heading}>
