@@ -5,14 +5,14 @@ $topbar-height: 56px;
 .layoutWrapper {
     height: 100vh;
     width: 100vw;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
     background-color: rgb(var(--nav-background-rgb));
 
     & > .pageContent {
-        overflow-y: auto;
+        /* overflow-y: auto; */
         padding: c.$page-content-padding-vertical
             c.$page-content-padding-horizontal;
         box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.1);
