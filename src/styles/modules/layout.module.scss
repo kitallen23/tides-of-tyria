@@ -2,6 +2,8 @@
 
 body {
     margin-top: c.$topbar-height;
+    background-color: rgb(var(--background-rgb));
+    transition: background-color var(--transition);
 }
 
 .layoutWrapper {
@@ -9,13 +11,10 @@ body {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: auto;
-    background-color: rgb(var(--nav-background-rgb));
 
     & > .pageContent {
         padding: c.$page-content-padding-vertical
             c.$page-content-padding-horizontal;
-        box-shadow: inset 1px 1px 4px 1px rgba(0, 0, 0, 0.1);
-        background: rgb(var(--background-rgb));
         transition: background-color var(--transition);
     }
 }
@@ -45,6 +44,9 @@ body {
     height: c.$topbar-height;
     z-index: 2;
     padding: 0 0.5rem;
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
     .content {
         display: flex;
