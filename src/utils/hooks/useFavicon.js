@@ -9,14 +9,22 @@ const useFavicon = color => {
         const svg = getSvg(color);
         const svgBlob = new Blob([svg], { type: "image/svg+xml" });
         const url = URL.createObjectURL(svgBlob);
-        const link = document.createElement("link");
-        link.rel = "icon";
-        link.href = url;
-        document.head.appendChild(link);
 
-        // Clean up by removing the old favicon
+        const createAndAppendLink = (rel, href) => {
+            const link = document.createElement("link");
+            link.rel = rel;
+            link.href = href;
+            document.head.appendChild(link);
+            return link;
+        };
+
+        const faviconLink = createAndAppendLink("icon", url);
+        const appleTouchIconLink = createAndAppendLink("apple-touch-icon", url);
+
+        // Clean up by removing the old favicon and apple-touch-icon
         return () => {
-            document.head.removeChild(link);
+            document.head.removeChild(faviconLink);
+            document.head.removeChild(appleTouchIconLink);
             URL.revokeObjectURL(url);
         };
     }, [color]);
