@@ -30,7 +30,7 @@ $time-row-font-size: 0.875em;
         width: 100%;
         transition: max-width 0.1s;
         display: grid;
-        grid-template-columns: 60px 1fr;
+        grid-template-columns: auto 1fr;
 
         @media (max-width: c.$media-md) {
             grid-template-columns: 1fr;
