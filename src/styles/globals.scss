@@ -7,22 +7,23 @@
     --font-size-md: 1rem;
     --font-size-lg: 1.125rem;
 
-    --primary-rgb: 126, 156, 216;
-    --secondary-rgb: 230, 195, 132;
-    --foreground-rgb: 220, 215, 186;
-    --foreground-light-rgb: 220, 215, 186;
-    --foreground-dark-rgb: 42, 42, 55;
-    --background-rgb: 31, 31, 40;
-    --nav-background-rgb: 42, 42, 55;
-    --menu-background-rgb: 31, 31, 40;
+    --primary-rgb: 95, 168, 211;
+    --secondary-rgb: 85, 85, 85;
+    --foreground-rgb: 224, 224, 224;
+    --foreground-light-rgb: 224, 224, 224;
+    --foreground-dark-rgb: 26, 26, 26;
+    --background-rgb: 25, 25, 25;
+    --nav-background-rgb: 32, 32, 32;
+    --menu-background-rgb: 25, 25, 25;
 
-    --scrollbar-track-color: 22, 22, 29;
-    --scrollbar-thumb-color: 220, 215, 186;
+    --scrollbar-track-color: 32, 32, 32;
+    --scrollbar-thumb-color: 153, 153, 153;
+    --scrollbar-thickness: 7px;
 
     --transition: 0.3s ease-in-out;
 
-    --text-muted: #54546d;
-    --muted-rgb: 84, 84, 109;
+    --text-muted: #555555;
+    --muted-rgb: 85, 85, 85;
     --max-z: 2147483647;
     --line-height: 1.35;
 
@@ -35,10 +36,10 @@
     line-height: 1.35;
     font-weight: 400;
 
-    --status-success: #98bb6c;
-    --status-danger: #ff5d62;
-    --status-warning: #ffa066;
-    --status-info: #7fb4ca;
+    --status-success: #5bae70;
+    --status-danger: #d76363;
+    --status-warning: #d9a063;
+    --status-info: #63b1d9;
 
     --red: #e82525;
 }
@@ -187,7 +188,7 @@
     --menu-background-rgb: 25, 25, 25;
 
     --scrollbar-track-color: 32, 32, 32;
-    --scrollbar-thumb-color: 215, 215, 215;
+    --scrollbar-thumb-color: 153, 153, 153;
 
     --text-muted: #555555;
     --muted-rgb: 85, 85, 85;
@@ -240,34 +241,6 @@ body {
 
 html[data-theme="kanagawa"] {
     color-scheme: dark;
-}
-
-$scrollbar-thickness: 6px;
-$scrollbar-thumb-border-radius: 6px;
-$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0);
-$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2);
-$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color));
-
-/* scrollbar width */
-html *:not(body)::-webkit-scrollbar {
-    height: $scrollbar-thickness;
-    width: $scrollbar-thickness;
-}
-
-/* scrollbar Track */
-html *:not(body)::-webkit-scrollbar-track {
-    background: $scrollbar-track-color;
-}
-
-/* scrollbar Handle */
-html *:not(body)::-webkit-scrollbar-thumb {
-    background: $scrollbar-thumb-color;
-    border-radius: $scrollbar-thumb-border-radius;
-}
-
-/* scrollbar Handle on hover */
-html *:not(body)::-webkit-scrollbar-thumb:hover {
-    background: $scrollbar-thumb-hover-color;
 }
 
 button {

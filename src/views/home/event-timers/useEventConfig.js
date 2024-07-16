@@ -3,6 +3,7 @@ import { addHours, isBefore } from "date-fns";
 
 import { useTimer } from "@/utils/hooks/useTimer";
 import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
+import { MODES } from "./utils";
 
 const isAreaEventsComplete = (area, dailyReset) => {
     const isIncomplete = area.phases.some(event => {
@@ -27,8 +28,15 @@ const isAreaComplete = (area, dailyReset) => {
     }
     return false;
 };
-const shouldRenderArea = (area, dailyReset) => {
-    if (area.onComplete === ON_COMPLETE_TYPES.none) {
+const shouldRenderArea = (area, dailyReset, showCompleted) => {
+    if (area.hideArea === true) {
+        // If area hidden by user, never show it
+        return false;
+    } else if (showCompleted) {
+        // If "show completed" setting is turned on, show it
+        return true;
+    } else if (area.onComplete === ON_COMPLETE_TYPES.none) {
+        // If area doesn't have a completion criteria, show it
         return true;
     } else if (area.onComplete === ON_COMPLETE_TYPES.completeArea) {
         const isComplete = isAreaComplete(area, dailyReset);
@@ -42,41 +50,51 @@ const shouldRenderArea = (area, dailyReset) => {
         return !isComplete;
     }
 };
-const shouldRenderRegion = (region, dailyReset) => {
-    return region.sub_areas.some(area => shouldRenderArea(area, dailyReset));
+const shouldRenderRegion = (region, dailyReset, showCompleted) => {
+    return region.sub_areas.some(area =>
+        shouldRenderArea(area, dailyReset, showCompleted)
+    );
 };
 
-const addRenderStatesToArea = (area, showCompleted, dailyReset) => {
-    const shouldRender = showCompleted
-        ? true
-        : shouldRenderArea(area, dailyReset);
+const addRenderStatesToArea = ({ area, showCompleted, mode, dailyReset }) => {
+    const shouldRender =
+        mode === MODES.edit
+            ? true
+            : shouldRenderArea(area, dailyReset, showCompleted);
     return {
         ...area,
         shouldRender,
     };
 };
-const addRenderStatesToRegion = (region, showCompleted, dailyReset) => {
-    const shouldRender = showCompleted
-        ? true
-        : shouldRenderRegion(region, dailyReset);
+const addRenderStatesToRegion = ({
+    region,
+    showCompleted,
+    mode,
+    dailyReset,
+}) => {
+    const shouldRender =
+        mode === MODES.edit
+            ? true
+            : shouldRenderRegion(region, dailyReset, showCompleted);
     return {
         ...region,
         shouldRender,
         sub_areas: region.sub_areas.map(area =>
-            addRenderStatesToArea(area, showCompleted, dailyReset)
+            addRenderStatesToArea({ area, showCompleted, mode, dailyReset })
         ),
     };
 };
-const addRenderStatesToEventConfig = (
+const addRenderStatesToEventConfig = ({
     eventConfig,
     showCompleted,
-    dailyReset
-) => {
+    mode,
+    dailyReset,
+}) => {
     return eventConfig.map(region =>
-        addRenderStatesToRegion(region, showCompleted, dailyReset)
+        addRenderStatesToRegion({ region, showCompleted, mode, dailyReset })
     );
 };
-const useEventConfig = ({ eventConfig: _eventConfig, showCompleted }) => {
+const useEventConfig = ({ eventConfig: _eventConfig, showCompleted, mode }) => {
     const { dailyReset } = useTimer();
 
     const [eventConfig, setEventConfig] = useState();
@@ -84,14 +102,15 @@ const useEventConfig = ({ eventConfig: _eventConfig, showCompleted }) => {
     useEffect(() => {
         if (_eventConfig) {
             const clonedEventConfig = structuredClone(_eventConfig);
-            let eventConfig = addRenderStatesToEventConfig(
-                clonedEventConfig,
+            let eventConfig = addRenderStatesToEventConfig({
+                eventConfig: clonedEventConfig,
                 showCompleted,
-                dailyReset
-            );
+                mode,
+                dailyReset,
+            });
             setEventConfig(eventConfig);
         }
-    }, [_eventConfig, showCompleted, dailyReset]);
+    }, [_eventConfig, showCompleted, mode, dailyReset]);
 
     return eventConfig;
 };

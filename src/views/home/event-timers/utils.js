@@ -11,13 +11,18 @@ export const HIGHLIGHT_SCHEMES = {
 };
 export const UPCOMING_MINS = 30;
 
+export const MODES = {
+    view: "view",
+    edit: "edit",
+};
+
 export const cleanEventConfig = (eventConfig, reset) => {
     const _eventConfig = structuredClone(eventConfig);
     return _eventConfig.map(region => ({
         ...region,
         sub_areas: region.sub_areas.map(subArea => {
             if (
-                subArea.lastCompletion &&
+                subArea?.lastCompletion &&
                 isBefore(subArea.lastCompletion, reset)
             ) {
                 subArea.lastCompletion = undefined;
@@ -77,5 +82,28 @@ export const markAllEventsIncomplete = eventConfig => {
             });
             return subArea;
         }),
+    }));
+};
+
+export const toggleAreaVisibility = (eventConfig, area) => {
+    const _eventConfig = structuredClone(eventConfig);
+    return _eventConfig.map(region => ({
+        ...region,
+        sub_areas: region.sub_areas.map(subArea => {
+            if (subArea.key === area.key) {
+                subArea.hideArea = !(subArea.hideArea ?? false);
+            }
+            return subArea;
+        }),
+    }));
+};
+export const markAllAreasVisible = eventConfig => {
+    const _eventConfig = structuredClone(eventConfig);
+    return _eventConfig.map(region => ({
+        ...region,
+        sub_areas: region.sub_areas.map(subArea => ({
+            ...subArea,
+            hideArea: undefined,
+        })),
     }));
 };

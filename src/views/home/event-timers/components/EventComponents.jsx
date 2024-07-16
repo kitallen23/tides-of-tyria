@@ -12,6 +12,8 @@ import { nanoid } from "nanoid";
 import classNames from "classnames";
 import { useResizeDetector } from "react-resize-detector";
 import { toast } from "react-hot-toast";
+import { css } from "@emotion/react";
+import { Switch } from "@mui/material";
 
 import styles from "@/styles/modules/event-timer.module.scss";
 import { useTheme } from "@/utils/theme-provider";
@@ -30,11 +32,11 @@ import HoveredEventIndicator from "./HoveredEventIndicator";
 import {
     HIGHLIGHT_SCHEMES,
     MINS_IN_DAY,
+    MODES,
     TIME_BLOCK_MINS,
     UPCOMING_MINS,
 } from "../utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
-import { css } from "@emotion/react";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -121,6 +123,7 @@ export const TimeRow = () => {
                 [styles.hideLabels]: shouldHideLabels,
             })}
             style={{ background: colors.background }}
+            id="time-row"
         >
             <div className={styles.timeRowInnerWrapper}>
                 <div>
@@ -840,9 +843,99 @@ const FixedTimeArea = ({ area, region }) => {
         </div>
     );
 };
+const EditableArea = ({ area }) => {
+    const { colors } = useTheme();
+    const { onToggleHidden } = useContext(EventTimerContext);
+    const eventBackground = useMemo(
+        () => colors[area.color],
+        [area.color, colors]
+    );
+    const isBackgroundLight = useMemo(
+        () => isLight(eventBackground),
+        [eventBackground]
+    );
+    const isDulledBackgroundLight = useMemo(() => {
+        const effectiveEventBackgroundColor = blendColors({
+            opacity: DOWNTIME_OPACITY,
+            color: eventBackground,
+            backgroundColor: colors.background,
+        });
+        return isLight(effectiveEventBackgroundColor);
+    }, [eventBackground, colors.background]);
+
+    const borderColor = useMemo(
+        () => adjustLuminance(eventBackground, -40),
+        [eventBackground]
+    );
+
+    const areaEvents = useMemo(
+        () => area.phases.map(phase => phase.name).join(", "),
+        [area.phases]
+    );
+
+    const isDulled = area.hideArea === true;
+    const isHidden = area.hideArea === true;
+
+    const style = useMemo(
+        () => ({
+            background: `${eventBackground}${isDulled ? "33" : ""}`,
+            color: `${
+                isDulled
+                    ? isDulledBackgroundLight
+                        ? colors.bodyDark
+                        : colors.bodyLight
+                    : isBackgroundLight
+                      ? colors.bodyDark
+                      : colors.bodyLight
+            }${isDulled ? "66" : ""}`,
+        }),
+        [
+            isDulled,
+            colors,
+            isBackgroundLight,
+            isDulledBackgroundLight,
+            eventBackground,
+        ]
+    );
+
+    const styleClass = useMemo(
+        () =>
+            css({
+                "&:hover": {
+                    borderColor: `${borderColor} !important`,
+                },
+            }),
+        [borderColor]
+    );
+
+    const onClick = () => {
+        onToggleHidden(area);
+    };
+
+    return (
+        <div className={styles.area} onClick={onClick}>
+            <div className={styles.editableArea} css={styleClass} style={style}>
+                <Switch
+                    checked={!isHidden}
+                    disabled={isHidden}
+                    color={isBackgroundLight ? "bodyDark" : "bodyLight"}
+                    size="small"
+                />
+                <div className={styles.text}>
+                    <div className={styles.title}>
+                        {area.displayTitle ?? area.name}
+                    </div>
+                    {"|"}
+                    <div className={styles.events}>{areaEvents}</div>
+                </div>
+            </div>
+        </div>
+    );
+};
 
 const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
     const { height, ref } = useResizeDetector();
+    const { mode } = useContext(EventTimerContext);
 
     useEffect(() => {
         if (height && indicatorWrapperRef.current) {
@@ -871,7 +964,13 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
             onMouseLeave={() => setHoveredRegion("")}
         >
             {region.sub_areas.map(area =>
-                area.type === "fixed_time" ? (
+                mode === MODES.edit ? (
+                    <EditableArea
+                        key={area.key}
+                        area={area}
+                        region={regionData}
+                    />
+                ) : area.type === "fixed_time" ? (
                     <FixedTimeArea
                         key={area.key}
                         area={area}
