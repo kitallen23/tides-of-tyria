@@ -8,9 +8,11 @@ import { Button } from "@mui/material";
 import {
     ChevronLeftSharp,
     ChevronRightSharp,
+    DoneSharp,
     HistorySharp,
     HourglassTopSharp,
     MoreVertSharp,
+    RestartAltSharp,
 } from "@mui/icons-material";
 import {
     getHours,
@@ -35,10 +37,13 @@ import EventRegion, {
 } from "./components/EventComponents";
 import {
     HIGHLIGHT_SCHEMES,
+    MODES,
     UPCOMING_MINS,
     cleanEventConfig,
+    markAllAreasVisible,
     markAllEventsIncomplete,
     markEventComplete,
+    toggleAreaVisibility,
 } from "./utils";
 import EventTimerContext from "./EventTimerContext";
 import OptionsMenu from "./components/OptionsMenu";
@@ -166,6 +171,28 @@ const EventTimers = () => {
             JSON.stringify(eventConfigAfterReset)
         );
         setSelectedEvent(null);
+    };
+
+    const onToggleHidden = area => {
+        const eventConfigWithToggledAreaVisibility = toggleAreaVisibility(
+            _eventConfig,
+            area
+        );
+        set_eventConfig(eventConfigWithToggledAreaVisibility);
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            JSON.stringify(eventConfigWithToggledAreaVisibility)
+        );
+    };
+
+    const onMarkAllAreasVisible = () => {
+        const eventConfigWithResetAreaVisibility =
+            markAllAreasVisible(_eventConfig);
+        set_eventConfig(eventConfigWithResetAreaVisibility);
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            JSON.stringify(eventConfigWithResetAreaVisibility)
+        );
     };
 
     // Unset the selected event whenever the current time block changes
@@ -332,6 +359,8 @@ const EventTimers = () => {
         );
     };
 
+    const [mode, setMode] = useState(MODES.view);
+
     const [menuAnchor, setMenuAnchor] = useState(null);
     const isMenuOpen = Boolean(menuAnchor);
 
@@ -351,6 +380,7 @@ const EventTimers = () => {
     const eventConfig = useEventConfig({
         eventConfig: _eventConfig,
         showCompleted,
+        mode,
     });
 
     if (!eventConfig) {
@@ -372,68 +402,111 @@ const EventTimers = () => {
                             }}
                             className={globalStyles.hideBelowMd}
                         >
-                            &nbsp;| Click an event to see info
+                            &nbsp;|{" "}
+                            {mode === MODES.edit
+                                ? "Click an event to show or hide it permanently"
+                                : "Click an event to see info"}
                         </span>
                     </h3>
                     <div className={layoutStyles.buttonGroup}>
-                        <Button
-                            variant="text"
-                            sx={{ minWidth: 0 }}
-                            color="muted"
-                            onClick={onMenuButtonClick}
-                        >
-                            <MoreVertSharp sx={{ fontSize: "1.17em" }} />
-                        </Button>
-                        <OptionsMenu
-                            anchorEl={menuAnchor}
-                            open={isMenuOpen}
-                            isTimerCollapsed={isTimerCollapsed}
-                            onClose={onMenuClose}
-                            onReset={onResetCompletedEvents}
-                            toggleIsTimerCollapsed={toggleIsTimerCollapsed}
-                            anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "right",
-                            }}
-                            transformOrigin={{
-                                vertical: "top",
-                                horizontal: "right",
-                            }}
-                            highlightScheme={highlightScheme}
-                            onHighlightSchemeChange={onHighlightSchemeChange}
-                            showCompleted={showCompleted}
-                            toggleShowCompleted={toggleShowCompleted}
-                        />
-                        <Button
-                            variant="text"
-                            sx={{ minWidth: 0 }}
-                            color="muted"
-                            onClick={() => setOffset(offset - 1)}
-                        >
-                            <ChevronLeftSharp sx={{ fontSize: "1.17em" }} />
-                        </Button>
-                        <Button
-                            variant="text"
-                            sx={{
-                                minWidth: 0,
-                                ":disabled": {
-                                    color: `${colors.muted}80`,
-                                },
-                            }}
-                            color="muted"
-                            onClick={() => setOffset(0)}
-                            disabled={offset === 0}
-                        >
-                            <HistorySharp sx={{ fontSize: "1.17em" }} />
-                        </Button>
-                        <Button
-                            variant="text"
-                            sx={{ minWidth: 0 }}
-                            color="muted"
-                            onClick={() => setOffset(offset + 1)}
-                        >
-                            <ChevronRightSharp sx={{ fontSize: "1.17em" }} />
-                        </Button>
+                        {mode === MODES.edit ? (
+                            <>
+                                <Button
+                                    variant="text"
+                                    sx={{ minWidth: 0, gap: 1, lineHeight: 1 }}
+                                    color="success"
+                                    onClick={() => setMode(MODES.view)}
+                                    key="finish-editing"
+                                >
+                                    <DoneSharp sx={{ fontSize: "1.17em" }} />
+                                    Finish editing
+                                </Button>
+                                <Button
+                                    variant="text"
+                                    sx={{ minWidth: 0, gap: 1 }}
+                                    color="muted"
+                                    onClick={onMarkAllAreasVisible}
+                                    key="reset-hidden"
+                                >
+                                    <RestartAltSharp
+                                        sx={{ fontSize: "1.17em" }}
+                                    />
+                                </Button>
+                            </>
+                        ) : (
+                            <>
+                                <Button
+                                    variant="text"
+                                    sx={{ minWidth: 0 }}
+                                    color="muted"
+                                    onClick={onMenuButtonClick}
+                                    key="more-menu"
+                                >
+                                    <MoreVertSharp
+                                        sx={{ fontSize: "1.17em" }}
+                                    />
+                                </Button>
+                                <OptionsMenu
+                                    anchorEl={menuAnchor}
+                                    open={isMenuOpen}
+                                    isTimerCollapsed={isTimerCollapsed}
+                                    onClose={onMenuClose}
+                                    onReset={onResetCompletedEvents}
+                                    toggleIsTimerCollapsed={
+                                        toggleIsTimerCollapsed
+                                    }
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "right",
+                                    }}
+                                    transformOrigin={{
+                                        vertical: "top",
+                                        horizontal: "right",
+                                    }}
+                                    highlightScheme={highlightScheme}
+                                    onHighlightSchemeChange={
+                                        onHighlightSchemeChange
+                                    }
+                                    showCompleted={showCompleted}
+                                    toggleShowCompleted={toggleShowCompleted}
+                                    setMode={setMode}
+                                />
+                                <Button
+                                    variant="text"
+                                    sx={{ minWidth: 0 }}
+                                    color="muted"
+                                    onClick={() => setOffset(offset - 1)}
+                                >
+                                    <ChevronLeftSharp
+                                        sx={{ fontSize: "1.17em" }}
+                                    />
+                                </Button>
+                                <Button
+                                    variant="text"
+                                    sx={{
+                                        minWidth: 0,
+                                        ":disabled": {
+                                            color: `${colors.muted}80`,
+                                        },
+                                    }}
+                                    color="muted"
+                                    onClick={() => setOffset(0)}
+                                    disabled={offset === 0}
+                                >
+                                    <HistorySharp sx={{ fontSize: "1.17em" }} />
+                                </Button>
+                                <Button
+                                    variant="text"
+                                    sx={{ minWidth: 0 }}
+                                    color="muted"
+                                    onClick={() => setOffset(offset + 1)}
+                                >
+                                    <ChevronRightSharp
+                                        sx={{ fontSize: "1.17em" }}
+                                    />
+                                </Button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>
@@ -446,7 +519,9 @@ const EventTimers = () => {
                     eventWrapperRef,
                     widthRulerRef,
                     onComplete,
+                    onToggleHidden,
                     highlightScheme,
+                    mode,
                 }}
             >
                 <div

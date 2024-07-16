@@ -24,7 +24,7 @@ import { toast } from "react-hot-toast";
 import { useTheme } from "@/utils/theme-provider";
 import styles from "@/styles/modules/event-timer.module.scss";
 import Modal from "@/components/Modal";
-import { HIGHLIGHT_SCHEMES, UPCOMING_MINS } from "../utils";
+import { HIGHLIGHT_SCHEMES, MODES, UPCOMING_MINS } from "../utils";
 
 const OptionsMenu = ({
     onClose,
@@ -35,6 +35,7 @@ const OptionsMenu = ({
     onHighlightSchemeChange,
     showCompleted,
     toggleShowCompleted,
+    setMode,
     ...rest
 }) => {
     const { colors } = useTheme();
@@ -58,6 +59,10 @@ const OptionsMenu = ({
     };
     const onShowCompletedClick = () => {
         toggleShowCompleted();
+        onClose();
+    };
+    const onModeClick = () => {
+        setMode(MODES.edit);
         onClose();
     };
 
@@ -195,7 +200,7 @@ const OptionsMenu = ({
                     </ListItemText>
                 </MenuItem>
                 <Divider />
-                <MenuItem onClick={onClose}>
+                <MenuItem onClick={onModeClick}>
                     <ListItemIcon>
                         <EditSharp />
                     </ListItemIcon>

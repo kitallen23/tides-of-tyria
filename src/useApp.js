@@ -27,6 +27,12 @@ export const getDesignTokens = theme => ({
         body: {
             main: theme.colors.body,
         },
+        bodyLight: {
+            main: theme.colors.bodyLight,
+        },
+        bodyDark: {
+            main: theme.colors.bodyDark,
+        },
         muted: {
             main: theme.colors.muted,
         },

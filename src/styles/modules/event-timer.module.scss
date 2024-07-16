@@ -120,7 +120,6 @@ $time-row-font-size: 0.875em;
                 }
                 .area {
                     position: relative;
-                    min-height: 2rem;
                     display: flex;
                     gap: 4px;
 
@@ -165,6 +164,57 @@ $time-row-font-size: 0.875em;
                             text-overflow: ellipsis;
 
                             font-size: 0.875em;
+                        }
+                    }
+                    .editableArea {
+                        line-height: $line-height;
+                        font-size: 0.875em;
+                        border-radius: 0.25rem;
+                        padding: 0 0.2em;
+
+                        border-width: 2px;
+                        border-style: solid;
+                        border-color: transparent;
+                        transition:
+                            background var(--transition),
+                            border-color var(--transition);
+
+                        display: grid;
+                        grid-template-columns: auto 1fr;
+                        align-content: center;
+                        gap: 1rem;
+
+                        user-select: none;
+                        -webkit-user-select: none;
+                        cursor: pointer;
+
+                        width: 100%;
+
+                        // Text height of title, text height of "time until",
+                        // padding * 2
+                        min-height: calc(
+                            (1em * #{$line-height}) +
+                                (0.875em * #{$line-height}) + (0.2em * 2)
+                        );
+
+                        .text {
+                            display: grid;
+                            grid-template-columns: 150px auto auto;
+                            gap: 0.5em;
+                            align-content: center;
+                            justify-content: start;
+
+                            .title {
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
+                            .events {
+                                font-size: 0.85em;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                            }
                         }
                     }
                 }
