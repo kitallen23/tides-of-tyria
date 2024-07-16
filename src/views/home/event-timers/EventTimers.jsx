@@ -24,6 +24,7 @@ import {
     addMinutes,
     min,
 } from "date-fns";
+import * as ScrollArea from "@radix-ui/react-scroll-area";
 
 import META_EVENTS from "@/utils/meta_events";
 import { getLocalItem } from "@/utils/util";
@@ -242,9 +243,11 @@ const EventTimers = () => {
 
     useEffect(() => {
         if (scrollParentRef?.current) {
-            const children = scrollParentRef.current.children;
-            const container0 = children?.[1];
-            const container1 = children?.[2];
+            const container0 =
+                scrollParentRef.current.querySelector("#time-row");
+            const container1 = scrollParentRef.current.querySelector(
+                "#event-scroll-viewport"
+            );
 
             if (!container0 || !container1) {
                 return;
@@ -553,29 +556,49 @@ const EventTimers = () => {
                                 <div ref={widthRulerRef} />
                             </div>
                             <TimeRow />
-                            <div className={styles.eventContainer}>
-                                <CurrentTimeIndicator />
-                                <HoveredEventIndicator />
-
-                                <div
-                                    className={styles.regions}
-                                    ref={eventWrapperRef}
+                            <ScrollArea.Root className={styles.scrollAreaRoot}>
+                                <ScrollArea.Viewport
+                                    className={styles.scrollAreaViewport}
+                                    id="event-scroll-viewport"
                                 >
-                                    {eventConfig.map(region => (
-                                        <EventRegion
-                                            key={region.key}
-                                            region={region}
-                                            currentTimeBlockStart={
-                                                currentTimeBlockStart
-                                            }
-                                            indicatorWrapperRef={
-                                                indicatorWrapperRef
-                                            }
-                                            setHoveredRegion={setHoveredRegion}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
+                                    <div className={styles.eventContainer}>
+                                        <CurrentTimeIndicator />
+                                        <HoveredEventIndicator />
+
+                                        <div
+                                            className={styles.regions}
+                                            ref={eventWrapperRef}
+                                        >
+                                            {eventConfig.map(region => (
+                                                <EventRegion
+                                                    key={region.key}
+                                                    region={region}
+                                                    currentTimeBlockStart={
+                                                        currentTimeBlockStart
+                                                    }
+                                                    indicatorWrapperRef={
+                                                        indicatorWrapperRef
+                                                    }
+                                                    setHoveredRegion={
+                                                        setHoveredRegion
+                                                    }
+                                                />
+                                            ))}
+                                        </div>
+                                    </div>
+                                </ScrollArea.Viewport>
+                                <ScrollArea.Scrollbar
+                                    className={styles.scrollAreaScrollbar}
+                                    orientation="horizontal"
+                                >
+                                    <ScrollArea.Thumb
+                                        className={styles.scrollAreaThumb}
+                                    />
+                                </ScrollArea.Scrollbar>
+                                <ScrollArea.Corner
+                                    className={styles.scrollAreaCorner}
+                                />
+                            </ScrollArea.Root>
                         </div>
                     </div>
                 </div>

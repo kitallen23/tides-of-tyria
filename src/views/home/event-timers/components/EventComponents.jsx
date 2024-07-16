@@ -123,6 +123,7 @@ export const TimeRow = () => {
                 [styles.hideLabels]: shouldHideLabels,
             })}
             style={{ background: colors.background }}
+            id="time-row"
         >
             <div className={styles.timeRowInnerWrapper}>
                 <div>

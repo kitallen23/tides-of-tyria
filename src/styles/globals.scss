@@ -243,34 +243,6 @@ html[data-theme="kanagawa"] {
     color-scheme: dark;
 }
 
-$scrollbar-thickness: 6px;
-$scrollbar-thumb-border-radius: 6px;
-$scrollbar-track-color: rgba(var(--scrollbar-track-color), 0);
-$scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2);
-$scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color));
-
-/* scrollbar width */
-html *:not(body)::-webkit-scrollbar {
-    height: $scrollbar-thickness;
-    width: $scrollbar-thickness;
-}
-
-/* scrollbar Track */
-html *:not(body)::-webkit-scrollbar-track {
-    background: $scrollbar-track-color;
-}
-
-/* scrollbar Handle */
-html *:not(body)::-webkit-scrollbar-thumb {
-    background: $scrollbar-thumb-color;
-    border-radius: $scrollbar-thumb-border-radius;
-}
-
-/* scrollbar Handle on hover */
-html *:not(body)::-webkit-scrollbar-thumb:hover {
-    background: $scrollbar-thumb-hover-color;
-}
-
 button {
     outline: none !important;
 }
