@@ -1,8 +1,9 @@
-import { Tab, Tabs } from "@mui/material";
+import { Tab, Tabs, useMediaQuery } from "@mui/material";
 import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
+import { ChecklistSharp, ViewTimelineSharp } from "@mui/icons-material";
 
 const ROUTES = {
     "/": 0,
@@ -13,6 +14,7 @@ const LinkTab = ({ className, ...rest }) => (
     <Tab
         component={Link}
         className={classNames(className, globalStyles.internalLink)}
+        sx={{ minWidth: 0 }}
         {...rest}
     />
 );
@@ -20,6 +22,7 @@ const LinkTab = ({ className, ...rest }) => (
 const NavTabs = () => {
     const { pathname } = useLocation();
     const routeId = ROUTES[pathname] ?? -1;
+    const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
     return (
         <Tabs
@@ -32,8 +35,46 @@ const NavTabs = () => {
                 },
             }}
         >
-            <LinkTab label="Event Timer" to="/" />
-            <LinkTab label="Checklist" to="/checklist" />
+            <LinkTab
+                label={
+                    isSmallScreen ? (
+                        <ViewTimelineSharp />
+                    ) : (
+                        <div
+                            style={{
+                                display: "grid",
+                                gap: "0.5rem",
+                                gridTemplateColumns: "auto 1fr",
+                                alignItems: "center",
+                            }}
+                        >
+                            <ViewTimelineSharp />
+                            Event Timer
+                        </div>
+                    )
+                }
+                to="/"
+            />
+            <LinkTab
+                label={
+                    isSmallScreen ? (
+                        <ChecklistSharp />
+                    ) : (
+                        <div
+                            style={{
+                                display: "grid",
+                                gap: "0.5rem",
+                                gridTemplateColumns: "auto 1fr",
+                                alignItems: "center",
+                            }}
+                        >
+                            <ChecklistSharp />
+                            Checklist
+                        </div>
+                    )
+                }
+                to="/checklist"
+            />
         </Tabs>
     );
 };
