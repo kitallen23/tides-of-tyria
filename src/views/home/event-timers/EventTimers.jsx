@@ -275,7 +275,7 @@ const EventTimers = () => {
     const [isTimerCollapsed, setIsTimerCollapsed] = useState(() => {
         const isTimerCollapsed = getLocalItem(
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
-            "false"
+            "true"
         );
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
