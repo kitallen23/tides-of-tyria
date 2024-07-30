@@ -3,11 +3,11 @@ import styles from "@/styles/modules/home.module.scss";
 import { HourglassTopSharp } from "@mui/icons-material";
 import EventTimers from "./event-timers/EventTimers";
 
-const Home = () => {
+const HomePage = () => {
     return (
         <div className={styles.pageWrapper}>
             <EventTimers />
-            <div className={styles.group} style={{ display: "none" }}>
+            <div className={styles.group} style={{ display: "initial" }}>
                 <div className={globalStyles.centeredContent}>
                     <div className={styles.headingRow}>
                         <h3 className={styles.heading}>
@@ -172,4 +172,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default HomePage;

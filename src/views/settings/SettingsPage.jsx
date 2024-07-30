@@ -18,7 +18,7 @@ import { SCHEMES } from "@/utils/color-schemes";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import Modal from "@/components/Modal";
 
-const Settings = () => {
+const SettingsPage = () => {
     const title = useMemo(() => getTitle("Settings"), []);
     const {
         colorScheme: scheme,
@@ -269,4 +269,4 @@ const Settings = () => {
     );
 };
 
-export default Settings;
+export default SettingsPage;
