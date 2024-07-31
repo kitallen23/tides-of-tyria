@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import classNames from "classnames";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import { ChecklistSharp, ViewTimelineSharp } from "@mui/icons-material";
+import { ChecklistSharp, TimelineSharp } from "@mui/icons-material";
 
 const ROUTES = {
     "/": 0,
@@ -38,7 +38,7 @@ const NavTabs = () => {
             <LinkTab
                 label={
                     isSmallScreen ? (
-                        <ViewTimelineSharp sx={{ fontSize: "1.5em" }} />
+                        <TimelineSharp sx={{ fontSize: "1.5em" }} />
                     ) : (
                         <div
                             style={{
@@ -48,7 +48,7 @@ const NavTabs = () => {
                                 alignItems: "center",
                             }}
                         >
-                            <ViewTimelineSharp />
+                            <TimelineSharp />
                             Event Timer
                         </div>
                     )
