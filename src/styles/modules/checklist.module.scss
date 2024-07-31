@@ -1,0 +1,15 @@
+.pageWrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    .heading {
+        display: flex;
+        align-items: center;
+    }
+
+    .group {
+        display: grid;
+        gap: 1rem;
+    }
+}

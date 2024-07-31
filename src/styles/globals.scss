@@ -26,6 +26,7 @@
     --muted-rgb: 85, 85, 85;
     --max-z: 2147483647;
     --line-height: 1.35;
+    line-height: 1.35;
 
     font-family: var(--font-regular);
     font-optical-scaling: auto;
@@ -33,7 +34,6 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.35;
     font-weight: 400;
 
     --status-success: #5bae70;

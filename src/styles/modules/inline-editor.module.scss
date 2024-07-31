@@ -1,0 +1,28 @@
+$editor-padding-vertical: 3px;
+$editor-padding-horizontal: 2px;
+$line-height: var(--line-height);
+
+.inlineEditorContainer {
+    position: relative;
+    width: 100%;
+    border: 1px solid #ccc;
+    padding: $editor-padding-vertical $editor-padding-horizontal;
+    min-height: calc(#{$line-height} + 2 * #{$editor-padding-vertical});
+
+    .inlineEditor {
+        outline: none;
+    }
+
+    .floatingToolbar {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: flex;
+        gap: 0.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        font-size: 1.17em;
+    }
+}

@@ -59,7 +59,7 @@ const Header = () => {
                             pathname === "/settings" ? "primary" : "secondary"
                         }
                         sx={{
-                            fontSize: "1.5rem",
+                            fontSize: "1.5em",
                         }}
                     >
                         <SettingsSharp />

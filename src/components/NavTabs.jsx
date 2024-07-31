@@ -38,7 +38,7 @@ const NavTabs = () => {
             <LinkTab
                 label={
                     isSmallScreen ? (
-                        <ViewTimelineSharp />
+                        <ViewTimelineSharp sx={{ fontSize: "1.5em" }} />
                     ) : (
                         <div
                             style={{
@@ -58,7 +58,7 @@ const NavTabs = () => {
             <LinkTab
                 label={
                     isSmallScreen ? (
-                        <ChecklistSharp />
+                        <ChecklistSharp sx={{ fontSize: "1.5em" }} />
                     ) : (
                         <div
                             style={{
