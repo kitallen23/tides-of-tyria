@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { Button } from "@mui/material";
 import {
     AddLinkSharp,
+    ExpandMoreSharp,
     FormatBoldSharp,
     FormatItalicSharp,
     FormatUnderlinedSharp,
@@ -143,7 +144,6 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     variant="text"
                     color={isBold ? "primary" : "body"}
                     sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
-                    // onClick={() => applyStyle("font-weight: bold;")}
                     onClick={() => applyStyle("bold")}
                 >
                     <FormatBoldSharp />
@@ -152,7 +152,6 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     variant="text"
                     color={isItalic ? "primary" : "body"}
                     sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
-                    // onClick={() => applyStyle("font-style: italic;")}
                     onClick={() => applyStyle("italic")}
                 >
                     <FormatItalicSharp />
@@ -161,7 +160,6 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     variant="text"
                     color={isUnderlined ? "primary" : "body"}
                     sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
-                    // onClick={() => applyStyle("text-decoration: underline;")}
                     onClick={() => applyStyle("underline")}
                 >
                     <FormatUnderlinedSharp />
@@ -173,6 +171,10 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     onClick={applyLink}
                 >
                     <AddLinkSharp />
+                    <ExpandMoreSharp
+                        sx={{ fontSize: "0.875em" }}
+                        color="muted"
+                    />
                 </Button>
             </div>
             <div
