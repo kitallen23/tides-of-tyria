@@ -3,15 +3,16 @@ export const SCHEMES = {
         // Custom scheme
         name: "Dark",
         mode: "dark",
+        // Secondary is the same as muted
         colors: {
             primary: "#5fa8d3", // 95, 168, 211
-            secondary: "#555555", // 85, 85, 85
+            secondary: "#737373", // 115, 115, 115
             body: "#e0e0e0", // 224, 224, 224
             bodyLight: "#e0e0e0", // 224, 224, 224
             bodyDark: "#1a1a1a", // 26, 26, 26
             background: "#191919", // 25, 25, 25
             backgroundNav: "#202020", // 32, 32, 32
-            muted: "#555555", // 85, 85, 85
+            muted: "#737373", // 115, 115, 115
             menu: "#191919", // 25, 25, 25
 
             success: "#5bae70", // 91, 174, 112
@@ -33,15 +34,16 @@ export const SCHEMES = {
         // https://github.com/rebelot/kanagawa.nvim
         name: "Kanagawa",
         mode: "dark",
+        // Secondary is the same as muted
         colors: {
             primary: "#7e9cd8", // 126, 156, 216
-            secondary: "#54546d", // 84, 84, 109
+            secondary: "#6f6f90", // 111, 111, 144
             body: "#dcd7ba", // 220, 215, 186
             bodyLight: "#dcd7ba", // 220, 215, 186
             bodyDark: "#2a2a37", // 42, 42, 55
             background: "#1f1f28", // 31, 31, 40
             backgroundNav: "#2a2a37", // 42, 42, 55
-            muted: "#54546d", // 84, 84, 109
+            muted: "#6f6f90", // 111, 111, 144
             menu: "#1f1f28", // 31, 31, 40
 
             success: "#98bb6c", // 152, 187, 108
@@ -64,6 +66,7 @@ export const SCHEMES = {
         // https://github.com/loctvl842/monokai-pro.nvim/blob/master/lua/monokai-pro/colorscheme/palette/pro.lua
         name: "Monokai Pro",
         mode: "dark",
+        // Secondary is different to muted
         colors: {
             primary: "#ffd866", // 255, 216, 102
             secondary: "#ff6188", // 255, 97, 136
@@ -72,7 +75,7 @@ export const SCHEMES = {
             bodyDark: "#3c393d", // 60, 57, 61
             background: "#2d2a2e", // 45, 42, 46
             backgroundNav: "#221f22", // 34, 31, 34
-            muted: "#696769", // 105, 103, 105
+            muted: "#8d8b8d", // 141, 139, 141
             menu: "#221f22", // 34, 31, 34
 
             success: "#a9dc76", // 169, 220, 118
@@ -94,6 +97,7 @@ export const SCHEMES = {
         // https://github.com/dracula/dracula-theme
         name: "Dracula",
         mode: "dark",
+        // Secondary is different to muted
         colors: {
             primary: "#bd93f9", // 189, 147, 249
             secondary: "#50fa7b", // 80, 250, 123
@@ -102,7 +106,7 @@ export const SCHEMES = {
             bodyDark: "#44475a", // 68, 71, 90
             background: "#282a36", // 40, 42, 54
             backgroundNav: "#44475a", // 68, 71, 90
-            muted: "#585b74", // 88, 91, 116
+            muted: "#7c7f9c", // 124, 127, 156
             menu: "#282a36", // 40, 42, 54
 
             success: "#50fa7b", // 80, 250, 123
@@ -124,15 +128,16 @@ export const SCHEMES = {
         // https://github.com/morhetz/gruvbox
         name: "Gruvbox Dark",
         mode: "dark",
+        // Secondary is the same as muted
         colors: {
             primary: "#b8bb26", // 184, 187, 38
-            secondary: "#665c54", // 102, 92, 84
+            secondary: "#85837a", // 133, 131, 122
             body: "#ebdbb2", // 235, 219, 178
             bodyLight: "#ebdbb2", // 235, 219, 178
             bodyDark: "#3c3836", // 60, 56, 54
             background: "#282828", // 40, 40, 40
             backgroundNav: "#3c3836", // 60, 56, 54
-            muted: "#727169", // 114, 113, 105
+            muted: "#85837a", // 133, 131, 122
             menu: "#282828", // 40, 40, 40
 
             success: "#b8bb26", // 184, 187, 38
@@ -154,15 +159,16 @@ export const SCHEMES = {
         // Custom scheme
         name: "Light",
         mode: "light",
+        // Secondary is the same as muted
         colors: {
             primary: "#5a8aa2", // 90, 138, 162
-            secondary: "#aaaaaa", // 170, 170, 170
+            secondary: "#737373", // 115, 115, 115
             body: "#1a1a1a", // 26, 26, 26
             bodyLight: "#e0e0e0", // 224, 224, 224
             bodyDark: "#1a1a1a", // 26, 26, 26
             background: "#ffffff", // 255, 255, 255
             backgroundNav: "#f5f5f5", // 245, 245, 245
-            muted: "#aaaaaa", // 170, 170, 170
+            muted: "#737373", // 115, 115, 115
             menu: "#ffffff", // 255, 255, 255
 
             success: "#3b824e", // 59, 130, 78
@@ -184,6 +190,7 @@ export const SCHEMES = {
         // https://github.com/morhetz/gruvbox
         name: "Gruvbox Light",
         mode: "light",
+        // Secondary is the same as muted
         colors: {
             primary: "#af3a03", // 175, 58, 3
             secondary: "#7c6f64", // 124, 111, 100
@@ -214,15 +221,16 @@ export const SCHEMES = {
         // Custom scheme
         name: "Pastel",
         mode: "light",
+        // Secondary is the same as muted
         colors: {
             primary: "#79a9d1", // 121, 169, 209
-            secondary: "#A6A6A6", // 166, 166, 166
+            secondary: "#737373", // 115, 115, 115
             body: "#64666b", // 100, 102, 107
             bodyLight: "#f0ebdb", // 240, 235, 219
             bodyDark: "#64666b", // 100, 102, 107
             background: "#e9e2cc", // 233, 226, 204
             backgroundNav: "#f0ebdb", // 240, 235, 219
-            muted: "#a6a6a6", // 166, 166, 166
+            muted: "#737373", // 115, 115, 115
             menu: "#f0ebdb", // 240, 235, 219
 
             success: "#77dd77", // 119, 221, 119
