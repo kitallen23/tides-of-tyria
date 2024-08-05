@@ -989,6 +989,46 @@ const META_EVENTS = [
                         frequency: 120,
                         waypoint: "[&BBwHAAA=]",
                     },
+                    {
+                        key: "labyrinthine_cliffs__skiff_race",
+                        name: "Skiff Race",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
+                        start: 0,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__fishing_tournament",
+                        name: "Fishing",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
+                        start: 90,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__skimmer_race",
+                        name: "Skimmer Race",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
+                        start: 75,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__dolyak_race",
+                        name: "Dolyak Race",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
+                        start: 105,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
                 ],
             },
         ],

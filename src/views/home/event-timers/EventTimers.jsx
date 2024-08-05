@@ -44,6 +44,7 @@ import {
     markAllAreasVisible,
     markAllEventsIncomplete,
     markEventComplete,
+    resetConfigToDefault,
     toggleAreaVisibility,
 } from "./utils";
 import EventTimerContext from "./EventTimerContext";
@@ -119,15 +120,14 @@ const EventTimers = () => {
             let eventConfig = JSON.parse(eventConfigString);
             eventConfig = cleanEventConfig(eventConfig, dailyReset);
 
-            // TODO: Complete this
             // Merge event config with new default event config if versions
             // don't match
-            // if (
-            //     eventConfig?.[0]?.version ??
-            //     "1970-01-01" < META_EVENTS?.[0]?.version
-            // ) {
-            //     console.log(`VERSION MISMATCH!`);
-            // }
+            if (
+                eventConfig?.[0]?.version ??
+                "1970-01-01" < META_EVENTS?.[0]?.version
+            ) {
+                eventConfig = resetConfigToDefault(eventConfig, META_EVENTS);
+            }
 
             set_eventConfig(eventConfig);
             localStorage.setItem(
