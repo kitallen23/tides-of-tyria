@@ -107,3 +107,36 @@ export const markAllAreasVisible = eventConfig => {
         })),
     }));
 };
+
+export const resetConfigToDefault = (currentConfig, defaultConfig) => {
+    const _eventConfig = structuredClone(defaultConfig);
+    return _eventConfig.map(region => {
+        const currentRegion = currentConfig.find(
+            cRegion => cRegion.key === region.key
+        );
+        return {
+            ...region,
+            sub_areas: region.sub_areas.map(subArea => {
+                const currentSubArea = currentRegion?.sub_areas?.find(
+                    cSubArea => cSubArea.key === subArea.key
+                );
+
+                subArea.lastCompletion =
+                    currentSubArea?.lastCompletion ?? undefined;
+                subArea.hideArea = currentSubArea?.hideArea ?? undefined;
+
+                subArea.phases = subArea.phases.map(phase => {
+                    const currentPhase = currentSubArea?.phases.find(
+                        cPhase => cPhase.key === phase.key
+                    );
+
+                    phase.lastCompletion =
+                        currentPhase?.lastCompletion ?? undefined;
+
+                    return phase;
+                });
+                return subArea;
+            }),
+        };
+    });
+};
