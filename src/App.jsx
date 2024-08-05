@@ -26,7 +26,7 @@ function App() {
         setPrimaryColor,
     } = useApp();
 
-    const [isHelpModalOpen, setIsHelpModalOpen] = useState();
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
     useGlobalHotkeys({
         "?": () => setIsHelpModalOpen(true),
