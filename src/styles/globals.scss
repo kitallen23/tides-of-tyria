@@ -1,4 +1,5 @@
 :root {
+    color-scheme: dark;
     --max-width: 1100px;
     --border-radius: 12px;
     --font-regular: "Noto Sans", sans-serif;
@@ -17,14 +18,14 @@
     --menu-background-rgb: 25, 25, 25;
 
     --scrollbar-track-color: 32, 32, 32;
-    --scrollbar-thumb-color: 215, 215, 215;
-
-    --transition: 0.3s ease-in-out;
+    --scrollbar-thumb-color: 153, 153, 153;
 
     --text-muted: #737373;
     --muted-rgb: 115, 115, 115;
+
     --max-z: 2147483647;
     --line-height: 1.35;
+    --transition: 0.3s ease-in-out;
 
     font-family: var(--font-regular);
     font-optical-scaling: auto;
@@ -35,10 +36,10 @@
     line-height: 1.35;
     font-weight: 400;
 
-    --status-success: #98bb6c;
-    --status-danger: #ff5d62;
-    --status-warning: #ffa066;
-    --status-info: #7fb4ca;
+    --status-success: #5bae70;
+    --status-danger: #d76363;
+    --status-warning: #d9a063;
+    --status-info: #63b1d9;
 
     --red: #e82525;
 }
@@ -51,6 +52,7 @@
 }
 
 [data-theme="kanagawa"]:root {
+    color-scheme: dark;
     --primary-rgb: 126, 156, 216;
     --secondary-rgb: 111, 111, 144;
     --foreground-rgb: 220, 215, 186;
@@ -72,6 +74,7 @@
     --status-info: #7fb4ca;
 }
 [data-theme="gruvbox_dark"]:root {
+    color-scheme: dark;
     --primary-rgb: 184, 187, 38;
     --secondary-rgb: 133, 131, 122;
     --foreground-rgb: 235, 219, 178;
@@ -93,6 +96,7 @@
     --status-info: #83a598;
 }
 [data-theme="dracula"]:root {
+    color-scheme: dark;
     --primary-rgb: 189, 147, 249;
     --secondary-rgb: 80, 250, 123;
     --foreground-rgb: 248, 248, 242;
@@ -114,6 +118,7 @@
     --status-info: #8be9fd;
 }
 [data-theme="monokai_pro"]:root {
+    color-scheme: dark;
     --primary-rgb: 255, 216, 102;
     --secondary-rgb: 255, 97, 136;
     --foreground-rgb: 252, 252, 250;
@@ -135,6 +140,7 @@
     --status-info: #78dce8;
 }
 [data-theme="gruvbox_light"]:root {
+    color-scheme: light;
     --primary-rgb: 175, 58, 3;
     --secondary-rgb: 124, 111, 100;
     --foreground-rgb: 60, 56, 54;
@@ -156,6 +162,7 @@
     --status-info: #076678;
 }
 [data-theme="pastel"]:root {
+    color-scheme: light;
     --primary-rgb: 121, 169, 209;
     --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 100, 102, 107;
@@ -177,6 +184,7 @@
     --status-info: #79a9d1;
 }
 [data-theme="dark"]:root {
+    color-scheme: dark;
     --primary-rgb: 95, 168, 211;
     --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 224, 224, 224;
@@ -187,7 +195,7 @@
     --menu-background-rgb: 25, 25, 25;
 
     --scrollbar-track-color: 32, 32, 32;
-    --scrollbar-thumb-color: 215, 215, 215;
+    --scrollbar-thumb-color: 153, 153, 153;
 
     --text-muted: #737373;
     --muted-rgb: 115, 115, 115;
@@ -198,6 +206,7 @@
     --status-info: #63b1d9;
 }
 [data-theme="light"]:root {
+    color-scheme: light;
     --primary-rgb: 90, 138, 162;
     --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 26, 26, 26;
@@ -237,50 +246,6 @@ body {
     background: rgb(var(--background-rgb));
     -webkit-text-size-adjust: none;
 }
-
-html[data-theme="kanagawa"] {
-    color-scheme: dark;
-}
-
-/* $scrollbar-thickness: 6px; */
-/* $scrollbar-thumb-border-radius: 6px; */
-/* $scrollbar-track-color: rgba(var(--scrollbar-track-color), 0); */
-/* $scrollbar-thumb-color: rgba(var(--scrollbar-thumb-color), 0.2); */
-/* $scrollbar-thumb-hover-color: rgb(var(--scrollbar-thumb-color)); */
-
-/* scrollbar width */
-/* ::-webkit-scrollbar { */
-/*     height: $scrollbar-thickness; */
-/*     width: $scrollbar-thickness; */
-/* } */
-
-/* scrollbar Track */
-/* ::-webkit-scrollbar-track { */
-/*     background: $scrollbar-track-color; */
-/* } */
-
-/* scrollbar Handle */
-/* ::-webkit-scrollbar-thumb { */
-/*     background: $scrollbar-thumb-color; */
-/*     border-radius: $scrollbar-thumb-border-radius; */
-/* } */
-
-/* scrollbar Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover { */
-/*     background: $scrollbar-thumb-hover-color; */
-/* } */
-
-/* [data-theme="gruvbox_light"] { */
-/* scrollbar Handle */
-/* ::-webkit-scrollbar-thumb { */
-/*     background: rgba(var(--scrollbar-thumb-color), 0.6); */
-/* } */
-
-/* scrollbar Handle on hover */
-/* ::-webkit-scrollbar-thumb:hover { */
-/*     background: $scrollbar-thumb-hover-color; */
-/* } */
-/* } */
 
 button {
     outline: none !important;

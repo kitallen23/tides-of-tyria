@@ -773,6 +773,7 @@ const META_EVENTS = [
             {
                 key: "eye_of_the_north",
                 name: "Eye of the North (instance)",
+                displayTitle: "Dragonstorm",
                 color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
@@ -947,6 +948,7 @@ const META_EVENTS = [
             {
                 key: "the_wizards_tower",
                 name: "The Wizard's Tower (instance)",
+                displayTitle: "Convergences",
                 color: COLOR_TYPES.yellow,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,

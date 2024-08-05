@@ -59,6 +59,13 @@ const Modal = ({
             className={classNames(styles.modal, className)}
             onClose={onClose}
             disableEscapeKeyDown={true}
+            slotProps={{
+                backdrop: {
+                    style: {
+                        backgroundColor: "rgba(0, 0, 0, 0.75)",
+                    },
+                },
+            }}
             {...rest}
         >
             <>

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import Modal from "@/components/Modal";
 
-const HelpModal = ({ isOpen, onClose }) => {
+const HelpModal = ({ isOpen = false, onClose }) => {
     return (
         <Modal
             open={isOpen}

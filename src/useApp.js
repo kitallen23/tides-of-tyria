@@ -7,6 +7,7 @@ import { detectTheme, getLocalItem } from "@/utils/util";
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import useFavicon from "./utils/hooks/useFavicon";
 
 export const getDesignTokens = theme => ({
     status: {
@@ -25,6 +26,12 @@ export const getDesignTokens = theme => ({
         },
         body: {
             main: theme.colors.body,
+        },
+        bodyLight: {
+            main: theme.colors.bodyLight,
+        },
+        bodyDark: {
+            main: theme.colors.bodyDark,
         },
         muted: {
             main: theme.colors.muted,
@@ -260,6 +267,8 @@ const useApp = () => {
         const theme = getDesignTokens(themeState);
         return createTheme(theme);
     }, [themeState]);
+
+    useFavicon(themeState.colors.primary);
 
     return {
         themeState,
