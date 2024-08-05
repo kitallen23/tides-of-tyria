@@ -22,6 +22,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
+        version: "2024-08-05",
         sub_areas: [
             {
                 key: "world_bosses",
@@ -959,6 +960,32 @@ const META_EVENTS = [
                         duration: 10,
                         frequency: 180,
                         waypoint: "[&BB8OAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "special_events",
+        name: "OTHER",
+        color: COLOR_TYPES.gray,
+        sub_areas: [
+            {
+                key: "labyrinthine_cliffs",
+                name: "Labyrinthine Cliffs",
+                color: COLOR_TYPES.blue,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "labyrinthine_cliffs__treasure_hunt",
+                        name: "Treasure Hunt",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
+                        start: 30,
+                        duration: 30,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
                     },
                 ],
             },
