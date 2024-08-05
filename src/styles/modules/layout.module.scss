@@ -15,7 +15,6 @@ body {
     & > .pageContent {
         padding: c.$page-content-padding-vertical
             c.$page-content-padding-horizontal;
-        background: rgb(var(--background-rgb));
         transition: background-color var(--transition);
     }
 }
