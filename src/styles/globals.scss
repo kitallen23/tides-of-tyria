@@ -1,4 +1,5 @@
 :root {
+    color-scheme: dark;
     --max-width: 1100px;
     --border-radius: 12px;
     --font-regular: "Noto Sans", sans-serif;
@@ -8,7 +9,7 @@
     --font-size-lg: 1.125rem;
 
     --primary-rgb: 95, 168, 211;
-    --secondary-rgb: 85, 85, 85;
+    --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 224, 224, 224;
     --foreground-light-rgb: 224, 224, 224;
     --foreground-dark-rgb: 26, 26, 26;
@@ -18,15 +19,13 @@
 
     --scrollbar-track-color: 32, 32, 32;
     --scrollbar-thumb-color: 153, 153, 153;
-    --scrollbar-thickness: 7px;
 
-    --transition: 0.3s ease-in-out;
+    --text-muted: #737373;
+    --muted-rgb: 115, 115, 115;
 
-    --text-muted: #555555;
-    --muted-rgb: 85, 85, 85;
     --max-z: 2147483647;
     --line-height: 1.35;
-    line-height: 1.35;
+    --transition: 0.3s ease-in-out;
 
     font-family: var(--font-regular);
     font-optical-scaling: auto;
@@ -54,7 +53,7 @@
 [data-theme="kanagawa"]:root {
     color-scheme: dark;
     --primary-rgb: 126, 156, 216;
-    --secondary-rgb: 84, 84, 109;
+    --secondary-rgb: 111, 111, 144;
     --foreground-rgb: 220, 215, 186;
     --foreground-light-rgb: 220, 215, 186;
     --foreground-dark-rgb: 42, 42, 55;
@@ -65,8 +64,8 @@
     --scrollbar-track-color: 22, 22, 29;
     --scrollbar-thumb-color: 140, 140, 166;
 
-    --text-muted: #54546d;
-    --muted-rgb: 84, 84, 109;
+    --text-muted: #6f6f90;
+    --muted-rgb: 111, 111, 144;
 
     --status-success: #98bb6c;
     --status-danger: #ff5d62;
@@ -76,7 +75,7 @@
 [data-theme="gruvbox_dark"]:root {
     color-scheme: dark;
     --primary-rgb: 184, 187, 38;
-    --secondary-rgb: 102, 92, 84;
+    --secondary-rgb: 133, 131, 122;
     --foreground-rgb: 235, 219, 178;
     --foreground-light-rgb: 235, 219, 178;
     --foreground-dark-rgb: 60, 56, 54;
@@ -87,8 +86,8 @@
     --scrollbar-track-color: 29, 32, 33;
     --scrollbar-thumb-color: 235, 219, 178;
 
-    --text-muted: #665c54;
-    --muted-rgb: 102, 92, 84;
+    --text-muted: #85837a;
+    --muted-rgb: 133, 131, 122;
 
     --status-success: #b8bb26;
     --status-danger: #fb4934;
@@ -109,8 +108,8 @@
     --scrollbar-track-color: 22, 23, 29;
     --scrollbar-thumb-color: 248, 248, 242;
 
-    --text-muted: #585b74;
-    --muted-rgb: 88, 91, 116;
+    --text-muted: #7c7f9c;
+    --muted-rgb: 124, 127, 156;
 
     --status-success: #50fa7b;
     --status-danger: #ff5555;
@@ -131,8 +130,8 @@
     --scrollbar-track-color: 29, 32, 33;
     --scrollbar-thumb-color: 252, 252, 250;
 
-    --text-muted: #696769;
-    --muted-rgb: 105, 103, 105;
+    --text-muted: #8d8b8d;
+    --muted-rgb: 141, 139, 141;
 
     --status-success: #a9dc76;
     --status-danger: #ff6188;
@@ -140,6 +139,7 @@
     --status-info: #78dce8;
 }
 [data-theme="gruvbox_light"]:root {
+    color-scheme: light;
     --primary-rgb: 175, 58, 3;
     --secondary-rgb: 124, 111, 100;
     --foreground-rgb: 60, 56, 54;
@@ -161,8 +161,9 @@
     --status-info: #076678;
 }
 [data-theme="pastel"]:root {
+    color-scheme: light;
     --primary-rgb: 121, 169, 209;
-    --secondary-rgb: 166, 166, 166;
+    --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 100, 102, 107;
     --foreground-light-rgb: 240, 235, 219;
     --foreground-dark-rgb: 100, 102, 107;
@@ -173,8 +174,8 @@
     --scrollbar-track-color: 233, 226, 204;
     --scrollbar-thumb-color: 100, 102, 107;
 
-    --text-muted: #a6a6a6;
-    --muted-rgb: 166, 166, 166;
+    --text-muted: #737373;
+    --muted-rgb: 115, 115, 115;
 
     --status-success: #77dd77;
     --status-danger: #ff6961;
@@ -184,7 +185,7 @@
 [data-theme="dark"]:root {
     color-scheme: dark;
     --primary-rgb: 95, 168, 211;
-    --secondary-rgb: 85, 85, 85;
+    --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 224, 224, 224;
     --foreground-light-rgb: 224, 224, 224;
     --foreground-dark-rgb: 26, 26, 26;
@@ -195,8 +196,8 @@
     --scrollbar-track-color: 32, 32, 32;
     --scrollbar-thumb-color: 153, 153, 153;
 
-    --text-muted: #555555;
-    --muted-rgb: 85, 85, 85;
+    --text-muted: #737373;
+    --muted-rgb: 115, 115, 115;
 
     --status-success: #5bae70;
     --status-danger: #d76363;
@@ -204,8 +205,9 @@
     --status-info: #63b1d9;
 }
 [data-theme="light"]:root {
+    color-scheme: light;
     --primary-rgb: 90, 138, 162;
-    --secondary-rgb: 170, 170, 170;
+    --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 26, 26, 26;
     --foreground-light-rgb: 224, 224, 224;
     --foreground-dark-rgb: 26, 26, 26;
@@ -216,8 +218,8 @@
     --scrollbar-track-color: 226, 226, 226;
     --scrollbar-thumb-color: 104, 104, 104;
 
-    --text-muted: #aaaaaa;
-    --muted-rgb: 170, 170, 170;
+    --text-muted: #737373;
+    --muted-rgb: 115, 115, 115;
 
     --status-success: #3b824e;
     --status-danger: #993d3d;
