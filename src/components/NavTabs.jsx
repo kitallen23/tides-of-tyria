@@ -21,7 +21,7 @@ const LinkTab = ({ className, ...rest }) => (
 
 const NavTabs = () => {
     const { pathname } = useLocation();
-    const routeId = ROUTES[pathname] ?? -1;
+    const routeId = ROUTES[pathname] ?? false;
     const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
     return (
