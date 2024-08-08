@@ -147,6 +147,13 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    color: theme.colors.muted,
+                },
+            },
+        },
     },
 });
 
