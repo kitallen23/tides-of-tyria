@@ -41,7 +41,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
 
     const handleKeyDown = e => {
         // Prevent the Enter key from creating a new line in the editor
-        if (e.key === "Enter") {
+        if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
         }
     };
