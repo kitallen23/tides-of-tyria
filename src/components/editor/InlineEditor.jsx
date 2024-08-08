@@ -71,15 +71,30 @@ const InlineEditor = ({ defaultValue = "" }) => {
             const selection = window.getSelection();
             if (selection && selection.toString().length > 0) {
                 const range = selection.getRangeAt(0);
-                const rangeRect = range.getBoundingClientRect();
-                const editorRect = editorRef.current.getBoundingClientRect();
 
-                const relativeTop = rangeRect.top - editorRect.top;
-                const relativeLeft = rangeRect.left - editorRect.left;
+                // Use getClientRects to get the start position of the selection
+                const clientRects = range.getClientRects();
+                const startRect = clientRects[0];
+
+                // const rangeRect = range.getBoundingClientRect();
+                const editorRect = editorRef.current.getBoundingClientRect();
+                const toolbarRect = toolbarRef.current.getBoundingClientRect();
+
+                const relativeTop = startRect.top - editorRect.top;
+                const relativeLeft = startRect.left - editorRect.left;
+
+                // Perorm a check to ensure our toolbar doesn't go off the side
+                // of the editor (ensures it stay within bounds of the editor)
+                const leftLimit =
+                    editorRect.right - toolbarRect.width - editorRect.left;
+                let finalLeft = relativeLeft;
+                if (finalLeft > leftLimit) {
+                    finalLeft = leftLimit;
+                }
 
                 setToolbarPosition({
                     top: relativeTop - toolbarRef.current.offsetHeight,
-                    left: relativeLeft,
+                    left: finalLeft,
                 });
                 setTextStates(range);
                 setShowToolbar(true);
@@ -93,6 +108,8 @@ const InlineEditor = ({ defaultValue = "" }) => {
      * Applies a given style (e.g., bold, italic, underline) to the selected text
      */
     const applyStyle = command => {
+        // For now we must use execCommand here, as without it the setTextStates
+        // function isn't able to correctly read the styles.
         document.execCommand(command, false, null);
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
