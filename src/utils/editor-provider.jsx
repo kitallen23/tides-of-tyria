@@ -7,7 +7,8 @@ export const EditorProvider = ({ children }) => {
     useEffect(() => {
         const handleClickOutside = event => {
             const isToolbarClick = Boolean(
-                event.target.closest(".inline-editor-toolbar")
+                event.target.closest(".inline-editor-toolbar") ||
+                    event.target.closest(".inline-editor-link-prompt")
             );
             if (isToolbarClick) {
                 return;

@@ -11,6 +11,10 @@ $line-height: var(--line-height);
 
     .inlineEditor {
         outline: none;
+
+        a {
+            cursor: pointer;
+        }
     }
 
     .floatingToolbar {
@@ -27,6 +31,34 @@ $line-height: var(--line-height);
 
         visibility: hidden;
         pointer-events: none;
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+    .linkPrompt {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        font-size: 1.17em;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        width: 280px;
+
+        & > div:last-of-type {
+            display: grid;
+            grid-template-columns: 1fr auto;
+        }
 
         &.show {
             visibility: visible;
