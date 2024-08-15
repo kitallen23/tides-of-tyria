@@ -192,6 +192,10 @@ $time-row-font-size: 0.875em;
                                 (0.875em * #{$line-height}) + (0.2em * 2)
                         );
 
+                        &.dayNight {
+                            min-height: 8px;
+                        }
+
                         &.isClickable {
                             cursor: pointer;
                         }
@@ -245,7 +249,7 @@ $time-row-font-size: 0.875em;
 
                         .text {
                             display: grid;
-                            grid-template-columns: 150px auto auto;
+                            grid-template-columns: 170px auto auto;
                             gap: 0.5em;
                             align-content: center;
                             justify-content: start;
