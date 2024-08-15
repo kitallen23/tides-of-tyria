@@ -7,6 +7,8 @@ export const COLOR_TYPES = {
     purple: "purple",
     pink: "pink",
     gray: "gray",
+    light: "light",
+    dark: "dark",
 };
 export const ON_COMPLETE_TYPES = {
     completeEvent: "complete_event",
@@ -22,8 +24,53 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-08-05",
+        version: "2024-08-15",
         sub_areas: [
+            {
+                key: "day-night__tyria",
+                name: "Day-Night Cycle (Tyria)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "day-night__tyria__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 25,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__tyria__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 30,
+                        duration: 70,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__tyria__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__tyria__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 105,
+                        duration: 40,
+                        frequency: 120,
+                    },
+                ],
+            },
             {
                 key: "world_bosses",
                 name: "World Bosses",
@@ -797,6 +844,51 @@ const META_EVENTS = [
         color: COLOR_TYPES.aqua,
         sub_areas: [
             {
+                key: "day-night__cantha",
+                name: "Day-Night Cycle (Cantha)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "day-night__cantha__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 35,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 40,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 95,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
                 key: "seitung_province",
                 name: "Seitung Province",
                 color: COLOR_TYPES.aqua,
@@ -1033,6 +1125,38 @@ const META_EVENTS = [
             },
         ],
     },
+    // {
+    //     key: "__test",
+    //     name: "TEST",
+    //     color: COLOR_TYPES.pink,
+    //     sub_areas: [
+    //         {
+    //             key: "__test__test",
+    //             name: "Test Area",
+    //             color: COLOR_TYPES.pink,
+    //             type: TIME_TYPES.periodic,
+    //             onComplete: ON_COMPLETE_TYPES.none,
+    //             phases: [
+    //                 {
+    //                     key: "__test__test__test1",
+    //                     name: "Test Phase 1",
+    //                     wikiUrl: "https://wiki.guildwars2.com",
+    //                     start: 30,
+    //                     duration: 30,
+    //                     frequency: 120,
+    //                 },
+    //                 {
+    //                     key: "__test__test__test2",
+    //                     name: "Test Phase 2",
+    //                     wikiUrl: "https://wiki.guildwars2.com",
+    //                     start: 90,
+    //                     duration: 30,
+    //                     frequency: 120,
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 ];
 
 export default META_EVENTS;
