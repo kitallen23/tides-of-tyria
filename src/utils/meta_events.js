@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-08-15",
+        version: "2024-08-24",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1060,71 +1060,97 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "special_events",
-        name: "OTHER",
-        color: COLOR_TYPES.gray,
+        key: "janthir_wilds",
+        name: "JW",
+        color: COLOR_TYPES.blue,
         sub_areas: [
             {
-                key: "labyrinthine_cliffs",
-                name: "Labyrinthine Cliffs",
+                key: "janthir_syntri",
+                name: "Janthir Syntri",
                 color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
-                onComplete: ON_COMPLETE_TYPES.none,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
-                        key: "labyrinthine_cliffs__treasure_hunt",
-                        name: "Treasure Hunt",
+                        key: "janthir_syntri__of_mists_and_monsters",
+                        name: "Of Mists and Monsters",
                         wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
+                            "https://wiki.guildwars2.com/wiki/Of_Mists_and_Monsters",
                         start: 30,
-                        duration: 30,
+                        duration: 25,
                         frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__skiff_race",
-                        name: "Skiff Race",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
-                        start: 0,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__fishing_tournament",
-                        name: "Fishing",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
-                        start: 90,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__skimmer_race",
-                        name: "Skimmer Race",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
-                        start: 75,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__dolyak_race",
-                        name: "Dolyak Race",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
-                        start: 105,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
+                        waypoint: "[&BCoPAAA=]",
                     },
                 ],
             },
         ],
     },
+    // {
+    //     key: "special_events",
+    //     name: "OTHER",
+    //     color: COLOR_TYPES.gray,
+    //     sub_areas: [
+    //         {
+    //             key: "labyrinthine_cliffs",
+    //             name: "Labyrinthine Cliffs",
+    //             color: COLOR_TYPES.blue,
+    //             type: TIME_TYPES.periodic,
+    //             onComplete: ON_COMPLETE_TYPES.none,
+    //             phases: [
+    //                 {
+    //                     key: "labyrinthine_cliffs__treasure_hunt",
+    //                     name: "Treasure Hunt",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
+    //                     start: 30,
+    //                     duration: 30,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__skiff_race",
+    //                     name: "Skiff Race",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
+    //                     start: 0,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__fishing_tournament",
+    //                     name: "Fishing",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
+    //                     start: 90,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__skimmer_race",
+    //                     name: "Skimmer Race",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
+    //                     start: 75,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__dolyak_race",
+    //                     name: "Dolyak Race",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
+    //                     start: 105,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
     // {
     //     key: "__test",
     //     name: "TEST",
