@@ -23,8 +23,11 @@
         }
 
         .uniformButton {
-            min-width: 8rem;
             padding: 6px 8px;
+
+            @media (min-width: c.$media-md) {
+                min-width: 8rem;
+            }
         }
     }
 
