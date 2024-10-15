@@ -42,9 +42,21 @@ const InlineEditor = ({ defaultValue = "" }) => {
     const [tempLinkUrl, setTempLinkUrl] = useState("");
     const isTempLinkUrlValid = useMemo(() => {
         try {
-            new URL(tempLinkUrl);
-            return true;
-        } catch (_) {
+            let _tempLinkUrl = tempLinkUrl;
+            // Check if the URL starts with http or https
+            if (!/^https?:\/\//i.test(tempLinkUrl)) {
+                // Prepend https:// if it doesn't start with http or https
+                _tempLinkUrl = `https://${tempLinkUrl}`;
+            }
+            const url = new URL(_tempLinkUrl);
+
+            // Check if the hostname contains a dot to ensure it's a valid domain
+            const hostnameParts = url.hostname.split(".");
+            const tld = hostnameParts[hostnameParts.length - 1];
+
+            // Ensure the TLD is at least 2 characters long
+            return hostnameParts.length > 1 && tld.length >= 2;
+        } catch {
             return false;
         }
     }, [tempLinkUrl]);
@@ -89,7 +101,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
     /**
      * Saves the current text selection range.
      * @returns {Range | null} The current selection range, or null if there is no selection.
-     */
+     **/
     const saveSelection = () => {
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
@@ -102,7 +114,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
     /**
      * Restores the saved text selection range.
      * @param {Range} range - The range to be restored.
-     */
+     **/
     const restoreSelection = range => {
         if (range) {
             const selection = window.getSelection();
@@ -114,7 +126,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
     /**
      * Updates the state variables for bold, italic, and underlined text
      * based on the computed style of the parent node of the selected range
-     */
+     **/
     const setTextStates = range => {
         const parentNode = range.commonAncestorContainer.parentNode;
         const computedStyle = window.getComputedStyle(parentNode);
@@ -136,7 +148,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
     /**
      * Handles the selection event to position the toolbar
      * and update text style states (bold, italic, underlined)
-     */
+     **/
     const handleSelect = () => {
         setTimeout(() => {
             const selection = window.getSelection();
@@ -197,7 +209,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
 
     /**
      * Applies a given style (e.g., bold, italic, underline) to the selected text
-     */
+     **/
     const applyStyle = command => {
         // For now we must use execCommand here, as without it the setTextStates
         // function isn't able to correctly read the styles.
@@ -221,8 +233,17 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     const range = selection.getRangeAt(0);
 
                     const anchor = document.createElement("a");
-                    anchor.href = tempLinkUrl;
+
+                    let _tempLinkUrl = tempLinkUrl;
+                    // Check if the URL starts with http or https
+                    if (!/^https?:\/\//i.test(tempLinkUrl)) {
+                        // Prepend https:// if it doesn't start with http or https
+                        _tempLinkUrl = `https://${tempLinkUrl}`;
+                    }
+                    anchor.href = _tempLinkUrl;
                     anchor.textContent = tempLinkText.toString();
+                    anchor.target = "_blank";
+                    anchor.rel = "noopener noreferrer";
 
                     range.deleteContents();
                     range.insertNode(anchor);
@@ -255,7 +276,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
     /**
      * Handles clicks within the contentEditable div.
      * If a link is clicked, it allows the default behavior to proceed.
-     */
+     **/
     const handleLinkClick = event => {
         const target = event.target;
         if (target.tagName.toLowerCase() === "a") {
@@ -328,6 +349,8 @@ const InlineEditor = ({ defaultValue = "" }) => {
                         />
                     </Button>
                 </div>
+
+                {/* Link prompt / editor */}
                 <div
                     ref={linkPromptRef}
                     className={classNames(
@@ -382,6 +405,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                         color={isTempLinkUrlValid ? "primary" : "muted"}
                         sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
                         onClick={() => applyLink()}
+                        disabled={!isTempLinkUrlValid}
                     >
                         <CheckSharp />
                     </Button>
