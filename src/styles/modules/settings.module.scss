@@ -21,6 +21,11 @@
             align-items: center;
             gap: 0.5em;
         }
+
+        .uniformButton {
+            min-width: 8rem;
+            padding: 6px 8px;
+        }
     }
 
     .settingsButtons {
@@ -86,4 +91,3 @@
     display: grid;
     gap: 1rem;
 }
-

@@ -135,6 +135,7 @@ const SettingsPage = () => {
                             sx={{
                                 fontFamily: "Noto Sans",
                             }}
+                            className={styles.uniformButton}
                         >
                             Regular
                         </Button>
@@ -147,6 +148,7 @@ const SettingsPage = () => {
                             sx={{
                                 fontFamily: "Noto Sans Mono",
                             }}
+                            className={styles.uniformButton}
                         >
                             Monospace
                         </Button>
@@ -165,6 +167,7 @@ const SettingsPage = () => {
                             sx={{
                                 fontSize: "0.75rem",
                             }}
+                            className={styles.uniformButton}
                         >
                             Small
                         </Button>
@@ -179,6 +182,7 @@ const SettingsPage = () => {
                             sx={{
                                 fontSize: "0.875rem",
                             }}
+                            className={styles.uniformButton}
                         >
                             Medium
                         </Button>
@@ -189,6 +193,7 @@ const SettingsPage = () => {
                             sx={{
                                 fontSize: "1rem",
                             }}
+                            className={styles.uniformButton}
                         >
                             Large
                         </Button>
@@ -206,6 +211,7 @@ const SettingsPage = () => {
                             }
                             onClick={() => setTimeFormat("12h")}
                             disableElevation
+                            className={styles.uniformButton}
                         >
                             12 hour
                         </Button>
@@ -215,6 +221,7 @@ const SettingsPage = () => {
                             }
                             onClick={() => setTimeFormat("24h")}
                             disableElevation
+                            className={styles.uniformButton}
                         >
                             24 hour
                         </Button>
