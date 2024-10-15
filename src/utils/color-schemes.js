@@ -28,6 +28,8 @@ export const SCHEMES = {
             purple: "#a08ed5", // 160, 142, 213
             pink: "#e87090", // 232, 112, 144
             gray: "#636270", // 99, 98, 112
+            light: "#e0e0e0", // 224, 224, 224
+            dark: "#1a1a1a", // 26, 26, 26
         },
     },
     kanagawa: {
@@ -59,6 +61,8 @@ export const SCHEMES = {
             purple: "#957fb8", // 149, 127, 184
             pink: "#d27e99", // 210, 126, 153
             gray: "#54546d", // 84, 84, 109
+            light: "#dcd7ba", // 220, 215, 186
+            dark: "#2a2a37", // 42, 42, 55
         },
     },
     monokai_pro: {
@@ -91,6 +95,8 @@ export const SCHEMES = {
             purple: "#ab9df2", // 171, 157, 242
             pink: "#ff6188", // 255, 97, 136
             gray: "#727072", // 114, 112, 114
+            light: "#fcfcfa", // 252, 252, 250
+            dark: "#3c393d", // 60, 57, 61
         },
     },
     dracula: {
@@ -122,6 +128,8 @@ export const SCHEMES = {
             purple: "#bd93f9", // 189, 147, 249
             pink: "#ff79c6", // 255, 121, 198
             gray: "#585b74", // 88, 91, 116
+            light: "#f8f8f2", // 248, 248, 242
+            dark: "#44475a", // 68, 71, 90
         },
     },
     gruvbox_dark: {
@@ -153,6 +161,8 @@ export const SCHEMES = {
             purple: "#b16286", // 177, 98, 134
             pink: "#d3869b", // 211, 134, 155
             gray: "#928374", // 146, 131, 116
+            light: "#ebdbb2", // 235, 219, 178
+            dark: "#3c3836", // 60, 56, 54
         },
     },
     light: {
@@ -184,6 +194,8 @@ export const SCHEMES = {
             purple: "#8570b5", // 133, 112, 181
             pink: "#b3506a", // 179, 80, 106
             gray: "#9e9da6", // 158, 157, 166
+            light: "#e0e0e0", // 224, 224, 224
+            dark: "#1a1a1a", // 26, 26, 26
         },
     },
     gruvbox_light: {
@@ -215,6 +227,8 @@ export const SCHEMES = {
             purple: "#8f3f71", // 143, 63, 113
             pink: "#b16286", // 177, 98, 134
             gray: "#7c6f64", // 124, 111, 100
+            light: "#f9f5d7", // 249, 245, 215
+            dark: "#3c3836", // 60, 56, 54
         },
     },
     pastel: {
@@ -246,6 +260,8 @@ export const SCHEMES = {
             purple: "#c39bd3", // 195, 155, 211
             pink: "#f7b7d2", // 247, 183, 210
             gray: "#c0c0c0", // 192, 192, 192
+            light: "#f0ebdb", // 240, 235, 219
+            dark: "#64666b", // 100, 102, 107
         },
     },
 };

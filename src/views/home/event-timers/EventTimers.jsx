@@ -123,8 +123,8 @@ const EventTimers = () => {
             // Merge event config with new default event config if versions
             // don't match
             if (
-                eventConfig?.[0]?.version ??
-                "1970-01-01" < META_EVENTS?.[0]?.version
+                (eventConfig?.[0]?.version ?? "1970-01-01") <
+                META_EVENTS?.[0]?.version
             ) {
                 eventConfig = resetConfigToDefault(eventConfig, META_EVENTS);
             }

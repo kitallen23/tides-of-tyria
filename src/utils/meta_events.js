@@ -7,6 +7,8 @@ export const COLOR_TYPES = {
     purple: "purple",
     pink: "pink",
     gray: "gray",
+    light: "light",
+    dark: "dark",
 };
 export const ON_COMPLETE_TYPES = {
     completeEvent: "complete_event",
@@ -22,8 +24,53 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-08-05",
+        version: "2024-08-24",
         sub_areas: [
+            {
+                key: "day-night__tyria",
+                name: "Day-Night Cycle (Tyria)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "day-night__tyria__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 25,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__tyria__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 30,
+                        duration: 70,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__tyria__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__tyria__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 105,
+                        duration: 40,
+                        frequency: 120,
+                    },
+                ],
+            },
             {
                 key: "world_bosses",
                 name: "World Bosses",
@@ -797,6 +844,51 @@ const META_EVENTS = [
         color: COLOR_TYPES.aqua,
         sub_areas: [
             {
+                key: "day-night__cantha",
+                name: "Day-Night Cycle (Cantha)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "day-night__cantha__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 35,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 40,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 95,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
                 key: "seitung_province",
                 name: "Seitung Province",
                 color: COLOR_TYPES.aqua,
@@ -968,71 +1060,129 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "special_events",
-        name: "OTHER",
-        color: COLOR_TYPES.gray,
+        key: "janthir_wilds",
+        name: "JW",
+        color: COLOR_TYPES.blue,
         sub_areas: [
             {
-                key: "labyrinthine_cliffs",
-                name: "Labyrinthine Cliffs",
+                key: "janthir_syntri",
+                name: "Janthir Syntri",
                 color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
-                onComplete: ON_COMPLETE_TYPES.none,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
-                        key: "labyrinthine_cliffs__treasure_hunt",
-                        name: "Treasure Hunt",
+                        key: "janthir_syntri__of_mists_and_monsters",
+                        name: "Of Mists and Monsters",
                         wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
+                            "https://wiki.guildwars2.com/wiki/Of_Mists_and_Monsters",
                         start: 30,
-                        duration: 30,
+                        duration: 25,
                         frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__skiff_race",
-                        name: "Skiff Race",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
-                        start: 0,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__fishing_tournament",
-                        name: "Fishing",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
-                        start: 90,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__skimmer_race",
-                        name: "Skimmer Race",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
-                        start: 75,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
-                    },
-                    {
-                        key: "labyrinthine_cliffs__dolyak_race",
-                        name: "Dolyak Race",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
-                        start: 105,
-                        duration: 10,
-                        frequency: 120,
-                        waypoint: "[&BBwHAAA=]",
+                        waypoint: "[&BCoPAAA=]",
                     },
                 ],
             },
         ],
     },
+    // {
+    //     key: "special_events",
+    //     name: "OTHER",
+    //     color: COLOR_TYPES.gray,
+    //     sub_areas: [
+    //         {
+    //             key: "labyrinthine_cliffs",
+    //             name: "Labyrinthine Cliffs",
+    //             color: COLOR_TYPES.blue,
+    //             type: TIME_TYPES.periodic,
+    //             onComplete: ON_COMPLETE_TYPES.none,
+    //             phases: [
+    //                 {
+    //                     key: "labyrinthine_cliffs__treasure_hunt",
+    //                     name: "Treasure Hunt",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
+    //                     start: 30,
+    //                     duration: 30,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__skiff_race",
+    //                     name: "Skiff Race",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
+    //                     start: 0,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__fishing_tournament",
+    //                     name: "Fishing",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
+    //                     start: 90,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__skimmer_race",
+    //                     name: "Skimmer Race",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
+    //                     start: 75,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //                 {
+    //                     key: "labyrinthine_cliffs__dolyak_race",
+    //                     name: "Dolyak Race",
+    //                     wikiUrl:
+    //                         "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
+    //                     start: 105,
+    //                     duration: 10,
+    //                     frequency: 120,
+    //                     waypoint: "[&BBwHAAA=]",
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
+    // {
+    //     key: "__test",
+    //     name: "TEST",
+    //     color: COLOR_TYPES.pink,
+    //     sub_areas: [
+    //         {
+    //             key: "__test__test",
+    //             name: "Test Area",
+    //             color: COLOR_TYPES.pink,
+    //             type: TIME_TYPES.periodic,
+    //             onComplete: ON_COMPLETE_TYPES.none,
+    //             phases: [
+    //                 {
+    //                     key: "__test__test__test1",
+    //                     name: "Test Phase 1",
+    //                     wikiUrl: "https://wiki.guildwars2.com",
+    //                     start: 30,
+    //                     duration: 30,
+    //                     frequency: 120,
+    //                 },
+    //                 {
+    //                     key: "__test__test__test2",
+    //                     name: "Test Phase 2",
+    //                     wikiUrl: "https://wiki.guildwars2.com",
+    //                     start: 90,
+    //                     duration: 30,
+    //                     frequency: 120,
+    //                 },
+    //             ],
+    //         },
+    //     ],
+    // },
 ];
 
 export default META_EVENTS;

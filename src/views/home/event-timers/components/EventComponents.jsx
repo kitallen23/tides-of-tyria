@@ -19,10 +19,8 @@ import styles from "@/styles/modules/event-timer.module.scss";
 import { useTheme } from "@/utils/theme-provider";
 import {
     adjustLuminance,
-    blendColors,
     ensureContrast,
     isContrastEnough,
-    isLight,
 } from "@/utils/color";
 import { useTimer } from "@/utils/hooks/useTimer";
 import { copyToClipboard } from "@/utils/util";
@@ -37,6 +35,7 @@ import {
     UPCOMING_MINS,
 } from "../utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
+import useEventColors from "@/utils/hooks/useEventColors";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -250,6 +249,7 @@ const AreaEventPhase = ({
     isDulledBackgroundLight,
     isLast,
     isAreaComplete,
+    isDayNight,
 }) => {
     const { colors } = useTheme();
     const { now, dailyReset } = useTimer();
@@ -454,6 +454,7 @@ const AreaEventPhase = ({
             className={classNames(`${styles.phase}`, {
                 [styles.isSelected]: selectedEvent?.id === item.id,
                 [styles.isClickable]: isClickable,
+                [styles.dayNight]: isDayNight,
                 "event-phase": isClickable,
             })}
             css={styleClass}
@@ -462,7 +463,7 @@ const AreaEventPhase = ({
             onClick={onClick}
             onDoubleClick={onDoubleClick}
         >
-            {isDowntime ? (
+            {isDayNight ? null : isDowntime ? (
                 item.wikiUrl ? (
                     <div
                         className={styles.title}
@@ -601,23 +602,27 @@ const PeriodicArea = ({ area, region }) => {
         return minuteBlocks;
     }, [areaEvents, downtime, area.color]);
 
+    const isDayNight = useMemo(
+        () => area.key.startsWith("day-night"),
+        [area.key]
+    );
+
     const { colors } = useTheme();
-    const eventBackground = useMemo(
-        () => colors[area.color],
-        [area.color, colors]
-    );
-    const isBackgroundLight = useMemo(
-        () => isLight(eventBackground),
-        [eventBackground]
-    );
-    const isDulledBackgroundLight = useMemo(() => {
-        const effectiveEventBackgroundColor = blendColors({
-            opacity: DOWNTIME_OPACITY,
-            color: eventBackground,
-            backgroundColor: colors.background,
-        });
-        return isLight(effectiveEventBackgroundColor);
-    }, [eventBackground, colors.background]);
+    const {
+        eventBackground,
+        backgroundLight,
+        backgroundDark,
+        backgroundMiddle,
+        isBackgroundLight,
+        isDarkBackgroundLight,
+        isMiddleBackgroundLight,
+        isDulledBackgroundLight,
+        isDulledDarkBackgroundLight,
+    } = useEventColors({
+        colors,
+        color: area.color,
+        downtimeOpacity: DOWNTIME_OPACITY,
+    });
 
     const isComplete = useMemo(() => {
         if (
@@ -635,17 +640,41 @@ const PeriodicArea = ({ area, region }) => {
     }
     return (
         <div className={styles.area}>
-            {(minuteBlocks || []).map((item, i) => (
-                <AreaEventPhase
-                    key={item.id}
-                    item={item}
-                    eventBackground={eventBackground}
-                    isBackgroundLight={isBackgroundLight}
-                    isDulledBackgroundLight={isDulledBackgroundLight}
-                    isLast={i === minuteBlocks.length - 1}
-                    isAreaComplete={isComplete}
-                />
-            ))}
+            {(minuteBlocks || []).map((item, i) => {
+                let isDay = isDayNight && item.key.endsWith("day");
+                let isNight = isDayNight && item.key.endsWith("night");
+                let isMiddle =
+                    isDayNight &&
+                    (item.key.endsWith("dusk") || item.key.endsWith("dawn"));
+                let _eventBackground = isDay
+                    ? backgroundLight
+                    : isNight
+                      ? backgroundDark
+                      : isMiddle
+                        ? backgroundMiddle
+                        : eventBackground;
+                let _isBackgroundLight = isNight
+                    ? isDarkBackgroundLight
+                    : isMiddle
+                      ? isMiddleBackgroundLight
+                      : isBackgroundLight;
+                let _isDulledBackgroundLight = isNight
+                    ? isDulledDarkBackgroundLight
+                    : isDulledBackgroundLight;
+
+                return (
+                    <AreaEventPhase
+                        key={item.id}
+                        item={item}
+                        eventBackground={_eventBackground}
+                        isBackgroundLight={_isBackgroundLight}
+                        isDulledBackgroundLight={_isDulledBackgroundLight}
+                        isLast={i === minuteBlocks.length - 1}
+                        isAreaComplete={isComplete}
+                        isDayNight={isDayNight}
+                    />
+                );
+            })}
         </div>
     );
 };
@@ -795,23 +824,27 @@ const FixedTimeArea = ({ area, region }) => {
         return minuteBlocks;
     }, [areaEvents, downtime, area.color]);
 
+    const isDayNight = useMemo(
+        () => area.key.startsWith("day-night"),
+        [area.key]
+    );
+
     const { colors } = useTheme();
-    const eventBackground = useMemo(
-        () => colors[area.color],
-        [area.color, colors]
-    );
-    const isBackgroundLight = useMemo(
-        () => isLight(eventBackground),
-        [eventBackground]
-    );
-    const isDulledBackgroundLight = useMemo(() => {
-        const effectiveEventBackgroundColor = blendColors({
-            opacity: DOWNTIME_OPACITY,
-            color: eventBackground,
-            backgroundColor: colors.background,
-        });
-        return isLight(effectiveEventBackgroundColor);
-    }, [eventBackground, colors.background]);
+    const {
+        eventBackground,
+        backgroundLight,
+        backgroundDark,
+        backgroundMiddle,
+        isBackgroundLight,
+        isDarkBackgroundLight,
+        isMiddleBackgroundLight,
+        isDulledBackgroundLight,
+        isDulledDarkBackgroundLight,
+    } = useEventColors({
+        colors,
+        color: area.color,
+        downtimeOpacity: DOWNTIME_OPACITY,
+    });
 
     const isComplete = useMemo(() => {
         if (
@@ -829,39 +862,52 @@ const FixedTimeArea = ({ area, region }) => {
     }
     return (
         <div className={styles.area}>
-            {(minuteBlocks || []).map((item, i) => (
-                <AreaEventPhase
-                    key={item.id}
-                    item={item}
-                    eventBackground={eventBackground}
-                    isBackgroundLight={isBackgroundLight}
-                    isDulledBackgroundLight={isDulledBackgroundLight}
-                    isLast={i === minuteBlocks.length - 1}
-                    isAreaComplete={isComplete}
-                />
-            ))}
+            {(minuteBlocks || []).map((item, i) => {
+                let isDay = isDayNight && item.key.endsWith("day");
+                let isNight = isDayNight && item.key.endsWith("night");
+                let isMiddle =
+                    isDayNight &&
+                    (item.key.endsWith("dusk") || item.key.endsWith("dawn"));
+                let _eventBackground = isDay
+                    ? backgroundLight
+                    : isNight
+                      ? backgroundDark
+                      : isMiddle
+                        ? backgroundMiddle
+                        : eventBackground;
+                let _isBackgroundLight = isNight
+                    ? isDarkBackgroundLight
+                    : isMiddle
+                      ? isMiddleBackgroundLight
+                      : isBackgroundLight;
+                let _isDulledBackgroundLight = isNight
+                    ? isDulledDarkBackgroundLight
+                    : isDulledBackgroundLight;
+
+                return (
+                    <AreaEventPhase
+                        key={item.id}
+                        item={item}
+                        eventBackground={_eventBackground}
+                        isBackgroundLight={_isBackgroundLight}
+                        isDulledBackgroundLight={_isDulledBackgroundLight}
+                        isLast={i === minuteBlocks.length - 1}
+                        isAreaComplete={isComplete}
+                    />
+                );
+            })}
         </div>
     );
 };
 const EditableArea = ({ area }) => {
     const { colors } = useTheme();
     const { onToggleHidden } = useContext(EventTimerContext);
-    const eventBackground = useMemo(
-        () => colors[area.color],
-        [area.color, colors]
-    );
-    const isBackgroundLight = useMemo(
-        () => isLight(eventBackground),
-        [eventBackground]
-    );
-    const isDulledBackgroundLight = useMemo(() => {
-        const effectiveEventBackgroundColor = blendColors({
-            opacity: DOWNTIME_OPACITY,
-            color: eventBackground,
-            backgroundColor: colors.background,
+    const { eventBackground, isBackgroundLight, isDulledBackgroundLight } =
+        useEventColors({
+            colors,
+            color: area.color,
+            downtimeOpacity: DOWNTIME_OPACITY,
         });
-        return isLight(effectiveEventBackgroundColor);
-    }, [eventBackground, colors.background]);
 
     const borderColor = useMemo(
         () => adjustLuminance(eventBackground, -40),
