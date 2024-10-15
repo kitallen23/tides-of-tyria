@@ -5,9 +5,14 @@ $line-height: var(--line-height);
 .inlineEditorContainer {
     position: relative;
     width: 100%;
-    border: 1px solid #ccc;
     padding: $editor-padding-vertical $editor-padding-horizontal;
     min-height: calc(#{$line-height} + 2 * #{$editor-padding-vertical});
+
+    // TODO: REMOVE ME
+    border: 1px solid #ccc;
+    &:focus-within {
+        border: 1px solid #00ff00;
+    }
 
     .inlineEditor {
         outline: none;
@@ -27,10 +32,12 @@ $line-height: var(--line-height);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         z-index: 1000;
 
-        font-size: 1.17em;
-
         visibility: hidden;
         pointer-events: none;
+
+        button {
+            font-size: 1.17rem;
+        }
 
         &.show {
             visibility: visible;
@@ -48,16 +55,61 @@ $line-height: var(--line-height);
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
         z-index: 1000;
 
-        font-size: 1.17em;
-
         visibility: hidden;
         pointer-events: none;
 
         width: 280px;
 
+        button {
+            font-size: 1.17rem;
+        }
+
         & > div:last-of-type {
             display: grid;
             grid-template-columns: 1fr auto;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+    .linkHover {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1em;
+        align-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        max-width: 320px;
+
+        .url {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            color: var(--text-muted);
+            font-size: 0.875em;
+            overflow: hidden;
+
+            .urlText {
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .buttonContainer {
+            display: flex;
+            gap: 0.2em;
         }
 
         &.show {

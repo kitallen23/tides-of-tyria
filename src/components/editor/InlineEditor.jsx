@@ -3,18 +3,24 @@ import { Button, TextField } from "@mui/material";
 import {
     AddLinkSharp,
     CheckSharp,
+    ContentCopySharp,
     ExpandMoreSharp,
     FormatBoldSharp,
     FormatItalicSharp,
     FormatUnderlinedSharp,
+    LanguageSharp,
 } from "@mui/icons-material";
 import { nanoid } from "nanoid";
 import classNames from "classnames";
 import { css } from "@emotion/react";
+import { toast } from "react-hot-toast";
 
 import styles from "@/styles/modules/inline-editor.module.scss";
 import useEditorContext from "./EditorContext";
 import { useTheme } from "@/utils/theme-provider";
+import { copyToClipboard } from "@/utils/util";
+
+const HOVER_DELAY = 500;
 
 const InlineEditor = ({ defaultValue = "" }) => {
     const id = useMemo(() => nanoid(6), []);
@@ -22,8 +28,13 @@ const InlineEditor = ({ defaultValue = "" }) => {
     const { activeEditor, setActiveEditor } = useEditorContext();
     const [showToolbar, setShowToolbar] = useState(false);
     const [showLinkPrompt, setShowLinkPrompt] = useState(false);
+    const [showLinkHover, setShowLinkHover] = useState(false);
     const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
     const [linkPromptPosition, setLinkPromptPosition] = useState({
+        top: 0,
+        left: 0,
+    });
+    const [linkHoverPosition, setLinkHoverPosition] = useState({
         top: 0,
         left: 0,
     });
@@ -32,6 +43,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
     const toolbarRef = useRef(null);
     const linkPromptRef = useRef(null);
     const linkPromptInputRef = useRef(null);
+    const linkHoverRef = useRef(null);
 
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
@@ -158,6 +170,9 @@ const InlineEditor = ({ defaultValue = "" }) => {
                 // Use getClientRects to get the start position of the selection
                 const clientRects = range.getClientRects();
                 const startRect = clientRects[0];
+                if (!startRect) {
+                    return;
+                }
 
                 // const rangeRect = range.getBoundingClientRect();
                 const editorRect = editorRef.current.getBoundingClientRect();
@@ -225,31 +240,59 @@ const InlineEditor = ({ defaultValue = "" }) => {
      * Applies the temporary link text to the current selected text
      **/
     const applyLink = () => {
-        if (tempLinkUrl && isTempLinkUrlValid) {
+        if (tempLinkUrl && isTempLinkUrlValid && tempLinkText?.trim().length) {
             restoreSelection(linkRange);
             setTimeout(() => {
                 const selection = window.getSelection();
                 if (selection.rangeCount > 0) {
                     const range = selection.getRangeAt(0);
+                    const commonAncestorContainer =
+                        range.commonAncestorContainer;
 
-                    const anchor = document.createElement("a");
+                    // Find the closest anchor element
+                    let anchorElement = null;
+
+                    if (
+                        commonAncestorContainer.nodeType === Node.ELEMENT_NODE
+                    ) {
+                        anchorElement = commonAncestorContainer.closest("a");
+                    } else if (
+                        commonAncestorContainer.nodeType === Node.TEXT_NODE
+                    ) {
+                        anchorElement =
+                            commonAncestorContainer.parentElement.closest("a");
+                    }
 
                     let _tempLinkUrl = tempLinkUrl;
-                    // Check if the URL starts with http or https
                     if (!/^https?:\/\//i.test(tempLinkUrl)) {
-                        // Prepend https:// if it doesn't start with http or https
                         _tempLinkUrl = `https://${tempLinkUrl}`;
                     }
-                    anchor.href = _tempLinkUrl;
-                    anchor.textContent = tempLinkText.toString();
-                    anchor.target = "_blank";
-                    anchor.rel = "noopener noreferrer";
 
-                    range.deleteContents();
-                    range.insertNode(anchor);
+                    if (
+                        anchorElement &&
+                        anchorElement.tagName.toLowerCase() === "a"
+                    ) {
+                        // Update the existing anchor's href and text
+                        anchorElement.href = _tempLinkUrl;
+                        anchorElement.textContent = tempLinkText.toString();
+                    } else {
+                        // Create a new anchor element
+                        const newAnchor = document.createElement("a");
+                        newAnchor.href = _tempLinkUrl;
+                        newAnchor.textContent = tempLinkText.toString();
+                        newAnchor.target = "_blank";
+                        newAnchor.rel = "noopener noreferrer";
 
-                    selection.removeAllRanges();
-                    selection.addRange(range);
+                        // Replace the current selection with the new anchor
+                        range.deleteContents();
+                        range.insertNode(newAnchor);
+
+                        // Adjust the selection to the new anchor
+                        selection.removeAllRanges();
+                        const newRange = document.createRange();
+                        newRange.selectNode(newAnchor);
+                        selection.addRange(newRange);
+                    }
 
                     closeLinkPrompt();
                 }
@@ -259,9 +302,37 @@ const InlineEditor = ({ defaultValue = "" }) => {
 
     const openLinkPrompt = () => {
         if (!showLinkPrompt) {
+            // If selection is a subset of a link, expand it to include the
+            // whole link
+            const selection = window.getSelection();
+            const range = selection.getRangeAt(0);
+            // Check if the selection is within an anchor tag
+            const commonAncestorContainer = range.commonAncestorContainer;
+            let anchorElement = null;
+            if (commonAncestorContainer.nodeType === Node.ELEMENT_NODE) {
+                anchorElement = commonAncestorContainer.closest("a");
+            } else if (commonAncestorContainer.nodeType === Node.TEXT_NODE) {
+                anchorElement =
+                    commonAncestorContainer.parentElement.closest("a");
+            }
+            let href = null;
+            if (anchorElement && anchorElement.tagName.toLowerCase() === "a") {
+                href = anchorElement.href;
+
+                // Create a new range that selects the entire anchor element
+                const newRange = document.createRange();
+                newRange.selectNodeContents(anchorElement);
+
+                // Clear the current selection and add the new range
+                selection.removeAllRanges();
+                selection.addRange(newRange);
+                handleSelect();
+            }
+
             const savedRange = saveSelection();
             setLinkRange(savedRange);
             setTempLinkText(savedRange.toString());
+            setTempLinkUrl(href || "");
             setShowLinkPrompt(true);
 
             // Focus the link input
@@ -284,6 +355,108 @@ const InlineEditor = ({ defaultValue = "" }) => {
         }
     };
 
+    const [hoveredLink, setHoveredLink] = useState(null);
+    const hoveredLinkTimeoutRef = useRef(null);
+    const handleEditorMouseEnter = event => {
+        if (event.target.tagName.toLowerCase() === "a") {
+            // Clear any existing timeout to prevent setting state for a previous link
+            clearTimeout(hoveredLinkTimeoutRef.current);
+
+            // Set a timeout to update the hovered link state after the delay
+            hoveredLinkTimeoutRef.current = setTimeout(() => {
+                setHoveredLink(event.target);
+            }, HOVER_DELAY);
+        }
+    };
+
+    const handleEditorMouseLeave = event => {
+        if (event.target.tagName.toLowerCase() === "a") {
+            // Clear the timeout if the mouse leaves the anchor before the delay
+            clearTimeout(hoveredLinkTimeoutRef.current);
+
+            if (
+                linkHoverRef.current &&
+                !linkHoverRef.current.contains(event.relatedTarget)
+            ) {
+                setHoveredLink(null); // Reset the hovered link state only if not entering the tooltip
+            }
+        }
+    };
+
+    const handleTooltipMouseEnter = () => {
+        // Clear any timeout and keep the tooltip open
+        clearTimeout(hoveredLinkTimeoutRef.current);
+    };
+
+    const handleTooltipMouseLeave = () => {
+        // Close the tooltip when the mouse leaves the tooltip area
+        if (
+            linkHoverRef.current &&
+            !linkHoverRef.current.contains(event.relatedTarget)
+        ) {
+            setHoveredLink(null); // Reset the hovered link state only if not entering the tooltip
+        }
+    };
+
+    useEffect(() => {
+        if (hoveredLink) {
+            const editorRect = editorRef.current.getBoundingClientRect();
+            const elementBox = hoveredLink.getBoundingClientRect();
+            if (!elementBox) {
+                return;
+            }
+
+            const relativeTop = elementBox.bottom - editorRect.top;
+            const relativeLeft = elementBox.left - editorRect.left;
+
+            const leftLimit =
+                editorRect.right -
+                linkHoverRef.current.offsetWidth -
+                editorRect.left;
+
+            let finalLeft = relativeLeft;
+            if (finalLeft > leftLimit) {
+                finalLeft = leftLimit;
+            }
+
+            setLinkHoverPosition({
+                top: relativeTop,
+                left: finalLeft,
+            });
+
+            setShowLinkHover(true);
+        } else {
+            setShowLinkHover(false);
+        }
+    }, [hoveredLink]);
+
+    const copyLinkToClipboard = () => {
+        if (hoveredLink) {
+            copyToClipboard(hoveredLink.href, {
+                onSuccess: () => toast.success("Link copied to clipboard."),
+                onError: () =>
+                    toast.error(
+                        "Something went wrong when copying to clipboard."
+                    ),
+            });
+
+            setHoveredLink(null);
+        }
+    };
+
+    const onLinkEditClick = () => {
+        if (hoveredLink) {
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.selectNodeContents(hoveredLink);
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            openLinkPrompt();
+            setHoveredLink(null);
+        }
+    };
+
     // TODO: Remove me
     const logEditorContent = () => {
         if (editorRef.current) {
@@ -299,6 +472,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     "inline-editor"
                 )}
             >
+                {/* Toolbar */}
                 <div
                     ref={toolbarRef}
                     className={classNames(
@@ -315,7 +489,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     <Button
                         variant="text"
                         color={isBold ? "primary" : "body"}
-                        sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
+                        sx={{ minWidth: 0, padding: 0.5 }}
                         onClick={() => applyStyle("bold")}
                     >
                         <FormatBoldSharp />
@@ -323,7 +497,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     <Button
                         variant="text"
                         color={isItalic ? "primary" : "body"}
-                        sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
+                        sx={{ minWidth: 0, padding: 0.5 }}
                         onClick={() => applyStyle("italic")}
                     >
                         <FormatItalicSharp />
@@ -331,7 +505,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     <Button
                         variant="text"
                         color={isUnderlined ? "primary" : "body"}
-                        sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
+                        sx={{ minWidth: 0, padding: 0.5 }}
                         onClick={() => applyStyle("underline")}
                     >
                         <FormatUnderlinedSharp />
@@ -339,7 +513,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     <Button
                         variant="text"
                         color="body"
-                        sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
+                        sx={{ minWidth: 0, padding: 0.5 }}
                         onClick={openLinkPrompt}
                     >
                         <AddLinkSharp />
@@ -402,14 +576,66 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     />
                     <Button
                         variant="text"
-                        color={isTempLinkUrlValid ? "primary" : "muted"}
-                        sx={{ fontSize: "inherit", minWidth: 0, padding: 0.5 }}
+                        color={
+                            isTempLinkUrlValid && tempLinkText?.trim().length
+                                ? "primary"
+                                : "muted"
+                        }
+                        sx={{ minWidth: 0, padding: 0.5 }}
                         onClick={() => applyLink()}
-                        disabled={!isTempLinkUrlValid}
+                        disabled={
+                            !isTempLinkUrlValid || !tempLinkText?.trim().length
+                        }
                     >
                         <CheckSharp />
                     </Button>
                 </div>
+
+                {/* Link hover menu */}
+                <div
+                    ref={linkHoverRef}
+                    className={classNames(
+                        styles.linkHover,
+                        {
+                            [styles.show]: editorRef.current && showLinkHover,
+                        },
+                        "inline-editor-link-hover"
+                    )}
+                    style={linkHoverPosition}
+                    onMouseOver={handleTooltipMouseEnter}
+                    onMouseOut={handleTooltipMouseLeave}
+                >
+                    <div className={styles.url}>
+                        <LanguageSharp />
+                        <div className={styles.urlText}>
+                            {hoveredLink?.href || ""}
+                        </div>
+                    </div>
+                    <div className={styles.buttonContainer}>
+                        <Button
+                            variant="text"
+                            color={isBold ? "primary" : "body"}
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={copyLinkToClipboard}
+                        >
+                            <ContentCopySharp />
+                        </Button>
+                        <Button
+                            variant="text"
+                            color={isBold ? "primary" : "body"}
+                            sx={{
+                                minWidth: 0,
+                                padding: 0.5,
+                                fontSize: "0.875rem !important",
+                                lineHeight: 1,
+                            }}
+                            onClick={onLinkEditClick}
+                        >
+                            Edit
+                        </Button>
+                    </div>
+                </div>
+
                 <div
                     ref={editorRef}
                     id={id}
@@ -426,6 +652,8 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     onKeyDown={handleKeyDown}
                     onFocus={() => setActiveEditor(editorRef.current)}
                     onClick={handleLinkClick}
+                    onMouseOver={handleEditorMouseEnter}
+                    onMouseOut={handleEditorMouseLeave}
                 />
             </div>
             {/* TODO: Remove me */}
