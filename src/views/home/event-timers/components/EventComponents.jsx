@@ -899,7 +899,7 @@ const FixedTimeArea = ({ area, region }) => {
         </div>
     );
 };
-const EditableArea = ({ area }) => {
+const EditableArea = ({ area, region }) => {
     const { colors } = useTheme();
     const { onToggleHidden } = useContext(EventTimerContext);
     const { eventBackground, isBackgroundLight, isDulledBackgroundLight } =
@@ -972,7 +972,7 @@ const EditableArea = ({ area }) => {
                         className={styles.title}
                         style={{
                             textDecoration:
-                                area.active === false
+                                region.key === "special_events" && !area.active
                                     ? "line-through"
                                     : undefined,
                         }}
@@ -981,7 +981,7 @@ const EditableArea = ({ area }) => {
                     </div>
                     {"|"}
                     <div className={styles.events}>
-                        {area.active === false ? (
+                        {region.key === "special_events" && !area.active ? (
                             <>
                                 [Event Inactive]{" "}
                                 <span

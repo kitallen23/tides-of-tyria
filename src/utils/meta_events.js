@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-10-16_01",
+        version: "2024-10-16_02",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1094,13 +1094,13 @@ const META_EVENTS = [
     {
         key: "special_events",
         name: "OTHER",
-        color: COLOR_TYPES.orange,
+        color: COLOR_TYPES.gray,
         sub_areas: [
             {
                 active: false,
                 key: "labyrinthine_cliffs",
                 name: "Labyrinthine Cliffs",
-                color: COLOR_TYPES.blue,
+                color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
@@ -1160,7 +1160,7 @@ const META_EVENTS = [
                 active: true,
                 key: "halloween",
                 name: "Lion's Arch",
-                color: COLOR_TYPES.orange,
+                color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
