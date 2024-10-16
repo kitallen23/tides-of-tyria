@@ -968,11 +968,32 @@ const EditableArea = ({ area }) => {
                     size="small"
                 />
                 <div className={styles.text}>
-                    <div className={styles.title}>
+                    <div
+                        className={styles.title}
+                        style={{
+                            textDecoration:
+                                area.active === false
+                                    ? "line-through"
+                                    : undefined,
+                        }}
+                    >
                         {area.displayTitle ?? area.name}
                     </div>
                     {"|"}
-                    <div className={styles.events}>{areaEvents}</div>
+                    <div className={styles.events}>
+                        {area.active === false ? (
+                            <>
+                                [Event Inactive]{" "}
+                                <span
+                                    style={{ textDecoration: "line-through" }}
+                                >
+                                    {areaEvents}
+                                </span>
+                            </>
+                        ) : (
+                            areaEvents
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

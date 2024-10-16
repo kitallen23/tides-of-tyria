@@ -35,10 +35,10 @@ const shouldRenderArea = ({
     mode,
     region,
 }) => {
-    if (region.key === "special_events" && !area.active) {
-        return false;
-    } else if (mode === MODES.edit) {
+    if (mode === MODES.edit) {
         return true;
+    } else if (region.key === "special_events" && !area.active) {
+        return false;
     } else if (area.hideArea === true) {
         // If area hidden by user, never show it
         return false;
