@@ -20,24 +20,29 @@ export const cleanEventConfig = (eventConfig, reset) => {
     const _eventConfig = structuredClone(eventConfig);
     return _eventConfig.map(region => ({
         ...region,
-        sub_areas: region.sub_areas.map(subArea => {
-            if (
-                subArea?.lastCompletion &&
-                isBefore(subArea.lastCompletion, reset)
-            ) {
-                subArea.lastCompletion = undefined;
-            }
-            subArea.phases = subArea.phases.map(phase => {
+        sub_areas: region.sub_areas
+            .map(subArea => {
                 if (
-                    phase.lastCompletion &&
-                    isBefore(phase.lastCompletion, reset)
+                    subArea?.lastCompletion &&
+                    isBefore(subArea.lastCompletion, reset)
                 ) {
-                    phase.lastCompletion = undefined;
+                    subArea.lastCompletion = undefined;
                 }
-                return phase;
-            });
-            return subArea;
-        }),
+                subArea.phases = subArea.phases.map(phase => {
+                    if (
+                        phase.lastCompletion &&
+                        isBefore(phase.lastCompletion, reset)
+                    ) {
+                        phase.lastCompletion = undefined;
+                    }
+                    return phase;
+                });
+                return subArea;
+            })
+            .filter(subArea =>
+                // Filter out special events that aren't active
+                region.key === "special_events" ? subArea.active : true
+            ),
     }));
 };
 
