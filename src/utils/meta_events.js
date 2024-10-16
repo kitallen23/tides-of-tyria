@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-08-24",
+        version: "2024-10-16",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1085,72 +1085,103 @@ const META_EVENTS = [
             },
         ],
     },
-    // {
-    //     key: "special_events",
-    //     name: "OTHER",
-    //     color: COLOR_TYPES.gray,
-    //     sub_areas: [
-    //         {
-    //             key: "labyrinthine_cliffs",
-    //             name: "Labyrinthine Cliffs",
-    //             color: COLOR_TYPES.blue,
-    //             type: TIME_TYPES.periodic,
-    //             onComplete: ON_COMPLETE_TYPES.none,
-    //             phases: [
-    //                 {
-    //                     key: "labyrinthine_cliffs__treasure_hunt",
-    //                     name: "Treasure Hunt",
-    //                     wikiUrl:
-    //                         "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
-    //                     start: 30,
-    //                     duration: 30,
-    //                     frequency: 120,
-    //                     waypoint: "[&BBwHAAA=]",
-    //                 },
-    //                 {
-    //                     key: "labyrinthine_cliffs__skiff_race",
-    //                     name: "Skiff Race",
-    //                     wikiUrl:
-    //                         "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
-    //                     start: 0,
-    //                     duration: 10,
-    //                     frequency: 120,
-    //                     waypoint: "[&BBwHAAA=]",
-    //                 },
-    //                 {
-    //                     key: "labyrinthine_cliffs__fishing_tournament",
-    //                     name: "Fishing",
-    //                     wikiUrl:
-    //                         "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
-    //                     start: 90,
-    //                     duration: 10,
-    //                     frequency: 120,
-    //                     waypoint: "[&BBwHAAA=]",
-    //                 },
-    //                 {
-    //                     key: "labyrinthine_cliffs__skimmer_race",
-    //                     name: "Skimmer Race",
-    //                     wikiUrl:
-    //                         "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
-    //                     start: 75,
-    //                     duration: 10,
-    //                     frequency: 120,
-    //                     waypoint: "[&BBwHAAA=]",
-    //                 },
-    //                 {
-    //                     key: "labyrinthine_cliffs__dolyak_race",
-    //                     name: "Dolyak Race",
-    //                     wikiUrl:
-    //                         "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
-    //                     start: 105,
-    //                     duration: 10,
-    //                     frequency: 120,
-    //                     waypoint: "[&BBwHAAA=]",
-    //                 },
-    //             ],
-    //         },
-    //     ],
-    // },
+    /**
+     * NOTE: Special events must have an "active" flag. If false, the event will
+     * be temporarily disabled.
+     *
+     * Don't forget to update the version number when making changes!
+     * **/
+    {
+        key: "special_events",
+        name: "OTHER",
+        color: COLOR_TYPES.orange,
+        sub_areas: [
+            {
+                active: false,
+                key: "labyrinthine_cliffs",
+                name: "Labyrinthine Cliffs",
+                color: COLOR_TYPES.blue,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "labyrinthine_cliffs__treasure_hunt",
+                        name: "Treasure Hunt",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Participate_in_the_treasure_hunt!",
+                        start: 30,
+                        duration: 30,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__skiff_race",
+                        name: "Skiff Race",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Labyrinthine_Skiffs:_A_race_is_starting_soon!",
+                        start: 0,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__fishing_tournament",
+                        name: "Fishing",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Fishing_Tournament_Sign-Up",
+                        start: 90,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__skimmer_race",
+                        name: "Skimmer Race",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Skimmer_Slalom:_Reach_the_finish_line!",
+                        start: 75,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                    {
+                        key: "labyrinthine_cliffs__dolyak_race",
+                        name: "Dolyak Race",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Flying_Dolyak:_Reach_the_finish_line!",
+                        start: 105,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBwHAAA=]",
+                    },
+                ],
+            },
+            {
+                active: true,
+                key: "halloween",
+                name: "Lion's Arch",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "halloween__mad_king_says",
+                        name: "Mad King Says",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Your_Mad_King_says...",
+                        start: 0,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BBAEAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+
+    /**
+     * Test
+     **/
     // {
     //     key: "__test",
     //     name: "TEST",
