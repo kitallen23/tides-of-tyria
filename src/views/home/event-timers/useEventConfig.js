@@ -28,8 +28,18 @@ const isAreaComplete = (area, dailyReset) => {
     }
     return false;
 };
-const shouldRenderArea = (area, dailyReset, showCompleted) => {
-    if (area.hideArea === true) {
+const shouldRenderArea = ({
+    area,
+    dailyReset,
+    showCompleted,
+    mode,
+    region,
+}) => {
+    if (region.key === "special_events" && !area.active) {
+        return false;
+    } else if (mode === MODES.edit) {
+        return true;
+    } else if (area.hideArea === true) {
         // If area hidden by user, never show it
         return false;
     } else if (showCompleted) {
@@ -50,17 +60,26 @@ const shouldRenderArea = (area, dailyReset, showCompleted) => {
         return !isComplete;
     }
 };
-const shouldRenderRegion = (region, dailyReset, showCompleted) => {
+const shouldRenderRegion = ({ region, dailyReset, showCompleted, mode }) => {
     return region.sub_areas.some(area =>
-        shouldRenderArea(area, dailyReset, showCompleted)
+        shouldRenderArea({ area, dailyReset, showCompleted, region, mode })
     );
 };
 
-const addRenderStatesToArea = ({ area, showCompleted, mode, dailyReset }) => {
-    const shouldRender =
-        mode === MODES.edit
-            ? true
-            : shouldRenderArea(area, dailyReset, showCompleted);
+const addRenderStatesToArea = ({
+    area,
+    showCompleted,
+    mode,
+    dailyReset,
+    region,
+}) => {
+    const shouldRender = shouldRenderArea({
+        area,
+        dailyReset,
+        showCompleted,
+        mode,
+        region,
+    });
     return {
         ...area,
         shouldRender,
@@ -72,15 +91,23 @@ const addRenderStatesToRegion = ({
     mode,
     dailyReset,
 }) => {
-    const shouldRender =
-        mode === MODES.edit
-            ? true
-            : shouldRenderRegion(region, dailyReset, showCompleted);
+    const shouldRender = shouldRenderRegion({
+        region,
+        dailyReset,
+        showCompleted,
+        mode,
+    });
     return {
         ...region,
         shouldRender,
         sub_areas: region.sub_areas.map(area =>
-            addRenderStatesToArea({ area, showCompleted, mode, dailyReset })
+            addRenderStatesToArea({
+                area,
+                showCompleted,
+                mode,
+                dailyReset,
+                region,
+            })
         ),
     };
 };
