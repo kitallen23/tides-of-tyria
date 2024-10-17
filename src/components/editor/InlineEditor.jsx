@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, forwardRef } from "react";
 import { Button, TextField } from "@mui/material";
 import {
     AddLinkSharp,
@@ -22,7 +22,7 @@ import { copyToClipboard } from "@/utils/util";
 
 const HOVER_DELAY = 500;
 
-const InlineEditor = ({ defaultValue = "" }) => {
+const InlineEditor = forwardRef(({ defaultValue = "", onChange }, ref) => {
     const id = useMemo(() => nanoid(6), []);
     const { colors } = useTheme();
     const { activeEditor, setActiveEditor } = useEditorContext();
@@ -39,7 +39,6 @@ const InlineEditor = ({ defaultValue = "" }) => {
         left: 0,
     });
 
-    const editorRef = useRef(null);
     const toolbarRef = useRef(null);
     const linkPromptRef = useRef(null);
     const linkPromptInputRef = useRef(null);
@@ -81,18 +80,18 @@ const InlineEditor = ({ defaultValue = "" }) => {
 
     useEffect(() => {
         // Set the initial content
-        if (editorRef.current && defaultValue) {
-            editorRef.current.innerHTML = defaultValue;
+        if (ref.current && defaultValue) {
+            ref.current.innerHTML = defaultValue;
         }
     }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     useEffect(() => {
         // Hide the toolbar if the active editor is not the current editor
-        if (activeEditor !== editorRef.current) {
+        if (activeEditor !== ref.current) {
             setShowToolbar(false);
             closeLinkPrompt();
         }
-    }, [activeEditor]);
+    }, [activeEditor, ref]);
 
     const handleKeyDown = e => {
         // Prevent the Enter key from creating a new line in the editor
@@ -175,7 +174,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                 }
 
                 // const rangeRect = range.getBoundingClientRect();
-                const editorRect = editorRef.current.getBoundingClientRect();
+                const editorRect = ref.current.getBoundingClientRect();
 
                 const relativeTop = startRect.top - editorRect.top;
                 const relativeLeft = startRect.left - editorRect.left;
@@ -388,7 +387,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
         clearTimeout(hoveredLinkTimeoutRef.current);
     };
 
-    const handleTooltipMouseLeave = () => {
+    const handleTooltipMouseLeave = event => {
         // Close the tooltip when the mouse leaves the tooltip area
         if (
             linkHoverRef.current &&
@@ -400,7 +399,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
 
     useEffect(() => {
         if (hoveredLink) {
-            const editorRect = editorRef.current.getBoundingClientRect();
+            const editorRect = ref.current.getBoundingClientRect();
             const elementBox = hoveredLink.getBoundingClientRect();
             if (!elementBox) {
                 return;
@@ -428,7 +427,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
         } else {
             setShowLinkHover(false);
         }
-    }, [hoveredLink]);
+    }, [hoveredLink, ref]);
 
     const copyLinkToClipboard = () => {
         if (hoveredLink) {
@@ -457,10 +456,14 @@ const InlineEditor = ({ defaultValue = "" }) => {
         }
     };
 
+    const handleInput = event => {
+        onChange(event.target.innerHTML);
+    };
+
     // TODO: Remove me
     const logEditorContent = () => {
-        if (editorRef.current) {
-            console.info(editorRef.current.innerHTML);
+        if (ref.current) {
+            console.info(ref.current.innerHTML);
         }
     };
 
@@ -479,8 +482,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                         styles.floatingToolbar,
                         {
                             [styles.show]:
-                                activeEditor === editorRef.current &&
-                                showToolbar,
+                                activeEditor === ref.current && showToolbar,
                         },
                         "inline-editor-toolbar"
                     )}
@@ -531,9 +533,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                         styles.linkPrompt,
                         {
                             [styles.show]:
-                                activeEditor &&
-                                editorRef.current &&
-                                showLinkPrompt,
+                                activeEditor && ref.current && showLinkPrompt,
                         },
                         "inline-editor-link-prompt"
                     )}
@@ -597,7 +597,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     className={classNames(
                         styles.linkHover,
                         {
-                            [styles.show]: editorRef.current && showLinkHover,
+                            [styles.show]: ref.current && showLinkHover,
                         },
                         "inline-editor-link-hover"
                     )}
@@ -637,7 +637,7 @@ const InlineEditor = ({ defaultValue = "" }) => {
                 </div>
 
                 <div
-                    ref={editorRef}
+                    ref={ref}
                     id={id}
                     className={styles.inlineEditor}
                     css={css({
@@ -650,16 +650,18 @@ const InlineEditor = ({ defaultValue = "" }) => {
                     onMouseUp={handleSelect}
                     onKeyUp={handleSelect}
                     onKeyDown={handleKeyDown}
-                    onFocus={() => setActiveEditor(editorRef.current)}
+                    onFocus={() => setActiveEditor(ref.current)}
                     onClick={handleLinkClick}
                     onMouseOver={handleEditorMouseEnter}
                     onMouseOut={handleEditorMouseLeave}
+                    onInput={handleInput}
                 />
             </div>
             {/* TODO: Remove me */}
             <Button onClick={logEditorContent}>Log HTML Content</Button>
         </>
     );
-};
+});
+InlineEditor.displayName = "InlineEditor";
 
 export default InlineEditor;
