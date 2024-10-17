@@ -119,7 +119,6 @@ const EventTimers = () => {
             }
             let eventConfig = JSON.parse(eventConfigString);
             eventConfig = cleanEventConfig(eventConfig, dailyReset);
-            console.log(`eventConfig after cleaning: `, eventConfig);
 
             // Merge event config with new default event config if versions
             // don't match
@@ -128,7 +127,6 @@ const EventTimers = () => {
                 META_EVENTS?.[0]?.version
             ) {
                 eventConfig = resetConfigToDefault(eventConfig, META_EVENTS);
-                console.log(`eventConfig after resetting: `, eventConfig);
             }
 
             set_eventConfig(eventConfig);
