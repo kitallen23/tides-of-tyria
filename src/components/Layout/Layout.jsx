@@ -1,4 +1,4 @@
-import styles from "@/styles/modules/layout.module.scss";
+import styles from "./layout.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import { IconButton } from "@mui/material";
 import { SettingsSharp } from "@mui/icons-material";

@@ -1,4 +1,4 @@
-import styles from "@/styles/modules/home.module.scss";
+import styles from "./home.module.scss";
 import EventTimers from "./event-timers/EventTimers";
 
 const HomePage = () => {

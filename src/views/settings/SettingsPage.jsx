@@ -2,7 +2,7 @@ import { useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import styles from "@/styles/modules/settings.module.scss";
+import styles from "./settings.module.scss";
 import { getLocalItem, getTitle, isHexValid } from "@/utils/util";
 
 import SchemeSelector from "./SchemeSelector";
@@ -16,7 +16,7 @@ import { useTheme } from "@/utils/theme-provider";
 import { Button, TextField } from "@mui/material";
 import { SCHEMES } from "@/utils/color-schemes";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
-import Modal from "@/components/Modal";
+import Modal from "@/components/Modal/Modal";
 
 const SettingsPage = () => {
     const title = useMemo(() => getTitle("Settings"), []);

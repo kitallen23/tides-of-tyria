@@ -1,5 +1,5 @@
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import styles from "@/styles/modules/checklist.module.scss";
+import styles from "./checklist-page.module.scss";
 import { EditorProvider } from "@/utils/editor-provider";
 import DailyChecklist from "./DailyChecklist";
 

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import classNames from "classnames";
-import styles from "@/styles/modules/event-timer.module.scss";
+import styles from "./event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import layoutStyles from "@/styles/modules/home.module.scss";
+import layoutStyles from "../home.module.scss";
 import { Button } from "@mui/material";
 import {
     ChevronLeftSharp,

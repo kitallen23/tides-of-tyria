@@ -9,10 +9,10 @@ $line-height: var(--line-height);
     min-height: calc(#{$line-height} + 2 * #{$editor-padding-vertical});
 
     // TODO: REMOVE ME
-    border: 1px solid #ccc;
-    &:focus-within {
-        border: 1px solid #00ff00;
-    }
+    // border: 1px solid #ccc;
+    // &:focus-within {
+    //     border: 1px solid #00ff00;
+    // }
 
     .inlineEditor {
         outline: none;
