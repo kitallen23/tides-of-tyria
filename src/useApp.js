@@ -121,6 +121,16 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
+        MuiInputBase: {
+            styleOverrides: {
+                input: {
+                    "&::placeholder": {
+                        color: theme.colors.muted,
+                        opacity: 1,
+                    },
+                },
+            },
+        },
         MuiOutlinedInput: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
@@ -137,6 +147,12 @@ export const getDesignTokens = theme => ({
                             theme.palette.primary.main,
                     },
                 }),
+                input: {
+                    "&::placeholder": {
+                        color: theme.colors.muted,
+                        opacity: 1,
+                    },
+                },
             },
         },
         MuiMenu: {
