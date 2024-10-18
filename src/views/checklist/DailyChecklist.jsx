@@ -26,15 +26,30 @@ const DailyChecklist = () => {
             "[]"
         );
         localStorage.setItem(LOCAL_STORAGE_KEYS.dailyChecklist, savedChecklist);
-        return savedChecklist ? JSON.parse(savedChecklist) : [];
+        try {
+            const savedChecklistWithRefs = JSON.parse(savedChecklist).map(
+                item => ({
+                    ...item,
+                    inputRef: createRef(),
+                })
+            );
+            return savedChecklistWithRefs;
+        } catch {
+            return [];
+        }
     });
 
     const debounceSave = useMemo(
         () =>
             debounce(items => {
+                const itemsWithoutRefs = items.map(item => {
+                    // eslint-disable-next-line no-unused-vars
+                    const { inputRef, ...rest } = item;
+                    return rest;
+                });
                 localStorage.setItem(
                     LOCAL_STORAGE_KEYS.dailyChecklist,
-                    JSON.stringify(items)
+                    JSON.stringify(itemsWithoutRefs)
                 );
             }, INPUT_DEBOUNCE_MS),
         []
@@ -111,7 +126,7 @@ const DailyChecklist = () => {
                 <ChecklistSharp style={{ marginRight: "0.25rem" }} />
                 Daily Checklist
             </h3>
-            <div style={{ display: "grid", gap: "1rem" }}>
+            <div style={{ display: "grid" }}>
                 {checklistItems.map((item, i) => (
                     <ChecklistItem
                         key={item.id}
@@ -120,7 +135,6 @@ const DailyChecklist = () => {
                             handleItemChange(i, updatedItem)
                         }
                         onNewline={text => addItem(text, i + 1, true)}
-                        showPlaceholder={i === checklistItems.length - 1}
                     />
                 ))}
             </div>
