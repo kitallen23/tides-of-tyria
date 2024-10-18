@@ -266,6 +266,7 @@ const SettingsPage = () => {
                             variant="contained"
                             color="error"
                             onClick={clearLocalData}
+                            disableElevation
                         >
                             Yes, reset everything
                         </Button>
