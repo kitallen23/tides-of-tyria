@@ -23,10 +23,13 @@ import { copyToClipboard } from "@/utils/util";
 const HOVER_DELAY = 500;
 
 const InlineEditor = forwardRef(
-    ({ defaultValue = "", onChange, onNewline }, ref) => {
+    ({ defaultValue = "", placeholder, onChange, onNewline }, ref) => {
         const id = useMemo(() => nanoid(6), []);
         const { colors } = useTheme();
         const { activeEditor, setActiveEditor } = useEditorContext();
+        const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(
+            defaultValue.trim() === ""
+        );
         const [showToolbar, setShowToolbar] = useState(false);
         const [showLinkPrompt, setShowLinkPrompt] = useState(false);
         const [showLinkHover, setShowLinkHover] = useState(false);
@@ -520,7 +523,13 @@ const InlineEditor = forwardRef(
         };
 
         const handleInput = event => {
-            onChange(event.target.innerHTML);
+            let value = event.target.innerHTML;
+            if (value === "<br>") {
+                value = "";
+                ref.current.innerHTML = "";
+            }
+            onChange(value);
+            setIsPlaceholderVisible(event.target.innerHTML.trim() === "");
         };
 
         return (
@@ -530,6 +539,11 @@ const InlineEditor = forwardRef(
                         styles.inlineEditorContainer,
                         "inline-editor"
                     )}
+                    onClick={event => {
+                        if (event.target === event.currentTarget) {
+                            ref.current?.focus?.();
+                        }
+                    }}
                 >
                     {/* Toolbar */}
                     <div
@@ -700,6 +714,7 @@ const InlineEditor = forwardRef(
                         </div>
                     </div>
 
+                    {/* Editor */}
                     <div
                         ref={ref}
                         id={id}
@@ -720,6 +735,15 @@ const InlineEditor = forwardRef(
                         onMouseOut={handleEditorMouseLeave}
                         onInput={handleInput}
                     />
+
+                    {/* Placeholder */}
+                    <div
+                        className={classNames(styles.placeholder, {
+                            [styles.show]: isPlaceholderVisible && placeholder,
+                        })}
+                    >
+                        {placeholder}
+                    </div>
                 </div>
             </>
         );

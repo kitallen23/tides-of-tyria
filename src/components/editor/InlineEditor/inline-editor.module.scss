@@ -1,18 +1,14 @@
 $editor-padding-vertical: 3px;
 $editor-padding-horizontal: 2px;
-$line-height: var(--line-height);
 
 .inlineEditorContainer {
     position: relative;
     width: 100%;
     padding: $editor-padding-vertical $editor-padding-horizontal;
-    min-height: calc(#{$line-height} + 2 * #{$editor-padding-vertical});
-
-    // TODO: REMOVE ME
-    // border: 1px solid #ccc;
-    // &:focus-within {
-    //     border: 1px solid #00ff00;
-    // }
+    min-height: calc(
+        1em * var(--line-height) + 2 * #{$editor-padding-vertical}
+    );
+    cursor: text;
 
     .inlineEditor {
         outline: none;
@@ -20,6 +16,20 @@ $line-height: var(--line-height);
         a {
             cursor: pointer;
         }
+    }
+
+    .placeholder {
+        position: absolute;
+        pointer-events: none;
+        color: var(--text-muted);
+        top: $editor-padding-vertical;
+        left: $editor-padding-horizontal;
+        opacity: 0;
+        transition: opacity 0.1s;
+    }
+
+    &:focus-within .placeholder.show {
+        opacity: 1;
     }
 
     .floatingToolbar {
