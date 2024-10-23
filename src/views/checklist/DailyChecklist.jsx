@@ -18,6 +18,7 @@ import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 const INPUT_DEBOUNCE_MS = 400;
 
 const DailyChecklist = () => {
+    const [valueKey, setValueKey] = useState(0);
     const hasAddedInitialItem = useRef(false);
     const [checklistItems, setChecklistItems] = useState(() => {
         // Load from local storage on initial render
@@ -56,17 +57,21 @@ const DailyChecklist = () => {
     );
 
     useEffect(() => {
+        // TODO: Remove me
+        // console.log(`checklistItems: `, checklistItems);
         debounceSave(checklistItems);
 
         return () => {
             debounceSave.cancel();
         };
-    }, [checklistItems, debounceSave]);
+    }, [valueKey, checklistItems, debounceSave]);
 
-    const handleItemChange = (index, updatedItem) => {
-        const newItems = [...checklistItems];
-        newItems[index] = updatedItem;
-        setChecklistItems(newItems);
+    const handleItemChange = (index, key, value) => {
+        setChecklistItems(prevItems => {
+            prevItems[index][key] = value;
+            return prevItems;
+        });
+        setValueKey(n => n + 1);
     };
 
     /**
@@ -78,38 +83,71 @@ const DailyChecklist = () => {
      * @param {boolean} focus - If true, the new line will become focused.
      **/
     const addItem = useCallback((text = "", position = -1, focus = false) => {
-        const newItem = {
-            text,
-            isComplete: false,
-            id: nanoid(6),
-            inputRef: createRef(),
-            indentLevel: 0,
-        };
+        // TODO: Fix bug here! Position sometimes gets janky.
+        // console.log(`position: `, position);
 
-        // setChecklistItems([...checklistItems, newItem]);
-        setChecklistItems(prevItems => {
+        setChecklistItems(items => {
             // Determine the actual index to insert the new item
             let index = position;
             if (position === -1) {
-                index = prevItems.length; // Insert at the end
+                index = items.length; // Insert at the end
             } else {
-                index = Math.min(position, prevItems.length);
+                index = Math.min(position, items.length);
             }
 
-            // Create a new array with the new item inserted at the correct position
-            const updatedItems = [...prevItems];
-            updatedItems.splice(index, 0, newItem);
-            return updatedItems;
-        });
+            const newItem = {
+                text,
+                isComplete: false,
+                id: nanoid(6),
+                inputRef: createRef(),
+                indentLevel: 0,
+            };
 
-        if (focus) {
-            setTimeout(() => newItem.inputRef.current?.focus?.());
-        }
+            // Create a new array with the new item inserted at the correct position
+            const newItems = items.toSpliced(index, 0, newItem);
+            if (focus) {
+                setTimeout(() => newItem.inputRef.current?.focus?.());
+            }
+
+            return newItems;
+        });
+        setValueKey(n => n + 1);
     }, []);
 
-    // const removeItem = index => {
-    //     setChecklistItems(checklistItems.filter((_, i) => i !== index));
-    // };
+    /**
+     * Removes a line, and collapses its content into the previous line.
+     *
+     * @param {string} text - The remaining text of the item that we're
+     * collapsing.
+     * @param {number} position - The position of the item we're removing.
+     * @param {boolean} focus - If true, the previous line will become focused.
+     **/
+    const removeItem = useCallback((text = "", position, focus = false) => {
+        setChecklistItems(prevItems => {
+            if (position < 0 || position >= prevItems.length) {
+                return prevItems;
+            }
+            const updatedItems = [...prevItems];
+
+            // Check if we have text and if there's a line before this one
+            if (text.trim() && position > 0) {
+                updatedItems[position - 1].text =
+                    `${updatedItems[position - 1].text}${text}`;
+            }
+            updatedItems.splice(position, 1);
+            if (focus) {
+                setTimeout(() => {
+                    // console.log(
+                    //     `updatedItems in debounce fn: `,
+                    //     position,
+                    //     updatedItems
+                    // );
+                    updatedItems[position - 1].current?.focus?.();
+                }, 0);
+            }
+            return updatedItems;
+        });
+    }, []);
 
     // If there are no checklist items, add a blank line (ensures there's always
     // an input field)
@@ -131,10 +169,11 @@ const DailyChecklist = () => {
                     <ChecklistItem
                         key={item.id}
                         item={item}
-                        onChange={updatedItem =>
-                            handleItemChange(i, updatedItem)
+                        onChange={(key, value) =>
+                            handleItemChange(i, key, value)
                         }
                         onNewline={text => addItem(text, i + 1, true)}
+                        onRemoveLine={text => removeItem(text, i, true)}
                     />
                 ))}
             </div>
