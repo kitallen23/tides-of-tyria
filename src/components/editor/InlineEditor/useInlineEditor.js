@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import { toast } from "react-hot-toast";
 
-import useEditorContext from "../EditorContext";
 import { copyToClipboard } from "@/utils/util";
 import { useTheme } from "@/utils/theme-provider";
 
@@ -17,11 +16,6 @@ const useInlineEditor = ({
 }) => {
     const id = useMemo(() => nanoid(6), []);
     const { colors } = useTheme();
-    const { isActiveEditor, setActiveEditor } = useEditorContext(ref.current);
-    // console.log(`isActiveEditor: `, isActiveEditor);
-    // const isActiveEditor = activeEditor === ref.current;
-    // const isActiveEditor = false;
-    // const setActiveEditor = () => {}
 
     const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(
         defaultValue.trim() === ""
@@ -46,6 +40,7 @@ const useInlineEditor = ({
     const linkPromptRef = useRef(null);
     const linkPromptInputRef = useRef(null);
     const linkHoverRef = useRef(null);
+    const wrapperRef = useRef(null);
 
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
@@ -82,19 +77,19 @@ const useInlineEditor = ({
     };
 
     useEffect(() => {
-        // Set the initial content
+        // Set the initial content (or updated content if renderKey changes)
         if (ref.current && defaultValue) {
             ref.current.innerHTML = defaultValue;
         }
-    }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
+        setIsPlaceholderVisible(defaultValue.trim() === "");
+    }, [defaultValue]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
-    useEffect(() => {
-        // Hide the toolbar if the active editor is not the current editor
-        if (!isActiveEditor) {
+    const handleBlur = event => {
+        if (!wrapperRef?.current.contains(event?.relatedTarget)) {
             setShowToolbar(false);
             closeLinkPrompt();
         }
-    }, [isActiveEditor, ref]);
+    };
 
     const [lastEnterPress, setLastEnterPress] = useState(0);
     const handleKeyDown = e => {
@@ -417,9 +412,9 @@ const useInlineEditor = ({
             setShowLinkPrompt(true);
 
             // Focus the link input
-            setTimeout(() => {
-                linkPromptInputRef.current.focus();
-            }, 0);
+            // setTimeout(() => {
+            //     linkPromptInputRef.current.focus();
+            // }, 0);
         } else {
             closeLinkPrompt();
         }
@@ -551,9 +546,7 @@ const useInlineEditor = ({
     return {
         id,
         colors,
-        isActiveEditor,
-        setActiveEditor,
-        // setActiveEditor: () => {},
+        wrapperRef,
 
         isBold,
         isItalic,
@@ -590,6 +583,7 @@ const useInlineEditor = ({
         isPlaceholderVisible,
 
         handleInput,
+        handleBlur,
         handleKeyDown,
         handleSelect,
         handleLinkClick,

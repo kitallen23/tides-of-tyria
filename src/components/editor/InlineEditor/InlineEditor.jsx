@@ -25,14 +25,14 @@ const InlineEditor = React.memo(
                 onChange,
                 onNewline,
                 onRemoveLine,
+                renderKey,
             },
             ref
         ) => {
             const {
                 id,
                 colors,
-                isActiveEditor,
-                setActiveEditor,
+                wrapperRef,
 
                 isBold,
                 isItalic,
@@ -69,239 +69,235 @@ const InlineEditor = React.memo(
                 isPlaceholderVisible,
 
                 handleInput,
+                handleBlur,
                 handleKeyDown,
                 handleSelect,
                 handleLinkClick,
                 handleEditorMouseEnter,
                 handleEditorMouseLeave,
             } = useInlineEditor({
+                renderKey,
                 defaultValue,
                 onChange,
                 onNewline,
                 onRemoveLine,
                 ref,
             });
-            // console.log(`UPDATED: `, id);
 
             return (
-                <>
+                <div
+                    ref={wrapperRef}
+                    className={classNames(
+                        styles.inlineEditorContainer,
+                        "inline-editor"
+                    )}
+                    onClick={event => {
+                        if (event.target === event.currentTarget) {
+                            ref.current?.focus?.();
+                        }
+                    }}
+                    onBlur={handleBlur}
+                >
+                    {/* Toolbar */}
                     <div
+                        ref={toolbarRef}
                         className={classNames(
-                            styles.inlineEditorContainer,
-                            "inline-editor"
+                            styles.floatingToolbar,
+                            {
+                                [styles.show]: showToolbar,
+                            },
+                            "inline-editor-toolbar"
                         )}
-                        onClick={event => {
-                            if (event.target === event.currentTarget) {
-                                ref.current?.focus?.();
-                            }
-                        }}
+                        style={toolbarPosition}
                     >
-                        {/* Toolbar */}
-                        <div
-                            ref={toolbarRef}
-                            className={classNames(
-                                styles.floatingToolbar,
-                                {
-                                    [styles.show]:
-                                        isActiveEditor && showToolbar,
-                                },
-                                "inline-editor-toolbar"
-                            )}
-                            style={toolbarPosition}
+                        <Button
+                            variant="text"
+                            color={isBold ? "primary" : "body"}
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={() => applyStyle("bold")}
                         >
+                            <FormatBoldSharp />
+                        </Button>
+                        <Button
+                            variant="text"
+                            color={isItalic ? "primary" : "body"}
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={() => applyStyle("italic")}
+                        >
+                            <FormatItalicSharp />
+                        </Button>
+                        <Button
+                            variant="text"
+                            color={isUnderlined ? "primary" : "body"}
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={() => applyStyle("underline")}
+                        >
+                            <FormatUnderlinedSharp />
+                        </Button>
+                        <Button
+                            variant="text"
+                            color="body"
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={openLinkPrompt}
+                        >
+                            <AddLinkSharp />
+                            <ExpandMoreSharp
+                                sx={{ fontSize: "0.875em" }}
+                                color="muted"
+                            />
+                        </Button>
+                    </div>
+
+                    {/* Link prompt / editor */}
+                    <div
+                        ref={linkPromptRef}
+                        className={classNames(
+                            styles.linkPrompt,
+                            {
+                                [styles.show]: showLinkPrompt,
+                            },
+                            "inline-editor-link-prompt"
+                        )}
+                        style={linkPromptPosition}
+                    >
+                        <TextField
+                            id="link-text"
+                            value={tempLinkText}
+                            variant="outlined"
+                            placeholder="Link text"
+                            size="small"
+                            color="primary"
+                            sx={{
+                                "& .MuiInputBase-input": {
+                                    padding: "4px 8px",
+                                    fontSize: "0.875em",
+                                },
+                            }}
+                            onChange={event =>
+                                setTempLinkText(event.target.value)
+                            }
+                            inputRef={linkPromptInputRef}
+                            onKeyDown={handleLinkInputKeyDown}
+                        />
+                        <div />
+                        <TextField
+                            id="link-url"
+                            value={tempLinkUrl}
+                            variant="outlined"
+                            placeholder="Paste link"
+                            size="small"
+                            color="primary"
+                            sx={{
+                                "& .MuiInputBase-input": {
+                                    padding: "4px 8px",
+                                    fontSize: "0.875em",
+                                },
+                            }}
+                            onChange={event =>
+                                setTempLinkUrl(event.target.value)
+                            }
+                            inputRef={linkPromptInputRef}
+                            onKeyDown={handleLinkInputKeyDown}
+                        />
+                        <Button
+                            variant="text"
+                            color={
+                                isTempLinkUrlValid &&
+                                tempLinkText?.trim().length
+                                    ? "primary"
+                                    : "muted"
+                            }
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={applyLink}
+                            disabled={
+                                !isTempLinkUrlValid ||
+                                !tempLinkText?.trim().length
+                            }
+                        >
+                            <CheckSharp />
+                        </Button>
+                    </div>
+
+                    {/* Link hover menu */}
+                    <div
+                        ref={linkHoverRef}
+                        className={classNames(
+                            styles.linkHover,
+                            {
+                                [styles.show]: ref.current && showLinkHover,
+                            },
+                            "inline-editor-link-hover"
+                        )}
+                        style={linkHoverPosition}
+                        onMouseOver={handleTooltipMouseEnter}
+                        onMouseOut={handleTooltipMouseLeave}
+                    >
+                        <div className={styles.url}>
+                            <LanguageSharp />
+                            <div className={styles.urlText}>
+                                {hoveredLink?.href || ""}
+                            </div>
+                        </div>
+                        <div className={styles.buttonContainer}>
                             <Button
                                 variant="text"
                                 color={isBold ? "primary" : "body"}
                                 sx={{ minWidth: 0, padding: 0.5 }}
-                                onClick={() => applyStyle("bold")}
+                                onClick={copyLinkToClipboard}
                             >
-                                <FormatBoldSharp />
+                                <ContentCopySharp />
                             </Button>
                             <Button
                                 variant="text"
-                                color={isItalic ? "primary" : "body"}
-                                sx={{ minWidth: 0, padding: 0.5 }}
-                                onClick={() => applyStyle("italic")}
-                            >
-                                <FormatItalicSharp />
-                            </Button>
-                            <Button
-                                variant="text"
-                                color={isUnderlined ? "primary" : "body"}
-                                sx={{ minWidth: 0, padding: 0.5 }}
-                                onClick={() => applyStyle("underline")}
-                            >
-                                <FormatUnderlinedSharp />
-                            </Button>
-                            <Button
-                                variant="text"
-                                color="body"
-                                sx={{ minWidth: 0, padding: 0.5 }}
-                                onClick={openLinkPrompt}
-                            >
-                                <AddLinkSharp />
-                                <ExpandMoreSharp
-                                    sx={{ fontSize: "0.875em" }}
-                                    color="muted"
-                                />
-                            </Button>
-                        </div>
-
-                        {/* Link prompt / editor */}
-                        <div
-                            ref={linkPromptRef}
-                            className={classNames(
-                                styles.linkPrompt,
-                                {
-                                    [styles.show]:
-                                        isActiveEditor && showLinkPrompt,
-                                },
-                                "inline-editor-link-prompt"
-                            )}
-                            style={linkPromptPosition}
-                        >
-                            <TextField
-                                id="link-text"
-                                value={tempLinkText}
-                                variant="outlined"
-                                placeholder="Link text"
-                                size="small"
-                                color="primary"
+                                color={isBold ? "primary" : "body"}
                                 sx={{
-                                    "& .MuiInputBase-input": {
-                                        padding: "4px 8px",
-                                        fontSize: "0.875em",
-                                    },
+                                    minWidth: 0,
+                                    padding: 0.5,
+                                    fontSize: "0.875rem !important",
+                                    lineHeight: 1,
                                 }}
-                                onChange={event =>
-                                    setTempLinkText(event.target.value)
-                                }
-                                inputRef={linkPromptInputRef}
-                                onKeyDown={handleLinkInputKeyDown}
-                            />
-                            <div />
-                            <TextField
-                                id="link-url"
-                                value={tempLinkUrl}
-                                variant="outlined"
-                                placeholder="Paste link"
-                                size="small"
-                                color="primary"
-                                sx={{
-                                    "& .MuiInputBase-input": {
-                                        padding: "4px 8px",
-                                        fontSize: "0.875em",
-                                    },
-                                }}
-                                onChange={event =>
-                                    setTempLinkUrl(event.target.value)
-                                }
-                                inputRef={linkPromptInputRef}
-                                onKeyDown={handleLinkInputKeyDown}
-                            />
-                            <Button
-                                variant="text"
-                                color={
-                                    isTempLinkUrlValid &&
-                                    tempLinkText?.trim().length
-                                        ? "primary"
-                                        : "muted"
-                                }
-                                sx={{ minWidth: 0, padding: 0.5 }}
-                                onClick={applyLink}
-                                disabled={
-                                    !isTempLinkUrlValid ||
-                                    !tempLinkText?.trim().length
-                                }
+                                onClick={handleLinkEditClick}
                             >
-                                <CheckSharp />
+                                Edit
                             </Button>
-                        </div>
-
-                        {/* Link hover menu */}
-                        <div
-                            ref={linkHoverRef}
-                            className={classNames(
-                                styles.linkHover,
-                                {
-                                    [styles.show]: ref.current && showLinkHover,
-                                },
-                                "inline-editor-link-hover"
-                            )}
-                            style={linkHoverPosition}
-                            onMouseOver={handleTooltipMouseEnter}
-                            onMouseOut={handleTooltipMouseLeave}
-                        >
-                            <div className={styles.url}>
-                                <LanguageSharp />
-                                <div className={styles.urlText}>
-                                    {hoveredLink?.href || ""}
-                                </div>
-                            </div>
-                            <div className={styles.buttonContainer}>
-                                <Button
-                                    variant="text"
-                                    color={isBold ? "primary" : "body"}
-                                    sx={{ minWidth: 0, padding: 0.5 }}
-                                    onClick={copyLinkToClipboard}
-                                >
-                                    <ContentCopySharp />
-                                </Button>
-                                <Button
-                                    variant="text"
-                                    color={isBold ? "primary" : "body"}
-                                    sx={{
-                                        minWidth: 0,
-                                        padding: 0.5,
-                                        fontSize: "0.875rem !important",
-                                        lineHeight: 1,
-                                    }}
-                                    onClick={handleLinkEditClick}
-                                >
-                                    Edit
-                                </Button>
-                            </div>
-                        </div>
-
-                        {/* Editor */}
-                        <div
-                            ref={ref}
-                            id={id}
-                            className={styles.inlineEditor}
-                            css={css({
-                                a: {
-                                    textDecoration: "underline",
-                                    color: colors?.primary || undefined,
-                                },
-                            })}
-                            contentEditable
-                            onMouseUp={handleSelect}
-                            onKeyUp={handleSelect}
-                            onKeyDown={handleKeyDown}
-                            onFocus={() => setActiveEditor(ref.current)}
-                            onClick={handleLinkClick}
-                            onMouseOver={handleEditorMouseEnter}
-                            onMouseOut={handleEditorMouseLeave}
-                            onInput={handleInput}
-                        />
-
-                        {/* Placeholder */}
-                        <div
-                            className={classNames(styles.placeholder, {
-                                [styles.show]:
-                                    isPlaceholderVisible && placeholder,
-                            })}
-                        >
-                            {placeholder}
                         </div>
                     </div>
-                </>
+
+                    {/* Editor */}
+                    <div
+                        ref={ref}
+                        id={id}
+                        className={styles.inlineEditor}
+                        css={css({
+                            a: {
+                                textDecoration: "underline",
+                                color: colors?.primary || undefined,
+                            },
+                        })}
+                        contentEditable
+                        onMouseUp={handleSelect}
+                        onKeyUp={handleSelect}
+                        onKeyDown={handleKeyDown}
+                        onClick={handleLinkClick}
+                        onMouseOver={handleEditorMouseEnter}
+                        onMouseOut={handleEditorMouseLeave}
+                        onInput={handleInput}
+                    />
+
+                    {/* Placeholder */}
+                    <div
+                        className={classNames(styles.placeholder, {
+                            [styles.show]: isPlaceholderVisible && placeholder,
+                        })}
+                    >
+                        {placeholder}
+                    </div>
+                </div>
             );
         }
     ),
-    // Should re-render logic
-    () => {
-        return true;
+    (prevProps, nextProps) => {
+        return prevProps.defaultValue === nextProps.defaultValue;
     }
 );
 InlineEditor.displayName = "InlineEditor";
