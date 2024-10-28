@@ -25,7 +25,6 @@ const InlineEditor = React.memo(
                 onChange,
                 onNewline,
                 onRemoveLine,
-                renderKey,
             },
             ref
         ) => {
@@ -76,7 +75,6 @@ const InlineEditor = React.memo(
                 handleEditorMouseEnter,
                 handleEditorMouseLeave,
             } = useInlineEditor({
-                renderKey,
                 defaultValue,
                 onChange,
                 onNewline,
@@ -295,10 +293,7 @@ const InlineEditor = React.memo(
                 </div>
             );
         }
-    ),
-    (prevProps, nextProps) => {
-        return prevProps.defaultValue === nextProps.defaultValue;
-    }
+    )
 );
 InlineEditor.displayName = "InlineEditor";
 

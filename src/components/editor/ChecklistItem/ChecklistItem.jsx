@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import InlineEditor from "@/components/editor/InlineEditor/InlineEditor";
 import styles from "./checklist-item.module.scss";
 import { Checkbox } from "@mui/material";
 
 const ChecklistItem = React.memo(
-    ({ item, onChange, onNewline, onRemoveLine, renderKey }) => {
+    ({ item, onChange, onNewline, onRemoveLine }) => {
         const onTextChange = text =>
             onChange({ key: "text", value: text, id: item.id });
         const onCheckboxChange = event =>
@@ -14,12 +14,7 @@ const ChecklistItem = React.memo(
                 id: item.id,
             });
 
-        const [defaultValue, setDefaultValue] = useState(item?.text || "");
-
-        useEffect(() => {
-            setDefaultValue(item.text);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
-        }, [renderKey]);
+        const [defaultValue] = useState(item?.text || "");
 
         const _onNewline = text =>
             onNewline({ text, id: item.id, focus: true });
@@ -44,16 +39,16 @@ const ChecklistItem = React.memo(
                 />
             </div>
         );
-    },
-    (prevProps, nextProps) => {
-        return (
-            prevProps.item.id === nextProps.item.id &&
-            prevProps.item.text === nextProps.item.text &&
-            prevProps.item.isComplete === nextProps.item.isComplete &&
-            prevProps.item.indentLevel === nextProps.item.indentLevel &&
-            prevProps.renderKey === nextProps.renderKey
-        );
     }
+    // (prevProps, nextProps) => {
+    //     return (
+    //         prevProps.item.id === nextProps.item.id &&
+    //         prevProps.item.text === nextProps.item.text &&
+    //         prevProps.item.isComplete === nextProps.item.isComplete &&
+    //         prevProps.item.indentLevel === nextProps.item.indentLevel &&
+    //         prevProps.onRemoveLine === nextProps.onRemoveLine
+    //     );
+    // }
 );
 ChecklistItem.displayName = "ChecklistItem";
 

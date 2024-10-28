@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+    useEffect,
+    // useImperativeHandle,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { nanoid } from "nanoid";
 import { toast } from "react-hot-toast";
 
@@ -77,7 +83,8 @@ const useInlineEditor = ({
     };
 
     useEffect(() => {
-        // Set the initial content (or updated content if renderKey changes)
+        // console.log(`defaultValue changed: `, defaultValue);
+        // Set the initial content
         if (ref.current && defaultValue) {
             ref.current.innerHTML = defaultValue;
         }
@@ -106,28 +113,34 @@ const useInlineEditor = ({
             handleNewLine();
         } else if (e.key === "Backspace") {
             const selection = window.getSelection();
-            if (!selection.isCollapsed) {
-                // Return if the selection isn't a "blinking line"
-                return;
-            }
-
             const range = selection.getRangeAt(0);
 
-            if (
-                range.startContainer === ref.current &&
-                range.startOffset === 0
-            ) {
-                // The cursor is at the start of the contentEditable element
-                handleRemoveCurrentLine();
-            } else if (
-                range.startContainer.nodeType === Node.TEXT_NODE &&
-                range.startOffset === 0
-            ) {
-                // The cursor is at the start of a text node that is the
-                // first child of the contentEditable element
-                if (range.startContainer === ref.current.firstChild) {
-                    handleRemoveCurrentLine();
+            // Check if the cursor is at the very start of the contentEditable
+            // element
+            if (range.collapsed) {
+                // Ensure there is no text selected
+                let currentNode = range.startContainer;
+                let offset = range.startOffset;
+
+                // Traverse up to the contentEditable element
+                while (currentNode !== ref.current) {
+                    // console.log(`currentNode, offset: `, currentNode, offset);
+                    if (offset > 0) {
+                        // If the offset is greater than 0, there's text to the
+                        // left
+                        return;
+                    }
+                    // Move to the parent node
+                    offset = Array.prototype.indexOf.call(
+                        currentNode.parentNode.childNodes,
+                        currentNode
+                    );
+                    currentNode = currentNode.parentNode;
                 }
+
+                // If we reach here, the cursor is at the start of the content
+                e.preventDefault();
+                handleRemoveCurrentLine();
             }
         }
     };
@@ -371,6 +384,7 @@ const useInlineEditor = ({
                     }
 
                     closeLinkPrompt();
+                    onChange(ref.current.innerHTML);
                 }
             }, 0);
         }
@@ -412,9 +426,9 @@ const useInlineEditor = ({
             setShowLinkPrompt(true);
 
             // Focus the link input
-            // setTimeout(() => {
-            //     linkPromptInputRef.current.focus();
-            // }, 0);
+            setTimeout(() => {
+                linkPromptInputRef.current.focus();
+            }, 0);
         } else {
             closeLinkPrompt();
         }
@@ -542,6 +556,15 @@ const useInlineEditor = ({
         onChange(value);
         setIsPlaceholderVisible(event.target.innerHTML.trim() === "");
     };
+
+    // const checkPlaceholderVisibility = () => {
+    //     console.log(`checkPlaceholderVisibility called`);
+    //     setIsPlaceholderVisible(ref.current.innerHTML.trim() === "");
+    // };
+
+    // useImperativeHandle(ref, () => ({
+    //     checkPlaceholderVisibility,
+    // }));
 
     return {
         id,

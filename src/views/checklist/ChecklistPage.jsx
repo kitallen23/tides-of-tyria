@@ -1,7 +1,8 @@
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "./checklist-page.module.scss";
 import { EditorProvider } from "@/utils/editor-provider";
-import DailyChecklist from "./DailyChecklist";
+
+import { TestChecklist } from "./TestChecklist";
 
 const ChecklistPage = () => {
     return (
@@ -9,7 +10,8 @@ const ChecklistPage = () => {
             className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}
         >
             <EditorProvider>
-                <DailyChecklist />
+                <TestChecklist />
+                {/* <DailyChecklist /> */}
             </EditorProvider>
         </div>
     );

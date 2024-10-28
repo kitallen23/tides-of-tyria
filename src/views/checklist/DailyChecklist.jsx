@@ -5,27 +5,33 @@ import debounce from "lodash.debounce";
 import { nanoid } from "nanoid";
 
 import styles from "./checklist-page.module.scss";
-import { getLocalItem } from "@/utils/util";
+// import { getLocalItem } from "@/utils/util";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 
 const INPUT_DEBOUNCE_MS = 400;
+
+// TODO: REMOVE ME
+const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
 
 const DailyChecklist = () => {
     const [valueKey, setValueKey] = useState(0);
     const hasAddedInitialItem = useRef(false);
     const [checklistItems, setChecklistItems] = useState(() => {
         // Load from local storage on initial render
-        const savedChecklist = getLocalItem(
-            LOCAL_STORAGE_KEYS.dailyChecklist,
-            "[]"
-        );
+        // const savedChecklist = getLocalItem(
+        //     LOCAL_STORAGE_KEYS.dailyChecklist,
+        //     "[]"
+        // );
+
+        // TODO: REMOVE ME
+        const savedChecklist = TEMP_VALUE;
+
         localStorage.setItem(LOCAL_STORAGE_KEYS.dailyChecklist, savedChecklist);
         try {
             const savedChecklistWithRefs = JSON.parse(savedChecklist).map(
                 item => ({
                     ...item,
                     inputRef: createRef(),
-                    renderKey: nanoid(4),
                 })
             );
             return savedChecklistWithRefs;
@@ -34,14 +40,131 @@ const DailyChecklist = () => {
         }
     });
 
+    const sanitiseHtmlString = text => {
+        // Create a temporary container to parse the HTML string
+        const container = document.createElement("div");
+        container.innerHTML = text;
+
+        const mergeAndCleanNodes = (parent, tagName) => {
+            let child = parent.firstChild;
+            while (child) {
+                if (
+                    child.nodeType === Node.ELEMENT_NODE &&
+                    child.tagName.toLowerCase() === tagName
+                ) {
+                    let nextSibling = child.nextSibling;
+                    while (
+                        nextSibling &&
+                        nextSibling.nodeType === Node.ELEMENT_NODE &&
+                        nextSibling.tagName.toLowerCase() === tagName
+                    ) {
+                        // Merge text content of adjacent nodes
+                        child.innerHTML += nextSibling.innerHTML;
+                        // Remove the merged node
+                        parent.removeChild(nextSibling);
+                        nextSibling = child.nextSibling;
+                    }
+                    // Remove the node if it is empty
+                    if (child.innerHTML.trim() === "") {
+                        const nodeToRemove = child;
+                        child = child.nextSibling;
+                        parent.removeChild(nodeToRemove);
+                        continue;
+                    }
+                }
+                child = child.nextSibling;
+            }
+        };
+
+        // Merge <b>, <i>, and <u> tags
+        ["b", "i", "u"].forEach(tag => mergeAndCleanNodes(container, tag));
+
+        // Return the sanitized HTML as a string
+        return container.innerHTML;
+    };
+
     const debounceSave = useMemo(
         () =>
             debounce(items => {
+                // console.log(`Saving checklistItems: `, items);
                 const sanitisedItems = items.map(item => {
-                    // eslint-disable-next-line no-unused-vars
-                    const { inputRef, renderKey, ...rest } = item;
-                    return rest;
+                    const { inputRef, text, ...rest } = item;
+
+                    // Save the current cursor position
+                    const selection = window.getSelection();
+                    const range =
+                        selection.rangeCount > 0
+                            ? selection.getRangeAt(0)
+                            : null;
+                    let cursorPosition = 0;
+
+                    if (
+                        range &&
+                        inputRef.current.contains(range.startContainer)
+                    ) {
+                        const preCaretRange = range.cloneRange();
+                        preCaretRange.selectNodeContents(inputRef.current);
+                        preCaretRange.setEnd(
+                            range.startContainer,
+                            range.startOffset
+                        );
+                        cursorPosition = preCaretRange.toString().length;
+                    }
+
+                    let sanitisedText = sanitiseHtmlString(text);
+
+                    if (sanitisedText !== text) {
+                        inputRef.current.innerHTML = sanitisedText;
+
+                        // Restore the cursor position
+                        if (range) {
+                            const newRange = document.createRange();
+                            const newSelection = window.getSelection();
+                            let charCount = 0;
+                            let found = false;
+
+                            const traverseNodes = node => {
+                                if (found) return;
+                                if (node.nodeType === Node.TEXT_NODE) {
+                                    const textLength = node.textContent.length;
+                                    if (
+                                        charCount + textLength >=
+                                        cursorPosition
+                                    ) {
+                                        newRange.setStart(
+                                            node,
+                                            cursorPosition - charCount
+                                        );
+                                        newRange.setEnd(
+                                            node,
+                                            cursorPosition - charCount
+                                        );
+                                        found = true;
+                                    }
+                                    charCount += textLength;
+                                } else {
+                                    for (
+                                        let i = 0;
+                                        i < node.childNodes.length;
+                                        i++
+                                    ) {
+                                        traverseNodes(node.childNodes[i]);
+                                    }
+                                }
+                            };
+
+                            traverseNodes(inputRef.current);
+
+                            if (found) {
+                                newSelection.removeAllRanges();
+                                newSelection.addRange(newRange);
+                            }
+                        }
+                    }
+
+                    return { ...rest, text: sanitisedText };
                 });
+                // console.log(`Saving sanitisedItems: `, sanitisedItems);
                 localStorage.setItem(
                     LOCAL_STORAGE_KEYS.dailyChecklist,
                     JSON.stringify(sanitisedItems)
@@ -50,11 +173,32 @@ const DailyChecklist = () => {
         []
     );
 
-    useEffect(() => {
-        // TODO: Remove me
-        // console.log(`checklistItems: `, checklistItems);
-        debounceSave(checklistItems);
+    // const debounceSave = useMemo(
+    //     () =>
+    //         debounce(items => {
+    //             // TODO: Remove me
+    //             console.log(`Saving checklistItems: `, items);
+    //             const sanitisedItems = items.map(item => {
+    //                 // eslint-disable-next-line no-unused-vars
+    //                 const { inputRef, text, ...rest } = item;
 
+    //                 let sanitisedText = sanitiseHtmlString(text);
+    //                 if (sanitisedText !== text) {
+    //                     inputRef.current.innerHTML = sanitisedText;
+    //                 }
+    //                 return { ...rest, text: sanitisedText };
+    //             });
+    //             console.log(`Saving sanitisedItems: `, sanitisedItems);
+    //             localStorage.setItem(
+    //                 LOCAL_STORAGE_KEYS.dailyChecklist,
+    //                 JSON.stringify(sanitisedItems)
+    //             );
+    //         }, INPUT_DEBOUNCE_MS),
+    //     []
+    // );
+
+    useEffect(() => {
+        debounceSave(checklistItems);
         return () => {
             debounceSave.cancel();
         };
@@ -96,13 +240,12 @@ const DailyChecklist = () => {
                 id: nanoid(6),
                 inputRef: createRef(),
                 indentLevel: 0,
-                renderKey: nanoid(4),
             };
 
             // Create a new array with the new item inserted at the correct position
             const newItems = items.toSpliced(index + 1, 0, newItem);
             if (focus) {
-                setTimeout(() => newItem.inputRef.current?.focus?.());
+                setTimeout(() => newItem.inputRef.current?.focus?.(), 0);
             }
 
             return newItems;
@@ -126,30 +269,55 @@ const DailyChecklist = () => {
             let newItems = [...items];
             const index = items.findIndex(item => item.id === id);
 
-            if (index > 0) {
+            const editor = newItems[index - 1]?.inputRef?.current;
+            if (index > 0 && editor) {
+                // Remove the current line
+                newItems = newItems.filter(item => item.id !== id);
+                // Add the current line's text to the editor on the previous
+                // line
+                editor.insertAdjacentHTML("beforeend", text);
+                newItems[index - 1].text += text;
+
                 if (focus) {
-                    newItems[index - 1]?.inputRef?.current?.focus?.();
+                    // Create a new range
                     const range = document.createRange();
                     const selection = window.getSelection();
 
-                    range.selectNodeContents(
-                        newItems[index - 1]?.inputRef?.current
-                    );
-                    range.collapse(false); // Collapse the range to the end
-                    selection.removeAllRanges();
-                    selection.addRange(range);
+                    // Find the last child node
+                    let lastChild = editor.lastChild;
+
+                    if (text) {
+                        // Set the range to the start of the newly added content
+                        if (lastChild.nodeType === Node.TEXT_NODE) {
+                            range.setStart(lastChild, 0);
+                        } else {
+                            range.setStart(lastChild.firstChild, 0);
+                        }
+                        range.collapse(true);
+
+                        // Clear any existing selections and set the new range
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    } else {
+                        // If the last child is an element, navigate to its last child
+                        if (lastChild?.nodeType === Node.ELEMENT_NODE) {
+                            lastChild = lastChild.lastChild;
+                        }
+
+                        // Set the range to the end of the last child node
+                        range.setStart(
+                            lastChild || editor,
+                            lastChild?.nodeValue
+                                ? lastChild.nodeValue.length
+                                : 0
+                        );
+                        range.collapse(true);
+
+                        // Clear any existing selections and set the new range
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                    }
                 }
-
-                // newItems = newItems.filter(item => item.id !== id);
-                newItems[index - 1].text += text;
-                newItems[index - 1].renderKey = nanoid(4);
-
-                // if (focus) {
-                // setTimeout(() => {
-                //     const range =
-                //         newItems[index - 1]?.inputRef?.current?.focus?.();
-                // }, 0);
-                // }
 
                 return newItems;
             } else {
@@ -181,7 +349,6 @@ const DailyChecklist = () => {
                         onChange={handleItemChange}
                         onNewline={handleAddItem}
                         onRemoveLine={handleRemoveItem}
-                        renderKey={item.renderKey}
                     />
                 ))}
             </div>
