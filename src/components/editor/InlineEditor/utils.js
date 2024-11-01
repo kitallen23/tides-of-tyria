@@ -1,0 +1,65 @@
+import DOMPurify from "dompurify";
+
+// Utility function to merge redundant adjacent tags and remove empty tags
+function processHtml(html) {
+    // Create a temporary DOM element to parse the HTML string
+    const tempDiv = document.createElement("div");
+    tempDiv.innerHTML = html;
+
+    // Function to recursively process nodes
+    function processNodes(node) {
+        if (!node || !node.childNodes) return;
+
+        let previousNode = null;
+
+        Array.from(node.childNodes).forEach(childNode => {
+            if (childNode.nodeType === Node.ELEMENT_NODE) {
+                // Remove the node if it's empty and not a <br> tag
+                if (
+                    childNode.tagName.toLowerCase() !== "br" &&
+                    childNode.innerHTML.trim() === ""
+                ) {
+                    node.removeChild(childNode);
+                    return;
+                }
+
+                // If the current node is the same as the previous node, merge them
+                if (
+                    previousNode &&
+                    previousNode.tagName === childNode.tagName
+                ) {
+                    previousNode.innerHTML += childNode.innerHTML;
+                    node.removeChild(childNode);
+                    processNodes(previousNode); // Recursively process within the merged node
+                } else {
+                    previousNode = childNode;
+                    processNodes(childNode); // Recursively check this node's children
+                }
+            } else {
+                previousNode = null; // Reset if it's not an element node
+            }
+        });
+    }
+
+    processNodes(tempDiv);
+    return tempDiv.innerHTML;
+}
+
+export function sanitizeRichText(dirty) {
+    // console.info(`dirty: `, dirty);
+    // First, process HTML to merge redundant tags and remove empty ones
+    const processedHtml = processHtml(dirty);
+
+    // Then, sanitize the processed HTML
+    const clean = DOMPurify.sanitize(processedHtml, {
+        ALLOWED_TAGS: ["b", "u", "i", "a", "br"],
+        ALLOWED_ATTR: {
+            a: ["href", "target", "rel"],
+        },
+    });
+
+    // console.info(`clean: `, clean);
+    return clean;
+}
+
+export default sanitizeRichText;

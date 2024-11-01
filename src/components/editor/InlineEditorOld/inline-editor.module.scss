@@ -1,0 +1,130 @@
+$editor-padding-vertical: 3px;
+$editor-padding-horizontal: 2px;
+
+.inlineEditorContainer {
+    position: relative;
+    width: 100%;
+    padding: $editor-padding-vertical $editor-padding-horizontal;
+    min-height: calc(
+        1em * var(--line-height) + 2 * #{$editor-padding-vertical}
+    );
+    cursor: text;
+
+    .inlineEditor {
+        outline: none;
+
+        a {
+            cursor: pointer;
+        }
+    }
+
+    .placeholder {
+        position: absolute;
+        pointer-events: none;
+        color: var(--text-muted);
+        top: $editor-padding-vertical;
+        left: $editor-padding-horizontal;
+        opacity: 0;
+        transition: opacity 0.1s;
+    }
+
+    &:focus-within .placeholder.show {
+        opacity: 1;
+    }
+
+    .floatingToolbar {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: flex;
+        gap: 0.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        button {
+            font-size: 1.17rem;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+    .linkPrompt {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        width: 280px;
+
+        button {
+            font-size: 1.17rem;
+        }
+
+        & > div:last-of-type {
+            display: grid;
+            grid-template-columns: 1fr auto;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+    .linkHover {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1em;
+        align-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        max-width: 320px;
+
+        .url {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            color: var(--text-muted);
+            font-size: 0.875em;
+            overflow: hidden;
+
+            .urlText {
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .buttonContainer {
+            display: flex;
+            gap: 0.2em;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+}
