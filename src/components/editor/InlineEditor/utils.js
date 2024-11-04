@@ -62,4 +62,41 @@ export function sanitizeRichText(dirty) {
     return clean;
 }
 
-export default sanitizeRichText;
+export function setCursorAtOffset(ref, offset) {
+    if (!ref.current) return;
+
+    const element = ref.current;
+    const selection = window.getSelection();
+    const range = document.createRange();
+
+    let charCount = 0;
+    let nodeStack = [element];
+    let node,
+        found = false;
+
+    while (nodeStack.length > 0 && !found) {
+        node = nodeStack.pop();
+
+        if (node.nodeType === Node.TEXT_NODE) {
+            const nextCharCount = charCount + node.textContent.length;
+
+            if (nextCharCount >= offset) {
+                range.setStart(node, offset - charCount);
+                found = true;
+            } else {
+                charCount = nextCharCount;
+            }
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+            for (let i = node.childNodes.length - 1; i >= 0; i--) {
+                nodeStack.push(node.childNodes[i]);
+            }
+        }
+    }
+
+    if (found) {
+        range.collapse(true);
+        selection.removeAllRanges();
+        selection.addRange(range);
+        element.focus();
+    }
+}

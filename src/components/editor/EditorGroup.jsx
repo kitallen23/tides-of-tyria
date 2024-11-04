@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 // import { getLocalItem } from "@/utils/util";
 // import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
-import { sanitizeRichText } from "./InlineEditor/utils";
+import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
 
 const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
 
@@ -88,48 +88,27 @@ export const EditorGroup = () => {
      **/
     const handleRemoveItem = ({ text = "", id }) => {
         // TODO: Remove me
-        console.info(`removeItem: `, text, id);
+        console.info(`removeItem: `, id, text);
 
-        setChecklistItems(items => {
-            let newItems = [...items];
-            const index = items.findIndex(item => item.id === id);
+        const index = checklistItems.findIndex(item => item.id === id);
 
-            if (index > 0) {
-                newItems[index - 1]?.inputRef?.current?.focus?.();
-                const range = document.createRange();
-                const selection = window.getSelection();
+        if (index > 0) {
+            const prevRef = checklistItems[index - 1]?.inputRef;
+            if (prevRef?.current) {
+                const prevEditorTextContent = prevRef.current.textContent;
+                const cursorOffset = prevEditorTextContent.length || 0;
 
-                range.selectNodeContents(
-                    newItems[index - 1]?.inputRef?.current
+                const newText = sanitizeRichText(
+                    prevRef.current.innerHTML + text
                 );
-                range.collapse(false);
-                selection.removeAllRanges();
-                selection.addRange(range);
-
-                // console.log(`Text: `, text);
-                // console.log(
-                //     `Prev line text: `,
-                //     newItems[index - 1].inputRef.current.innerHTML
-                // );
-                setTimeout(() => {
-                    // TODO: Restore cursor position
-
-                    if (newItems[index - 1]?.inputRef.current) {
-                        const newText = sanitizeRichText(
-                            newItems[index - 1].inputRef.current.innerHTML +
-                                text
-                        );
-                        newItems[index - 1].inputRef.current.focus();
-                        newItems[index - 1].inputRef.current.innerHTML =
-                            newText;
-                    }
-                }, 0);
-
-                return newItems.filter(item => item.id !== id);
-            } else {
-                return newItems;
+                prevRef.current.innerHTML = newText;
+                setTimeout(() => setCursorAtOffset(prevRef, cursorOffset), 0);
             }
-        });
+
+            // Only remove this line if index is greater than zero (don't remove
+            // the first line)
+            setChecklistItems(items => items.filter(item => item.id !== id));
+        }
     };
 
     // If there are no checklist items, add a blank line (ensures there's always
