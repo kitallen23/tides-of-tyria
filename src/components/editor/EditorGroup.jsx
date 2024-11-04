@@ -1,129 +1,171 @@
-import { createRef, useEffect, useRef, useState } from "react";
-import { nanoid } from "nanoid";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
+import {
+    AddLinkSharp,
+    CheckSharp,
+    // ContentCopySharp,
+    ExpandMoreSharp,
+    FormatBoldSharp,
+    FormatItalicSharp,
+    FormatUnderlinedSharp,
+    // LanguageSharp,
+} from "@mui/icons-material";
+import classNames from "classnames";
 
-// import { getLocalItem } from "@/utils/util";
-// import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
-import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
-
-const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
+import useEditorGroup from "./useEditorGroup";
+import styles from "./editor-group.module.scss";
 
 export const EditorGroup = () => {
-    const [checklistItems, setChecklistItems] = useState(() => {
-        // Load from local storage on initial render
-        // const savedChecklist = getLocalItem(LOCAL_STORAGE_KEYS[key], "[]");
-        // localStorage.setItem(LOCAL_STORAGE_KEYS[key], savedChecklist);
+    const {
+        editorGroupRef,
+        checklistItems,
+        handleSelect,
+        handleBlur,
+        handleItemChange,
+        handleAddItem,
+        handleRemoveItem,
+        handleApplyStyle,
 
-        const savedChecklist = TEMP_VALUE;
-        try {
-            const savedChecklistWithRefs = JSON.parse(savedChecklist).map(
-                item => ({
-                    ...item,
-                    inputRef: createRef(),
-                    renderKey: nanoid(4),
-                })
-            );
-            return savedChecklistWithRefs;
-        } catch {
-            return [];
-        }
-    });
+        toolbarRef,
+        showToolbar,
+        toolbarPosition,
+        textStates,
+        handleOpenLinkEditor,
 
-    const handleItemChange = ({ key, value, id }) =>
-        setChecklistItems(prevItems =>
-            prevItems.map(item =>
-                item.id === id ? { ...item, [key]: value } : item
-            )
-        );
-
-    /**
-     * Adds a new checklist item.
-     *
-     * @param {Object} options - The options for adding the item.
-     * @param {string} options.text - The text of the item.
-     * @param {string} options.id - The unique identifier for the item.
-     * @param {boolean} [options.focus=false] - If true, the new line will become focused.
-     */
-    const handleAddItem = ({ text = "", id = "", focus = false }) => {
-        // TODO: Remove me
-        console.info(`addItem: `, text, id, focus);
-
-        setChecklistItems(items => {
-            // Determine the index to insert the new item
-            let index = -1;
-            if (id) {
-                index = items.findIndex(item => item.id === id);
-            }
-            if (index === -1) {
-                index = items.length - 1;
-            }
-
-            const newItem = {
-                text,
-                isComplete: false,
-                id: nanoid(6),
-                inputRef: createRef(),
-                indentLevel: 0,
-                renderKey: nanoid(4),
-            };
-
-            // Create a new array with the new item inserted at the correct position
-            const newItems = items.toSpliced(index + 1, 0, newItem);
-            if (focus) {
-                setTimeout(() => newItem.inputRef.current?.focus(), 1);
-            }
-
-            return newItems;
-        });
-    };
-
-    /**
-     * Removes a line, and collapses its content into the previous line.
-     *
-     * @param {string} text - The remaining text of the item that we're
-     * collapsing.
-     * @param {number} position - The position (as an index) of the item we're
-     * removing.
-     **/
-    const handleRemoveItem = ({ text = "", id }) => {
-        // TODO: Remove me
-        console.info(`removeItem: `, id, text);
-
-        const index = checklistItems.findIndex(item => item.id === id);
-
-        if (index > 0) {
-            const prevRef = checklistItems[index - 1]?.inputRef;
-            if (prevRef?.current) {
-                const prevEditorTextContent = prevRef.current.textContent;
-                const cursorOffset = prevEditorTextContent.length || 0;
-
-                const newText = sanitizeRichText(
-                    prevRef.current.innerHTML + text
-                );
-                prevRef.current.innerHTML = newText;
-                setTimeout(() => setCursorAtOffset(prevRef, cursorOffset), 0);
-            }
-
-            // Only remove this line if index is greater than zero (don't remove
-            // the first line)
-            setChecklistItems(items => items.filter(item => item.id !== id));
-        }
-    };
-
-    // If there are no checklist items, add a blank line (ensures there's always
-    // an input field)
-    const hasAddedInitialItem = useRef(false);
-    useEffect(() => {
-        if (!checklistItems.length && !hasAddedInitialItem.current) {
-            handleAddItem({});
-            hasAddedInitialItem.current = true;
-        }
-    }, [checklistItems]);
+        linkEditorRef,
+        linkEditorUrlInputRef,
+        showLinkEditor,
+        linkEditorPosition,
+        tempLinkText,
+        tempLinkUrl,
+        isTempLinkUrlValid,
+        handleTempLinkTextChange,
+        handleTempLinkUrlChange,
+        handleLinkInputKeyDown,
+        handleApplyLink,
+    } = useEditorGroup();
 
     return (
         <>
-            <div>
+            <div
+                className={styles.editorGroup}
+                ref={editorGroupRef}
+                onBlur={handleBlur}
+            >
+                {/* Toolbar */}
+                <div
+                    ref={toolbarRef}
+                    className={classNames(
+                        styles.floatingToolbar,
+                        {
+                            [styles.show]: showToolbar,
+                        },
+                        "inline-editor-toolbar"
+                    )}
+                    style={toolbarPosition}
+                >
+                    <Button
+                        variant="text"
+                        color={textStates.isBold ? "primary" : "body"}
+                        sx={{ minWidth: 0, padding: 0.5 }}
+                        onClick={() => handleApplyStyle("bold")}
+                    >
+                        <FormatBoldSharp />
+                    </Button>
+                    <Button
+                        variant="text"
+                        color={textStates.isItalic ? "primary" : "body"}
+                        sx={{ minWidth: 0, padding: 0.5 }}
+                        onClick={() => handleApplyStyle("italic")}
+                    >
+                        <FormatItalicSharp />
+                    </Button>
+                    <Button
+                        variant="text"
+                        color={textStates.isUnderlined ? "primary" : "body"}
+                        sx={{ minWidth: 0, padding: 0.5 }}
+                        onClick={() => handleApplyStyle("underline")}
+                    >
+                        <FormatUnderlinedSharp />
+                    </Button>
+                    <Button
+                        variant="text"
+                        color="body"
+                        sx={{ minWidth: 0, padding: 0.5 }}
+                        onClick={handleOpenLinkEditor}
+                    >
+                        <AddLinkSharp />
+                        <ExpandMoreSharp
+                            sx={{ fontSize: "0.875em" }}
+                            color="muted"
+                        />
+                    </Button>
+                </div>
+
+                {/* Link prompt / editor */}
+                <div
+                    ref={linkEditorRef}
+                    className={classNames(styles.floatingLinkEditor, {
+                        [styles.show]: showLinkEditor,
+                    })}
+                    style={linkEditorPosition}
+                >
+                    <TextField
+                        id="link-text"
+                        value={tempLinkText}
+                        variant="outlined"
+                        placeholder="Link text"
+                        size="small"
+                        color="primary"
+                        sx={{
+                            "& .MuiInputBase-input": {
+                                padding: "4px 8px",
+                                fontSize: "0.875em",
+                            },
+                        }}
+                        onChange={event =>
+                            handleTempLinkTextChange(event.target.value)
+                        }
+                        onKeyDown={handleLinkInputKeyDown}
+                    />
+                    <div />
+                    <TextField
+                        id="link-url"
+                        value={tempLinkUrl}
+                        variant="outlined"
+                        placeholder="Paste link"
+                        size="small"
+                        color="primary"
+                        sx={{
+                            "& .MuiInputBase-input": {
+                                padding: "4px 8px",
+                                fontSize: "0.875em",
+                            },
+                        }}
+                        onChange={event =>
+                            handleTempLinkUrlChange(event.target.value)
+                        }
+                        inputRef={linkEditorUrlInputRef}
+                        onKeyDown={handleLinkInputKeyDown}
+                    />
+                    <Button
+                        variant="text"
+                        color={
+                            isTempLinkUrlValid && tempLinkText?.trim().length
+                                ? "primary"
+                                : "muted"
+                        }
+                        sx={{ minWidth: 0, padding: 0.5 }}
+                        onClick={handleApplyLink}
+                        disabled={
+                            !isTempLinkUrlValid || !tempLinkText?.trim().length
+                        }
+                    >
+                        <CheckSharp />
+                    </Button>
+                </div>
+
+                {/* Checklist items */}
                 {checklistItems.map(item => (
                     <ChecklistItem
                         key={item.id}
@@ -131,9 +173,11 @@ export const EditorGroup = () => {
                         onChange={handleItemChange}
                         onNewLine={handleAddItem}
                         onRemoveLine={handleRemoveItem}
+                        onSelect={handleSelect}
                     />
                 ))}
             </div>
+
             <Button
                 onClick={() =>
                     console.info("Checklist items: ", checklistItems)

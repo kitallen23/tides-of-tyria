@@ -53,9 +53,10 @@ export function sanitizeRichText(dirty) {
     // Then, sanitize the processed HTML
     const clean = DOMPurify.sanitize(processedHtml, {
         ALLOWED_TAGS: ["b", "u", "i", "a", "br"],
-        ALLOWED_ATTR: {
+        ALLOWED_ATTRS: {
             a: ["href", "target", "rel"],
         },
+        ADD_ATTR: ["target"],
     });
 
     // console.info(`clean: `, clean);

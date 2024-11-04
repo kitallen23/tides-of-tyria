@@ -6,15 +6,17 @@ import { useInlineEditor } from "./useInlineEditor";
 import { useTheme } from "@/utils/theme-provider";
 
 export const InlineEditor = forwardRef(
-    ({ defaultValue, onChange, onNewline, onRemoveLine }, ref) => {
+    ({ defaultValue, onSelect, onChange, onNewLine, onRemoveLine }, ref) => {
         const { colors } = useTheme();
-        const { handleKeyDown, handleInput } = useInlineEditor({
-            ref,
-            defaultValue,
-            onChange,
-            onNewline,
-            onRemoveLine,
-        });
+        const { handleKeyDown, handleInput, handleLinkClick } = useInlineEditor(
+            {
+                ref,
+                defaultValue,
+                onChange,
+                onNewLine,
+                onRemoveLine,
+            }
+        );
 
         return (
             <div
@@ -27,10 +29,10 @@ export const InlineEditor = forwardRef(
                     },
                 })}
                 contentEditable
-                // onMouseUp={handleSelect}
-                // onKeyUp={handleSelect}
+                onMouseUp={onSelect}
+                onKeyUp={onSelect}
                 onKeyDown={handleKeyDown}
-                // onClick={handleLinkClick}
+                onClick={handleLinkClick}
                 // onMouseOver={handleEditorMouseEnter}
                 // onMouseOut={handleEditorMouseLeave}
                 onInput={handleInput}

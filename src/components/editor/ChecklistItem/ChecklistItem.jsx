@@ -7,6 +7,7 @@ import InlineEditor from "../InlineEditor/InlineEditor";
 export const ChecklistItem = ({
     item,
     // onChange,
+    onSelect,
     onNewLine,
     onRemoveLine,
 }) => {
@@ -32,8 +33,9 @@ export const ChecklistItem = ({
             <InlineEditor
                 ref={item.inputRef}
                 defaultValue={defaultValue}
+                onSelect={onSelect}
                 onChange={_onTextChange}
-                onNewline={_onNewLine}
+                onNewLine={_onNewLine}
                 onRemoveLine={_onRemoveLine}
                 // placeholder="To-do today"
             />

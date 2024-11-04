@@ -4,7 +4,7 @@ export const useInlineEditor = ({
     ref,
     defaultValue,
     onChange,
-    onNewline,
+    onNewLine,
     onRemoveLine,
 }) => {
     useEffect(() => {
@@ -49,6 +49,14 @@ export const useInlineEditor = ({
                 e.preventDefault();
                 handleRemoveCurrentLine();
             }
+        } else if (e.key === "Escape") {
+            const selection = window.getSelection();
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0);
+                range.collapse(true); // Collapse the selection to the start
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
         }
     };
 
@@ -65,19 +73,25 @@ export const useInlineEditor = ({
         endRange.setEnd(ref.current, ref.current.childNodes.length);
 
         // Check if cursor is inside a link. If so, don't do anything (can't
-        // create a newline in the middle of a link)
-        let cursorPositionInNode = range.endContainer;
-        let wrappingTag = "";
-        while (cursorPositionInNode && cursorPositionInNode !== ref.current) {
-            if (cursorPositionInNode.nodeType === Node.ELEMENT_NODE) {
-                wrappingTag = cursorPositionInNode.tagName;
-                break;
-            }
-            cursorPositionInNode = cursorPositionInNode.parentNode;
-        }
-        if (wrappingTag.toLowerCase() === "a") {
-            return;
-        }
+        // create a newline in the middle of a link).
+        //
+        // NOTE: This is commented out as it was stopping us from creating a
+        // newline at the start or end of a link. Let's leave this out for now,
+        // but if uncommenting, ensure we update it to check if we're actually
+        // in the middle of a link or not.
+        //
+        // let cursorPositionInNode = range.endContainer;
+        // let wrappingTag = "";
+        // while (cursorPositionInNode && cursorPositionInNode !== ref.current) {
+        //     if (cursorPositionInNode.nodeType === Node.ELEMENT_NODE) {
+        //         wrappingTag = cursorPositionInNode.tagName;
+        //         break;
+        //     }
+        //     cursorPositionInNode = cursorPositionInNode.parentNode;
+        // }
+        // if (wrappingTag.toLowerCase() === "a") {
+        //     return;
+        // }
 
         // Extract the HTML content within this range
         const fragment = endRange.cloneContents();
@@ -89,7 +103,7 @@ export const useInlineEditor = ({
         endRange.deleteContents();
 
         onChange(ref.current.innerHTML);
-        setTimeout(() => onNewline(htmlAfterCursor), 0);
+        setTimeout(() => onNewLine(htmlAfterCursor), 0);
     };
 
     const handleRemoveCurrentLine = () => onRemoveLine(ref.current.innerHTML);
@@ -103,8 +117,20 @@ export const useInlineEditor = ({
         onChange(value);
     };
 
+    /**
+     * Handles clicks within the contentEditable div.
+     * If a link is clicked, it allows the default behavior to proceed.
+     **/
+    const handleLinkClick = event => {
+        const target = event.target;
+        if (target.tagName.toLowerCase() === "a") {
+            window.open(target.href, "_blank");
+        }
+    };
+
     return {
         handleKeyDown,
         handleInput,
+        handleLinkClick,
     };
 };
