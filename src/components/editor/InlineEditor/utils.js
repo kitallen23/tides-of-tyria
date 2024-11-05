@@ -26,7 +26,8 @@ function processHtml(html) {
                 // If the current node is the same as the previous node, merge them
                 if (
                     previousNode &&
-                    previousNode.tagName === childNode.tagName
+                    previousNode.tagName === childNode.tagName &&
+                    childNode.tagName.toLowerCase() !== "br"
                 ) {
                     previousNode.innerHTML += childNode.innerHTML;
                     node.removeChild(childNode);
