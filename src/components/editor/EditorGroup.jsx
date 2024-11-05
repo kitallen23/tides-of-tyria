@@ -45,6 +45,20 @@ export const EditorGroup = () => {
         handleApplyLink,
     } = useEditorGroup();
 
+    // TODO: Remove me
+    const logAllItems = () => {
+        if (editorGroupRef.current) {
+            const contentEditableDivs = editorGroupRef.current.querySelectorAll(
+                '[contenteditable="true"]'
+            );
+            const itemsWithHtml = checklistItems.map((item, i) => ({
+                html: contentEditableDivs[i].innerHTML,
+                ...item,
+            }));
+            console.info(`Checklist items: `, itemsWithHtml);
+        }
+    };
+
     return (
         <>
             <div
@@ -178,13 +192,7 @@ export const EditorGroup = () => {
                 ))}
             </div>
 
-            <Button
-                onClick={() =>
-                    console.info("Checklist items: ", checklistItems)
-                }
-            >
-                Log checklist items
-            </Button>
+            <Button onClick={() => logAllItems()}>Log checklist items</Button>
         </>
     );
 };
