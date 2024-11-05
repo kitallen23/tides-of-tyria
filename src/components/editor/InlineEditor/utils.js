@@ -102,3 +102,14 @@ export function setCursorAtOffset(ref, offset) {
         element.focus();
     }
 }
+
+export function getDecodedLengthWithBr(htmlString) {
+    const div = document.createElement("div");
+    div.innerHTML = htmlString;
+
+    // Count the number of <br> tags
+    const brCount = div.querySelectorAll("br").length;
+
+    // Calculate the length of text content and add the number of <br> tags
+    return div.textContent.length + brCount;
+}

@@ -1,4 +1,6 @@
+import DOMPurify from "dompurify";
 import { useEffect } from "react";
+import { getDecodedLengthWithBr } from "./utils";
 
 export const useInlineEditor = ({
     ref,
@@ -20,34 +22,25 @@ export const useInlineEditor = ({
             handleNewLine();
         } else if (e.key === "Backspace") {
             const selection = window.getSelection();
-            const range = selection.getRangeAt(0);
+            if (selection.rangeCount > 0) {
+                const range = selection.getRangeAt(0).cloneRange();
+                range.setStart(ref.current, 0);
+                const contentBeforeCursor = range.cloneContents();
 
-            // Check if the cursor is at the very start of the contentEditable
-            // element
-            if (range.collapsed) {
-                // Ensure there is no text selected
-                let currentNode = range.startContainer;
-                let offset = range.startOffset;
+                const fragment = document.createDocumentFragment();
+                fragment.appendChild(contentBeforeCursor);
+                const div = document.createElement("div");
+                div.appendChild(fragment);
 
-                // Traverse up to the contentEditable element
-                while (currentNode !== ref.current) {
-                    // console.log(`currentNode, offset: `, currentNode, offset);
-                    if (offset > 0) {
-                        // If the offset is greater than 0, there's text to the
-                        // left
-                        return;
-                    }
-                    // Move to the parent node
-                    offset = Array.prototype.indexOf.call(
-                        currentNode.parentNode.childNodes,
-                        currentNode
-                    );
-                    currentNode = currentNode.parentNode;
+                const htmlBeforeCursor = div.innerHTML;
+                const strippedHtml = DOMPurify.sanitize(htmlBeforeCursor, {
+                    ALLOWED_TAGS: ["br"],
+                });
+                const length = getDecodedLengthWithBr(strippedHtml);
+                if (length === 0) {
+                    e.preventDefault();
+                    handleRemoveCurrentLine();
                 }
-
-                // If we reach here, the cursor is at the start of the content
-                e.preventDefault();
-                handleRemoveCurrentLine();
             }
         } else if (e.key === "Escape") {
             const selection = window.getSelection();
