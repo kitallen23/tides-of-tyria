@@ -15,7 +15,7 @@ import ChecklistItem from "./ChecklistItem/ChecklistItem";
 import useEditorGroup from "./useEditorGroup";
 import styles from "./editor-group.module.scss";
 
-export const EditorGroup = () => {
+export const EditorGroup = ({ localStorageKey }) => {
     const {
         editorGroupRef,
         checklistItems,
@@ -43,7 +43,7 @@ export const EditorGroup = () => {
         handleTempLinkUrlChange,
         handleLinkInputKeyDown,
         handleApplyLink,
-    } = useEditorGroup();
+    } = useEditorGroup({ localStorageKey });
 
     // TODO: Remove me
     const logAllItems = () => {

@@ -1,22 +1,21 @@
 import { createRef, useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
+import debounce from "lodash.debounce";
 
-// import { getLocalItem } from "@/utils/util";
-// import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
-
+import { getLocalItem } from "@/utils/util";
 import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
 
-const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
+// TODO: Remove me
+// const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
 
-const useEditorGroup = () => {
+const useEditorGroup = ({ localStorageKey }) => {
     const editorGroupRef = useRef(null);
 
     const [checklistItems, setChecklistItems] = useState(() => {
         // Load from local storage on initial render
-        // const savedChecklist = getLocalItem(LOCAL_STORAGE_KEYS[key], "[]");
-        // localStorage.setItem(LOCAL_STORAGE_KEYS[key], savedChecklist);
+        const savedChecklist = getLocalItem(localStorageKey, "[]");
+        localStorage.setItem(localStorageKey, savedChecklist);
 
-        const savedChecklist = TEMP_VALUE;
         try {
             const savedChecklistWithRefs = JSON.parse(savedChecklist).map(
                 item => ({
@@ -74,6 +73,39 @@ const useEditorGroup = () => {
         }
     }, [tempLinkUrl]);
 
+    const debouncedSaveChecklistItems = useMemo(
+        () =>
+            debounce(items => {
+                const sanitisedItems = items.map(item => {
+                    // eslint-disable-next-line no-unused-vars
+                    const { inputRef, renderKey, ...rest } = item;
+                    return {
+                        ...rest,
+                        text: inputRef.current?.innerHTML,
+                    };
+                });
+                // TODO: Remove me
+                console.info(
+                    `Saving sanitised items to local storage: `,
+                    localStorageKey,
+                    sanitisedItems
+                );
+
+                localStorage.setItem(
+                    localStorageKey,
+                    JSON.stringify(sanitisedItems)
+                );
+            }, 50),
+        [localStorageKey]
+    );
+    useEffect(() => {
+        debouncedSaveChecklistItems(checklistItems);
+
+        return () => {
+            debouncedSaveChecklistItems.cancel();
+        };
+    }, [checklistItems, debouncedSaveChecklistItems]);
+
     /**
      * Handles changes to a checklist item by updating its specified property.
      *
@@ -82,12 +114,15 @@ const useEditorGroup = () => {
      * @param {*} params.value - The new value for the specified key.
      * @param {string} params.id - The identifier of the item to update.
      */
-    const handleItemChange = ({ key, value, id }) =>
+    const handleItemChange = ({ key, value, id }) => {
+        // TODO: Remove me
+        console.info(`itemChange: `, id, key, value);
         setChecklistItems(prevItems =>
             prevItems.map(item =>
                 item.id === id ? { ...item, [key]: value } : item
             )
         );
+    };
 
     /**
      * Handles the blur event to determine if the focus has moved outside
@@ -112,7 +147,7 @@ const useEditorGroup = () => {
      */
     const handleAddItem = ({ text = "", id = "", focus = false }) => {
         // TODO: Remove me
-        console.info(`addItem: `, text, id, focus);
+        console.info(`addItem: `, id, text, focus);
 
         setChecklistItems(items => {
             // Determine the index to insert the new item
