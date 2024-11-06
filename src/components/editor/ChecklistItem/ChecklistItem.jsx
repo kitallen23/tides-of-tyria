@@ -1,42 +1,70 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Checkbox } from "@mui/material";
+import debounce from "lodash.debounce";
 
 import styles from "./checklist-item.module.scss";
 import InlineEditor from "../InlineEditor/InlineEditor";
 
+const INPUT_DEBOUNCE_MS = 400;
+
 export const ChecklistItem = ({
     item,
-    // onChange,
+    onChange,
     onSelect,
     onNewLine,
     onRemoveLine,
 }) => {
     const [defaultValue] = useState(item?.text || "");
 
-    const _onNewLine = text => onNewLine({ text, id: item.id, focus: true });
-    const _onRemoveLine = text =>
-        onRemoveLine({ text, id: item.id, focus: true });
-    const _onTextChange = () => {
-        // console.(`On text change called`);
+    const debouncedTextChange = useMemo(
+        () =>
+            debounce(
+                () => onChange({ id: item.id, key: "text" }),
+                INPUT_DEBOUNCE_MS
+            ),
+        [item.id, onChange]
+    );
+
+    const handleTextChange = () => {
+        debouncedTextChange();
     };
-    const _onCheckboxChange = () => {
-        // console.log(`On checkbox change called`);
+    const handleNewLine = text => {
+        debouncedTextChange.flush();
+        onNewLine({ text, id: item.id, focus: true });
+    };
+    const handleRemoveLine = text => {
+        debouncedTextChange.flush();
+        onRemoveLine({ text, id: item.id, focus: true });
+    };
+
+    const handleCheckboxChange = event => {
+        const value = event.target.checked;
+        debouncedTextChange.flush();
+        setTimeout(
+            () =>
+                onChange({
+                    id: item.id,
+                    value,
+                    key: "isComplete",
+                }),
+            0
+        );
     };
 
     return (
         <div className={styles.checklistItem}>
             <Checkbox
                 checked={item.isComplete}
-                onChange={_onCheckboxChange}
+                onChange={handleCheckboxChange}
                 className={styles.itemCheckbox}
             />
             <InlineEditor
                 ref={item.inputRef}
                 defaultValue={defaultValue}
                 onSelect={onSelect}
-                onChange={_onTextChange}
-                onNewLine={_onNewLine}
-                onRemoveLine={_onRemoveLine}
+                onChange={handleTextChange}
+                onNewLine={handleNewLine}
+                onRemoveLine={handleRemoveLine}
                 // placeholder="To-do today"
             />
         </div>
