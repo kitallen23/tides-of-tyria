@@ -6,7 +6,10 @@ import { useInlineEditor } from "./useInlineEditor";
 import { useTheme } from "@/utils/theme-provider";
 
 export const InlineEditor = forwardRef(
-    ({ defaultValue, onSelect, onChange, onNewLine, onRemoveLine }, ref) => {
+    (
+        { id, defaultValue, onSelect, onChange, onNewLine, onRemoveLine },
+        ref
+    ) => {
         const { colors } = useTheme();
         const { handleKeyDown, handleInput, handleLinkClick } = useInlineEditor(
             {
@@ -20,6 +23,7 @@ export const InlineEditor = forwardRef(
 
         return (
             <div
+                id={id}
                 ref={ref}
                 className={styles.inlineEditor}
                 css={css({

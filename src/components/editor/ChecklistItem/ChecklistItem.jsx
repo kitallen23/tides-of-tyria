@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Checkbox } from "@mui/material";
 import debounce from "lodash.debounce";
 
@@ -24,6 +24,13 @@ export const ChecklistItem = ({
             ),
         [item.id, onChange]
     );
+
+    useEffect(() => {
+        // Cleanup function to flush the debounce on unmount
+        return () => {
+            debouncedTextChange.flush();
+        };
+    }, [debouncedTextChange]);
 
     const handleTextChange = () => {
         debouncedTextChange();
@@ -59,6 +66,7 @@ export const ChecklistItem = ({
                 className={styles.itemCheckbox}
             />
             <InlineEditor
+                id={item.id}
                 ref={item.inputRef}
                 defaultValue={defaultValue}
                 onSelect={onSelect}

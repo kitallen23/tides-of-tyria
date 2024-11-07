@@ -1,6 +1,7 @@
 import { createRef, useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import debounce from "lodash.debounce";
+import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 
 import { getLocalItem } from "@/utils/util";
 import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
@@ -399,6 +400,16 @@ const useEditorGroup = ({ localStorageKey }) => {
                     }
 
                     handleCloseLinkEditor();
+
+                    const focusedElement = document.activeElement;
+                    const ancestorWithClass = focusedElement?.closest(
+                        `.${inlineEditorStyles.inlineEditor}`
+                    );
+
+                    if (ancestorWithClass) {
+                        const id = ancestorWithClass.id;
+                        handleItemChange({ id, key: "text" });
+                    }
                 }
             }, 0);
         }
