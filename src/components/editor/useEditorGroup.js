@@ -8,7 +8,7 @@ import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
 
 const LINK_HOVER_DELAY = 500;
-// const MAX_INDENT = 3;
+const MAX_INDENT = 3;
 
 // TODO: Remove me
 // const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
@@ -206,12 +206,15 @@ const useEditorGroup = ({ localStorageKey }) => {
                 index = items.length - 1;
             }
 
+            // Place the new item on the same indent level as the previous item
+            const newIndentLevel = items[index].indentLevel || 0;
+
             const newItem = {
                 text: sanitizeRichText(text),
                 isComplete: false,
                 id: nanoid(6),
                 inputRef: createRef(),
-                indentLevel: 0,
+                indentLevel: newIndentLevel,
                 renderKey: nanoid(4),
             };
 
@@ -257,6 +260,34 @@ const useEditorGroup = ({ localStorageKey }) => {
             // Only remove this line if index is greater than zero (don't remove
             // the first line)
             setChecklistItems(items => items.filter(item => item.id !== id));
+        }
+    };
+
+    /**
+     * Adjusts the indent level of a checklist item based on the specified direction.
+     *
+     * @param {Object} params - The parameters for indenting an item.
+     * @param {string|number} params.id - The identifier of the item to indent.
+     * @param {boolean} params.indent - A flag indicating whether to increase (true) or decrease (false) the indent level.
+     */
+    const handleIndentItem = ({ id, indent }) => {
+        // TODO: Remove me
+        console.info(`indentItem: `, id, indent);
+        const item = checklistItems.find(item => item.id === id);
+
+        if (item) {
+            const newIndentLevel = item.indentLevel + (indent ? 1 : -1);
+
+            // Only set a new indent level if it's within the indent bounds
+            if (newIndentLevel >= 0 && newIndentLevel <= MAX_INDENT) {
+                setChecklistItems(prevItems =>
+                    prevItems.map(item =>
+                        item.id === id
+                            ? { ...item, indentLevel: newIndentLevel }
+                            : item
+                    )
+                );
+            }
         }
     };
 
@@ -665,6 +696,7 @@ const useEditorGroup = ({ localStorageKey }) => {
         handleItemChange,
         handleAddItem,
         handleRemoveItem,
+        handleIndentItem,
         handleApplyStyle,
         handleMouseEnter,
         handleMouseLeave,

@@ -24,6 +24,7 @@ export const EditorGroup = ({ localStorageKey }) => {
         handleItemChange,
         handleAddItem,
         handleRemoveItem,
+        handleIndentItem,
         handleApplyStyle,
         handleMouseEnter,
         handleMouseLeave,
@@ -242,6 +243,7 @@ export const EditorGroup = ({ localStorageKey }) => {
                         onNewLine={handleAddItem}
                         onRemoveLine={handleRemoveItem}
                         onSelect={handleSelect}
+                        onIndent={handleIndentItem}
                     />
                 ))}
             </div>

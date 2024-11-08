@@ -1,5 +1,9 @@
 $editor-padding-vertical: 3px;
 
+@mixin indent($level) {
+    padding-left: #{2 * $level}em;
+}
+
 .checklistItem {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -14,6 +18,12 @@ $editor-padding-vertical: 3px;
 
         svg {
             font-size: 1.2em;
+        }
+    }
+
+    @for $i from 0 through 3 {
+        &.indent#{$i} {
+            @include indent($i);
         }
     }
 }

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Checkbox } from "@mui/material";
 import debounce from "lodash.debounce";
+import classNames from "classnames";
 
 import styles from "./checklist-item.module.scss";
 import InlineEditor from "../InlineEditor/InlineEditor";
@@ -13,6 +14,7 @@ export const ChecklistItem = ({
     onSelect,
     onNewLine,
     onRemoveLine,
+    onIndent,
 }) => {
     const [defaultValue] = useState(item?.text || "");
 
@@ -41,9 +43,16 @@ export const ChecklistItem = ({
     };
     const handleRemoveLine = text => {
         debouncedTextChange.flush();
-        onRemoveLine({ text, id: item.id, focus: true });
+        if (item.indentLevel > 0) {
+            onIndent({ id: item.id, indent: false });
+        } else {
+            onRemoveLine({ text, id: item.id, focus: true });
+        }
     };
-
+    const handleIndent = (indent = true) => {
+        debouncedTextChange.flush();
+        onIndent({ id: item.id, indent });
+    };
     const handleCheckboxChange = event => {
         const value = event.target.checked;
         debouncedTextChange.flush();
@@ -58,8 +67,21 @@ export const ChecklistItem = ({
         );
     };
 
+    const handleKeyDown = e => {
+        if (e.key === "Tab") {
+            e.preventDefault();
+            handleIndent(!e.shiftKey);
+        }
+    };
+
     return (
-        <div className={styles.checklistItem}>
+        <div
+            className={classNames(
+                styles.checklistItem,
+                styles[`indent${item.indentLevel}`]
+            )}
+            onKeyDown={handleKeyDown}
+        >
             <Checkbox
                 checked={item.isComplete}
                 onChange={handleCheckboxChange}
@@ -73,6 +95,7 @@ export const ChecklistItem = ({
                 onChange={handleTextChange}
                 onNewLine={handleNewLine}
                 onRemoveLine={handleRemoveLine}
+                onIndent={handleIndent}
                 // placeholder="To-do today"
             />
         </div>
