@@ -37,8 +37,6 @@ export const InlineEditor = forwardRef(
                 onKeyUp={onSelect}
                 onKeyDown={handleKeyDown}
                 onClick={handleLinkClick}
-                // onMouseOver={handleEditorMouseEnter}
-                // onMouseOut={handleEditorMouseLeave}
                 onInput={handleInput}
             />
         );

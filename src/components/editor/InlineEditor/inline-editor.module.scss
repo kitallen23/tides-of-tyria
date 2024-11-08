@@ -7,4 +7,8 @@ $editor-padding-horizontal: 2px;
     min-height: calc(
         1em * var(--line-height) + 2 * #{$editor-padding-vertical}
     );
+
+    a {
+        cursor: pointer;
+    }
 }

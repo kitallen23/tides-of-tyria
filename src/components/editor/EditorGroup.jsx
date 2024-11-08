@@ -2,12 +2,12 @@ import { Button, TextField } from "@mui/material";
 import {
     AddLinkSharp,
     CheckSharp,
-    // ContentCopySharp,
+    ContentCopySharp,
     ExpandMoreSharp,
     FormatBoldSharp,
     FormatItalicSharp,
     FormatUnderlinedSharp,
-    // LanguageSharp,
+    LanguageSharp,
 } from "@mui/icons-material";
 import classNames from "classnames";
 
@@ -25,6 +25,8 @@ export const EditorGroup = ({ localStorageKey }) => {
         handleAddItem,
         handleRemoveItem,
         handleApplyStyle,
+        handleMouseEnter,
+        handleMouseLeave,
 
         toolbarRef,
         showToolbar,
@@ -43,6 +45,15 @@ export const EditorGroup = ({ localStorageKey }) => {
         handleTempLinkUrlChange,
         handleLinkInputKeyDown,
         handleApplyLink,
+
+        linkHoverRef,
+        showLinkHover,
+        linkHoverPosition,
+        hoveredLink,
+        handleLinkTooltipMouseEnter,
+        handleLinkTooltipMouseLeave,
+        handleCopyLinkToClipboardClick,
+        handleLinkEditClick,
     } = useEditorGroup({ localStorageKey });
 
     // TODO: Remove me
@@ -65,6 +76,8 @@ export const EditorGroup = ({ localStorageKey }) => {
                 className={styles.editorGroup}
                 ref={editorGroupRef}
                 onBlur={handleBlur}
+                onMouseOver={handleMouseEnter}
+                onMouseOut={handleMouseLeave}
             >
                 {/* Toolbar */}
                 <div
@@ -177,6 +190,47 @@ export const EditorGroup = ({ localStorageKey }) => {
                     >
                         <CheckSharp />
                     </Button>
+                </div>
+
+                {/* Link hover menu */}
+                <div
+                    ref={linkHoverRef}
+                    className={classNames(styles.floatingLinkMenu, {
+                        [styles.show]: showLinkHover,
+                    })}
+                    style={linkHoverPosition}
+                    onMouseOver={handleLinkTooltipMouseEnter}
+                    onMouseOut={handleLinkTooltipMouseLeave}
+                >
+                    <div className={styles.url}>
+                        <LanguageSharp />
+                        <div className={styles.urlText}>
+                            {hoveredLink?.href || ""}
+                        </div>
+                    </div>
+                    <div className={styles.buttonContainer}>
+                        <Button
+                            variant="text"
+                            color="body"
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={handleCopyLinkToClipboardClick}
+                        >
+                            <ContentCopySharp />
+                        </Button>
+                        <Button
+                            variant="text"
+                            color="body"
+                            sx={{
+                                minWidth: 0,
+                                padding: 0.5,
+                                fontSize: "0.875rem !important",
+                                lineHeight: 1,
+                            }}
+                            onClick={handleLinkEditClick}
+                        >
+                            Edit
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Checklist items */}

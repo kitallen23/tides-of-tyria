@@ -1,13 +1,43 @@
 import { createRef, useEffect, useMemo, useRef, useState } from "react";
 import { nanoid } from "nanoid";
 import debounce from "lodash.debounce";
-import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
+import { toast } from "react-hot-toast";
 
-import { getLocalItem } from "@/utils/util";
+import { getLocalItem, copyToClipboard } from "@/utils/util";
+import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
+
+const LINK_HOVER_DELAY = 500;
+// const MAX_INDENT = 3;
 
 // TODO: Remove me
 // const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
+// const TEMP_VALUE = [
+//     {
+//         text: "Here's a line with no link.",
+//         isComplete: false,
+//         id: "-9nt_x",
+//         indentLevel: 0,
+//     },
+//     {
+//         text: 'Here\'s a line <a href="https://google.com" target="_blank" rel="noopener noreferrer">with a link</a>.',
+//         isComplete: false,
+//         id: "AO_ac3",
+//         indentLevel: 0,
+//     },
+//     {
+//         text: "This line is checked.",
+//         isComplete: true,
+//         id: "cwcpww",
+//         indentLevel: 0,
+//     },
+//     {
+//         text: "This line isn't checked.",
+//         isComplete: false,
+//         id: "facBXQ",
+//         indentLevel: 0,
+//     },
+// ];
 
 const useEditorGroup = ({ localStorageKey }) => {
     const editorGroupRef = useRef(null);
@@ -16,6 +46,13 @@ const useEditorGroup = ({ localStorageKey }) => {
         // Load from local storage on initial render
         const savedChecklist = getLocalItem(localStorageKey, "[]");
         localStorage.setItem(localStorageKey, savedChecklist);
+
+        // TODO: Remove me
+        // return TEMP_VALUE.map(item => ({
+        //     ...item,
+        //     inputRef: createRef(),
+        //     renderKey: nanoid(4),
+        // }));
 
         try {
             const savedChecklistWithRefs = JSON.parse(savedChecklist).map(
@@ -73,6 +110,15 @@ const useEditorGroup = ({ localStorageKey }) => {
             return false;
         }
     }, [tempLinkUrl]);
+
+    const linkHoverRef = useRef(null);
+    const [showLinkHover, setShowLinkHover] = useState(false);
+    const [linkHoverPosition, setLinkHoverPosition] = useState({
+        top: 0,
+        left: 0,
+    });
+    const [hoveredLink, setHoveredLink] = useState(null);
+    const hoveredLinkTimeoutRef = useRef(null);
 
     const debouncedSaveChecklistItems = useMemo(
         () =>
@@ -142,8 +188,8 @@ const useEditorGroup = ({ localStorageKey }) => {
      * Adds a new checklist item.
      *
      * @param {Object} options - The options for adding the item.
-     * @param {string} options.text - The text of the item.
-     * @param {string} options.id - The unique identifier for the item.
+     * @param {string} options.text - The text to initialise the item with.
+     * @param {string} options.id - The unique identifier of the current line (the new line will be added below this item).
      * @param {boolean} [options.focus=false] - If true, the new line will become focused.
      */
     const handleAddItem = ({ text = "", id = "", focus = false }) => {
@@ -493,6 +539,114 @@ const useEditorGroup = ({ localStorageKey }) => {
         setTempLinkText("");
     };
 
+    const handleMouseEnter = event => {
+        if (event.target.tagName.toLowerCase() === "a") {
+            const editorElement = event.target.closest(
+                `.${inlineEditorStyles.inlineEditor}`
+            );
+            if (editorElement) {
+                // Clear any existing timeout to prevent setting state for a previous link
+                clearTimeout(hoveredLinkTimeoutRef.current);
+
+                // Set a timeout to update the hovered link state after the delay
+                hoveredLinkTimeoutRef.current = setTimeout(() => {
+                    setHoveredLink(event.target);
+                }, LINK_HOVER_DELAY);
+            }
+        }
+    };
+
+    const handleMouseLeave = event => {
+        if (event.target.tagName.toLowerCase() === "a") {
+            const editorElement = event.target.closest(
+                `.${inlineEditorStyles.inlineEditor}`
+            );
+            if (editorElement) {
+                // Clear the timeout if the mouse leaves the anchor before the delay
+                clearTimeout(hoveredLinkTimeoutRef.current);
+
+                if (
+                    linkHoverRef.current &&
+                    !linkHoverRef.current.contains(event.relatedTarget)
+                ) {
+                    setHoveredLink(null); // Reset the hovered link state only if not entering the tooltip
+                }
+            }
+        }
+    };
+    const handleLinkTooltipMouseEnter = () => {
+        // Clear any timeout and keep the tooltip open
+        clearTimeout(hoveredLinkTimeoutRef.current);
+    };
+
+    const handleLinkTooltipMouseLeave = event => {
+        // Close the tooltip when the mouse leaves the tooltip area
+        if (
+            linkHoverRef.current &&
+            !linkHoverRef.current.contains(event.relatedTarget)
+        ) {
+            setHoveredLink(null); // Reset the hovered link state only if not entering the tooltip
+        }
+    };
+
+    useEffect(() => {
+        if (hoveredLink) {
+            const editorRect = editorGroupRef.current.getBoundingClientRect();
+            const elementBox = hoveredLink.getBoundingClientRect();
+            if (!elementBox) {
+                return;
+            }
+
+            const relativeTop = elementBox.bottom - editorRect.top;
+            const relativeLeft = elementBox.left - editorRect.left;
+
+            const leftLimit =
+                editorRect.right -
+                linkHoverRef.current.offsetWidth -
+                editorRect.left;
+
+            let finalLeft = relativeLeft;
+            if (finalLeft > leftLimit) {
+                finalLeft = leftLimit;
+            }
+
+            setLinkHoverPosition({
+                top: relativeTop,
+                left: finalLeft,
+            });
+
+            setShowLinkHover(true);
+        } else {
+            setShowLinkHover(false);
+        }
+    }, [hoveredLink]);
+
+    const handleCopyLinkToClipboardClick = () => {
+        if (hoveredLink) {
+            copyToClipboard(hoveredLink.href, {
+                onSuccess: () => toast.success("Link copied to clipboard."),
+                onError: () =>
+                    toast.error(
+                        "Something went wrong when copying to clipboard."
+                    ),
+            });
+
+            setHoveredLink(null);
+        }
+    };
+    const handleLinkEditClick = () => {
+        if (hoveredLink) {
+            const range = document.createRange();
+            const selection = window.getSelection();
+            range.selectNodeContents(hoveredLink);
+            selection.removeAllRanges();
+            selection.addRange(range);
+
+            handleOpenLinkEditor();
+            setHoveredLink(null);
+        }
+    };
+
     // If there are no checklist items, add a blank line (ensures there's always
     // an input field)
     const hasAddedInitialItem = useRef(false);
@@ -512,6 +666,8 @@ const useEditorGroup = ({ localStorageKey }) => {
         handleAddItem,
         handleRemoveItem,
         handleApplyStyle,
+        handleMouseEnter,
+        handleMouseLeave,
 
         toolbarRef,
         showToolbar,
@@ -530,6 +686,15 @@ const useEditorGroup = ({ localStorageKey }) => {
         handleTempLinkUrlChange: setTempLinkUrl,
         handleLinkInputKeyDown,
         handleApplyLink,
+
+        linkHoverRef,
+        showLinkHover,
+        linkHoverPosition,
+        hoveredLink,
+        handleLinkTooltipMouseEnter,
+        handleLinkTooltipMouseLeave,
+        handleCopyLinkToClipboardClick,
+        handleLinkEditClick,
     };
 };
 

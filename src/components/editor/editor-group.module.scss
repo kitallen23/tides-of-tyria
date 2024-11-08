@@ -53,4 +53,47 @@
             pointer-events: initial;
         }
     }
+    .floatingLinkMenu {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1em;
+        align-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        max-width: 320px;
+
+        .url {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            color: var(--text-muted);
+            font-size: 0.875em;
+            overflow: hidden;
+
+            .urlText {
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .buttonContainer {
+            display: flex;
+            gap: 0.2em;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
 }
