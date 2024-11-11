@@ -8,7 +8,7 @@
     --font-size-md: 1rem;
     --font-size-lg: 1.125rem;
 
-    --primary-rgb: 95, 168, 211;
+    --primary-rgb: 255, 133, 51;
     --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 224, 224, 224;
     --foreground-light-rgb: 224, 224, 224;
@@ -184,7 +184,7 @@
 }
 [data-theme="dark"]:root {
     color-scheme: dark;
-    --primary-rgb: 95, 168, 211;
+    --primary-rgb: 255, 133, 51;
     --secondary-rgb: 130, 130, 130;
     --foreground-rgb: 224, 224, 224;
     --foreground-light-rgb: 224, 224, 224;
