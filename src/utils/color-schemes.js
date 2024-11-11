@@ -171,7 +171,7 @@ export const SCHEMES = {
         mode: "light",
         // Secondary is the same as muted
         colors: {
-            primary: "#5a8aa2", // 90, 138, 162
+            primary: "#ff6600", // 255, 102, 0
             secondary: "#737373", // 115, 115, 115
             body: "#1a1a1a", // 26, 26, 26
             bodyLight: "#e0e0e0", // 224, 224, 224
