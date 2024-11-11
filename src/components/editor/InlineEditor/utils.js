@@ -99,8 +99,8 @@ export function setCursorAtOffset(ref, offset) {
         range.collapse(true);
         selection.removeAllRanges();
         selection.addRange(range);
-        element.focus();
     }
+    element.focus();
 }
 
 export function getDecodedLengthWithBr(htmlString) {
