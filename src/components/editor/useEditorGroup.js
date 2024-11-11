@@ -207,7 +207,7 @@ const useEditorGroup = ({ localStorageKey }) => {
             }
 
             // Place the new item on the same indent level as the previous item
-            const newIndentLevel = items[index].indentLevel || 0;
+            const newIndentLevel = items[index]?.indentLevel || 0;
 
             const newItem = {
                 text: sanitizeRichText(text),
