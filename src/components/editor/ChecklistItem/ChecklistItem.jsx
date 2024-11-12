@@ -66,6 +66,14 @@ export const ChecklistItem = ({
             0
         );
     };
+    const handleFocusPreviousEditor = offset => {
+        // TODO: Remove me
+        console.info(`#### handleFocusPreviousEditor: `, offset);
+    };
+    const handleFocusNextEditor = offset => {
+        // TODO: Remove me
+        console.info(`#### handleFocusNextEditor: `, offset);
+    };
 
     const handleKeyDown = e => {
         if (e.key === "Tab") {
@@ -96,6 +104,8 @@ export const ChecklistItem = ({
                 onNewLine={handleNewLine}
                 onRemoveLine={handleRemoveLine}
                 onIndent={handleIndent}
+                onFocusPreviousEditor={handleFocusPreviousEditor}
+                onFocusNextEditor={handleFocusNextEditor}
                 // placeholder="To-do today"
             />
         </div>

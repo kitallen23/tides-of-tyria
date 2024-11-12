@@ -2,12 +2,16 @@ import DOMPurify from "dompurify";
 import { useEffect } from "react";
 import { getDecodedLengthWithBr } from "./utils";
 
+const EDITOR_PADDING_VERTICAL = 3;
+
 export const useInlineEditor = ({
     ref,
     defaultValue,
     onChange,
     onNewLine,
     onRemoveLine,
+    onFocusPreviousEditor,
+    onFocusNextEditor,
 }) => {
     useEffect(() => {
         // Set the initial content
@@ -17,6 +21,9 @@ export const useInlineEditor = ({
     }, [defaultValue]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     const handleKeyDown = e => {
+        // TODO: Remove me
+        // console.info(`handleKeyDown event: `, e.key);
+
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             handleNewLine();
@@ -50,7 +57,123 @@ export const useInlineEditor = ({
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
+        } else if (e.key === "ArrowUp") {
+            const selection = window.getSelection();
+            if (
+                selection.isCollapsed &&
+                selection.rangeCount > 0 &&
+                isOnFirstLine()
+            ) {
+                e.preventDefault();
+                const range = selection.getRangeAt(0).cloneRange();
+                range.setStart(ref.current, 0);
+                const contentBeforeCursor = range.cloneContents();
+
+                const fragment = document.createDocumentFragment();
+                fragment.appendChild(contentBeforeCursor);
+                const div = document.createElement("div");
+                div.appendChild(fragment);
+
+                const textBeforeCursor = div.textContent;
+                onFocusPreviousEditor(textBeforeCursor?.length || 0);
+            }
+        } else if (e.key === "ArrowDown") {
+            const selection = window.getSelection();
+            if (
+                selection.isCollapsed &&
+                selection.rangeCount > 0 &&
+                isOnLastLine()
+            ) {
+                e.preventDefault();
+                // TODO: Calculate offset, send to onFocusNextEditor
+                onFocusNextEditor(0);
+            }
         }
+    };
+
+    /**
+     * Determines if the current selection is on the first line of the editor.
+     **/
+    const isOnFirstLine = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+            return false;
+        }
+
+        const cursorPosition = getCursorPositionRelativeToEditor();
+        return cursorPosition.top <= EDITOR_PADDING_VERTICAL;
+    };
+    /**
+     * Determines if the current selection is on the last line of the editor.
+     **/
+    const isOnLastLine = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+            return false;
+        }
+
+        const cursorPosition = getCursorPositionRelativeToEditor();
+        return cursorPosition.bottom <= EDITOR_PADDING_VERTICAL;
+    };
+
+    /**
+     * Gets the cursor's position relative to the contentEditable editor.
+     **/
+    const getCursorPositionRelativeToEditor = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount === 0) {
+            return null;
+        }
+
+        const range = selection.getRangeAt(0);
+        const editor = ref.current;
+        const editorRect = editor.getBoundingClientRect();
+
+        const clientRects = range.getClientRects();
+        // Special case (only works due to editor padding).
+        // This solves a bug that we would otherwise see, where the cursor
+        // position reports as wrong near the end of a line, when the wrapped
+        // text would appear on the first line if the word was broken.
+        if (clientRects[0]?.top && clientRects) {
+            return {
+                top: Math.round(clientRects[0].top - editorRect.top),
+                left: Math.round(clientRects[0].left - editorRect.left),
+                bottom: Math.round(editorRect.bottom - clientRects[0].bottom),
+                right: Math.round(editorRect.right - clientRects[0].right),
+            };
+        }
+
+        // Create a temporary span element to insert at the caret position
+        const span = document.createElement("span");
+        // Use a zero-width space to ensure it doesn't affect layout
+        span.textContent = "\u200b";
+
+        // Insert the span at the caret position
+        range.insertNode(span);
+
+        // Get the position of the span relative to the editor
+        const spanRect = span.getBoundingClientRect();
+
+        // Calculate the cursor's position relative to the editor
+        const position = {
+            top: Math.round(spanRect.top - editorRect.top),
+            left: Math.round(spanRect.left - editorRect.left),
+            bottom: Math.round(editorRect.bottom - spanRect.bottom),
+            right: Math.round(editorRect.right - spanRect.right),
+        };
+
+        // Move the range to after the inserted span
+        range.setStartAfter(span);
+        range.collapse(true);
+
+        // Clean up: remove the temporary span
+        span.parentNode.removeChild(span);
+
+        // Restore the selection to its original state
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        return position;
     };
 
     const handleNewLine = () => {

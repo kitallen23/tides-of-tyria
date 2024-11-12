@@ -7,7 +7,16 @@ import { useTheme } from "@/utils/theme-provider";
 
 export const InlineEditor = forwardRef(
     (
-        { id, defaultValue, onSelect, onChange, onNewLine, onRemoveLine },
+        {
+            id,
+            defaultValue,
+            onSelect,
+            onChange,
+            onNewLine,
+            onRemoveLine,
+            onFocusPreviousEditor,
+            onFocusNextEditor,
+        },
         ref
     ) => {
         const { colors } = useTheme();
@@ -18,6 +27,8 @@ export const InlineEditor = forwardRef(
                 onChange,
                 onNewLine,
                 onRemoveLine,
+                onFocusPreviousEditor,
+                onFocusNextEditor,
             }
         );
 
