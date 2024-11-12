@@ -296,7 +296,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      * and update text style states (bold, italic, underlined)
      *
      * @param {Object} ref - The ref of the editor that triggered the selection event
-     **/
+     */
     const handleSelect = () => {
         setTimeout(() => {
             const selection = window.getSelection();
@@ -363,7 +363,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      * based on the computed style of the parent node of the selected range.
      *
      * @param {Range} range - The range object representing the current selection.
-     **/
+     */
     const updateTextStates = range => {
         const parentNode = range.commonAncestorContainer.parentNode;
         const computedStyle = window.getComputedStyle(parentNode);
@@ -420,7 +420,7 @@ const useEditorGroup = ({ localStorageKey }) => {
 
     /**
      * Applies the temporary link text to the current selected text
-     **/
+     */
     const handleApplyLink = () => {
         if (tempLinkUrl && isTempLinkUrlValid && tempLinkText?.trim().length) {
             restoreSelection(linkRange);
@@ -495,7 +495,7 @@ const useEditorGroup = ({ localStorageKey }) => {
     /**
      * Saves the current text selection range.
      * @returns {Range | null} The current selection range, or null if there is no selection.
-     **/
+     */
     const saveSelection = () => {
         const selection = window.getSelection();
         if (selection.rangeCount > 0) {
