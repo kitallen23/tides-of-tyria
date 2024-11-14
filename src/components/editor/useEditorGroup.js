@@ -6,6 +6,11 @@ import { toast } from "react-hot-toast";
 import { getLocalItem, copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
+import {
+    // getLastLineContent,
+    // getLastLineRect,
+    moveCursorToEditor,
+} from "./utils";
 
 const LINK_HOVER_DELAY = 500;
 const MAX_INDENT = 3;
@@ -260,6 +265,33 @@ const useEditorGroup = ({ localStorageKey }) => {
             // Only remove this line if index is greater than zero (don't remove
             // the first line)
             setChecklistItems(items => items.filter(item => item.id !== id));
+        }
+    };
+
+    // TODO: JSDocs
+    const handleFocusNextEditor = ({ id, left }) => {
+        // TODO: Remove me
+        console.info(`focusNextEditor: `, id, left);
+        // const index = checklistItems.findIndex(item => item.id === id);
+
+        // if (index > 0) {
+        //     const nextRef = checklistItems[index + 1]?.inputRef;
+        //     if (nextRef?.current) {
+        //         const firstLineText = getFirstLineText(nextRef);
+        //         console.log(`firstLineText: `, firstLineText);
+        //     }
+        // }
+    };
+
+    // TODO: JSDocs
+    const handleFocusPreviousEditor = ({ id, left }) => {
+        // TODO: Remove me
+        console.info(`focusPreviousEditor: `, id, left);
+        const index = checklistItems.findIndex(item => item.id === id);
+
+        if (index > 0) {
+            const prevRef = checklistItems[index - 1]?.inputRef;
+            moveCursorToEditor(prevRef, left);
         }
     };
 
@@ -700,6 +732,8 @@ const useEditorGroup = ({ localStorageKey }) => {
         handleApplyStyle,
         handleMouseEnter,
         handleMouseLeave,
+        handleFocusNextEditor,
+        handleFocusPreviousEditor,
 
         toolbarRef,
         showToolbar,

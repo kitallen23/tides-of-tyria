@@ -28,6 +28,8 @@ export const EditorGroup = ({ localStorageKey }) => {
         handleApplyStyle,
         handleMouseEnter,
         handleMouseLeave,
+        handleFocusNextEditor,
+        handleFocusPreviousEditor,
 
         toolbarRef,
         showToolbar,
@@ -244,6 +246,8 @@ export const EditorGroup = ({ localStorageKey }) => {
                         onRemoveLine={handleRemoveItem}
                         onSelect={handleSelect}
                         onIndent={handleIndentItem}
+                        onFocusNextEditor={handleFocusNextEditor}
+                        onFocusPreviousEditor={handleFocusPreviousEditor}
                     />
                 ))}
             </div>

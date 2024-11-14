@@ -15,6 +15,8 @@ export const ChecklistItem = ({
     onNewLine,
     onRemoveLine,
     onIndent,
+    onFocusNextEditor,
+    onFocusPreviousEditor,
 }) => {
     const [defaultValue] = useState(item?.text || "");
 
@@ -66,13 +68,11 @@ export const ChecklistItem = ({
             0
         );
     };
-    const handleFocusPreviousEditor = offset => {
-        // TODO: Remove me
-        console.info(`#### handleFocusPreviousEditor: `, offset);
+    const handleFocusPreviousEditor = left => {
+        onFocusPreviousEditor({ id: item.id, left });
     };
-    const handleFocusNextEditor = offset => {
-        // TODO: Remove me
-        console.info(`#### handleFocusNextEditor: `, offset);
+    const handleFocusNextEditor = left => {
+        onFocusNextEditor({ id: item.id, left });
     };
 
     const handleKeyDown = e => {

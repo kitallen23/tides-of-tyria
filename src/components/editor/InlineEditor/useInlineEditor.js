@@ -57,36 +57,53 @@ export const useInlineEditor = ({
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
+            // } else if (e.key === "ArrowUp") {
+            //     const selection = window.getSelection();
+            //     if (
+            //         selection.isCollapsed &&
+            //         selection.rangeCount > 0 &&
+            //         isOnFirstLine()
+            //     ) {
+            //         e.preventDefault();
+            //         const range = selection.getRangeAt(0).cloneRange();
+            //         range.setStart(ref.current, 0);
+            //         const contentBeforeCursor = range.cloneContents();
+
+            //         const fragment = document.createDocumentFragment();
+            //         fragment.appendChild(contentBeforeCursor);
+            //         const div = document.createElement("div");
+            //         div.appendChild(fragment);
+
+            //         const textBeforeCursor = div.textContent;
+            //         onFocusPreviousEditor(textBeforeCursor?.length || 0);
+            //     }
+            // } else if (e.key === "ArrowDown") {
+            //     const selection = window.getSelection();
+            //     if (
+            //         selection.isCollapsed &&
+            //         selection.rangeCount > 0 &&
+            //         isOnLastLine()
+            //     ) {
+            //         e.preventDefault();
+            //         // TODO: Calculate offset, send to onFocusNextEditor
+            //         onFocusNextEditor(0);
+            //     }
+            // }
         } else if (e.key === "ArrowUp") {
             const selection = window.getSelection();
-            if (
-                selection.isCollapsed &&
-                selection.rangeCount > 0 &&
-                isOnFirstLine()
-            ) {
+            if (selection.rangeCount > 0 && isOnFirstLine()) {
                 e.preventDefault();
-                const range = selection.getRangeAt(0).cloneRange();
-                range.setStart(ref.current, 0);
-                const contentBeforeCursor = range.cloneContents();
-
-                const fragment = document.createDocumentFragment();
-                fragment.appendChild(contentBeforeCursor);
-                const div = document.createElement("div");
-                div.appendChild(fragment);
-
-                const textBeforeCursor = div.textContent;
-                onFocusPreviousEditor(textBeforeCursor?.length || 0);
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                onFocusPreviousEditor(rect.left);
             }
         } else if (e.key === "ArrowDown") {
             const selection = window.getSelection();
-            if (
-                selection.isCollapsed &&
-                selection.rangeCount > 0 &&
-                isOnLastLine()
-            ) {
+            if (selection.rangeCount > 0 && isOnLastLine()) {
                 e.preventDefault();
-                // TODO: Calculate offset, send to onFocusNextEditor
-                onFocusNextEditor(0);
+                const range = selection.getRangeAt(0);
+                const rect = range.getBoundingClientRect();
+                onFocusNextEditor(rect.left);
             }
         }
     };
