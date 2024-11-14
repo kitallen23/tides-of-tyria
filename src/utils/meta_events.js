@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-10-16_02",
+        version: "2024-11-14",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1157,7 +1157,7 @@ const META_EVENTS = [
                 ],
             },
             {
-                active: true,
+                active: false,
                 key: "halloween",
                 name: "Lion's Arch",
                 color: COLOR_TYPES.gray,
