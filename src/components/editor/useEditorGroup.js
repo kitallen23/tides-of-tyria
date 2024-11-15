@@ -5,11 +5,12 @@ import { toast } from "react-hot-toast";
 
 import { getLocalItem, copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
-import { sanitizeRichText, setCursorAtOffset } from "./InlineEditor/utils";
 import {
-    // getLastLineContent,
-    // getLastLineRect,
+    moveCursorToCharacterOffsetOfEditor,
     moveCursorToEditor,
+    moveCursorToFirstLineOfEditor,
+    moveCursorToLastLineOfEditor,
+    sanitizeRichText,
 } from "./utils";
 
 const LINK_HOVER_DELAY = 500;
@@ -168,7 +169,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      */
     const handleItemChange = ({ key, value, id }) => {
         // TODO: Remove me
-        console.info(`itemChange: `, id, key, value);
+        // console.info(`itemChange: `, id, key, value);
         setChecklistItems(prevItems =>
             prevItems.map(item =>
                 item.id === id ? { ...item, [key]: value } : item
@@ -199,7 +200,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      */
     const handleAddItem = ({ text = "", id = "", focus = false }) => {
         // TODO: Remove me
-        console.info(`addItem: `, id, text, focus);
+        // console.info(`addItem: `, id, text, focus);
 
         setChecklistItems(items => {
             // Determine the index to insert the new item
@@ -242,7 +243,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      */
     const handleRemoveItem = ({ text = "", id }) => {
         // TODO: Remove me
-        console.info(`removeItem: `, id, text);
+        // console.info(`removeItem: `, id, text);
 
         const index = checklistItems.findIndex(item => item.id === id);
 
@@ -259,7 +260,14 @@ const useEditorGroup = ({ localStorageKey }) => {
                 // Append new text to the previous line
                 prevRef.current.innerHTML = newText;
                 // Restore the cursor position to the offset we found above
-                setTimeout(() => setCursorAtOffset(prevRef, cursorOffset), 0);
+                setTimeout(
+                    () =>
+                        moveCursorToCharacterOffsetOfEditor(
+                            prevRef,
+                            cursorOffset
+                        ),
+                    0
+                );
             }
 
             // Only remove this line if index is greater than zero (don't remove
@@ -268,30 +276,63 @@ const useEditorGroup = ({ localStorageKey }) => {
         }
     };
 
-    // TODO: JSDocs
+    /**
+     * Handles focusing the next editor in a checklist.
+     *
+     * This function finds the current item by its `id` in the `checklistItems` array.
+     * If there is a next item, it moves the cursor to the first line of the next item's editor.
+     * If there is no next item, it moves the cursor to the end of the current editor,
+     * possibly indicating the need to add a new item.
+     *
+     * @param {Object} params - The parameters for the function.
+     * @param {string} params.id - The ID of the current checklist item.
+     * @param {number} params.left - The left position to move the cursor to.
+     *
+     * @throws {Error} If the `checklistItems` array is not defined or empty.
+     */
+
     const handleFocusNextEditor = ({ id, left }) => {
         // TODO: Remove me
-        console.info(`focusNextEditor: `, id, left);
-        // const index = checklistItems.findIndex(item => item.id === id);
+        // console.info(`focusNextEditor: `, id, left);
+        const index = checklistItems.findIndex(item => item.id === id);
 
-        // if (index > 0) {
-        //     const nextRef = checklistItems[index + 1]?.inputRef;
-        //     if (nextRef?.current) {
-        //         const firstLineText = getFirstLineText(nextRef);
-        //         console.log(`firstLineText: `, firstLineText);
-        //     }
-        // }
+        if (index >= 0) {
+            const nextRef = checklistItems[index + 1]?.inputRef;
+            if (nextRef?.current) {
+                moveCursorToFirstLineOfEditor(nextRef, left);
+            } else {
+                // No next editor, so add one and focus it
+                const currentRef = checklistItems[index]?.inputRef;
+                moveCursorToEditor(currentRef, "end");
+            }
+        }
     };
 
-    // TODO: JSDocs
+    /**
+     * Handles focusing the previous editor in a checklist.
+     *
+     * This function finds the current item by its `id` in the `checklistItems` array.
+     * If the current item is not the first one, it moves the cursor to the previous item's editor.
+     * If the current item is the first one, it moves the cursor to the start of the first editor.
+     *
+     * @param {Object} params - The parameters for the function.
+     * @param {string} params.id - The ID of the current checklist item.
+     * @param {number} params.left - The left position to move the cursor to.
+     *
+     * @throws {Error} If the `checklistItems` array is not defined or empty.
+     */
     const handleFocusPreviousEditor = ({ id, left }) => {
         // TODO: Remove me
-        console.info(`focusPreviousEditor: `, id, left);
+        // console.info(`focusPreviousEditor: `, id, left);
         const index = checklistItems.findIndex(item => item.id === id);
 
         if (index > 0) {
             const prevRef = checklistItems[index - 1]?.inputRef;
-            moveCursorToEditor(prevRef, left);
+            moveCursorToLastLineOfEditor(prevRef, left);
+        } else {
+            // Index is zero, so go to start of the first editor
+            const firstRef = checklistItems[0]?.inputRef;
+            moveCursorToEditor(firstRef, "start");
         }
     };
 
@@ -304,7 +345,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      */
     const handleIndentItem = ({ id, indent }) => {
         // TODO: Remove me
-        console.info(`indentItem: `, id, indent);
+        // console.info(`indentItem: `, id, indent);
         const item = checklistItems.find(item => item.id === id);
 
         if (item) {

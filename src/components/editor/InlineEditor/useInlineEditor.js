@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { useEffect } from "react";
-import { getDecodedLengthWithBr } from "./utils";
+import { getDecodedLengthWithBr } from "../utils";
 
 const EDITOR_PADDING_VERTICAL = 3;
 
@@ -57,38 +57,6 @@ export const useInlineEditor = ({
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
-            // } else if (e.key === "ArrowUp") {
-            //     const selection = window.getSelection();
-            //     if (
-            //         selection.isCollapsed &&
-            //         selection.rangeCount > 0 &&
-            //         isOnFirstLine()
-            //     ) {
-            //         e.preventDefault();
-            //         const range = selection.getRangeAt(0).cloneRange();
-            //         range.setStart(ref.current, 0);
-            //         const contentBeforeCursor = range.cloneContents();
-
-            //         const fragment = document.createDocumentFragment();
-            //         fragment.appendChild(contentBeforeCursor);
-            //         const div = document.createElement("div");
-            //         div.appendChild(fragment);
-
-            //         const textBeforeCursor = div.textContent;
-            //         onFocusPreviousEditor(textBeforeCursor?.length || 0);
-            //     }
-            // } else if (e.key === "ArrowDown") {
-            //     const selection = window.getSelection();
-            //     if (
-            //         selection.isCollapsed &&
-            //         selection.rangeCount > 0 &&
-            //         isOnLastLine()
-            //     ) {
-            //         e.preventDefault();
-            //         // TODO: Calculate offset, send to onFocusNextEditor
-            //         onFocusNextEditor(0);
-            //     }
-            // }
         } else if (e.key === "ArrowUp") {
             const selection = window.getSelection();
             if (selection.rangeCount > 0 && isOnFirstLine()) {
@@ -105,6 +73,10 @@ export const useInlineEditor = ({
                 const rect = range.getBoundingClientRect();
                 onFocusNextEditor(rect.left);
             }
+        } else if (e.key === "ArrowRight" && !e.shiftKey) {
+            // Check of at end of content - if so, go to start of next editor
+        } else if (e.key === "ArrowLeft" && !e.shiftKey) {
+            // Check of at start of content - if so, go to end of prev editor
         }
     };
 
