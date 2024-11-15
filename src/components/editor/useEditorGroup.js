@@ -310,13 +310,13 @@ const useEditorGroup = ({ localStorageKey }) => {
             if (nextRef?.current) {
                 if (left === Infinity) {
                     moveCursorToEditor(nextRef, "end");
-                } else if (left === 0) {
+                } else if (left === -Infinity) {
                     moveCursorToEditor(nextRef, "start");
                 } else {
                     moveCursorToFirstLineOfEditor(nextRef, left);
                 }
             } else {
-                // No next editor, so add one and focus it
+                // No next editor, so move cursor to end of current editor
                 const currentRef = checklistItems[index]?.inputRef;
                 moveCursorToEditor(currentRef, "end");
             }
@@ -345,7 +345,7 @@ const useEditorGroup = ({ localStorageKey }) => {
             const prevRef = checklistItems[index - 1]?.inputRef;
             if (left === Infinity) {
                 moveCursorToEditor(prevRef, "end");
-            } else if (left === 0) {
+            } else if (left === -Infinity) {
                 moveCursorToEditor(prevRef, "start");
             } else {
                 moveCursorToLastLineOfEditor(prevRef, left);

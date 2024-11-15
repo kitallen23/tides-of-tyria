@@ -61,7 +61,7 @@ export const useInlineEditor = ({
             const selection = window.getSelection();
             if (selection.isCollapsed && isCursorAtEnd()) {
                 e.preventDefault();
-                onFocusNextEditor(0);
+                onFocusNextEditor(-Infinity);
             }
         } else if (e.key === "ArrowLeft" && !e.shiftKey) {
             // Check of at start of content - if so, go to end of prev editor
