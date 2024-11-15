@@ -28,26 +28,9 @@ export const useInlineEditor = ({
             e.preventDefault();
             handleNewLine();
         } else if (e.key === "Backspace") {
-            const selection = window.getSelection();
-            if (selection.rangeCount > 0) {
-                const range = selection.getRangeAt(0).cloneRange();
-                range.setStart(ref.current, 0);
-                const contentBeforeCursor = range.cloneContents();
-
-                const fragment = document.createDocumentFragment();
-                fragment.appendChild(contentBeforeCursor);
-                const div = document.createElement("div");
-                div.appendChild(fragment);
-
-                const htmlBeforeCursor = div.innerHTML;
-                const strippedHtml = DOMPurify.sanitize(htmlBeforeCursor, {
-                    ALLOWED_TAGS: ["br"],
-                });
-                const length = getDecodedLengthWithBr(strippedHtml);
-                if (length === 0) {
-                    e.preventDefault();
-                    handleRemoveCurrentLine();
-                }
+            if (isCursorAtStart()) {
+                e.preventDefault();
+                handleRemoveCurrentLine();
             }
         } else if (e.key === "Escape") {
             const selection = window.getSelection();
@@ -57,7 +40,7 @@ export const useInlineEditor = ({
                 selection.removeAllRanges();
                 selection.addRange(range);
             }
-        } else if (e.key === "ArrowUp") {
+        } else if (e.key === "ArrowUp" && !e.shiftKey) {
             const selection = window.getSelection();
             if (selection.rangeCount > 0 && isOnFirstLine()) {
                 e.preventDefault();
@@ -65,7 +48,7 @@ export const useInlineEditor = ({
                 const rect = range.getBoundingClientRect();
                 onFocusPreviousEditor(rect.left);
             }
-        } else if (e.key === "ArrowDown") {
+        } else if (e.key === "ArrowDown" && !e.shiftKey) {
             const selection = window.getSelection();
             if (selection.rangeCount > 0 && isOnLastLine()) {
                 e.preventDefault();
@@ -75,9 +58,80 @@ export const useInlineEditor = ({
             }
         } else if (e.key === "ArrowRight" && !e.shiftKey) {
             // Check of at end of content - if so, go to start of next editor
+            const selection = window.getSelection();
+            if (selection.isCollapsed && isCursorAtEnd()) {
+                e.preventDefault();
+                onFocusNextEditor(0);
+            }
         } else if (e.key === "ArrowLeft" && !e.shiftKey) {
             // Check of at start of content - if so, go to end of prev editor
+            const selection = window.getSelection();
+            if (selection.isCollapsed && isCursorAtStart()) {
+                e.preventDefault();
+                onFocusPreviousEditor(Infinity);
+            }
         }
+    };
+
+    /**
+     * Determines if the cursor is at the start of the content within a specified element.
+     *
+     * This function checks if the current selection's cursor is positioned at the very beginning
+     * of the text content within the element referenced by `ref`. It calculates the length of
+     * the content before the cursor, considering only `<br>` tags, and returns true if this length is zero.
+     *
+     * @returns {boolean} `true` if the cursor is at the start of the content, otherwise `false`.
+     */
+    const isCursorAtStart = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0).cloneRange();
+            range.setStart(ref.current, 0);
+            const contentBeforeCursor = range.cloneContents();
+
+            const fragment = document.createDocumentFragment();
+            fragment.appendChild(contentBeforeCursor);
+            const div = document.createElement("div");
+            div.appendChild(fragment);
+
+            const htmlBeforeCursor = div.innerHTML;
+            const strippedHtml = DOMPurify.sanitize(htmlBeforeCursor, {
+                ALLOWED_TAGS: ["br"],
+            });
+            const length = getDecodedLengthWithBr(strippedHtml);
+            return length === 0;
+        }
+    };
+
+    /**
+     * Determines if the cursor is at the end of the content within a specified element.
+     *
+     * This function checks if the current selection's cursor is positioned at the very end
+     * of the text content within the element referenced by `ref`. It calculates the length of
+     * the content after the cursor, considering only `<br>` tags, and returns true if this length is zero.
+     *
+     * @returns {boolean} `true` if the cursor is at the end of the content, otherwise `false`.
+     */
+    const isCursorAtEnd = () => {
+        const selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            const range = selection.getRangeAt(0).cloneRange();
+            range.setEnd(ref.current, ref.current.childNodes.length);
+            const contentAfterCursor = range.cloneContents();
+
+            const fragment = document.createDocumentFragment();
+            fragment.appendChild(contentAfterCursor);
+            const div = document.createElement("div");
+            div.appendChild(fragment);
+
+            const htmlAfterCursor = div.innerHTML;
+            const strippedHtml = DOMPurify.sanitize(htmlAfterCursor, {
+                ALLOWED_TAGS: ["br"],
+            });
+            const length = getDecodedLengthWithBr(strippedHtml);
+            return length === 0 || strippedHtml === "<br>";
+        }
+        return false;
     };
 
     /**
@@ -176,27 +230,6 @@ export const useInlineEditor = ({
         const endRange = document.createRange();
         endRange.setStart(cursorNode, cursorOffset);
         endRange.setEnd(ref.current, ref.current.childNodes.length);
-
-        // Check if cursor is inside a link. If so, don't do anything (can't
-        // create a newline in the middle of a link).
-        //
-        // NOTE: This is commented out as it was stopping us from creating a
-        // newline at the start or end of a link. Let's leave this out for now,
-        // but if uncommenting, ensure we update it to check if we're actually
-        // in the middle of a link or not.
-        //
-        // let cursorPositionInNode = range.endContainer;
-        // let wrappingTag = "";
-        // while (cursorPositionInNode && cursorPositionInNode !== ref.current) {
-        //     if (cursorPositionInNode.nodeType === Node.ELEMENT_NODE) {
-        //         wrappingTag = cursorPositionInNode.tagName;
-        //         break;
-        //     }
-        //     cursorPositionInNode = cursorPositionInNode.parentNode;
-        // }
-        // if (wrappingTag.toLowerCase() === "a") {
-        //     return;
-        // }
 
         // Extract the HTML content within this range
         const fragment = endRange.cloneContents();
