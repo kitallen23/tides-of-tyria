@@ -41,7 +41,11 @@ export const ChecklistItem = ({
     };
     const handleNewLine = text => {
         debouncedTextChange.flush();
-        onNewLine({ text, id: item.id, focus: true });
+        if (!item.inputRef.current.innerHTML && item.indentLevel > 0) {
+            onIndent({ id: item.id, indent: false });
+        } else {
+            onNewLine({ text, id: item.id, focus: true });
+        }
     };
     const handleRemoveLine = text => {
         debouncedTextChange.flush();
