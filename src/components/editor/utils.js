@@ -89,6 +89,8 @@ export const moveCursorToLastLineOfEditor = (ref, x) => {
     // Update the selection with the new range
     selection.removeAllRanges();
     selection.addRange(range);
+
+    targetEditor.scrollIntoView({ behaviour: "instant", block: "nearest" });
 };
 
 /**
@@ -186,6 +188,7 @@ export const moveCursorToFirstLineOfEditor = (ref, x) => {
     // Update the selection with the new range
     selection.removeAllRanges();
     selection.addRange(range);
+    targetEditor.scrollIntoView({ behaviour: "instant", block: "nearest" });
 };
 
 /**
@@ -293,6 +296,7 @@ export function moveCursorToCharacterOffsetOfEditor(ref, offset) {
     }
     // Focus the element to ensure the cursor is visible
     element.focus();
+    element.scrollIntoView({ behaviour: "instant", block: "nearest" });
 }
 
 /**
@@ -355,6 +359,8 @@ export function moveCursorToEditor(ref, pos = "start") {
 
     selection.removeAllRanges();
     selection.addRange(range);
+
+    ref.current.scrollIntoView({ behaviour: "instant", block: "nearest" });
 }
 
 /**
