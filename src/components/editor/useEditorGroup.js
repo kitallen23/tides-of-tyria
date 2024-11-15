@@ -126,6 +126,15 @@ const useEditorGroup = ({ localStorageKey }) => {
     const [hoveredLink, setHoveredLink] = useState(null);
     const hoveredLinkTimeoutRef = useRef(null);
 
+    // Holds a duplicate of hoveredLink to allow the UI to persist the hovered
+    // link for a short time after the hovered link is cleared
+    const [lastHoveredLink, setLastHoveredLink] = useState(null);
+    useEffect(() => {
+        if (hoveredLink?.href) {
+            setLastHoveredLink(hoveredLink);
+        }
+    }, [hoveredLink]);
+
     const debouncedSaveChecklistItems = useMemo(
         () =>
             debounce(items => {
@@ -438,6 +447,7 @@ const useEditorGroup = ({ localStorageKey }) => {
                 setShowToolbar(true);
             } else {
                 setShowToolbar(false);
+                setHoveredLink(null);
                 handleCloseLinkEditor();
             }
         }, 0);
@@ -809,7 +819,7 @@ const useEditorGroup = ({ localStorageKey }) => {
         linkHoverRef,
         showLinkHover,
         linkHoverPosition,
-        hoveredLink,
+        hoveredLink: lastHoveredLink,
         handleLinkTooltipMouseEnter,
         handleLinkTooltipMouseLeave,
         handleCopyLinkToClipboardClick,
