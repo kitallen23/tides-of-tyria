@@ -143,7 +143,7 @@ const useEditorGroup = ({ localStorageKey }) => {
                     const { inputRef, renderKey, ...rest } = item;
                     return {
                         ...rest,
-                        text: inputRef.current?.innerHTML,
+                        text: sanitizeRichText(inputRef.current?.innerHTML),
                     };
                 });
                 // TODO: Remove me
@@ -686,20 +686,23 @@ const useEditorGroup = ({ localStorageKey }) => {
     };
 
     const handleMouseLeave = event => {
-        if (event.target.tagName.toLowerCase() === "a") {
-            const editorElement = event.target.closest(
-                `.${inlineEditorStyles.inlineEditor}`
-            );
-            if (editorElement) {
-                // Clear the timeout if the mouse leaves the anchor before the delay
-                clearTimeout(hoveredLinkTimeoutRef.current);
+        const anchorElement =
+            event.target.tagName.toLowerCase() === "a"
+                ? event.target
+                : event.target.closest("a");
+        const editorElement = event.target.closest(
+            `.${inlineEditorStyles.inlineEditor}`
+        );
 
-                if (
-                    linkHoverRef.current &&
-                    !linkHoverRef.current.contains(event.relatedTarget)
-                ) {
-                    setHoveredLink(null); // Reset the hovered link state only if not entering the tooltip
-                }
+        if (anchorElement && editorElement) {
+            // Clear the timeout if the mouse leaves the anchor before the delay
+            clearTimeout(hoveredLinkTimeoutRef.current);
+
+            if (
+                linkHoverRef.current &&
+                !linkHoverRef.current.contains(event.relatedTarget)
+            ) {
+                setHoveredLink(null); // Reset the hovered link state only if not entering the tooltip
             }
         }
     };
