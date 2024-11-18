@@ -1,6 +1,6 @@
 import DOMPurify from "dompurify";
 import { useEffect } from "react";
-import { getDecodedLengthWithBr } from "../utils";
+import { getDecodedLengthWithBr, sanitizeRichText } from "../utils";
 
 const EDITOR_PADDING_VERTICAL = 3;
 
@@ -242,7 +242,9 @@ export const useInlineEditor = ({
         // Delete contents after the cursor
         endRange.deleteContents();
 
-        onChange(ref.current.innerHTML);
+        const sanitized = sanitizeRichText(ref.current.innerHTML);
+        ref.current.innerHTML = sanitized;
+        onChange(sanitized);
         setTimeout(() => onNewLine(htmlAfterCursor), 0);
     };
 

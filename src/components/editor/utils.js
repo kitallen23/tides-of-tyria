@@ -411,7 +411,13 @@ export function sanitizeRichText(dirty) {
         ADD_ATTR: ["target"],
     });
 
-    return clean;
+    // Remove all <br> tags from the end of the string
+    let result = clean;
+    while (result.endsWith("<br>")) {
+        result = result.slice(0, -4).trimEnd();
+    }
+
+    return result;
 }
 
 /**
