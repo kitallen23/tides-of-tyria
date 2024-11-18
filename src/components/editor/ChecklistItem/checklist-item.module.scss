@@ -1,4 +1,4 @@
-$editor-padding-vertical: 3px;
+@use "@/styles/variables/editor-variables" as e;
 
 @mixin indent($level) {
     padding-left: #{2 * $level}em;
@@ -13,7 +13,7 @@ $editor-padding-vertical: 3px;
         padding: 0 4px;
         border-radius: 2px;
         min-height: calc(
-            1em * var(--line-height) + 2 * #{$editor-padding-vertical}
+            1em * var(--line-height) + 2 * #{e.$editor-padding-vertical}
         );
 
         svg {
@@ -30,5 +30,23 @@ $editor-padding-vertical: 3px;
     &.isComplete {
         color: var(--text-muted) !important;
         text-decoration: line-through;
+    }
+
+    .editorWrapper {
+        position: relative;
+
+        .placeholder {
+            position: absolute;
+            pointer-events: none;
+            color: var(--text-muted);
+            top: e.$editor-padding-vertical;
+            left: e.$editor-padding-horizontal;
+            opacity: 0;
+            transition: opacity 0.1s;
+
+            &.show {
+                opacity: 1;
+            }
+        }
     }
 }

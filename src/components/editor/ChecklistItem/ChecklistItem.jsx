@@ -10,6 +10,7 @@ const INPUT_DEBOUNCE_MS = 400;
 
 export const ChecklistItem = ({
     item,
+    placeholder,
     onChange,
     onSelect,
     onNewLine,
@@ -86,6 +87,43 @@ export const ChecklistItem = ({
         }
     };
 
+    const [isPlaceholderVisible, setIsPlaceholderVisible] = useState(false);
+    useEffect(() => {
+        const editor = item.inputRef?.current;
+        if (editor) {
+            const updatePlaceholderVisibility = () => {
+                if (document.activeElement === editor) {
+                    if (editor.textContent === "") {
+                        setIsPlaceholderVisible(true);
+                    } else {
+                        setIsPlaceholderVisible(false);
+                    }
+                } else {
+                    setIsPlaceholderVisible(false);
+                }
+            };
+
+            editor.addEventListener("focus", updatePlaceholderVisibility);
+            editor.addEventListener("blur", updatePlaceholderVisibility);
+            editor.addEventListener("input", updatePlaceholderVisibility);
+
+            // Initialize placeholder
+            updatePlaceholderVisibility();
+
+            return () => {
+                editor.removeEventListener(
+                    "focus",
+                    updatePlaceholderVisibility
+                );
+                editor.removeEventListener("blur", updatePlaceholderVisibility);
+                editor.removeEventListener(
+                    "input",
+                    updatePlaceholderVisibility
+                );
+            };
+        }
+    }, [item.inputRef]);
+
     return (
         <div
             className={classNames(
@@ -102,20 +140,32 @@ export const ChecklistItem = ({
                 onChange={handleCheckboxChange}
                 className={styles.itemCheckbox}
             />
-            <InlineEditor
-                id={item.id}
-                ref={item.inputRef}
-                defaultValue={defaultValue}
-                disableColor={item.isComplete}
-                onSelect={onSelect}
-                onChange={handleTextChange}
-                onNewLine={handleNewLine}
-                onRemoveLine={handleRemoveLine}
-                onIndent={handleIndent}
-                onFocusPreviousEditor={handleFocusPreviousEditor}
-                onFocusNextEditor={handleFocusNextEditor}
-                // placeholder="To-do today"
-            />
+            <div className={styles.editorWrapper}>
+                <InlineEditor
+                    id={item.id}
+                    ref={item.inputRef}
+                    defaultValue={defaultValue}
+                    disableColor={item.isComplete}
+                    onSelect={onSelect}
+                    onChange={handleTextChange}
+                    onNewLine={handleNewLine}
+                    onRemoveLine={handleRemoveLine}
+                    onIndent={handleIndent}
+                    onFocusPreviousEditor={handleFocusPreviousEditor}
+                    onFocusNextEditor={handleFocusNextEditor}
+                />
+
+                {/* Placeholder */}
+                {placeholder ? (
+                    <div
+                        className={classNames(styles.placeholder, {
+                            [styles.show]: isPlaceholderVisible,
+                        })}
+                    >
+                        {placeholder}
+                    </div>
+                ) : null}
+            </div>
         </div>
     );
 };

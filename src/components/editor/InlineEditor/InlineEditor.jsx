@@ -34,30 +34,37 @@ export const InlineEditor = forwardRef(
         );
 
         return (
-            <div
-                id={id}
-                ref={ref}
-                className={styles.inlineEditor}
-                css={css({
-                    a: {
-                        textDecoration: "underline",
-                        color: disableColor
-                            ? undefined
-                            : colors?.muted || undefined,
-                    },
-                    b: {
-                        color: disableColor
-                            ? undefined
-                            : colors?.primary || undefined,
-                    },
-                })}
-                contentEditable
-                onMouseUp={onSelect}
-                onKeyUp={onSelect}
-                onKeyDown={handleKeyDown}
-                onClick={handleLinkClick}
-                onInput={handleInput}
-            />
+            <>
+                <div
+                    id={id}
+                    ref={ref}
+                    className={styles.inlineEditor}
+                    css={css({
+                        a: {
+                            textDecoration: "underline",
+                            color: disableColor
+                                ? undefined
+                                : colors?.muted || undefined,
+                        },
+                        b: {
+                            color: disableColor
+                                ? undefined
+                                : colors?.primary || undefined,
+                            a: {
+                                color: disableColor
+                                    ? undefined
+                                    : colors?.primary || undefined,
+                            },
+                        },
+                    })}
+                    contentEditable
+                    onMouseUp={onSelect}
+                    onKeyUp={onSelect}
+                    onKeyDown={handleKeyDown}
+                    onClick={handleLinkClick}
+                    onInput={handleInput}
+                />
+            </>
         );
     }
 );

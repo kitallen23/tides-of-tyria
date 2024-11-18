@@ -9,7 +9,10 @@ const ChecklistPage = () => {
         <div
             className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}
         >
-            <EditorGroup localStorageKey={LOCAL_STORAGE_KEYS.dailyChecklist} />
+            <EditorGroup
+                localStorageKey={LOCAL_STORAGE_KEYS.dailyChecklist}
+                placeholder="To-do daily"
+            />
         </div>
     );
 };

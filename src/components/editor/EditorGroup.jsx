@@ -16,7 +16,7 @@ import ChecklistItem from "./ChecklistItem/ChecklistItem";
 import useEditorGroup from "./useEditorGroup";
 import styles from "./editor-group.module.scss";
 
-export const EditorGroup = ({ localStorageKey }) => {
+export const EditorGroup = ({ localStorageKey, placeholder }) => {
     const {
         editorGroupRef,
         checklistItems,
@@ -258,6 +258,7 @@ export const EditorGroup = ({ localStorageKey }) => {
                         onIndent={handleIndentItem}
                         onFocusNextEditor={handleFocusNextEditor}
                         onFocusPreviousEditor={handleFocusPreviousEditor}
+                        placeholder={placeholder}
                     />
                 ))}
             </div>
