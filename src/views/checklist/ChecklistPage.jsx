@@ -1,16 +1,19 @@
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "./checklist-page.module.scss";
 
-import { EditorGroup } from "@/components/editor/EditorGroup";
-import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import ChecklistGroup from "@/components/editor/ChecklistGroup";
+import useChecklistPage from "./useChecklistPage";
 
 const ChecklistPage = () => {
+    const { dailyChecklistItems, setDailyChecklistItems } = useChecklistPage();
+
     return (
         <div
             className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}
         >
-            <EditorGroup
-                localStorageKey={LOCAL_STORAGE_KEYS.dailyChecklist}
+            <ChecklistGroup
+                checklistItems={dailyChecklistItems}
+                setChecklistItems={setDailyChecklistItems}
                 placeholder="To-do daily"
             />
         </div>

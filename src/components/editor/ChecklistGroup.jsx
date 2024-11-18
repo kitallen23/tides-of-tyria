@@ -13,13 +13,16 @@ import {
 import classNames from "classnames";
 
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
-import useEditorGroup from "./useEditorGroup";
-import styles from "./editor-group.module.scss";
+import useChecklistGroup from "./useChecklistGroup";
+import styles from "./checklist-group.module.scss";
 
-export const EditorGroup = ({ localStorageKey, placeholder }) => {
+export const ChecklistGroup = ({
+    checklistItems,
+    setChecklistItems,
+    placeholder,
+}) => {
     const {
-        editorGroupRef,
-        checklistItems,
+        checklistGroupRef,
         handleSelect,
         handleBlur,
         handleItemChange,
@@ -59,14 +62,15 @@ export const EditorGroup = ({ localStorageKey, placeholder }) => {
         handleCopyLinkToClipboardClick,
         handleLinkEditClick,
         handleLinkRemoveClick,
-    } = useEditorGroup({ localStorageKey });
+    } = useChecklistGroup({ checklistItems, setChecklistItems });
 
     // TODO: Remove me
     const logAllItems = () => {
-        if (editorGroupRef.current) {
-            const contentEditableDivs = editorGroupRef.current.querySelectorAll(
-                '[contenteditable="true"]'
-            );
+        if (checklistGroupRef.current) {
+            const contentEditableDivs =
+                checklistGroupRef.current.querySelectorAll(
+                    '[contenteditable="true"]'
+                );
             const itemsWithHtml = checklistItems.map((item, i) => ({
                 html: contentEditableDivs[i].innerHTML,
                 ...item,
@@ -78,8 +82,8 @@ export const EditorGroup = ({ localStorageKey, placeholder }) => {
     return (
         <>
             <div
-                className={styles.editorGroup}
-                ref={editorGroupRef}
+                className={styles.checklistGroup}
+                ref={checklistGroupRef}
                 onBlur={handleBlur}
                 onMouseOver={handleMouseEnter}
                 onMouseOut={handleMouseLeave}
@@ -267,3 +271,5 @@ export const EditorGroup = ({ localStorageKey, placeholder }) => {
         </>
     );
 };
+
+export default ChecklistGroup;

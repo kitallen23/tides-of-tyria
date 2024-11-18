@@ -1,9 +1,15 @@
-import { createRef, useEffect, useMemo, useRef, useState } from "react";
+import {
+    createRef,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { nanoid } from "nanoid";
-import debounce from "lodash.debounce";
 import { toast } from "react-hot-toast";
 
-import { getLocalItem, copyToClipboard } from "@/utils/util";
+import { copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import {
     moveCursorToCharacterOffsetOfEditor,
@@ -16,63 +22,8 @@ import {
 const LINK_HOVER_DELAY = 500;
 const MAX_INDENT = 3;
 
-// TODO: Remove me
-// const TEMP_VALUE = `[{"text":"Hello, <b>wo</b>","isComplete":false,"id":"Na6rkc","indentLevel":0},{"text":"<b>rld</b>","isComplete":false,"id":"Z9clUU","indentLevel":0},{"text":"<b></b>Test 3","isComplete":false,"id":"2HTcnd","indentLevel":0}]`;
-// const TEMP_VALUE = [
-//     {
-//         text: "Here's a line with no link.",
-//         isComplete: false,
-//         id: "-9nt_x",
-//         indentLevel: 0,
-//     },
-//     {
-//         text: 'Here\'s a line <a href="https://google.com" target="_blank" rel="noopener noreferrer">with a link</a>.',
-//         isComplete: false,
-//         id: "AO_ac3",
-//         indentLevel: 0,
-//     },
-//     {
-//         text: "This line is checked.",
-//         isComplete: true,
-//         id: "cwcpww",
-//         indentLevel: 0,
-//     },
-//     {
-//         text: "This line isn't checked.",
-//         isComplete: false,
-//         id: "facBXQ",
-//         indentLevel: 0,
-//     },
-// ];
-
-const useEditorGroup = ({ localStorageKey }) => {
-    const editorGroupRef = useRef(null);
-
-    const [checklistItems, setChecklistItems] = useState(() => {
-        // Load from local storage on initial render
-        const savedChecklist = getLocalItem(localStorageKey, "[]");
-        localStorage.setItem(localStorageKey, savedChecklist);
-
-        // TODO: Remove me
-        // return TEMP_VALUE.map(item => ({
-        //     ...item,
-        //     inputRef: createRef(),
-        //     renderKey: nanoid(4),
-        // }));
-
-        try {
-            const savedChecklistWithRefs = JSON.parse(savedChecklist).map(
-                item => ({
-                    ...item,
-                    inputRef: createRef(),
-                    renderKey: nanoid(4),
-                })
-            );
-            return savedChecklistWithRefs;
-        } catch {
-            return [];
-        }
-    });
+const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
+    const checklistGroupRef = useRef(null);
 
     const toolbarRef = useRef(null);
     const [showToolbar, setShowToolbar] = useState(false);
@@ -135,39 +86,6 @@ const useEditorGroup = ({ localStorageKey }) => {
         }
     }, [hoveredLink]);
 
-    const debouncedSaveChecklistItems = useMemo(
-        () =>
-            debounce(items => {
-                const sanitisedItems = items.map(item => {
-                    // eslint-disable-next-line no-unused-vars
-                    const { inputRef, renderKey, ...rest } = item;
-                    return {
-                        ...rest,
-                        text: sanitizeRichText(inputRef.current?.innerHTML),
-                    };
-                });
-                // TODO: Remove me
-                console.info(
-                    `Saving sanitised items to local storage: `,
-                    localStorageKey,
-                    sanitisedItems
-                );
-
-                localStorage.setItem(
-                    localStorageKey,
-                    JSON.stringify(sanitisedItems)
-                );
-            }, 50),
-        [localStorageKey]
-    );
-    useEffect(() => {
-        debouncedSaveChecklistItems(checklistItems);
-
-        return () => {
-            debouncedSaveChecklistItems.cancel();
-        };
-    }, [checklistItems, debouncedSaveChecklistItems]);
-
     /**
      * Handles changes to a checklist item by updating its specified property.
      *
@@ -179,10 +97,25 @@ const useEditorGroup = ({ localStorageKey }) => {
     const handleItemChange = ({ key, value, id }) => {
         // TODO: Remove me
         // console.info(`itemChange: `, id, key, value);
+
         setChecklistItems(prevItems =>
-            prevItems.map(item =>
-                item.id === id ? { ...item, [key]: value } : item
-            )
+            prevItems.map(item => {
+                if (item.id === id) {
+                    if (key === "isComplete") {
+                        return {
+                            ...item,
+                            [key]: value,
+                            lastCompletion: value
+                                ? new Date().toISOString()
+                                : undefined,
+                        };
+                    } else {
+                        return { ...item, [key]: value };
+                    }
+                } else {
+                    return item;
+                }
+            })
         );
     };
 
@@ -193,7 +126,7 @@ const useEditorGroup = ({ localStorageKey }) => {
      * @param {FocusEvent} event - The blur event object.
      */
     const handleBlur = event => {
-        if (!editorGroupRef?.current.contains(event?.relatedTarget)) {
+        if (!checklistGroupRef?.current.contains(event?.relatedTarget)) {
             setShowToolbar(false);
             handleCloseLinkEditor();
         }
@@ -207,41 +140,44 @@ const useEditorGroup = ({ localStorageKey }) => {
      * @param {string} options.id - The unique identifier of the current line (the new line will be added below this item).
      * @param {boolean} [options.focus=false] - If true, the new line will become focused.
      */
-    const handleAddItem = ({ text = "", id = "", focus = false }) => {
-        // TODO: Remove me
-        // console.info(`addItem: `, id, text, focus);
+    const handleAddItem = useCallback(
+        ({ text = "", id = "", focus = false }) => {
+            // TODO: Remove me
+            // console.info(`addItem: `, id, text, focus);
 
-        setChecklistItems(items => {
-            // Determine the index to insert the new item
-            let index = -1;
-            if (id) {
-                index = items.findIndex(item => item.id === id);
-            }
-            if (index === -1) {
-                index = items.length - 1;
-            }
+            setChecklistItems(items => {
+                // Determine the index to insert the new item
+                let index = -1;
+                if (id) {
+                    index = items.findIndex(item => item.id === id);
+                }
+                if (index === -1) {
+                    index = items.length - 1;
+                }
 
-            // Place the new item on the same indent level as the previous item
-            const newIndentLevel = items[index]?.indentLevel || 0;
+                // Place the new item on the same indent level as the previous item
+                const newIndentLevel = items[index]?.indentLevel || 0;
 
-            const newItem = {
-                text: sanitizeRichText(text),
-                isComplete: false,
-                id: nanoid(6),
-                inputRef: createRef(),
-                indentLevel: newIndentLevel,
-                renderKey: nanoid(4),
-            };
+                const newItem = {
+                    text: sanitizeRichText(text),
+                    isComplete: false,
+                    id: nanoid(6),
+                    inputRef: createRef(),
+                    indentLevel: newIndentLevel,
+                    renderKey: nanoid(4),
+                };
 
-            // Create a new array with the new item inserted at the correct position
-            const newItems = items.toSpliced(index + 1, 0, newItem);
-            if (focus) {
-                setTimeout(() => newItem.inputRef.current?.focus(), 1);
-            }
+                // Create a new array with the new item inserted at the correct position
+                const newItems = items.toSpliced(index + 1, 0, newItem);
+                if (focus) {
+                    setTimeout(() => newItem.inputRef.current?.focus(), 1);
+                }
 
-            return newItems;
-        });
-    };
+                return newItems;
+            });
+        },
+        [setChecklistItems]
+    );
 
     /**
      * Removes a line, and collapses its content into the previous line.
@@ -404,18 +340,18 @@ const useEditorGroup = ({ localStorageKey }) => {
                     return;
                 }
 
-                const editorGroupRect =
-                    editorGroupRef.current.getBoundingClientRect();
+                const checklistGroupRect =
+                    checklistGroupRef.current.getBoundingClientRect();
 
-                const relativeTop = startRect.top - editorGroupRect.top;
-                const relativeLeft = startRect.left - editorGroupRect.left;
+                const relativeTop = startRect.top - checklistGroupRect.top;
+                const relativeLeft = startRect.left - checklistGroupRect.left;
 
                 // Perform a check to ensure our toolbar doesn't go off the side
                 // of the editor (ensures it stay within bounds of the editor)
                 const leftLimit =
-                    editorGroupRect.right -
+                    checklistGroupRect.right -
                     toolbarRef.current.offsetWidth -
-                    editorGroupRect.left;
+                    checklistGroupRect.left;
 
                 let finalLeft = relativeLeft;
                 if (finalLeft > leftLimit) {
@@ -430,9 +366,9 @@ const useEditorGroup = ({ localStorageKey }) => {
                 // Perform a check to ensure our toolbar doesn't go off the side
                 // of the editor (ensures it stay within bounds of the editor)
                 const linkToolbarLeftLimit =
-                    editorGroupRect.right -
+                    checklistGroupRect.right -
                     linkEditorRef.current.offsetWidth -
-                    editorGroupRect.left;
+                    checklistGroupRect.left;
 
                 let finalLinkToolbarLeft = relativeLeft;
                 if (finalLinkToolbarLeft > linkToolbarLeftLimit) {
@@ -723,7 +659,8 @@ const useEditorGroup = ({ localStorageKey }) => {
 
     useEffect(() => {
         if (hoveredLink) {
-            const editorRect = editorGroupRef.current.getBoundingClientRect();
+            const editorRect =
+                checklistGroupRef.current.getBoundingClientRect();
             const elementBox = hoveredLink.getBoundingClientRect();
             if (!elementBox) {
                 return;
@@ -813,10 +750,10 @@ const useEditorGroup = ({ localStorageKey }) => {
             handleAddItem({});
             hasAddedInitialItem.current = true;
         }
-    }, [checklistItems]);
+    }, [checklistItems, handleAddItem]);
 
     return {
-        editorGroupRef,
+        checklistGroupRef,
         checklistItems,
         handleSelect,
         handleBlur,
@@ -860,4 +797,4 @@ const useEditorGroup = ({ localStorageKey }) => {
     };
 };
 
-export default useEditorGroup;
+export default useChecklistGroup;
