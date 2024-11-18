@@ -5,6 +5,7 @@ import classNames from "classnames";
 
 import styles from "./checklist-item.module.scss";
 import InlineEditor from "../InlineEditor/InlineEditor";
+import { getDecodedLengthWithBr } from "../utils";
 
 const INPUT_DEBOUNCE_MS = 400;
 
@@ -93,7 +94,10 @@ export const ChecklistItem = ({
         if (editor) {
             const updatePlaceholderVisibility = () => {
                 if (document.activeElement === editor) {
-                    if (editor.textContent === "") {
+                    const contentLength = getDecodedLengthWithBr(
+                        editor.innerHTML
+                    );
+                    if (contentLength === 0 || editor.innerHTML === "<br>") {
                         setIsPlaceholderVisible(true);
                     } else {
                         setIsPlaceholderVisible(false);
