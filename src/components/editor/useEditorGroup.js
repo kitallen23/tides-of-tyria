@@ -772,6 +772,32 @@ const useEditorGroup = ({ localStorageKey }) => {
             setHoveredLink(null);
         }
     };
+    const handleLinkRemoveClick = () => {
+        if (hoveredLink) {
+            // Get a handle on the parent editor so we can update its value
+            const parentEditor = hoveredLink?.closest(
+                `.${inlineEditorStyles.inlineEditor}`
+            );
+
+            // Get the parent node of the hovered link
+            const parent = hoveredLink.parentNode;
+
+            // Move all children out of the hovered link
+            while (hoveredLink.firstChild) {
+                parent.insertBefore(hoveredLink.firstChild, hoveredLink);
+            }
+
+            // Remove the hovered link element
+            parent.removeChild(hoveredLink);
+
+            setHoveredLink(null);
+
+            if (parentEditor) {
+                const id = parentEditor.id;
+                handleItemChange({ id, key: "text" });
+            }
+        }
+    };
 
     // If there are no checklist items, add a blank line (ensures there's always
     // an input field)
@@ -824,6 +850,7 @@ const useEditorGroup = ({ localStorageKey }) => {
         handleLinkTooltipMouseLeave,
         handleCopyLinkToClipboardClick,
         handleLinkEditClick,
+        handleLinkRemoveClick,
     };
 };
 

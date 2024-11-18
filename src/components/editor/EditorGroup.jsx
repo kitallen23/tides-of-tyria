@@ -3,6 +3,7 @@ import {
     AddLinkSharp,
     CheckSharp,
     ContentCopySharp,
+    DeleteSharp,
     ExpandMoreSharp,
     FormatBoldSharp,
     FormatItalicSharp,
@@ -57,6 +58,7 @@ export const EditorGroup = ({ localStorageKey }) => {
         handleLinkTooltipMouseLeave,
         handleCopyLinkToClipboardClick,
         handleLinkEditClick,
+        handleLinkRemoveClick,
     } = useEditorGroup({ localStorageKey });
 
     // TODO: Remove me
@@ -219,6 +221,14 @@ export const EditorGroup = ({ localStorageKey }) => {
                             onClick={handleCopyLinkToClipboardClick}
                         >
                             <ContentCopySharp />
+                        </Button>
+                        <Button
+                            variant="text"
+                            color="body"
+                            sx={{ minWidth: 0, padding: 0.5 }}
+                            onClick={handleLinkRemoveClick}
+                        >
+                            <DeleteSharp />
                         </Button>
                         <Button
                             variant="text"
