@@ -666,19 +666,22 @@ const useEditorGroup = ({ localStorageKey }) => {
     };
 
     const handleMouseEnter = event => {
-        if (event.target.tagName.toLowerCase() === "a") {
-            const editorElement = event.target.closest(
-                `.${inlineEditorStyles.inlineEditor}`
-            );
-            if (editorElement) {
-                // Clear any existing timeout to prevent setting state for a previous link
-                clearTimeout(hoveredLinkTimeoutRef.current);
+        const anchorElement =
+            event.target.tagName.toLowerCase() === "a"
+                ? event.target
+                : event.target.closest("a");
+        const editorElement = event.target.closest(
+            `.${inlineEditorStyles.inlineEditor}`
+        );
 
-                // Set a timeout to update the hovered link state after the delay
-                hoveredLinkTimeoutRef.current = setTimeout(() => {
-                    setHoveredLink(event.target);
-                }, LINK_HOVER_DELAY);
-            }
+        if (anchorElement && editorElement) {
+            // Clear any existing timeout to prevent setting state for a previous link
+            clearTimeout(hoveredLinkTimeoutRef.current);
+
+            // Set a timeout to update the hovered link state after the delay
+            hoveredLinkTimeoutRef.current = setTimeout(() => {
+                setHoveredLink(anchorElement);
+            }, LINK_HOVER_DELAY);
         }
     };
 
