@@ -26,7 +26,9 @@ export const useInlineEditor = ({
 
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            handleNewLine();
+            if (!e.repeat) {
+                handleNewLine();
+            }
         } else if (e.key === "Backspace") {
             if (isCursorAtStart()) {
                 e.preventDefault();
