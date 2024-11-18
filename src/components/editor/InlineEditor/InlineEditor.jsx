@@ -51,9 +51,7 @@ export const InlineEditor = forwardRef(
                                 ? undefined
                                 : colors?.primary || undefined,
                             a: {
-                                color: disableColor
-                                    ? undefined
-                                    : colors?.primary || undefined,
+                                color: "inherit",
                             },
                         },
                     })}
