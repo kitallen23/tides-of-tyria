@@ -153,7 +153,7 @@ const EventTimers = () => {
             ""
         );
         initialiseEventConfig(eventConfigString, dailyReset);
-        // console.log(
+        // console.info(
         //     `Minutes until next reset: `,
         //     differenceInMinutes(addHours(dailyReset, 24), new Date())
         // );
