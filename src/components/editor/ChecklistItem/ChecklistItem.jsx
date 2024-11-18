@@ -90,7 +90,10 @@ export const ChecklistItem = ({
         <div
             className={classNames(
                 styles.checklistItem,
-                styles[`indent${item.indentLevel}`]
+                styles[`indent${item.indentLevel}`],
+                {
+                    [styles.isComplete]: item.isComplete,
+                }
             )}
             onKeyDown={handleKeyDown}
         >
@@ -103,6 +106,7 @@ export const ChecklistItem = ({
                 id={item.id}
                 ref={item.inputRef}
                 defaultValue={defaultValue}
+                disableColor={item.isComplete}
                 onSelect={onSelect}
                 onChange={handleTextChange}
                 onNewLine={handleNewLine}

@@ -10,6 +10,7 @@ export const InlineEditor = forwardRef(
         {
             id,
             defaultValue,
+            disableColor,
             onSelect,
             onChange,
             onNewLine,
@@ -40,7 +41,14 @@ export const InlineEditor = forwardRef(
                 css={css({
                     a: {
                         textDecoration: "underline",
-                        color: colors?.primary || undefined,
+                        color: disableColor
+                            ? undefined
+                            : colors?.muted || undefined,
+                    },
+                    b: {
+                        color: disableColor
+                            ? undefined
+                            : colors?.primary || undefined,
                     },
                 })}
                 contentEditable

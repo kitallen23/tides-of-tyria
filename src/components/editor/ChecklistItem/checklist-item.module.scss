@@ -26,4 +26,9 @@ $editor-padding-vertical: 3px;
             @include indent($i);
         }
     }
+
+    &.isComplete {
+        color: var(--text-muted) !important;
+        text-decoration: line-through;
+    }
 }
