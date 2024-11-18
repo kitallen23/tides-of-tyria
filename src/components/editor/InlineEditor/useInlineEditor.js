@@ -260,9 +260,12 @@ export const useInlineEditor = ({
      * If a link is clicked, it allows the default behavior to proceed.
      **/
     const handleLinkClick = event => {
-        const target = event.target;
-        if (target.tagName.toLowerCase() === "a") {
-            window.open(target.href, "_blank");
+        const anchorElement =
+            event.target.tagName.toLowerCase() === "a"
+                ? event.target
+                : event.target.closest("a");
+        if (anchorElement) {
+            window.open(anchorElement.href, "_blank");
         }
     };
 
