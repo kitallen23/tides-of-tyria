@@ -1,7 +1,10 @@
+@use "@/styles/variables/core-variables" as c;
+
 .pageWrapper {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
+    max-width: c.$content-width-narrow;
 
     .heading {
         display: flex;
