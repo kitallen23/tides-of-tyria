@@ -1,16 +1,22 @@
 import { createRef, useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
-// import { addHours, differenceInMinutes, format } from "date-fns";
+import { addHours } from "date-fns";
+// import { differenceInMinutes, format } from "date-fns";
 
 import { getLocalItem } from "@/utils/util";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import { useTimer } from "@/utils/hooks/useTimer";
 import debounce from "lodash.debounce";
 import { sanitizeRichText } from "@/components/editor/utils";
-import { cleanDailyChecklist } from "./utils";
+import { cleanDailyChecklist, formatRelativeTime } from "./utils";
 
 const useChecklistPage = () => {
-    const { dailyReset } = useTimer();
+    const { now, dailyReset } = useTimer();
+
+    const timeUntilDailyReset = useMemo(
+        () => formatRelativeTime(now, addHours(dailyReset, 24)),
+        [now, dailyReset]
+    );
 
     const initialiseDailyChecklist = () => {
         // Load from local storage on initial render
@@ -98,6 +104,8 @@ const useChecklistPage = () => {
     return {
         dailyChecklistItems,
         setDailyChecklistItems,
+
+        timeUntilDailyReset,
     };
 };
 
