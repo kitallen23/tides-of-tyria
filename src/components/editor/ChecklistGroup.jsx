@@ -65,19 +65,19 @@ export const ChecklistGroup = ({
     } = useChecklistGroup({ checklistItems, setChecklistItems });
 
     // TODO: Remove me
-    const logAllItems = () => {
-        if (checklistGroupRef.current) {
-            const contentEditableDivs =
-                checklistGroupRef.current.querySelectorAll(
-                    '[contenteditable="true"]'
-                );
-            const itemsWithHtml = checklistItems.map((item, i) => ({
-                html: contentEditableDivs[i].innerHTML,
-                ...item,
-            }));
-            console.info(`Checklist items: `, itemsWithHtml);
-        }
-    };
+    // const logAllItems = () => {
+    //     if (checklistGroupRef.current) {
+    //         const contentEditableDivs =
+    //             checklistGroupRef.current.querySelectorAll(
+    //                 '[contenteditable="true"]'
+    //             );
+    //         const itemsWithHtml = checklistItems.map((item, i) => ({
+    //             html: contentEditableDivs[i].innerHTML,
+    //             ...item,
+    //         }));
+    //         console.info(`Checklist items: `, itemsWithHtml);
+    //     }
+    // };
 
     return (
         <>
@@ -267,7 +267,8 @@ export const ChecklistGroup = ({
                 ))}
             </div>
 
-            <Button onClick={() => logAllItems()}>Log checklist items</Button>
+            {/* TODO: Remove me */}
+            {/* <Button onClick={() => logAllItems()}>Log checklist items</Button> */}
         </>
     );
 };
