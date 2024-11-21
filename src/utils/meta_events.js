@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-10-16_02",
+        version: "2024-11-21",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1047,7 +1047,7 @@ const META_EVENTS = [
                 phases: [
                     {
                         key: "convergences",
-                        name: "Convergences",
+                        name: "Convergence",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Convergences",
                         start: 90,
@@ -1080,6 +1080,26 @@ const META_EVENTS = [
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BCoPAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "mt_balrior",
+                name: "Mount Balrior (instance)",
+                displayTitle: "Convergence: Mt Balrior",
+                color: COLOR_TYPES.blue,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "mt_balrior__convergences",
+                        name: "Convergence: Mt Balrior",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Mount_Balrior",
+                        start: 0,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BK4OAAA=]",
                     },
                 ],
             },
@@ -1157,7 +1177,7 @@ const META_EVENTS = [
                 ],
             },
             {
-                active: true,
+                active: false,
                 key: "halloween",
                 name: "Lion's Arch",
                 color: COLOR_TYPES.gray,
