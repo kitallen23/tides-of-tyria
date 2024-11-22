@@ -4,6 +4,7 @@ const DEFAULT_TIMER_CONTEXT = {
     key: 0,
     now: new Date(),
     dailyReset: new Date().setUTCHours(0, 0, 0, 0),
+    weeklyReset: undefined,
     updateKey: () => {},
 };
 export const TimerContext = createContext(DEFAULT_TIMER_CONTEXT);

@@ -1,4 +1,4 @@
-@use "../variables/core-variables" as c;
+@use "@/styles/variables/core-variables" as c;
 
 .pageWrapper {
     display: grid;
@@ -19,6 +19,11 @@
     .heading {
         display: flex;
         align-items: center;
+
+        h3 {
+            display: flex;
+            align-items: center;
+        }
     }
 
     .group {
@@ -26,6 +31,7 @@
         gap: 1rem;
     }
 
+    // TODO: Remove me
     .scratchpadPlaceholder {
         display: flex;
         align-items: center;

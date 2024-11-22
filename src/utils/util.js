@@ -9,6 +9,7 @@ import {
     isAfter as _isAfter,
     formatDistanceToNow as _formatDistanceToNow,
 } from "date-fns";
+import { isLight } from "@/utils/color";
 
 export function getTitle(string) {
     return `${string} | ${TITLE_SUFFIX}`;
@@ -78,4 +79,15 @@ export function copyToClipboard(text, options) {
 export function isHexValid(c) {
     const hexPattern = /^#[0-9A-Fa-f]{6}$/;
     return hexPattern.test(c);
+}
+
+export function setSelectionStyle({ background, textDark, textLight }) {
+    const style = document.createElement("style");
+    const isBackgroundLight = isLight(background);
+    style.innerHTML = `
+::selection {
+    background: ${background};
+    color: ${isBackgroundLight ? textDark : textLight};
+}`;
+    document.head.appendChild(style);
 }

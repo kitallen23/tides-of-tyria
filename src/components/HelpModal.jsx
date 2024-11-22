@@ -6,7 +6,7 @@ import {
     TableHead,
     TableRow,
 } from "@mui/material";
-import Modal from "@/components/Modal";
+import Modal from "@/components/Modal/Modal";
 
 const HelpModal = ({ isOpen = false, onClose }) => {
     return (
