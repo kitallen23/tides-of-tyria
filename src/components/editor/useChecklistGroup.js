@@ -187,10 +187,17 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @param {Object} params - The parameters for removing an item.
      * @param {string} params.text - The remaining text of the item that we're collapsing.
      * @param {string} params.id - The id of the item we're removing.
+     * @param {boolean} [params.force=false] - A flag indicating whether to forcefully remove the item
+     *                                         even if it's the last remaining item.*
      */
-    const handleRemoveItem = ({ text = "", id }) => {
+    const handleRemoveItem = ({ text = "", id, force = false }) => {
         // TODO: Remove me
-        // console.info(`removeItem: `, id, text);
+        // console.info(`removeItem: `, id, text, force);
+
+        // Don't allow the last item to be removed from the array, unless the force flag is passed
+        if (checklistItems.length === 1 && !force) {
+            return;
+        }
 
         const index = checklistItems.findIndex(item => item.id === id);
 
@@ -255,7 +262,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
         // If there is no content, remove the item
         if (contentLength === 0 || editor.innerHTML === "<br>") {
-            handleRemoveItem({ id });
+            handleRemoveItem({ id, force: true });
         }
     };
 
