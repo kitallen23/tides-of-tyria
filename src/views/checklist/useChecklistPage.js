@@ -79,6 +79,26 @@ const useChecklistPage = () => {
         };
     }, [todoChecklistItems, debouncedSaveTodoChecklistItems]);
 
+    const addTodoChecklistItem = () => {
+        // Only add an item if the array is currently empty
+        if (todoChecklistItems.length) {
+            return;
+        }
+
+        const newItem = {
+            text: "",
+            isComplete: false,
+            id: nanoid(6),
+            inputRef: createRef(),
+            indentLevel: 0,
+            renderKey: nanoid(4),
+        };
+        setTodoChecklistItems([newItem]);
+
+        // Focus the newly added input field
+        setTimeout(() => newItem.inputRef.current?.focus(), 0);
+    };
+
     /**
      * Daily checklist logic
      */
@@ -163,6 +183,26 @@ const useChecklistPage = () => {
         };
     }, [dailyChecklistItems, debouncedSaveDailyChecklistItems]);
 
+    const addDailyChecklistItem = () => {
+        // Only add an item if the array is currently empty
+        if (dailyChecklistItems.length) {
+            return;
+        }
+
+        const newItem = {
+            text: "",
+            isComplete: false,
+            id: nanoid(6),
+            inputRef: createRef(),
+            indentLevel: 0,
+            renderKey: nanoid(4),
+        };
+        setDailyChecklistItems([newItem]);
+
+        // Focus the newly added input field
+        setTimeout(() => newItem.inputRef.current?.focus(), 0);
+    };
+
     /**
      * Weekly checklist logic
      */
@@ -244,17 +284,40 @@ const useChecklistPage = () => {
         };
     }, [weeklyChecklistItems, debouncedSaveWeeklyChecklistItems]);
 
+    const addWeeklyChecklistItem = () => {
+        // Only add an item if the array is currently empty
+        if (weeklyChecklistItems.length) {
+            return;
+        }
+
+        const newItem = {
+            text: "",
+            isComplete: false,
+            id: nanoid(6),
+            inputRef: createRef(),
+            indentLevel: 0,
+            renderKey: nanoid(4),
+        };
+        setWeeklyChecklistItems([newItem]);
+
+        // Focus the newly added input field
+        setTimeout(() => newItem.inputRef.current?.focus(), 0);
+    };
+
     return {
         todoChecklistItems,
         setTodoChecklistItems,
+        addTodoChecklistItem,
 
         dailyChecklistItems,
-        setDailyChecklistItems,
         timeUntilDailyReset,
+        setDailyChecklistItems,
+        addDailyChecklistItem,
 
         weeklyChecklistItems,
-        setWeeklyChecklistItems,
         timeUntilWeeklyReset,
+        setWeeklyChecklistItems,
+        addWeeklyChecklistItem,
     };
 };
 

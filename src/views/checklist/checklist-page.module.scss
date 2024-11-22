@@ -21,6 +21,11 @@
         }
     }
 
+    .headingRow {
+        display: grid;
+        grid-template-columns: 1fr auto;
+    }
+
     .group {
         display: grid;
         gap: 1rem;
