@@ -1,5 +1,14 @@
+@use "@/styles/variables/editor-variables" as e;
+
 .checklistGroup {
     position: relative;
+
+    .noItemsPlaceholder {
+        margin-left: 1.7em;
+        color: var(--text-muted);
+        padding: e.$editor-padding-vertical e.$editor-padding-horizontal;
+        cursor: text;
+    }
 
     .floatingToolbar {
         position: absolute;

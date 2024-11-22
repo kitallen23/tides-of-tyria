@@ -4,10 +4,9 @@ import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "./checklist-page.module.scss";
 import ChecklistGroup from "@/components/editor/ChecklistGroup";
 import useChecklistPage from "./useChecklistPage";
-import { useTheme } from "@/utils/theme-provider";
+import classNames from "classnames";
 
 const ChecklistPage = () => {
-    const { colors } = useTheme();
     const {
         todoChecklistItems,
         setTodoChecklistItems,
@@ -27,10 +26,12 @@ const ChecklistPage = () => {
         >
             {/* Todo checklist */}
             <div className={styles.group}>
-                <h3 className={styles.heading}>
-                    <TaskAltSharp style={{ marginRight: "0.25rem" }} />
-                    To-Do List
-                </h3>
+                <div className={styles.heading}>
+                    <h3>
+                        <TaskAltSharp style={{ marginRight: "0.25rem" }} />
+                        To-Do List
+                    </h3>
+                </div>
                 <ChecklistGroup
                     checklistItems={todoChecklistItems}
                     setChecklistItems={setTodoChecklistItems}
@@ -40,20 +41,20 @@ const ChecklistPage = () => {
 
             {/* Daily checklist */}
             <div className={styles.group}>
-                <h3 className={styles.heading}>
-                    <TaskAltSharp style={{ marginRight: "0.25rem" }} />
-                    Daily Checklist
+                <div className={styles.heading}>
+                    <h3>
+                        <TaskAltSharp style={{ marginRight: "0.25rem" }} />
+                        Daily Checklist
+                    </h3>
                     <span
-                        style={{
-                            color: colors.muted,
-                            fontSize: "0.85em",
-                            fontWeight: "normal",
-                        }}
-                        className={globalStyles.hideBelowMd}
+                        className={classNames(
+                            styles.resetIndicator,
+                            globalStyles.hideBelowMd
+                        )}
                     >
                         &nbsp;| resets in {timeUntilDailyReset}
                     </span>
-                </h3>
+                </div>
                 <ChecklistGroup
                     checklistItems={dailyChecklistItems}
                     setChecklistItems={setDailyChecklistItems}
@@ -63,20 +64,20 @@ const ChecklistPage = () => {
 
             {/* Weekly checklist */}
             <div className={styles.group}>
-                <h3 className={styles.heading}>
-                    <TaskAltSharp style={{ marginRight: "0.25rem" }} />
-                    Weekly Checklist
+                <div className={styles.heading}>
+                    <h3>
+                        <TaskAltSharp style={{ marginRight: "0.25rem" }} />
+                        Weekly Checklist
+                    </h3>
                     <span
-                        style={{
-                            color: colors.muted,
-                            fontSize: "0.85em",
-                            fontWeight: "normal",
-                        }}
-                        className={globalStyles.hideBelowMd}
+                        className={classNames(
+                            styles.resetIndicator,
+                            globalStyles.hideBelowMd
+                        )}
                     >
                         &nbsp;| resets in {timeUntilWeeklyReset}
                     </span>
-                </h3>
+                </div>
                 <ChecklistGroup
                     checklistItems={weeklyChecklistItems}
                     setChecklistItems={setWeeklyChecklistItems}

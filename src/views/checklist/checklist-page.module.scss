@@ -9,6 +9,11 @@
     .heading {
         display: flex;
         align-items: center;
+
+        .resetIndicator {
+            color: var(--text-muted);
+            font-size: 0.85em;
+        }
     }
 
     .group {

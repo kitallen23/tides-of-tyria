@@ -14,6 +14,7 @@ export const ChecklistItem = ({
     placeholder,
     onChange,
     onSelect,
+    onBlur,
     onNewLine,
     onRemoveLine,
     onIndent,
@@ -80,6 +81,13 @@ export const ChecklistItem = ({
     const handleFocusNextEditor = left => {
         onFocusNextEditor({ id: item.id, left });
     };
+    const handleBlur = event => {
+        const newTarget = event.relatedTarget || document.activeElement;
+        const isNested = newTarget?.closest(".checklist-item") !== null;
+        if (!isNested) {
+            onBlur({ id: item.id });
+        }
+    };
 
     const handleKeyDown = e => {
         if (e.key === "Tab") {
@@ -135,9 +143,11 @@ export const ChecklistItem = ({
                 styles[`indent${item.indentLevel}`],
                 {
                     [styles.isComplete]: item.isComplete,
-                }
+                },
+                "checklist-item"
             )}
             onKeyDown={handleKeyDown}
+            onBlur={handleBlur}
         >
             <Checkbox
                 checked={item.isComplete}

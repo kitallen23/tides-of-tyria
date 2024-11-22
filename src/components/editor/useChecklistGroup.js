@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 import { copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import {
+    getDecodedLengthWithBr,
     moveCursorToCharacterOffsetOfEditor,
     moveCursorToEditor,
     moveCursorToFirstLineOfEditor,
@@ -169,6 +170,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
                 // Create a new array with the new item inserted at the correct position
                 const newItems = items.toSpliced(index + 1, 0, newItem);
+
                 if (focus) {
                     setTimeout(() => newItem.inputRef.current?.focus(), 1);
                 }
@@ -192,7 +194,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
         const index = checklistItems.findIndex(item => item.id === id);
 
-        if (index > 0) {
+        if (index >= 0) {
             const prevRef = checklistItems[index - 1]?.inputRef;
             if (prevRef?.current) {
                 // Find the number of characters in the previous line's content
@@ -218,6 +220,42 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             // Only remove this line if index is greater than zero (don't remove
             // the first line)
             setChecklistItems(items => items.filter(item => item.id !== id));
+        }
+    };
+
+    /**
+     * Handles the blur event for a checklist item by performing validation and potentially removing the item.
+     *
+     * This function checks if there is exactly one item in the `checklistItems` array and whether the
+     * blurred item's ID matches the current item's ID. It then verifies if the content within the
+     * associated editor is empty (considering `<br>` tags). If the content is empty, the item is removed.
+     *
+     * @param {Object} event - The blur event object containing details about the event.
+     * @param {number|string} event.id - The unique identifier of the checklist item that triggered the blur event.
+     */
+    const handleBlurItem = ({ id }) => {
+        // Perform some initial logic checks and return early if we shouldn't be
+        // removing an item
+        if (checklistItems.length !== 1) {
+            return;
+        }
+
+        const [currentItem] = checklistItems;
+        if (currentItem.id !== id) {
+            return;
+        }
+        const editor = currentItem.inputRef?.current;
+        if (!editor) {
+            return;
+        }
+
+        // Calculate the decoded length of the editor's inner HTML, considering
+        // <br> tags
+        const contentLength = getDecodedLengthWithBr(editor.innerHTML);
+
+        // If there is no content, remove the item
+        if (contentLength === 0 || editor.innerHTML === "<br>") {
+            handleRemoveItem({ id });
         }
     };
 
@@ -742,16 +780,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
     };
 
-    // If there are no checklist items, add a blank line (ensures there's always
-    // an input field)
-    const hasAddedInitialItem = useRef(false);
-    useEffect(() => {
-        if (!checklistItems.length && !hasAddedInitialItem.current) {
-            handleAddItem({});
-            hasAddedInitialItem.current = true;
-        }
-    }, [checklistItems, handleAddItem]);
-
     return {
         checklistGroupRef,
         checklistItems,
@@ -760,6 +788,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleItemChange,
         handleAddItem,
         handleRemoveItem,
+        handleBlurItem,
         handleIndentItem,
         handleApplyStyle,
         handleMouseEnter,
