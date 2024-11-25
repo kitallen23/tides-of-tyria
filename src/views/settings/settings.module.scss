@@ -1,4 +1,4 @@
-@use "../variables/core-variables" as c;
+@use "@/styles/variables/core-variables" as c;
 
 .pageWrapper {
     display: grid;
@@ -20,6 +20,14 @@
             display: flex;
             align-items: center;
             gap: 0.5em;
+        }
+
+        .uniformButton {
+            padding: 6px 8px;
+
+            @media (min-width: c.$media-md) {
+                min-width: 8rem;
+            }
         }
     }
 
@@ -86,4 +94,3 @@
     display: grid;
     gap: 1rem;
 }
-

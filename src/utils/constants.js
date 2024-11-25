@@ -21,4 +21,7 @@ export const LOCAL_STORAGE_KEYS = {
     eventConfig: "tot_event_config",
     highlightScheme: "tot_highlight_scheme",
     showCompleted: "tot_show_completed",
+    dailyChecklist: "tot_daily_checklist",
+    weeklyChecklist: "tot_weekly_checklist",
+    todoChecklist: "tot_todo_checklist",
 };

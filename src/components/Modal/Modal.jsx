@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { Box, Modal as _Modal } from "@mui/material";
 import { ClearSharp } from "@mui/icons-material";
 import classNames from "classnames";
-import styles from "@/styles/modules/modal.module.scss";
+import styles from "./modal.module.scss";
 import { useTheme } from "@/utils/theme-provider";
 
 const Modal = ({

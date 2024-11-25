@@ -1,0 +1,14 @@
+@use "@/styles/variables/editor-variables" as e;
+
+.inlineEditor {
+    outline: none;
+    padding: e.$editor-padding-vertical e.$editor-padding-horizontal;
+    min-height: calc(
+        1em * var(--line-height) + 2 * #{e.$editor-padding-vertical}
+    );
+    word-break: break-word;
+
+    a {
+        cursor: pointer;
+    }
+}
