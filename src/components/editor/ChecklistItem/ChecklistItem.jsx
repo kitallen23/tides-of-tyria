@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
-import { Checkbox } from "@mui/material";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Button, Checkbox } from "@mui/material";
+import { DragIndicator } from "@mui/icons-material";
 import debounce from "lodash.debounce";
 import classNames from "classnames";
 
@@ -21,6 +22,7 @@ export const ChecklistItem = ({
     onFocusNextEditor,
     onFocusPreviousEditor,
 }) => {
+    const checklistItemRef = useRef(null);
     const [defaultValue] = useState(item?.text || "");
 
     const debouncedTextChange = useMemo(
@@ -83,7 +85,7 @@ export const ChecklistItem = ({
     };
     const handleBlur = event => {
         const newTarget = event.relatedTarget || document.activeElement;
-        const isNested = newTarget?.closest(".checklist-item") !== null;
+        const isNested = checklistItemRef.current?.contains(newTarget);
         if (!isNested) {
             onBlur({ id: item.id });
         }
@@ -139,46 +141,66 @@ export const ChecklistItem = ({
     return (
         <div
             className={classNames(
-                styles.checklistItem,
-                styles[`indent${item.indentLevel}`],
-                {
-                    [styles.isComplete]: item.isComplete,
-                },
-                "checklist-item"
+                styles.checklistItemHoverArea,
+                styles[`indent${item.indentLevel}`]
             )}
-            onKeyDown={handleKeyDown}
-            onBlur={handleBlur}
         >
-            <Checkbox
-                checked={item.isComplete}
-                onChange={handleCheckboxChange}
-                className={styles.itemCheckbox}
-            />
-            <div className={styles.editorWrapper}>
-                <InlineEditor
-                    id={item.id}
-                    ref={item.inputRef}
-                    defaultValue={defaultValue}
-                    disableColor={item.isComplete}
-                    onSelect={onSelect}
-                    onChange={handleTextChange}
-                    onNewLine={handleNewLine}
-                    onRemoveLine={handleRemoveLine}
-                    onIndent={handleIndent}
-                    onFocusPreviousEditor={handleFocusPreviousEditor}
-                    onFocusNextEditor={handleFocusNextEditor}
+            <div className={styles.itemMenuIndicator}>
+                <Button
+                    color="muted"
+                    sx={{
+                        minWidth: 0,
+                        padding: "3px 2px",
+                        fontSize: "inherit",
+                    }}
+                    className={styles.dragHandle}
+                >
+                    <DragIndicator />
+                </Button>
+            </div>
+            <div
+                ref={checklistItemRef}
+                className={classNames(
+                    styles.checklistItem,
+                    {
+                        [styles.isComplete]: item.isComplete,
+                    },
+                    "checklist-item"
+                )}
+                onKeyDown={handleKeyDown}
+                onBlur={handleBlur}
+            >
+                <Checkbox
+                    checked={item.isComplete}
+                    onChange={handleCheckboxChange}
+                    className={styles.itemCheckbox}
                 />
+                <div className={styles.editorWrapper}>
+                    <InlineEditor
+                        id={item.id}
+                        ref={item.inputRef}
+                        defaultValue={defaultValue}
+                        disableColor={item.isComplete}
+                        onSelect={onSelect}
+                        onChange={handleTextChange}
+                        onNewLine={handleNewLine}
+                        onRemoveLine={handleRemoveLine}
+                        onIndent={handleIndent}
+                        onFocusPreviousEditor={handleFocusPreviousEditor}
+                        onFocusNextEditor={handleFocusNextEditor}
+                    />
 
-                {/* Placeholder */}
-                {placeholder ? (
-                    <div
-                        className={classNames(styles.placeholder, {
-                            [styles.show]: isPlaceholderVisible,
-                        })}
-                    >
-                        {placeholder}
-                    </div>
-                ) : null}
+                    {/* Placeholder */}
+                    {placeholder ? (
+                        <div
+                            className={classNames(styles.placeholder, {
+                                [styles.show]: isPlaceholderVisible,
+                            })}
+                        >
+                            {placeholder}
+                        </div>
+                    ) : null}
+                </div>
             </div>
         </div>
     );

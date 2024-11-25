@@ -4,6 +4,31 @@
     padding-left: #{2 * $level}em;
 }
 
+.checklistItemHoverArea {
+    margin-left: calc(-1 * ((2 * 2px) + 1em));
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+
+    @for $i from 0 through 3 {
+        &.indent#{$i} {
+            @include indent($i);
+        }
+    }
+
+    .itemMenuIndicator {
+        opacity: 0;
+        transition: opacity 0.15s;
+
+        svg {
+            height: calc(1em * var(--line-height));
+        }
+    }
+    &:hover .itemMenuIndicator {
+        opacity: 1;
+    }
+}
+
 .checklistItem {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -18,12 +43,6 @@
 
         svg {
             font-size: 1.2em;
-        }
-    }
-
-    @for $i from 0 through 3 {
-        &.indent#{$i} {
-            @include indent($i);
         }
     }
 
