@@ -12,6 +12,7 @@ import {
 } from "@mui/icons-material";
 import classNames from "classnames";
 
+import { useTheme } from "@/utils/theme-provider";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
 import useChecklistGroup from "./useChecklistGroup";
 import styles from "./checklist-group.module.scss";
@@ -21,6 +22,7 @@ export const ChecklistGroup = ({
     setChecklistItems,
     placeholder,
 }) => {
+    const { colors } = useTheme();
     const {
         checklistGroupRef,
         handleSelect,
@@ -63,6 +65,10 @@ export const ChecklistGroup = ({
         handleCopyLinkToClipboardClick,
         handleLinkEditClick,
         handleLinkRemoveClick,
+
+        handleSelectItem,
+        selectedBorderBoxPosition,
+        showSelectedBorderBox,
     } = useChecklistGroup({ checklistItems, setChecklistItems });
 
     return (
@@ -83,6 +89,18 @@ export const ChecklistGroup = ({
                 </div>
             ) : (
                 <>
+                    {/* Selected item border box */}
+                    <div
+                        className={classNames(styles.selectedItemBorderBox, {
+                            [styles.active]: showSelectedBorderBox,
+                        })}
+                        style={{
+                            ...selectedBorderBoxPosition,
+                            borderColor: colors.primary,
+                            background: `${colors.primary}08`,
+                        }}
+                    />
+
                     {/* Toolbar */}
                     <div
                         ref={toolbarRef}
@@ -260,6 +278,7 @@ export const ChecklistGroup = ({
                             onFocusNextEditor={handleFocusNextEditor}
                             onFocusPreviousEditor={handleFocusPreviousEditor}
                             onBlur={handleBlurItem}
+                            onSelectItem={handleSelectItem}
                             placeholder={placeholder}
                         />
                     ))}

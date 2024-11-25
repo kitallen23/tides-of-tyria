@@ -13,6 +13,7 @@ import { copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import {
     getDecodedLengthWithBr,
+    getMinAndMax,
     moveCursorToCharacterOffsetOfEditor,
     moveCursorToEditor,
     moveCursorToFirstLineOfEditor,
@@ -787,6 +788,132 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
     };
 
+    const [selectedItemIndices, setSelectedItemIndices] = useState([]);
+    const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
+        useState(undefined);
+    const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
+
+    /**
+     * Handles the selection of a checklist item, supporting single and range selections.
+     *
+     * This function manages the selection state of checklist items based on user interactions.
+     * When a user selects an item:
+     * - If the Shift key is held and there are already selected items, it selects a range from the
+     *   first selected item to the currently selected item.
+     * - If the Shift key is not held, it selects only the currently clicked item and its children.
+     *
+     * @param {React.MouseEvent} event - The mouse event triggered by the user's interaction.
+     * @param {string|number} id - The unique identifier of the checklist item being selected.
+     */
+    const handleSelectItem = (event, id) => {
+        // Find the index of the item with the given id in the checklistItems array
+        const itemIndex = checklistItems.findIndex(item => item.id === id);
+        const { start, end } = getIndexRangeOfItemWithChildren(itemIndex);
+
+        if (itemIndex >= 0) {
+            // Update the selected item indices based on the user's selection
+            setSelectedItemIndices(currentSelectedItems => {
+                if (event.shiftKey && currentSelectedItems.length > 0) {
+                    // If the shift key is pressed and there are already
+                    // selected items, select a range from the first selected
+                    // item to the current item
+                    return getMinAndMax([currentSelectedItems[0], start]);
+                } else {
+                    // If the Shift key is not pressed, select only the current
+                    // item and its children.
+                    return getMinAndMax([start, end]);
+                }
+            });
+            setTimeout(() => setShowSelectedBorderBox(true), 0);
+        }
+    };
+
+    /**
+     * Retrieves the index range of a checklist item along with all its child items based on indentation levels.
+     *
+     * This function identifies the range of items that are considered children of a specified checklist item.
+     * It starts from the item immediately after the given index and continues until it encounters an item
+     * with an indentation level less than or equal to the current item's indentation level.
+     *
+     * @param {number} index - The zero-based index of the checklist item for which to find the range of child items.
+     * @returns {{ start: number, end: number }} An object containing the `start` and `end` indices defining the range of child items.
+     */
+
+    const getIndexRangeOfItemWithChildren = index => {
+        const currentIndentLevel = checklistItems[index].indentLevel;
+
+        let end = index + 1;
+        while ((checklistItems[end]?.indentLevel ?? -1) > currentIndentLevel) {
+            end++;
+        }
+
+        return { start: index, end: end - 1 };
+    };
+
+    useEffect(() => {
+        const calculateSelectedBorderBox = selectedItemIndices => {
+            const checklistItemBoxes = [];
+            for (
+                let i = selectedItemIndices[0];
+                i <= selectedItemIndices[selectedItemIndices.length - 1];
+                ++i
+            ) {
+                const editor = checklistItems[i].inputRef?.current;
+                const checklistItem = editor.closest(".checklist-item");
+                checklistItemBoxes.push(checklistItem.getBoundingClientRect());
+            }
+
+            const checklistGroupBox =
+                checklistGroupRef.current.getBoundingClientRect();
+
+            // Calculate the top position of the bounding box
+            const relativeTop =
+                checklistItemBoxes[0].top - checklistGroupBox.top;
+
+            // Calculate the left position of the bounding box
+            const minX = Math.min(...checklistItemBoxes.map(rect => rect.x));
+            const relativeLeft = minX - checklistGroupBox.left;
+
+            // Calculate the bottom position of the bounding box
+            const relativeBottom =
+                checklistGroupBox.bottom -
+                checklistItemBoxes[checklistItemBoxes.length - 1].bottom;
+
+            return {
+                top: relativeTop,
+                left: relativeLeft,
+                bottom: relativeBottom,
+                right: 0,
+            };
+        };
+
+        if (selectedItemIndices?.length > 0) {
+            const selectedBorderBoxPosition =
+                calculateSelectedBorderBox(selectedItemIndices);
+            setSelectedBorderBoxPosition(selectedBorderBoxPosition);
+        }
+
+        /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    }, [selectedItemIndices]);
+
+    useEffect(() => {
+        const detectDeselectClick = event => {
+            if (
+                !event.target.closest(".item-menu-indicator") ||
+                !checklistGroupRef.current.contains(event.target)
+            ) {
+                setShowSelectedBorderBox(false);
+                setSelectedItemIndices([]);
+            }
+        };
+
+        window.addEventListener("click", detectDeselectClick);
+
+        return () => {
+            window.removeEventListener("click", detectDeselectClick);
+        };
+    }, []);
+
     return {
         checklistGroupRef,
         checklistItems,
@@ -830,6 +957,10 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleCopyLinkToClipboardClick,
         handleLinkEditClick,
         handleLinkRemoveClick,
+
+        handleSelectItem,
+        selectedBorderBoxPosition,
+        showSelectedBorderBox,
     };
 };
 

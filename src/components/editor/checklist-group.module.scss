@@ -105,4 +105,19 @@
             pointer-events: initial;
         }
     }
+
+    .selectedItemBorderBox {
+        position: absolute;
+        inset: 0;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 0.25em;
+        pointer-events: none;
+
+        visibility: hidden;
+
+        &.active {
+            visibility: visible;
+        }
+    }
 }

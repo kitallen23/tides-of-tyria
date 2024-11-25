@@ -21,6 +21,7 @@ export const ChecklistItem = ({
     onIndent,
     onFocusNextEditor,
     onFocusPreviousEditor,
+    onSelectItem,
 }) => {
     const checklistItemRef = useRef(null);
     const [defaultValue] = useState(item?.text || "");
@@ -145,7 +146,12 @@ export const ChecklistItem = ({
                 styles[`indent${item.indentLevel}`]
             )}
         >
-            <div className={styles.itemMenuIndicator}>
+            <div
+                className={classNames(
+                    styles.itemMenuIndicator,
+                    "item-menu-indicator"
+                )}
+            >
                 <Button
                     color="muted"
                     sx={{
@@ -154,6 +160,8 @@ export const ChecklistItem = ({
                         fontSize: "inherit",
                     }}
                     className={styles.dragHandle}
+                    onMouseDown={event => onSelectItem(event, item.id)}
+                    onTouchStart={event => onSelectItem(event, item.id)}
                 >
                     <DragIndicator />
                 </Button>
