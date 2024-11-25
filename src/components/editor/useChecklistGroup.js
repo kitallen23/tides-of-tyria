@@ -788,7 +788,22 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
     };
 
-    const [selectedItemIndices, setSelectedItemIndices] = useState([]);
+    /**
+     * An object containing:
+     * - start: the index of the item that was first selected by the user
+     * - end: the index of the item that was last selected by the user
+     *
+     * Note that start and end can be the same index.
+     *
+     * Example: if user clicks index 3 to select it, then shift-clicks index 7,
+     * the values would be: `{ start: 3, end: 7 }`.
+     * If the user then shift-clicks on index 0, the values would be:
+     * `{ start: 3, end: 0 }`.
+     *
+     * This allows us to keep a history of which element was the first one that
+     * the user selected.
+     */
+    const [selectedItemIndices, setSelectedItemIndices] = useState(undefined);
     const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
@@ -813,15 +828,18 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         if (itemIndex >= 0) {
             // Update the selected item indices based on the user's selection
             setSelectedItemIndices(currentSelectedItems => {
-                if (event.shiftKey && currentSelectedItems.length > 0) {
-                    // If the shift key is pressed and there are already
-                    // selected items, select a range from the first selected
-                    // item to the current item
-                    return getMinAndMax([currentSelectedItems[0], start]);
+                if (event.shiftKey && currentSelectedItems) {
+                    // If the Shift key is pressed and there are currently
+                    // selected items, extend the selection from the existing
+                    // start to the new end
+                    return {
+                        start: currentSelectedItems.start,
+                        end: itemIndex,
+                    };
                 } else {
-                    // If the Shift key is not pressed, select only the current
-                    // item and its children.
-                    return getMinAndMax([start, end]);
+                    // If the Shift key is not pressed, set the selection to the
+                    // current item's range
+                    return { start, end };
                 }
             });
             setTimeout(() => setShowSelectedBorderBox(true), 0);
@@ -838,7 +856,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @param {number} index - The zero-based index of the checklist item for which to find the range of child items.
      * @returns {{ start: number, end: number }} An object containing the `start` and `end` indices defining the range of child items.
      */
-
     const getIndexRangeOfItemWithChildren = index => {
         const currentIndentLevel = checklistItems[index].indentLevel;
 
@@ -851,13 +868,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     };
 
     useEffect(() => {
-        const calculateSelectedBorderBox = selectedItemIndices => {
+        const calculateSelectedBorderBox = ({ start, end }) => {
+            const { min, max } = getMinAndMax([start, end]);
+
             const checklistItemBoxes = [];
-            for (
-                let i = selectedItemIndices[0];
-                i <= selectedItemIndices[selectedItemIndices.length - 1];
-                ++i
-            ) {
+            for (let i = min; i <= max; ++i) {
                 const editor = checklistItems[i].inputRef?.current;
                 const checklistItem = editor.closest(".checklist-item");
                 checklistItemBoxes.push(checklistItem.getBoundingClientRect());
@@ -887,7 +902,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             };
         };
 
-        if (selectedItemIndices?.length > 0) {
+        if (selectedItemIndices) {
             const selectedBorderBoxPosition =
                 calculateSelectedBorderBox(selectedItemIndices);
             setSelectedBorderBoxPosition(selectedBorderBoxPosition);
@@ -903,7 +918,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 !checklistGroupRef.current.contains(event.target)
             ) {
                 setShowSelectedBorderBox(false);
-                setSelectedItemIndices([]);
+                setSelectedItemIndices(undefined);
             }
         };
 

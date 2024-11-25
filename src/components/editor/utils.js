@@ -478,21 +478,13 @@ function processHtml(html) {
 /**
  * Retrieves the minimum and maximum values from an array of numbers.
  *
- * This function takes an array of numeric values and returns an array containing the minimum
- * and maximum values. If all numbers in the array are identical, it returns an array with a single
- * element representing that value.
+ * This function takes an array of numbers and returns an object containing the minimum and maximum values.
  *
  * @param {number[]} numbers - An array of numbers from which to determine the minimum and maximum values.
- * @returns {number[]} An array containing:
- *   - Both the minimum and maximum numbers if they are different, e.g., `[min, max]`.
- *   - A single-element array containing the number if all elements are identical, e.g., `[min]`.
+ * @returns {{ min: number, max: number }} An object containing the minimum and maximum numbers.
  */
-
 export function getMinAndMax(numbers) {
     const max = Math.max(...numbers);
     const min = Math.min(...numbers);
-    if (min === max) {
-        return [min];
-    }
-    return [min, max];
+    return { min, max };
 }
