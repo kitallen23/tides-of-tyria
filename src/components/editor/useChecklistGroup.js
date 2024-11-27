@@ -1015,6 +1015,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
     };
 
+    /**
+     * Handles the click event to add a line above the currently selected item in the checklist.
+     * If there are selected items, it determines the minimum index and inserts a new item above it,
+     * then deactivates the selection border.
+     */
     const handleMenuAddLineAboveClick = () => {
         if (!selectedItemIndices) {
             return;
@@ -1029,6 +1034,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         deactivateSelectedBorderBox();
     };
 
+    /**
+     * Handles the click event to add a line below the currently selected item in the checklist.
+     * If there are selected items, it determines the maximum index and inserts a new item below it,
+     * then deactivates the selection border.
+     */
     const handleMenuAddLineBelowClick = () => {
         if (!selectedItemIndices) {
             return;
@@ -1043,6 +1053,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         deactivateSelectedBorderBox();
     };
 
+    /**
+     * Handles the click event to mark the selected items in the checklist as complete.
+     * If there are selected items, it determines the minimum and maximum indices and updates
+     * the checklist items within that range to be marked as complete.
+     */
     const handleMenuMarkAsComplete = () => {
         if (!selectedItemIndices) {
             return;
@@ -1066,6 +1081,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         });
     };
 
+    /**
+     * Handles the click event to mark the selected items in the checklist as incomplete.
+     * If there are selected items, it determines the minimum and maximum indices and updates
+     * the checklist items within that range to be marked as incomplete.
+     */
     const handleMenuMarkAsIncomplete = () => {
         if (!selectedItemIndices) {
             return;
@@ -1089,6 +1109,12 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         });
     };
 
+    /**
+     * Handles the click event to increase the indentation level of the selected items in the checklist.
+     * If there are selected items, it determines the minimum and maximum indices and updates
+     * the indentation level of each item within that range, ensuring it does not exceed the maximum indent level.
+     * Also triggers a recalculation of the selected item border box position.
+     */
     const handleMenuIncreaseIndent = () => {
         if (!selectedItemIndices) {
             return;
@@ -1113,6 +1139,12 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         setBorderBoxRecalculationKey(x => x + 1);
     };
 
+    /**
+     * Handles the click event to decrease the indentation level of the selected items in the checklist.
+     * If there are selected items, it determines the minimum and maximum indices and updates
+     * the indentation level of each item within that range, ensuring it does not go below zero.
+     * Also triggers a recalculation of the selected item border box position.
+     */
     const handleMenuDecreaseIndent = () => {
         if (!selectedItemIndices) {
             return;
@@ -1137,6 +1169,13 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         setBorderBoxRecalculationKey(x => x + 1);
     };
 
+    /**
+     * Handles the click event to duplicate the selected items in the checklist.
+     * If there are selected items, it determines the minimum and maximum indices,
+     * creates duplicates of each item within that range with new unique IDs and input references,
+     * inserts the duplicated items immediately after the original selection,
+     * updates the checklist items state, and deactivates the selection border.
+     */
     const handleMenuDuplicateItems = () => {
         if (!selectedItemIndices) {
             return;
@@ -1158,6 +1197,12 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         deactivateSelectedBorderBox();
     };
 
+    /**
+     * Handles the click event to delete the selected items from the checklist.
+     * If there are selected items, it determines the minimum and maximum indices,
+     * removes the items within that range from the checklist, updates the checklist items state,
+     * and deactivates the selection border.
+     */
     const handleMenuDeleteItems = () => {
         if (!selectedItemIndices) {
             return;
