@@ -88,6 +88,27 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
     }, [hoveredLink]);
 
+    const selectionMenuRef = useRef(null);
+    /**
+     * An object containing:
+     * - start: the index of the item that was first selected by the user
+     * - end: the index of the item that was last selected by the user
+     *
+     * Note that start and end can be the same index.
+     *
+     * Example: if user clicks index 3 to select it, then shift-clicks index 7,
+     * the values would be: `{ start: 3, end: 7 }`.
+     * If the user then shift-clicks on index 0, the values would be:
+     * `{ start: 3, end: 0 }`.
+     *
+     * This allows us to keep a history of which element was the first one that
+     * the user selected.
+     */
+    const [selectedItemIndices, setSelectedItemIndices] = useState(undefined);
+    const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
+        useState(undefined);
+    const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
+
     /**
      * Handles changes to a checklist item by updating its specified property.
      *
@@ -143,7 +164,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @param {boolean} [options.focus=false] - If true, the new line will become focused.
      */
     const handleAddItem = useCallback(
-        ({ text = "", id = "", focus = false }) => {
+        ({ text = "", id = "", focus = false, insertAbove = false }) => {
             // TODO: Remove me
             // console.info(`addItem: `, id, text, focus);
 
@@ -166,14 +187,17 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                     id: nanoid(6),
                     inputRef: createRef(),
                     indentLevel: newIndentLevel,
-                    renderKey: nanoid(4),
                 };
 
                 // Create a new array with the new item inserted at the correct position
-                const newItems = items.toSpliced(index + 1, 0, newItem);
+                const newItems = items.toSpliced(
+                    insertAbove ? index : index + 1,
+                    0,
+                    newItem
+                );
 
                 if (focus) {
-                    setTimeout(() => newItem.inputRef.current?.focus(), 1);
+                    setTimeout(() => newItem.inputRef.current?.focus(), 0);
                 }
 
                 return newItems;
@@ -788,26 +812,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
     };
 
-    /**
-     * An object containing:
-     * - start: the index of the item that was first selected by the user
-     * - end: the index of the item that was last selected by the user
-     *
-     * Note that start and end can be the same index.
-     *
-     * Example: if user clicks index 3 to select it, then shift-clicks index 7,
-     * the values would be: `{ start: 3, end: 7 }`.
-     * If the user then shift-clicks on index 0, the values would be:
-     * `{ start: 3, end: 0 }`.
-     *
-     * This allows us to keep a history of which element was the first one that
-     * the user selected.
-     */
-    const [selectedItemIndices, setSelectedItemIndices] = useState(undefined);
-    const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
-        useState(undefined);
-    const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
-
     const activateSelectedBorderBox = () => {
         const selection = window.getSelection();
         if (selection) {
@@ -815,6 +819,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
         setShowToolbar(false);
         setTimeout(() => setShowSelectedBorderBox(true), 0);
+    };
+
+    const deactivateSelectedBorderBox = () => {
+        setShowSelectedBorderBox(false);
+        setSelectedItemIndices(undefined);
     };
 
     /**
@@ -876,6 +885,8 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         return { start: index, end: end - 1 };
     };
 
+    const [borderBoxRecalculationKey, setBorderBoxRecalculationKey] =
+        useState(0);
     useEffect(() => {
         const calculateSelectedBorderBox = ({ start, end }) => {
             const { min, max } = getMinAndMax([start, end]);
@@ -918,21 +929,21 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
 
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [selectedItemIndices]);
+    }, [selectedItemIndices, borderBoxRecalculationKey]);
 
     useEffect(() => {
         const handleClick = event => {
-            const isWithinGroup = checklistGroupRef.current.contains(
+            const isWithinGroup = checklistGroupRef.current?.contains(
                 event.target
             );
             const isItemMenuIndicator = event.target.closest(
                 ".item-menu-indicator"
             );
+            const isMenu = selectionMenuRef.current?.contains(event.target);
 
             // Handle deselection
-            if (!isItemMenuIndicator || !isWithinGroup) {
-                setShowSelectedBorderBox(false);
-                setSelectedItemIndices(undefined);
+            if ((!isItemMenuIndicator && !isMenu) || !isWithinGroup) {
+                deactivateSelectedBorderBox();
             }
 
             // Handle shift-click selection
@@ -988,8 +999,8 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             // will be used to determine if the click event is between editors
             // of the same editor group.
             const currentEditorGroup =
-                currentEditor.closest(".checklist-group");
-            const targetEditorGroup = targetEditor.closest(".checklist-group");
+                currentEditor?.closest(".checklist-group");
+            const targetEditorGroup = targetEditor?.closest(".checklist-group");
 
             // If we have shift-clicked between this editor and another (in the
             // same checklist group), don't highlight any text
@@ -1002,6 +1013,170 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 event.preventDefault();
             }
         }
+    };
+
+    const handleMenuAddLineAboveClick = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        const itemAtIndex = checklistItems[min];
+        handleAddItem({ id: itemAtIndex.id, insertAbove: true, focus: true });
+        deactivateSelectedBorderBox();
+    };
+
+    const handleMenuAddLineBelowClick = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        const itemAtIndex = checklistItems[max];
+        handleAddItem({ id: itemAtIndex.id, insertAbove: false, focus: true });
+        deactivateSelectedBorderBox();
+    };
+
+    const handleMenuMarkAsComplete = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        setChecklistItems(prevItems => {
+            const newItems = prevItems.map((item, i) => {
+                if (i >= min && i <= max) {
+                    return {
+                        ...item,
+                        isComplete: true,
+                    };
+                }
+                return item;
+            });
+            return newItems;
+        });
+    };
+
+    const handleMenuMarkAsIncomplete = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        setChecklistItems(prevItems => {
+            const newItems = prevItems.map((item, i) => {
+                if (i >= min && i <= max) {
+                    return {
+                        ...item,
+                        isComplete: false,
+                    };
+                }
+                return item;
+            });
+            return newItems;
+        });
+    };
+
+    const handleMenuIncreaseIndent = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        setChecklistItems(prevItems => {
+            const newItems = prevItems.map((item, i) => {
+                if (i >= min && i <= max) {
+                    return {
+                        ...item,
+                        indentLevel: Math.min(item.indentLevel + 1, MAX_INDENT),
+                    };
+                }
+                return item;
+            });
+            return newItems;
+        });
+        setBorderBoxRecalculationKey(x => x + 1);
+    };
+
+    const handleMenuDecreaseIndent = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        setChecklistItems(prevItems => {
+            const newItems = prevItems.map((item, i) => {
+                if (i >= min && i <= max) {
+                    return {
+                        ...item,
+                        indentLevel: Math.max(item.indentLevel - 1, 0),
+                    };
+                }
+                return item;
+            });
+            return newItems;
+        });
+        setBorderBoxRecalculationKey(x => x + 1);
+    };
+
+    const handleMenuDuplicateItems = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        const newItems = checklistItems
+            .slice(min, max + 1)
+            .map(item => ({ ...item, id: nanoid(6), inputRef: createRef() }));
+        const newChecklistItems = checklistItems.toSpliced(
+            max + 1,
+            0,
+            ...newItems
+        );
+        setChecklistItems(newChecklistItems);
+        deactivateSelectedBorderBox();
+    };
+
+    const handleMenuDeleteItems = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        setChecklistItems(prevItems => {
+            const newItems = prevItems.filter((_, i) => {
+                if (i >= min && i <= max) {
+                    return false;
+                }
+                return true;
+            });
+            return newItems;
+        });
+        deactivateSelectedBorderBox();
     };
 
     return {
@@ -1052,6 +1227,16 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleSelectItem,
         selectedBorderBoxPosition,
         showSelectedBorderBox,
+
+        selectionMenuRef,
+        handleMenuAddLineAboveClick,
+        handleMenuAddLineBelowClick,
+        handleMenuMarkAsComplete,
+        handleMenuMarkAsIncomplete,
+        handleMenuIncreaseIndent,
+        handleMenuDecreaseIndent,
+        handleMenuDuplicateItems,
+        handleMenuDeleteItems,
     };
 };
 

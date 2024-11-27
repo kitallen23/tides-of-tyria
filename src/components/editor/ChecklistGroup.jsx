@@ -1,11 +1,30 @@
-import { Button, TextField } from "@mui/material";
+import {
+    Box,
+    Button,
+    Divider,
+    ListItemIcon,
+    ListItemText,
+    MenuItem,
+    MenuList,
+    Paper,
+    TextField,
+    Typography,
+    useMediaQuery,
+} from "@mui/material";
 import {
     AddLinkSharp,
+    AddSharp,
+    ArrowDownwardSharp,
+    ArrowUpwardSharp,
+    CheckBoxOutlineBlankSharp,
+    CheckBoxSharp,
     CheckSharp,
     ContentCopySharp,
     DeleteSharp,
     ExpandMoreSharp,
     FormatBoldSharp,
+    FormatIndentDecreaseSharp,
+    FormatIndentIncreaseSharp,
     FormatItalicSharp,
     FormatUnderlinedSharp,
     LanguageSharp,
@@ -23,6 +42,7 @@ export const ChecklistGroup = ({
     placeholder,
 }) => {
     const { colors } = useTheme();
+    const isSmallScreen = useMediaQuery("(max-width: 768px)");
     const {
         checklistGroupRef,
         handleSelect,
@@ -70,6 +90,16 @@ export const ChecklistGroup = ({
         handleSelectItem,
         selectedBorderBoxPosition,
         showSelectedBorderBox,
+
+        selectionMenuRef,
+        handleMenuAddLineAboveClick,
+        handleMenuAddLineBelowClick,
+        handleMenuMarkAsComplete,
+        handleMenuMarkAsIncomplete,
+        handleMenuIncreaseIndent,
+        handleMenuDecreaseIndent,
+        handleMenuDuplicateItems,
+        handleMenuDeleteItems,
     } = useChecklistGroup({ checklistItems, setChecklistItems });
 
     return (
@@ -284,6 +314,155 @@ export const ChecklistGroup = ({
                             placeholder={placeholder}
                         />
                     ))}
+
+                    {/* Selection menu */}
+                    <div
+                        className={classNames(
+                            styles.selectionMenu,
+                            "selection-menu",
+                            { [styles.active]: showSelectedBorderBox }
+                        )}
+                        ref={selectionMenuRef}
+                    >
+                        <Paper sx={{ width: 300 }}>
+                            <MenuList dense>
+                                <MenuItem onClick={handleMenuMarkAsComplete}>
+                                    <ListItemIcon>
+                                        <CheckBoxSharp />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Mark as complete
+                                    </ListItemText>
+                                    {isSmallScreen ? null : (
+                                        <Typography
+                                            sx={{
+                                                color: colors.muted,
+                                                fontSize: "inherit",
+                                            }}
+                                        >
+                                            <code>Enter</code>
+                                        </Typography>
+                                    )}
+                                </MenuItem>
+                                <MenuItem onClick={handleMenuMarkAsIncomplete}>
+                                    <ListItemIcon>
+                                        <CheckBoxOutlineBlankSharp />
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        Mark as incomplete
+                                    </ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={handleMenuDuplicateItems}>
+                                    <ListItemIcon>
+                                        <ContentCopySharp />
+                                    </ListItemIcon>
+                                    <ListItemText>Duplicate</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={handleMenuDeleteItems}>
+                                    <ListItemIcon>
+                                        <DeleteSharp />
+                                    </ListItemIcon>
+                                    <ListItemText>Delete</ListItemText>
+                                    {isSmallScreen ? null : (
+                                        <Typography
+                                            sx={{
+                                                color: colors.muted,
+                                                fontSize: "inherit",
+                                            }}
+                                        >
+                                            <code>Backspace</code>
+                                        </Typography>
+                                    )}
+                                </MenuItem>
+
+                                <Divider />
+
+                                <MenuItem onClick={handleMenuAddLineAboveClick}>
+                                    <ListItemIcon>
+                                        <Box
+                                            position="relative"
+                                            display="inline-flex"
+                                        >
+                                            <AddSharp />
+                                            <ArrowUpwardSharp
+                                                style={{
+                                                    fontSize: "1em",
+                                                    color: colors.muted,
+                                                }}
+                                                sx={{
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    right: 0,
+                                                    transform:
+                                                        "translate(40%,-40%)",
+                                                }}
+                                            />
+                                        </Box>
+                                    </ListItemIcon>
+                                    <ListItemText>Add line above</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={handleMenuAddLineBelowClick}>
+                                    <ListItemIcon>
+                                        <Box
+                                            position="relative"
+                                            display="inline-flex"
+                                        >
+                                            <AddSharp />
+                                            <ArrowDownwardSharp
+                                                style={{
+                                                    fontSize: "1em",
+                                                    color: colors.muted,
+                                                }}
+                                                sx={{
+                                                    position: "absolute",
+                                                    top: 0,
+                                                    right: 0,
+                                                    transform:
+                                                        "translate(40%,-40%)",
+                                                }}
+                                            />
+                                        </Box>
+                                    </ListItemIcon>
+                                    <ListItemText>Add line below</ListItemText>
+                                </MenuItem>
+
+                                <Divider />
+
+                                <MenuItem onClick={handleMenuIncreaseIndent}>
+                                    <ListItemIcon>
+                                        <FormatIndentIncreaseSharp />
+                                    </ListItemIcon>
+                                    <ListItemText>Increase indent</ListItemText>
+                                    {isSmallScreen ? null : (
+                                        <Typography
+                                            sx={{
+                                                color: colors.muted,
+                                                fontSize: "inherit",
+                                            }}
+                                        >
+                                            <code>Tab</code>
+                                        </Typography>
+                                    )}
+                                </MenuItem>
+                                <MenuItem onClick={handleMenuDecreaseIndent}>
+                                    <ListItemIcon>
+                                        <FormatIndentDecreaseSharp />
+                                    </ListItemIcon>
+                                    <ListItemText>Decrease indent</ListItemText>
+                                    {isSmallScreen ? null : (
+                                        <Typography
+                                            sx={{
+                                                color: colors.muted,
+                                                fontSize: "inherit",
+                                            }}
+                                        >
+                                            <code>Shift</code>+<code>Tab</code>
+                                        </Typography>
+                                    )}
+                                </MenuItem>
+                            </MenuList>
+                        </Paper>
+                    </div>
                 </>
             )}
         </div>

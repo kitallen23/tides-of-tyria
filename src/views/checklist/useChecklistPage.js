@@ -39,7 +39,6 @@ const useChecklistPage = () => {
             const todoChecklistWithRefs = parsedChecklist.map(item => ({
                 ...item,
                 inputRef: createRef(),
-                renderKey: nanoid(4),
             }));
             return todoChecklistWithRefs;
         } catch {
@@ -57,7 +56,7 @@ const useChecklistPage = () => {
                 // Sanitise the HTML of the items
                 const sanitisedItems = items.map(item => {
                     // eslint-disable-next-line no-unused-vars
-                    const { inputRef, renderKey, ...rest } = item;
+                    const { inputRef, ...rest } = item;
                     return {
                         ...rest,
                         text: sanitizeRichText(inputRef.current?.innerHTML),
@@ -91,7 +90,6 @@ const useChecklistPage = () => {
             id: nanoid(6),
             inputRef: createRef(),
             indentLevel: 0,
-            renderKey: nanoid(4),
         };
         setTodoChecklistItems([newItem]);
 
@@ -131,7 +129,6 @@ const useChecklistPage = () => {
             const dailyChecklistWithRefs = cleanedDailyChecklist.map(item => ({
                 ...item,
                 inputRef: createRef(),
-                renderKey: nanoid(4),
             }));
             return dailyChecklistWithRefs;
         } catch {
@@ -161,7 +158,7 @@ const useChecklistPage = () => {
                 // Sanitise the HTML of the items
                 const sanitisedItems = items.map(item => {
                     // eslint-disable-next-line no-unused-vars
-                    const { inputRef, renderKey, ...rest } = item;
+                    const { inputRef, ...rest } = item;
                     return {
                         ...rest,
                         text: sanitizeRichText(inputRef.current?.innerHTML),
@@ -195,7 +192,6 @@ const useChecklistPage = () => {
             id: nanoid(6),
             inputRef: createRef(),
             indentLevel: 0,
-            renderKey: nanoid(4),
         };
         setDailyChecklistItems([newItem]);
 
@@ -236,7 +232,6 @@ const useChecklistPage = () => {
                 item => ({
                     ...item,
                     inputRef: createRef(),
-                    renderKey: nanoid(4),
                 })
             );
             return weeklyChecklistWithRefs;
@@ -262,7 +257,7 @@ const useChecklistPage = () => {
                 // Sanitise the HTML of the items
                 const sanitisedItems = items.map(item => {
                     // eslint-disable-next-line no-unused-vars
-                    const { inputRef, renderKey, ...rest } = item;
+                    const { inputRef, ...rest } = item;
                     return {
                         ...rest,
                         text: sanitizeRichText(inputRef.current?.innerHTML),
@@ -296,7 +291,6 @@ const useChecklistPage = () => {
             id: nanoid(6),
             inputRef: createRef(),
             indentLevel: 0,
-            renderKey: nanoid(4),
         };
         setWeeklyChecklistItems([newItem]);
 

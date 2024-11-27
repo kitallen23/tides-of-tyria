@@ -120,4 +120,15 @@
             visibility: visible;
         }
     }
+
+    .selectionMenu {
+        position: absolute;
+        top: 0;
+        right: 0;
+        display: none;
+
+        &.active {
+            display: initial;
+        }
+    }
 }
