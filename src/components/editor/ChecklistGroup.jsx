@@ -90,6 +90,7 @@ export const ChecklistGroup = ({
         handleSelectItem,
         selectedBorderBoxPosition,
         showSelectedBorderBox,
+        isSelectionMenuOpen,
 
         selectionMenuRef,
         handleMenuAddLineAboveClick,
@@ -320,7 +321,7 @@ export const ChecklistGroup = ({
                         className={classNames(
                             styles.selectionMenu,
                             "selection-menu",
-                            { [styles.active]: showSelectedBorderBox }
+                            { [styles.active]: isSelectionMenuOpen }
                         )}
                         ref={selectionMenuRef}
                     >

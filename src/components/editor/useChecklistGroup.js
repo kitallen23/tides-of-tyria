@@ -108,6 +108,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
+    const [isSelectionMenuOpen, setIsSelectionMenuOpen] = useState(false);
 
     /**
      * Handles changes to a checklist item by updating its specified property.
@@ -817,12 +818,19 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         if (selection) {
             selection.removeAllRanges();
         }
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
         setShowToolbar(false);
-        setTimeout(() => setShowSelectedBorderBox(true), 0);
+        setTimeout(() => {
+            setShowSelectedBorderBox(true);
+            setIsSelectionMenuOpen(true);
+        }, 0);
     };
 
     const deactivateSelectedBorderBox = () => {
         setShowSelectedBorderBox(false);
+        setIsSelectionMenuOpen(false);
         setSelectedItemIndices(undefined);
     };
 
@@ -1115,7 +1123,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * the indentation level of each item within that range, ensuring it does not exceed the maximum indent level.
      * Also triggers a recalculation of the selected item border box position.
      */
-    const handleMenuIncreaseIndent = () => {
+    const handleMenuIncreaseIndent = useCallback(() => {
         if (!selectedItemIndices) {
             return;
         }
@@ -1137,7 +1145,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             return newItems;
         });
         setBorderBoxRecalculationKey(x => x + 1);
-    };
+    }, [selectedItemIndices, setChecklistItems]);
 
     /**
      * Handles the click event to decrease the indentation level of the selected items in the checklist.
@@ -1145,7 +1153,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * the indentation level of each item within that range, ensuring it does not go below zero.
      * Also triggers a recalculation of the selected item border box position.
      */
-    const handleMenuDecreaseIndent = () => {
+    const handleMenuDecreaseIndent = useCallback(() => {
         if (!selectedItemIndices) {
             return;
         }
@@ -1167,7 +1175,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             return newItems;
         });
         setBorderBoxRecalculationKey(x => x + 1);
-    };
+    }, [selectedItemIndices, setChecklistItems]);
 
     /**
      * Handles the click event to duplicate the selected items in the checklist.
@@ -1203,7 +1211,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * removes the items within that range from the checklist, updates the checklist items state,
      * and deactivates the selection border.
      */
-    const handleMenuDeleteItems = () => {
+    const handleMenuDeleteItems = useCallback(() => {
         if (!selectedItemIndices) {
             return;
         }
@@ -1222,7 +1230,46 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             return newItems;
         });
         deactivateSelectedBorderBox();
-    };
+    }, [selectedItemIndices, setChecklistItems]);
+
+    useEffect(() => {
+        const handleKeyDown = event => {
+            // Return early if we don't even have a selection active
+            if (!showSelectedBorderBox) {
+                return;
+            }
+
+            // On press of escape, close the window or deactivate the selected
+            // border box
+            if (event.key === "Escape") {
+                if (isSelectionMenuOpen) {
+                    setIsSelectionMenuOpen(false);
+                } else {
+                    deactivateSelectedBorderBox();
+                }
+            } else if (event.key === "Tab" && !event.shiftKey) {
+                handleMenuIncreaseIndent();
+                event.preventDefault();
+            } else if (event.key === "Tab" && event.shiftKey) {
+                handleMenuDecreaseIndent();
+                event.preventDefault();
+            } else if (event.key === "Delete" || event.key === "Backspace") {
+                handleMenuDeleteItems();
+                event.preventDefault();
+            }
+        };
+
+        window.addEventListener("keydown", handleKeyDown);
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [
+        isSelectionMenuOpen,
+        showSelectedBorderBox,
+        handleMenuIncreaseIndent,
+        handleMenuDecreaseIndent,
+        handleMenuDeleteItems,
+    ]);
 
     return {
         checklistGroupRef,
@@ -1272,6 +1319,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleSelectItem,
         selectedBorderBoxPosition,
         showSelectedBorderBox,
+        isSelectionMenuOpen,
 
         selectionMenuRef,
         handleMenuAddLineAboveClick,
