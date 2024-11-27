@@ -984,12 +984,20 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 document.activeElement?.closest(".inline-editor");
             const targetEditor = event.target?.closest(".inline-editor");
 
-            // If we have shift-clicked between this editor and another, don't
-            // highlight any text
+            // Get the checklist group "parents" of the editors above. These
+            // will be used to determine if the click event is between editors
+            // of the same editor group.
+            const currentEditorGroup =
+                currentEditor.closest(".checklist-group");
+            const targetEditorGroup = targetEditor.closest(".checklist-group");
+
+            // If we have shift-clicked between this editor and another (in the
+            // same checklist group), don't highlight any text
             if (
                 currentEditor &&
                 targetEditor &&
-                currentEditor.id !== targetEditor.id
+                currentEditor.id !== targetEditor.id &&
+                currentEditorGroup === targetEditorGroup
             ) {
                 event.preventDefault();
             }

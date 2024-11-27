@@ -74,7 +74,7 @@ export const ChecklistGroup = ({
 
     return (
         <div
-            className={styles.checklistGroup}
+            className={classNames(styles.checklistGroup, "checklist-group")}
             ref={checklistGroupRef}
             onBlur={handleBlur}
             onMouseOver={handleMouseEnter}
