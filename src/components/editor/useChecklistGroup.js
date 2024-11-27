@@ -808,6 +808,15 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
 
+    const activateSelectedBorderBox = () => {
+        const selection = window.getSelection();
+        if (selection) {
+            selection.removeAllRanges();
+        }
+        setShowToolbar(false);
+        setTimeout(() => setShowSelectedBorderBox(true), 0);
+    };
+
     /**
      * Handles the selection of a checklist item, supporting single and range selections.
      *
@@ -842,7 +851,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                     return { start, end };
                 }
             });
-            setTimeout(() => setShowSelectedBorderBox(true), 0);
+            activateSelectedBorderBox();
         }
     };
 
@@ -949,7 +958,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                             start: activeEditorIndex,
                             end: targetEditorIndex,
                         });
-                        setTimeout(() => setShowSelectedBorderBox(true), 0);
+                        activateSelectedBorderBox();
                     }
                 }
             }
