@@ -949,15 +949,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                             start: activeEditorIndex,
                             end: targetEditorIndex,
                         });
-                        setShowSelectedBorderBox(true);
-
-                        // TODO: Remove me
-                        // event.preventDefault();
-
-                        // const selection = window.getSelection();
-                        // if (selection) {
-                        //     selection.removeAllRanges();
-                        // }
+                        setTimeout(() => setShowSelectedBorderBox(true), 0);
                     }
                 }
             }
@@ -969,6 +961,31 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             window.removeEventListener("click", handleClick);
         };
     }, [checklistItems]);
+
+    /**
+     * Handles the mouse down event on the editor. If the Shift key is pressed and the click
+     * occurs between different inline editors, it prevents text highlighting.
+     *
+     * @param {MouseEvent} event - The mouse down event object.
+     */
+    const handleEditorMouseDown = event => {
+        if (event.shiftKey) {
+            // Get the current and target editors of the click event
+            const currentEditor =
+                document.activeElement?.closest(".inline-editor");
+            const targetEditor = event.target?.closest(".inline-editor");
+
+            // If we have shift-clicked between this editor and another, don't
+            // highlight any text
+            if (
+                currentEditor &&
+                targetEditor &&
+                currentEditor.id !== targetEditor.id
+            ) {
+                event.preventDefault();
+            }
+        }
+    };
 
     return {
         checklistGroupRef,
@@ -985,6 +1002,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleMouseLeave,
         handleFocusNextEditor,
         handleFocusPreviousEditor,
+        handleEditorMouseDown,
 
         toolbarRef,
         showToolbar,

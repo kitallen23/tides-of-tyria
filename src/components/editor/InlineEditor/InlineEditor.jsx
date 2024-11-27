@@ -18,6 +18,7 @@ export const InlineEditor = forwardRef(
             onRemoveLine,
             onFocusPreviousEditor,
             onFocusNextEditor,
+            onMouseDown,
         },
         ref
     ) => {
@@ -61,6 +62,7 @@ export const InlineEditor = forwardRef(
                     onKeyUp={onSelect}
                     onKeyDown={handleKeyDown}
                     onClick={handleLinkClick}
+                    onMouseDown={onMouseDown}
                     onInput={handleInput}
                 />
             </>

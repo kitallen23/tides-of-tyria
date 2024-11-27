@@ -22,6 +22,7 @@ export const ChecklistItem = ({
     onFocusNextEditor,
     onFocusPreviousEditor,
     onSelectItem,
+    onMouseDown,
 }) => {
     const checklistItemRef = useRef(null);
     const [defaultValue] = useState(item?.text || "");
@@ -199,6 +200,7 @@ export const ChecklistItem = ({
                         onIndent={handleIndent}
                         onFocusPreviousEditor={handleFocusPreviousEditor}
                         onFocusNextEditor={handleFocusNextEditor}
+                        onMouseDown={onMouseDown}
                     />
 
                     {/* Placeholder */}

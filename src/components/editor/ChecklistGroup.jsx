@@ -37,6 +37,7 @@ export const ChecklistGroup = ({
         handleMouseLeave,
         handleFocusNextEditor,
         handleFocusPreviousEditor,
+        handleEditorMouseDown,
 
         toolbarRef,
         showToolbar,
@@ -279,6 +280,7 @@ export const ChecklistGroup = ({
                             onFocusPreviousEditor={handleFocusPreviousEditor}
                             onBlur={handleBlurItem}
                             onSelectItem={handleSelectItem}
+                            onMouseDown={handleEditorMouseDown}
                             placeholder={placeholder}
                         />
                     ))}
