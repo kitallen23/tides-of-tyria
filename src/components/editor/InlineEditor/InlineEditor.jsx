@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { css } from "@emotion/react";
+import classNames from "classnames";
 
 import styles from "./inline-editor.module.scss";
 import { useInlineEditor } from "./useInlineEditor";
@@ -38,7 +39,7 @@ export const InlineEditor = forwardRef(
                 <div
                     id={id}
                     ref={ref}
-                    className={styles.inlineEditor}
+                    className={classNames(styles.inlineEditor, "inline-editor")}
                     css={css({
                         a: {
                             textDecoration: "underline",

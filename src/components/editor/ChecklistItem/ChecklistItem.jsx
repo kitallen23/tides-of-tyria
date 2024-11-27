@@ -146,6 +146,7 @@ export const ChecklistItem = ({
                 styles[`indent${item.indentLevel}`]
             )}
         >
+            {/* Drag handle / menu icon */}
             <div
                 className={classNames(
                     styles.itemMenuIndicator,
@@ -166,6 +167,8 @@ export const ChecklistItem = ({
                     <DragIndicator />
                 </Button>
             </div>
+
+            {/* Checklist item */}
             <div
                 ref={checklistItemRef}
                 className={classNames(

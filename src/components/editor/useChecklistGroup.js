@@ -912,22 +912,63 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     }, [selectedItemIndices]);
 
     useEffect(() => {
-        const detectDeselectClick = event => {
-            if (
-                !event.target.closest(".item-menu-indicator") ||
-                !checklistGroupRef.current.contains(event.target)
-            ) {
+        const handleClick = event => {
+            const isWithinGroup = checklistGroupRef.current.contains(
+                event.target
+            );
+            const isItemMenuIndicator = event.target.closest(
+                ".item-menu-indicator"
+            );
+
+            // Handle deselection
+            if (!isItemMenuIndicator || !isWithinGroup) {
                 setShowSelectedBorderBox(false);
                 setSelectedItemIndices(undefined);
             }
+
+            // Handle shift-click selection
+            if (event.shiftKey && isWithinGroup) {
+                const activeEditor =
+                    document.activeElement?.closest(".inline-editor");
+                const targetEditor = event.target.closest(".inline-editor");
+
+                if (
+                    activeEditor &&
+                    targetEditor &&
+                    activeEditor.id !== targetEditor.id
+                ) {
+                    const activeEditorIndex = checklistItems.findIndex(
+                        item => item.id === activeEditor.id
+                    );
+                    const targetEditorIndex = checklistItems.findIndex(
+                        item => item.id === targetEditor.id
+                    );
+
+                    if (activeEditorIndex !== -1 && targetEditorIndex !== -1) {
+                        setSelectedItemIndices({
+                            start: activeEditorIndex,
+                            end: targetEditorIndex,
+                        });
+                        setShowSelectedBorderBox(true);
+
+                        // TODO: Remove me
+                        // event.preventDefault();
+
+                        // const selection = window.getSelection();
+                        // if (selection) {
+                        //     selection.removeAllRanges();
+                        // }
+                    }
+                }
+            }
         };
 
-        window.addEventListener("click", detectDeselectClick);
+        window.addEventListener("click", handleClick);
 
         return () => {
-            window.removeEventListener("click", detectDeselectClick);
+            window.removeEventListener("click", handleClick);
         };
-    }, []);
+    }, [checklistItems]);
 
     return {
         checklistGroupRef,
