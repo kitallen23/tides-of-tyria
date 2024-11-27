@@ -1,5 +1,5 @@
 import { SCHEMES } from "@/utils/color-schemes";
-import styles from "@/styles/modules/settings.module.scss";
+import styles from "./settings.module.scss";
 import { useMemo } from "react";
 import { getLocalItem } from "@/utils/util";
 import { useTheme } from "@/utils/theme-provider";

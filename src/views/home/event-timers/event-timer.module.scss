@@ -1,4 +1,4 @@
-@use "../variables/core-variables" as c;
+@use "@/styles/variables/core-variables" as c;
 $min-area-width: 768px;
 $timer-gap: 4px;
 $line-height: var(--line-height);

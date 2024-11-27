@@ -11,7 +11,7 @@ import { TimerProvider } from "@/utils/timer-provider";
 import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 
 import useApp from "@/useApp";
-import Layout from "@/components/Layout";
+import Layout from "@/components/Layout/Layout";
 import HelpModal from "@/components/HelpModal";
 
 function App() {

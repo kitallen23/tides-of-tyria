@@ -1,7 +1,7 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import { format } from "date-fns";
 
-import styles from "@/styles/modules/event-timer.module.scss";
+import styles from "../event-timer.module.scss";
 import { useTheme } from "@/utils/theme-provider";
 import { ensureContrast, isContrastEnough } from "@/utils/color";
 

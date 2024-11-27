@@ -1,7 +1,7 @@
 import { useContext, useMemo } from "react";
 import { addMinutes, differenceInSeconds } from "date-fns";
 
-import styles from "@/styles/modules/event-timer.module.scss";
+import styles from "../event-timer.module.scss";
 import { useTimer } from "@/utils/hooks/useTimer";
 
 import EventTimerContext from "../EventTimerContext";
