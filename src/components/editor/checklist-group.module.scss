@@ -124,11 +124,15 @@
     .selectionMenu {
         position: absolute;
         top: 0;
-        right: 0;
-        display: none;
+        left: 0;
+        z-index: 1;
+
+        visibility: hidden;
+        pointer-events: none;
 
         &.active {
-            display: initial;
+            visibility: visible;
+            pointer-events: initial;
         }
     }
 }

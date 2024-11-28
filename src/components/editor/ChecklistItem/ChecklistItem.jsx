@@ -144,7 +144,8 @@ export const ChecklistItem = ({
         <div
             className={classNames(
                 styles.checklistItemHoverArea,
-                styles[`indent${item.indentLevel}`]
+                styles[`indent${item.indentLevel}`],
+                "checklist-item-hover-area"
             )}
         >
             {/* Drag handle / menu icon */}
@@ -162,8 +163,7 @@ export const ChecklistItem = ({
                         fontSize: "inherit",
                     }}
                     className={styles.dragHandle}
-                    onMouseDown={event => onSelectItem(event, item.id)}
-                    onTouchStart={event => onSelectItem(event, item.id)}
+                    onPointerDown={event => onSelectItem(event, item.id)}
                 >
                     <DragIndicator />
                 </Button>

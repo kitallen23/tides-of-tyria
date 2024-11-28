@@ -23,6 +23,7 @@ import {
 
 const LINK_HOVER_DELAY = 500;
 const MAX_INDENT = 3;
+export const SELECTION_MENU_WIDTH = 300;
 
 const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     const checklistGroupRef = useRef(null);
@@ -89,6 +90,11 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     }, [hoveredLink]);
 
     const selectionMenuRef = useRef(null);
+    const [isSelectionMenuOpen, setIsSelectionMenuOpen] = useState(false);
+    const [selectionMenuPosition, setSelectionMenuPosition] = useState({
+        top: 0,
+        left: 0,
+    });
     /**
      * An object containing:
      * - start: the index of the item that was first selected by the user
@@ -108,7 +114,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
-    const [isSelectionMenuOpen, setIsSelectionMenuOpen] = useState(false);
 
     /**
      * Handles changes to a checklist item by updating its specified property.
@@ -852,23 +857,41 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         const { start, end } = getIndexRangeOfItemWithChildren(itemIndex);
 
         if (itemIndex >= 0) {
-            // Update the selected item indices based on the user's selection
-            setSelectedItemIndices(currentSelectedItems => {
-                if (event.shiftKey && currentSelectedItems) {
-                    // If the Shift key is pressed and there are currently
-                    // selected items, extend the selection from the existing
-                    // start to the new end
-                    return {
-                        start: currentSelectedItems.start,
-                        end: itemIndex,
-                    };
-                } else {
-                    // If the Shift key is not pressed, set the selection to the
-                    // current item's range
-                    return { start, end };
-                }
-            });
-            activateSelectedBorderBox();
+            if (
+                event.pointerType === "touch" &&
+                selectedItemIndices?.start === start &&
+                selectedItemIndices?.end === end
+            ) {
+                // If the touched item is already highlighted, deselect it
+                // (turns it into a toggle on touch devices)
+                deactivateSelectedBorderBox();
+            } else {
+                // Update the selected item indices based on the user's selection
+                setSelectedItemIndices(currentSelectedItems => {
+                    if (event.shiftKey && currentSelectedItems) {
+                        // If the Shift key is pressed and there are currently
+                        // selected items, extend the selection from the existing
+                        // start to the new end
+                        return {
+                            start: currentSelectedItems.start,
+                            end: itemIndex,
+                        };
+                    } else {
+                        // If the Shift key is not pressed, set the selection to the
+                        // current item's range
+                        if (
+                            event.pointerType === "touch" &&
+                            currentSelectedItems?.start === start &&
+                            currentSelectedItems?.end === end
+                        ) {
+                            return undefined;
+                        } else {
+                            return { start, end };
+                        }
+                    }
+                });
+                activateSelectedBorderBox();
+            }
         }
     };
 
@@ -930,10 +953,113 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             };
         };
 
+        const calculateSelectionMenuPosition = ({ start, end }) => {
+            const { min, max } = getMinAndMax([start, end]);
+
+            const firstChecklistEditor = checklistItems[min].inputRef?.current;
+            const firstChecklistItem =
+                firstChecklistEditor.closest(".checklist-item");
+            const firstChecklistItemBox =
+                firstChecklistItem.getBoundingClientRect();
+            const firstChecklistItemHoverAreaBox = firstChecklistEditor
+                .closest(".checklist-item-hover-area")
+                .getBoundingClientRect();
+
+            const GAP = 2;
+            // TODO: Replace this with a calculation
+            const PROGRESS_BAR_WIDTH = 4;
+
+            const checklistGroupBox =
+                checklistGroupRef.current.getBoundingClientRect();
+
+            let hasEnoughClearance =
+                firstChecklistItemHoverAreaBox.left >=
+                SELECTION_MENU_WIDTH + PROGRESS_BAR_WIDTH + 2 * GAP;
+
+            let style = {
+                top: 0,
+                left: 0,
+            };
+
+            if (hasEnoughClearance) {
+                // Menu has enough clearance to the left of the checklist, so
+                // place it floating out to the left.
+
+                // Calculate the top position of the menu
+                const relativeTop =
+                    firstChecklistItemBox.top - checklistGroupBox.top;
+
+                // Calculate the left position of the menu.
+                // The menu will be a little bit left (gap) of the hover box of
+                // any checklist item.
+                const relativeLeft =
+                    firstChecklistItemHoverAreaBox.left -
+                    checklistGroupBox.left -
+                    SELECTION_MENU_WIDTH -
+                    GAP;
+
+                style = {
+                    top: relativeTop,
+                    left: relativeLeft,
+                };
+            } else {
+                // Place on right of the checkboxes, as there isn't enough space
+                // to the left of the checklist.
+
+                const editorBoxes = [];
+                for (let i = min; i <= max; ++i) {
+                    const editor = checklistItems[i].inputRef?.current;
+                    editorBoxes.push(editor.getBoundingClientRect());
+                }
+                const maxEditorX = Math.max(...editorBoxes.map(rect => rect.x));
+
+                // Calculate the top position of the menu
+                const relativeTop =
+                    firstChecklistItemBox.top - checklistGroupBox.top + GAP;
+
+                // Calculate the left position of the menu.
+                // This will be the maximum "x" (left) value of any of the
+                // selected editors. We use this value so the menu won't cover
+                // any checkboxes.
+                const relativeLeft = maxEditorX - checklistGroupBox.left;
+
+                style = {
+                    top: relativeTop,
+                    left: relativeLeft,
+                };
+            }
+
+            /**
+             * Ensure the menu doesn't go off the bottom of the screen
+             */
+            // Find the height of the menu
+            const menuBox = selectionMenuRef.current?.getBoundingClientRect();
+
+            // Bottom of page relative to the entire document
+            const viewportBottom = window.scrollY + window.innerHeight;
+
+            // Top of the menu relative to the scrolled viewport
+            const menuYRelativeToViewport =
+                checklistGroupBox.top + style.top + window.scrollY;
+            const menuBottom = menuYRelativeToViewport + menuBox.height;
+
+            // If the bottom of the menu is below the bottom of the visible
+            // portion of the screen, place it against the bottom of the screen.
+            if (menuBottom + GAP > viewportBottom) {
+                style.top -= menuBottom - viewportBottom + GAP;
+            }
+
+            return style;
+        };
+
         if (selectedItemIndices) {
             const selectedBorderBoxPosition =
                 calculateSelectedBorderBox(selectedItemIndices);
             setSelectedBorderBoxPosition(selectedBorderBoxPosition);
+
+            const selectionMenuPosition =
+                calculateSelectionMenuPosition(selectedItemIndices);
+            setSelectionMenuPosition(selectionMenuPosition);
         }
 
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
@@ -944,20 +1070,13 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             const isWithinGroup = checklistGroupRef.current?.contains(
                 event.target
             );
-            const isItemMenuIndicator = event.target.closest(
-                ".item-menu-indicator"
-            );
-            const isMenu = selectionMenuRef.current?.contains(event.target);
-
-            // Handle deselection
-            if ((!isItemMenuIndicator && !isMenu) || !isWithinGroup) {
-                deactivateSelectedBorderBox();
-            }
 
             // Handle shift-click selection
             if (event.shiftKey && isWithinGroup) {
-                const activeEditor =
-                    document.activeElement?.closest(".inline-editor");
+                const activeEditor = selectedItemIndices?.start
+                    ? checklistItems[selectedItemIndices.start].inputRef
+                          ?.current
+                    : document.activeElement?.closest(".inline-editor");
                 const targetEditor = event.target.closest(".inline-editor");
 
                 if (
@@ -978,8 +1097,19 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                             end: targetEditorIndex,
                         });
                         activateSelectedBorderBox();
+                        return;
                     }
                 }
+            }
+
+            const isItemMenuIndicator = event.target.closest(
+                ".item-menu-indicator"
+            );
+            const isMenu = selectionMenuRef.current?.contains(event.target);
+
+            // Handle deselection
+            if ((!isItemMenuIndicator && !isMenu) || !isWithinGroup) {
+                deactivateSelectedBorderBox();
             }
         };
 
@@ -988,7 +1118,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         return () => {
             window.removeEventListener("click", handleClick);
         };
-    }, [checklistItems]);
+    }, [checklistItems, selectedItemIndices]);
 
     /**
      * Handles the mouse down event on the editor. If the Shift key is pressed and the click
@@ -1087,6 +1217,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             });
             return newItems;
         });
+        deactivateSelectedBorderBox();
     };
 
     /**
@@ -1115,6 +1246,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             });
             return newItems;
         });
+        deactivateSelectedBorderBox();
     };
 
     /**
@@ -1257,6 +1389,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 handleMenuDeleteItems();
                 event.preventDefault();
             }
+            // TODO: Enter key handling
         };
 
         window.addEventListener("keydown", handleKeyDown);
@@ -1322,6 +1455,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         isSelectionMenuOpen,
 
         selectionMenuRef,
+        selectionMenuPosition,
         handleMenuAddLineAboveClick,
         handleMenuAddLineBelowClick,
         handleMenuMarkAsComplete,

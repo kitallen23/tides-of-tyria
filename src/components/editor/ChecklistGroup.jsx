@@ -33,7 +33,7 @@ import classNames from "classnames";
 
 import { useTheme } from "@/utils/theme-provider";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
-import useChecklistGroup from "./useChecklistGroup";
+import useChecklistGroup, { SELECTION_MENU_WIDTH } from "./useChecklistGroup";
 import styles from "./checklist-group.module.scss";
 
 export const ChecklistGroup = ({
@@ -93,6 +93,7 @@ export const ChecklistGroup = ({
         isSelectionMenuOpen,
 
         selectionMenuRef,
+        selectionMenuPosition,
         handleMenuAddLineAboveClick,
         handleMenuAddLineBelowClick,
         handleMenuMarkAsComplete,
@@ -324,8 +325,9 @@ export const ChecklistGroup = ({
                             { [styles.active]: isSelectionMenuOpen }
                         )}
                         ref={selectionMenuRef}
+                        style={selectionMenuPosition}
                     >
-                        <Paper sx={{ width: 300 }}>
+                        <Paper sx={{ width: SELECTION_MENU_WIDTH }}>
                             <MenuList dense>
                                 <MenuItem onClick={handleMenuMarkAsComplete}>
                                     <ListItemIcon>
