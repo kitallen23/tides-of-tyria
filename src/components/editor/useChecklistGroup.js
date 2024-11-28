@@ -20,12 +20,16 @@ import {
     moveCursorToLastLineOfEditor,
     sanitizeRichText,
 } from "./utils";
+import { useMediaQuery } from "@mui/material";
 
 const LINK_HOVER_DELAY = 500;
 const MAX_INDENT = 3;
 export const SELECTION_MENU_WIDTH = 300;
+export const SELECTION_MENU_WIDTH_SMALL = 200;
 
 const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
+    const isSmallScreen = useMediaQuery("(max-width: 768px)");
+
     const checklistGroupRef = useRef(null);
 
     const toolbarRef = useRef(null);
@@ -114,6 +118,12 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
+
+    const [disableDecreaseIndent, setDisableDecreaseIndent] = useState(false);
+    const [disableIncreaseIndent, setDisableIncreaseIndent] = useState(false);
+    const [disableMarkAsComplete, setDisableMarkAsComplete] = useState(false);
+    const [disableMarkAsIncomplete, setDisableMarkAsIncomplete] =
+        useState(false);
 
     /**
      * Handles changes to a checklist item by updating its specified property.
@@ -839,6 +849,48 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         setSelectedItemIndices(undefined);
     };
 
+    useEffect(() => {
+        if (
+            isSelectionMenuOpen &&
+            (selectedItemIndices?.start || selectedItemIndices?.start === 0) &&
+            (selectedItemIndices?.end || selectedItemIndices?.end === 0)
+        ) {
+            const { min, max } = getMinAndMax([
+                selectedItemIndices.start,
+                selectedItemIndices.end,
+            ]);
+
+            let indentSum = 0;
+            let completedCount = 0;
+            const num = max - min + 1;
+
+            for (let i = min; i <= max; ++i) {
+                const item = checklistItems[i];
+                indentSum += item.indentLevel;
+                completedCount += item.isComplete ? 1 : 0;
+            }
+
+            // Disable the increase indent button if all items are at the maximum indent level
+            const disableIncreaseIndent = indentSum === num * MAX_INDENT;
+
+            // Disable the decrease indent button if all items are at indent level zero
+            const disableDecreaseIndent = indentSum === 0;
+
+            setDisableIncreaseIndent(disableIncreaseIndent);
+            setDisableDecreaseIndent(disableDecreaseIndent);
+
+            // If all items are complete, disable the mark as complete button
+            setDisableMarkAsComplete(completedCount === num);
+            // If no items are complete, disable the mark as incomplete button
+            setDisableMarkAsIncomplete(completedCount === 0);
+        } else {
+            setDisableIncreaseIndent(false);
+            setDisableDecreaseIndent(false);
+            setDisableMarkAsComplete(false);
+            setDisableMarkAsIncomplete(false);
+        }
+    }, [isSelectionMenuOpen, selectedItemIndices, checklistItems]);
+
     /**
      * Handles the selection of a checklist item, supporting single and range selections.
      *
@@ -956,6 +1008,10 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         const calculateSelectionMenuPosition = ({ start, end }) => {
             const { min, max } = getMinAndMax([start, end]);
 
+            const menuWidth = isSmallScreen
+                ? SELECTION_MENU_WIDTH_SMALL
+                : SELECTION_MENU_WIDTH;
+
             const firstChecklistEditor = checklistItems[min].inputRef?.current;
             const firstChecklistItem =
                 firstChecklistEditor.closest(".checklist-item");
@@ -974,7 +1030,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
             let hasEnoughClearance =
                 firstChecklistItemHoverAreaBox.left >=
-                SELECTION_MENU_WIDTH + PROGRESS_BAR_WIDTH + 2 * GAP;
+                menuWidth + PROGRESS_BAR_WIDTH + 2 * GAP;
 
             let style = {
                 top: 0,
@@ -995,7 +1051,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 const relativeLeft =
                     firstChecklistItemHoverAreaBox.left -
                     checklistGroupBox.left -
-                    SELECTION_MENU_WIDTH -
+                    menuWidth -
                     GAP;
 
                 style = {
@@ -1063,7 +1119,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         }
 
         /* eslint-disable-next-line react-hooks/exhaustive-deps */
-    }, [selectedItemIndices, borderBoxRecalculationKey]);
+    }, [selectedItemIndices, borderBoxRecalculationKey, isSmallScreen]);
 
     useEffect(() => {
         const handleClick = event => {
@@ -1196,7 +1252,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * If there are selected items, it determines the minimum and maximum indices and updates
      * the checklist items within that range to be marked as complete.
      */
-    const handleMenuMarkAsComplete = () => {
+    const handleMenuMarkAsComplete = useCallback(() => {
         if (!selectedItemIndices) {
             return;
         }
@@ -1218,14 +1274,14 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             return newItems;
         });
         deactivateSelectedBorderBox();
-    };
+    }, [selectedItemIndices, setChecklistItems]);
 
     /**
      * Handles the click event to mark the selected items in the checklist as incomplete.
      * If there are selected items, it determines the minimum and maximum indices and updates
      * the checklist items within that range to be marked as incomplete.
      */
-    const handleMenuMarkAsIncomplete = () => {
+    const handleMenuMarkAsIncomplete = useCallback(() => {
         if (!selectedItemIndices) {
             return;
         }
@@ -1247,7 +1303,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             return newItems;
         });
         deactivateSelectedBorderBox();
-    };
+    }, [selectedItemIndices, setChecklistItems]);
 
     /**
      * Handles the click event to increase the indentation level of the selected items in the checklist.
@@ -1388,6 +1444,12 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             } else if (event.key === "Delete" || event.key === "Backspace") {
                 handleMenuDeleteItems();
                 event.preventDefault();
+            } else if (event.key === "Enter") {
+                if (!disableMarkAsComplete) {
+                    handleMenuMarkAsComplete();
+                } else {
+                    handleMenuMarkAsIncomplete();
+                }
             }
             // TODO: Enter key handling
         };
@@ -1399,12 +1461,18 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     }, [
         isSelectionMenuOpen,
         showSelectedBorderBox,
+        disableMarkAsComplete,
+        disableMarkAsIncomplete,
         handleMenuIncreaseIndent,
         handleMenuDecreaseIndent,
         handleMenuDeleteItems,
+        handleMenuMarkAsComplete,
+        handleMenuMarkAsIncomplete,
     ]);
 
     return {
+        isSmallScreen,
+
         checklistGroupRef,
         checklistItems,
         handleSelect,
@@ -1464,6 +1532,10 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleMenuDecreaseIndent,
         handleMenuDuplicateItems,
         handleMenuDeleteItems,
+        disableDecreaseIndent,
+        disableIncreaseIndent,
+        disableMarkAsComplete,
+        disableMarkAsIncomplete,
     };
 };
 

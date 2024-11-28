@@ -9,7 +9,6 @@ import {
     Paper,
     TextField,
     Typography,
-    useMediaQuery,
 } from "@mui/material";
 import {
     AddLinkSharp,
@@ -33,7 +32,10 @@ import classNames from "classnames";
 
 import { useTheme } from "@/utils/theme-provider";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
-import useChecklistGroup, { SELECTION_MENU_WIDTH } from "./useChecklistGroup";
+import useChecklistGroup, {
+    SELECTION_MENU_WIDTH,
+    SELECTION_MENU_WIDTH_SMALL,
+} from "./useChecklistGroup";
 import styles from "./checklist-group.module.scss";
 
 export const ChecklistGroup = ({
@@ -42,8 +44,9 @@ export const ChecklistGroup = ({
     placeholder,
 }) => {
     const { colors } = useTheme();
-    const isSmallScreen = useMediaQuery("(max-width: 768px)");
     const {
+        isSmallScreen,
+
         checklistGroupRef,
         handleSelect,
         handleBlur,
@@ -102,6 +105,10 @@ export const ChecklistGroup = ({
         handleMenuDecreaseIndent,
         handleMenuDuplicateItems,
         handleMenuDeleteItems,
+        disableDecreaseIndent,
+        disableIncreaseIndent,
+        disableMarkAsComplete,
+        disableMarkAsIncomplete,
     } = useChecklistGroup({ checklistItems, setChecklistItems });
 
     return (
@@ -327,16 +334,26 @@ export const ChecklistGroup = ({
                         ref={selectionMenuRef}
                         style={selectionMenuPosition}
                     >
-                        <Paper sx={{ width: SELECTION_MENU_WIDTH }}>
+                        <Paper
+                            sx={{
+                                width: isSmallScreen
+                                    ? SELECTION_MENU_WIDTH_SMALL
+                                    : SELECTION_MENU_WIDTH,
+                            }}
+                        >
                             <MenuList dense>
-                                <MenuItem onClick={handleMenuMarkAsComplete}>
+                                <MenuItem
+                                    onClick={handleMenuMarkAsComplete}
+                                    disabled={disableMarkAsComplete}
+                                >
                                     <ListItemIcon>
                                         <CheckBoxSharp />
                                     </ListItemIcon>
                                     <ListItemText>
                                         Mark as complete
                                     </ListItemText>
-                                    {isSmallScreen ? null : (
+                                    {isSmallScreen ||
+                                    disableMarkAsComplete ? null : (
                                         <Typography
                                             sx={{
                                                 color: colors.muted,
@@ -347,13 +364,29 @@ export const ChecklistGroup = ({
                                         </Typography>
                                     )}
                                 </MenuItem>
-                                <MenuItem onClick={handleMenuMarkAsIncomplete}>
+                                <MenuItem
+                                    onClick={handleMenuMarkAsIncomplete}
+                                    disabled={disableMarkAsIncomplete}
+                                >
                                     <ListItemIcon>
                                         <CheckBoxOutlineBlankSharp />
                                     </ListItemIcon>
                                     <ListItemText>
                                         Mark as incomplete
                                     </ListItemText>
+                                    {isSmallScreen ||
+                                    disableMarkAsIncomplete ||
+                                    (!disableMarkAsComplete &&
+                                        !disableMarkAsIncomplete) ? null : (
+                                        <Typography
+                                            sx={{
+                                                color: colors.muted,
+                                                fontSize: "inherit",
+                                            }}
+                                        >
+                                            <code>Enter</code>
+                                        </Typography>
+                                    )}
                                 </MenuItem>
                                 <MenuItem onClick={handleMenuDuplicateItems}>
                                     <ListItemIcon>
@@ -431,7 +464,10 @@ export const ChecklistGroup = ({
 
                                 <Divider />
 
-                                <MenuItem onClick={handleMenuIncreaseIndent}>
+                                <MenuItem
+                                    onClick={handleMenuIncreaseIndent}
+                                    disabled={disableIncreaseIndent}
+                                >
                                     <ListItemIcon>
                                         <FormatIndentIncreaseSharp />
                                     </ListItemIcon>
@@ -447,7 +483,10 @@ export const ChecklistGroup = ({
                                         </Typography>
                                     )}
                                 </MenuItem>
-                                <MenuItem onClick={handleMenuDecreaseIndent}>
+                                <MenuItem
+                                    onClick={handleMenuDecreaseIndent}
+                                    disabled={disableDecreaseIndent}
+                                >
                                     <ListItemIcon>
                                         <FormatIndentDecreaseSharp />
                                     </ListItemIcon>
