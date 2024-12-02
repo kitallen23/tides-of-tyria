@@ -1102,7 +1102,7 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             // If the bottom of the menu is below the bottom of the visible
             // portion of the screen, place it against the bottom of the screen.
             if (menuBottom + GAP > viewportBottom) {
-                style.top -= menuBottom - viewportBottom + GAP;
+                style.top -= menuBottom - viewportBottom + GAP * 4;
             }
 
             return style;
