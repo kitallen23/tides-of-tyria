@@ -1,0 +1,138 @@
+@use "@/styles/variables/editor-variables" as e;
+
+.checklistGroup {
+    position: relative;
+
+    .noItemsPlaceholder {
+        margin-left: 1.7em;
+        color: var(--text-muted);
+        padding: e.$editor-padding-vertical e.$editor-padding-horizontal;
+        cursor: text;
+    }
+
+    .floatingToolbar {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: flex;
+        gap: 0.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        button {
+            font-size: 1.17rem;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+    .floatingLinkEditor {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 0.2em;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        width: 280px;
+
+        button {
+            font-size: 1.17rem;
+        }
+
+        & > div:last-of-type {
+            display: grid;
+            grid-template-columns: 1fr auto;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+    .floatingLinkMenu {
+        position: absolute;
+        background: rgb(var(--nav-background-rgb));
+        border-radius: 0.25rem;
+        padding: 4px;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 1em;
+        align-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        max-width: 320px;
+
+        .url {
+            display: flex;
+            align-items: center;
+            gap: 0.5em;
+            color: var(--text-muted);
+            font-size: 0.875em;
+            overflow: hidden;
+
+            .urlText {
+                width: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        .buttonContainer {
+            display: flex;
+            gap: 0.2em;
+        }
+
+        &.show {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+
+    .selectedItemBorderBox {
+        position: absolute;
+        inset: 0;
+        border-style: solid;
+        border-width: 2px;
+        border-radius: 0.25em;
+        pointer-events: none;
+
+        visibility: hidden;
+
+        &.active {
+            visibility: visible;
+        }
+    }
+
+    .selectionMenu {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 1;
+
+        visibility: hidden;
+        pointer-events: none;
+
+        &.active {
+            visibility: visible;
+            pointer-events: initial;
+        }
+    }
+}

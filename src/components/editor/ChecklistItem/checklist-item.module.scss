@@ -1,0 +1,71 @@
+@use "@/styles/variables/editor-variables" as e;
+
+@mixin indent($level) {
+    padding-left: #{2 * $level}em;
+}
+
+.checklistItemHoverArea {
+    margin-left: calc(-1 * ((2 * 2px) + 1em));
+
+    display: grid;
+    grid-template-columns: auto 1fr;
+
+    @for $i from 0 through 3 {
+        &.indent#{$i} {
+            @include indent($i);
+        }
+    }
+
+    .itemMenuIndicator {
+        opacity: 0;
+        transition: opacity 0.15s;
+
+        svg {
+            height: calc(1em * var(--line-height));
+        }
+    }
+    &:hover .itemMenuIndicator {
+        opacity: 1;
+    }
+}
+
+.checklistItem {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+
+    .itemCheckbox {
+        padding: 0 4px;
+        border-radius: 2px;
+        min-height: calc(
+            1em * var(--line-height) + 2 * #{e.$editor-padding-vertical}
+        );
+
+        svg {
+            font-size: 1.2em;
+        }
+    }
+
+    &.isComplete {
+        color: var(--text-muted) !important;
+        text-decoration: line-through;
+    }
+
+    .editorWrapper {
+        position: relative;
+
+        .placeholder {
+            position: absolute;
+            pointer-events: none;
+            color: var(--text-muted);
+            top: e.$editor-padding-vertical;
+            left: e.$editor-padding-horizontal;
+            opacity: 0;
+            transition: opacity 0.1s;
+
+            &.show {
+                opacity: 1;
+            }
+        }
+    }
+}

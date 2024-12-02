@@ -1,8 +1,8 @@
-import { useReducer, useMemo } from "react";
+import { useReducer, useMemo, useEffect } from "react";
 import { alpha, createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
-import { detectTheme, getLocalItem } from "@/utils/util";
+import { detectTheme, getLocalItem, setSelectionStyle } from "@/utils/util";
 
 import { ThemeReducer, DEFAULT_THEME_STATE } from "@/utils/theme-provider";
 import { SCHEMES } from "@/utils/color-schemes";
@@ -121,6 +121,16 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
+        MuiInputBase: {
+            styleOverrides: {
+                input: {
+                    "&::placeholder": {
+                        color: theme.colors.muted,
+                        opacity: 1,
+                    },
+                },
+            },
+        },
         MuiOutlinedInput: {
             styleOverrides: {
                 root: ({ ownerState, theme }) => ({
@@ -137,13 +147,26 @@ export const getDesignTokens = theme => ({
                             theme.palette.primary.main,
                     },
                 }),
+                input: {
+                    "&::placeholder": {
+                        color: theme.colors.muted,
+                        opacity: 1,
+                    },
+                },
             },
         },
-        MuiMenu: {
+        MuiPaper: {
             styleOverrides: {
-                paper: {
+                root: {
                     backgroundColor: theme.colors.backgroundNav,
                     backgroundImage: "none",
+                },
+            },
+        },
+        MuiTab: {
+            styleOverrides: {
+                root: {
+                    color: theme.colors.muted,
                 },
             },
         },
@@ -267,6 +290,16 @@ const useApp = () => {
         const theme = getDesignTokens(themeState);
         return createTheme(theme);
     }, [themeState]);
+
+    useEffect(() => {
+        if (themeState?.colors) {
+            setSelectionStyle({
+                background: themeState.colors.primary,
+                textDark: themeState.colors.bodyDark,
+                textLight: themeState.colors.bodyLight,
+            });
+        }
+    }, [themeState?.colors]);
 
     useFavicon(themeState.colors.primary);
 

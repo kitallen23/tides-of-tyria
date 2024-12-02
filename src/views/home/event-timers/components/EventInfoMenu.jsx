@@ -17,7 +17,7 @@ import classNames from "classnames";
 import { toast } from "react-hot-toast";
 import { addHours, format, isBefore } from "date-fns";
 
-import styles from "@/styles/modules/event-timer.module.scss";
+import styles from "../event-timer.module.scss";
 import Portal from "@/components/Portal";
 import { useTheme } from "@/utils/theme-provider";
 import {
@@ -27,7 +27,7 @@ import {
 } from "@/utils/color";
 import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { copyToClipboard } from "@/utils/util";
-import Modal from "@/components/Modal";
+import Modal from "@/components/Modal/Modal";
 import { useTimer } from "@/utils/hooks/useTimer";
 
 import EventTimerContext from "../EventTimerContext";

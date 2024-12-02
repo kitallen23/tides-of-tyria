@@ -9,6 +9,7 @@ import {
     isAfter as _isAfter,
     formatDistanceToNow as _formatDistanceToNow,
 } from "date-fns";
+import { isLight } from "@/utils/color";
 
 export function getTitle(string) {
     return `${string} | ${TITLE_SUFFIX}`;
@@ -79,3 +80,28 @@ export function isHexValid(c) {
     const hexPattern = /^#[0-9A-Fa-f]{6}$/;
     return hexPattern.test(c);
 }
+
+export function setSelectionStyle({ background, textDark, textLight }) {
+    const style = document.createElement("style");
+    const isBackgroundLight = isLight(background);
+    style.innerHTML = `
+::selection {
+    background: ${background};
+    color: ${isBackgroundLight ? textDark : textLight};
+}`;
+    document.head.appendChild(style);
+}
+
+/**
+ * Checks if a string is a valid HTTP or HTTPS URL.
+ * @param {string} str - The string to validate.
+ * @returns {boolean} - True if valid URL, else false.
+ */
+export const isValidUrl = str => {
+    try {
+        const url = new URL(str);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
+    }
+};

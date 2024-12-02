@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useResizeDetector } from "react-resize-detector";
 import classNames from "classnames";
-import styles from "@/styles/modules/event-timer.module.scss";
+import styles from "./event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import layoutStyles from "@/styles/modules/home.module.scss";
+import layoutStyles from "../home.module.scss";
 import { Button } from "@mui/material";
 import {
     ChevronLeftSharp,
@@ -153,7 +153,7 @@ const EventTimers = () => {
             ""
         );
         initialiseEventConfig(eventConfigString, dailyReset);
-        // console.log(
+        // console.info(
         //     `Minutes until next reset: `,
         //     differenceInMinutes(addHours(dailyReset, 24), new Date())
         // );
@@ -286,7 +286,7 @@ const EventTimers = () => {
     const [isTimerCollapsed, setIsTimerCollapsed] = useState(() => {
         const isTimerCollapsed = getLocalItem(
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
-            "false"
+            "true"
         );
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.isTimerCollapsed,
@@ -405,14 +405,17 @@ const EventTimers = () => {
         <div className={layoutStyles.group}>
             <div className={globalStyles.centeredContent}>
                 <div className={layoutStyles.headingRow}>
-                    <h3 className={layoutStyles.heading}>
-                        <HourglassTopSharp style={{ marginRight: "0.25rem" }} />
-                        Event Timers
+                    <div className={layoutStyles.heading}>
+                        <h3>
+                            <HourglassTopSharp
+                                style={{ marginRight: "0.25rem" }}
+                            />
+                            Event Timers
+                        </h3>
                         <span
                             style={{
                                 color: colors.muted,
                                 fontSize: "0.85em",
-                                fontWeight: "normal",
                             }}
                             className={globalStyles.hideBelowMd}
                         >
@@ -421,7 +424,7 @@ const EventTimers = () => {
                                 ? "Click an event to show or hide it permanently"
                                 : "Click an event to see info"}
                         </span>
-                    </h3>
+                    </div>
                     <div className={layoutStyles.buttonGroup}>
                         {mode === MODES.edit ? (
                             <>

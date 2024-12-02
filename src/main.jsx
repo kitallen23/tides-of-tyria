@@ -6,8 +6,9 @@ import "@/styles/globals.scss";
 import App from "@/App";
 import RootError from "@/views/errors/RootError";
 
-import Settings from "@/views/settings/Settings";
-import Home from "@/views/home/Home";
+import SettingsPage from "@/views/settings/SettingsPage";
+import HomePage from "@/views/home/HomePage";
+import ChecklistPage from "@/views/checklist/ChecklistPage";
 
 const router = createBrowserRouter([
     {
@@ -17,11 +18,15 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "settings",
-                element: <Settings />,
+                element: <SettingsPage />,
             },
             {
                 path: "",
-                element: <Home />,
+                element: <HomePage />,
+            },
+            {
+                path: "/checklist",
+                element: <ChecklistPage />,
             },
         ],
     },

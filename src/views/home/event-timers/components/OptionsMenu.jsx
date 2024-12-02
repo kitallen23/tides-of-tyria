@@ -22,8 +22,8 @@ import {
 import { toast } from "react-hot-toast";
 
 import { useTheme } from "@/utils/theme-provider";
-import styles from "@/styles/modules/event-timer.module.scss";
-import Modal from "@/components/Modal";
+import styles from "../event-timer.module.scss";
+import Modal from "@/components/Modal/Modal";
 import { HIGHLIGHT_SCHEMES, MODES, UPCOMING_MINS } from "../utils";
 
 const OptionsMenu = ({

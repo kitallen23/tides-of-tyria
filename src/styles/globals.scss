@@ -1,3 +1,5 @@
+@use "./variables/core-variables" as c;
+
 :root {
     color-scheme: dark;
     --max-width: 1100px;
@@ -8,7 +10,7 @@
     --font-size-md: 1rem;
     --font-size-lg: 1.125rem;
 
-    --primary-rgb: 95, 168, 211;
+    --primary-rgb: 255, 133, 51;
     --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 224, 224, 224;
     --foreground-light-rgb: 224, 224, 224;
@@ -20,20 +22,18 @@
     --scrollbar-track-color: 32, 32, 32;
     --scrollbar-thumb-color: 153, 153, 153;
 
-    --text-muted: #737373;
-    --muted-rgb: 115, 115, 115;
+    --text-muted: #828282;
+    --muted-rgb: 130, 130, 130;
 
     --max-z: 2147483647;
     --line-height: 1.35;
     --transition: 0.3s ease-in-out;
 
     font-family: var(--font-regular);
-    font-optical-scaling: auto;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    line-height: 1.35;
     font-weight: 400;
 
     --status-success: #5bae70;
@@ -185,8 +185,8 @@
 }
 [data-theme="dark"]:root {
     color-scheme: dark;
-    --primary-rgb: 95, 168, 211;
-    --secondary-rgb: 115, 115, 115;
+    --primary-rgb: 255, 133, 51;
+    --secondary-rgb: 130, 130, 130;
     --foreground-rgb: 224, 224, 224;
     --foreground-light-rgb: 224, 224, 224;
     --foreground-dark-rgb: 26, 26, 26;
@@ -197,8 +197,8 @@
     --scrollbar-track-color: 32, 32, 32;
     --scrollbar-thumb-color: 153, 153, 153;
 
-    --text-muted: #737373;
-    --muted-rgb: 115, 115, 115;
+    --text-muted: #828282;
+    --muted-rgb: 130, 130, 130;
 
     --status-success: #5bae70;
     --status-danger: #d76363;
@@ -207,7 +207,7 @@
 }
 [data-theme="light"]:root {
     color-scheme: light;
-    --primary-rgb: 90, 138, 162;
+    --primary-rgb: 255, 102, 0;
     --secondary-rgb: 115, 115, 115;
     --foreground-rgb: 26, 26, 26;
     --foreground-light-rgb: 224, 224, 224;
@@ -232,6 +232,7 @@
     box-sizing: border-box;
     padding: 0;
     margin: 0;
+    scroll-margin-top: c.$topbar-height;
     /* outline: 1px solid green; */
 }
 

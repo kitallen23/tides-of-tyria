@@ -15,7 +15,7 @@ import { toast } from "react-hot-toast";
 import { css } from "@emotion/react";
 import { Switch } from "@mui/material";
 
-import styles from "@/styles/modules/event-timer.module.scss";
+import styles from "../event-timer.module.scss";
 import { useTheme } from "@/utils/theme-provider";
 import {
     adjustLuminance,

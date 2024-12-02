@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet";
 import { Button } from "@mui/material";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
-import styles from "@/styles/modules/errors.module.scss";
+import styles from "./errors.module.scss";
 
 import { ThemeProvider } from "@/utils/theme-provider";
 import { getTitle } from "@/utils/util";
