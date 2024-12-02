@@ -9,6 +9,7 @@ import {
     Paper,
     TextField,
     Typography,
+    useMediaQuery,
 } from "@mui/material";
 import {
     AddLinkSharp,
@@ -44,6 +45,7 @@ export const ChecklistGroup = ({
     placeholder,
 }) => {
     const { colors } = useTheme();
+    const isTouchDevice = useMediaQuery("(pointer: coarse)");
     const {
         isSmallScreen,
 
@@ -125,7 +127,7 @@ export const ChecklistGroup = ({
                     className={styles.noItemsPlaceholder}
                     onClick={() => handleAddItem({ focus: true })}
                 >
-                    <em>No items.</em>
+                    <em>No items{isTouchDevice ? " (tap to add)" : "."}</em>
                 </div>
             ) : (
                 <>
