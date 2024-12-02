@@ -1381,9 +1381,12 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
             selectedItemIndices.end,
         ]);
 
-        const newItems = checklistItems
-            .slice(min, max + 1)
-            .map(item => ({ ...item, id: nanoid(6), inputRef: createRef() }));
+        const newItems = checklistItems.slice(min, max + 1).map(item => ({
+            ...item,
+            id: nanoid(6),
+            inputRef: createRef(),
+            text: item.inputRef.current?.innerHTML,
+        }));
         const newChecklistItems = checklistItems.toSpliced(
             max + 1,
             0,
