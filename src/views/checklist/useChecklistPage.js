@@ -11,6 +11,8 @@ import debounce from "lodash.debounce";
 import { sanitizeRichText } from "@/components/editor/utils";
 import {
     cleanChecklist,
+    DEFAULT_DAILY_CHECKLIST,
+    DEFAULT_WEEKLY_CHECKLIST,
     formatRelativeTime,
     getNextWeeklyReset,
 } from "./utils";
@@ -25,7 +27,7 @@ const useChecklistPage = () => {
         // Load from local storage on initial render
         const savedChecklist = getLocalItem(
             LOCAL_STORAGE_KEYS.todoChecklist,
-            "[]"
+            ""
         );
 
         try {
@@ -109,7 +111,7 @@ const useChecklistPage = () => {
         // Load from local storage on initial render
         const savedChecklist = getLocalItem(
             LOCAL_STORAGE_KEYS.dailyChecklist,
-            "[]"
+            ""
         );
 
         try {
@@ -132,7 +134,11 @@ const useChecklistPage = () => {
             }));
             return dailyChecklistWithRefs;
         } catch {
-            return [];
+            return DEFAULT_DAILY_CHECKLIST.map(item => ({
+                ...item,
+                inputRef: createRef(),
+                id: nanoid(6),
+            }));
         }
     };
 
@@ -211,7 +217,7 @@ const useChecklistPage = () => {
         // Load from local storage on initial render
         const savedChecklist = getLocalItem(
             LOCAL_STORAGE_KEYS.weeklyChecklist,
-            "[]"
+            ""
         );
 
         try {
@@ -236,7 +242,11 @@ const useChecklistPage = () => {
             );
             return weeklyChecklistWithRefs;
         } catch {
-            return [];
+            return DEFAULT_WEEKLY_CHECKLIST.map(item => ({
+                ...item,
+                inputRef: createRef(),
+                id: nanoid(6),
+            }));
         }
     };
 

@@ -5,6 +5,122 @@ import {
     isBefore,
 } from "date-fns";
 
+export const DEFAULT_DAILY_CHECKLIST = [
+    {
+        text: "<b>Note</b>: any item checked off here will be automatically unchecked on the next daily reset",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Modify this list to your liking!",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Farm home instance",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Do instanced content:",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Strikes",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "Fractals",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: 'Buy&nbsp;<a href="https://wiki.guildwars2.com/wiki/Faction_Provisioner" target="_blank" rel="noopener noreferrer">Provisioner Tokens</a>',
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Use Karmic Converter",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Wizard's Vault dailies",
+        isComplete: false,
+        indentLevel: 0,
+    },
+];
+
+export const DEFAULT_WEEKLY_CHECKLIST = [
+    {
+        text: "<b>Note</b>: any item checked off here will be automatically unchecked on the next weekly reset",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Modify this list to your liking!",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: 'Buy <a rel="noopener noreferrer" target="_blank" href="https://wiki.guildwars2.com/wiki/Mystic_Clover">Mystic Clovers</a>:',
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Magnetite shards",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "Fractal relics",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "Prophet shards",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "Also buy mystic coins here",
+        isComplete: false,
+        indentLevel: 2,
+    },
+    {
+        text: "Antique Summoning Stones",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "Raids:",
+        isComplete: false,
+        indentLevel: 0,
+    },
+    {
+        text: "HoT",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "PoF",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "JW",
+        isComplete: false,
+        indentLevel: 1,
+    },
+    {
+        text: "Weekly Wizard's Vault",
+        isComplete: false,
+        indentLevel: 0,
+    },
+];
+
 /**
  * Cleans the checklist by resetting items that were last completed before a specified date.
  *
