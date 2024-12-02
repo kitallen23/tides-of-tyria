@@ -12,7 +12,7 @@ export const DEFAULT_DAILY_CHECKLIST = [
         indentLevel: 0,
     },
     {
-        text: "Modify this list to your liking!",
+        text: "Modify this list to your liking! Below are some example daily tasks.",
         isComplete: false,
         indentLevel: 0,
     },
@@ -60,7 +60,7 @@ export const DEFAULT_WEEKLY_CHECKLIST = [
         indentLevel: 0,
     },
     {
-        text: "Modify this list to your liking!",
+        text: "Modify this list to your liking! Below are some example weekly tasks.",
         isComplete: false,
         indentLevel: 0,
     },

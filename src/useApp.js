@@ -155,9 +155,9 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
-        MuiMenu: {
+        MuiPaper: {
             styleOverrides: {
-                paper: {
+                root: {
                     backgroundColor: theme.colors.backgroundNav,
                     backgroundImage: "none",
                 },
