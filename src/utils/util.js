@@ -91,3 +91,17 @@ export function setSelectionStyle({ background, textDark, textLight }) {
 }`;
     document.head.appendChild(style);
 }
+
+/**
+ * Checks if a string is a valid HTTP or HTTPS URL.
+ * @param {string} str - The string to validate.
+ * @returns {boolean} - True if valid URL, else false.
+ */
+export const isValidUrl = str => {
+    try {
+        const url = new URL(str);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
+    }
+};

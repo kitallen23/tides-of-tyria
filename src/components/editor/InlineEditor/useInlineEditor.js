@@ -1,6 +1,7 @@
 import DOMPurify from "dompurify";
 import { useEffect } from "react";
 import { getDecodedLengthWithBr, sanitizeRichText } from "../utils";
+import { isValidUrl } from "@/utils/util";
 
 const EDITOR_PADDING_VERTICAL = 3;
 
@@ -273,9 +274,80 @@ export const useInlineEditor = ({
         }
     };
 
+    /**
+     * Handles paste events by sanitizing and processing pasted content.
+     * Ensures that the action is undoable via the browser's native undo stack.
+     * @param {ClipboardEvent} event - The paste event.
+     */
+    const handlePaste = event => {
+        const clipboardData = event.clipboardData;
+        const pastedData =
+            clipboardData.getData("text/html") ||
+            clipboardData.getData("text/plain");
+
+        let sanitizedData = sanitizeRichText(pastedData);
+
+        const isUrl = isValidUrl(sanitizedData);
+        const selection = window.getSelection();
+
+        if (!selection.rangeCount) return;
+
+        const range = selection.getRangeAt(0);
+
+        if (isUrl) {
+            if (!selection.isCollapsed) {
+                /**
+                 * With selection:
+                 * Wrap selected content in an anchor with pasted URL as href
+                 */
+
+                // Extract the selected content as a DocumentFragment
+                const extractedContent = range.extractContents();
+
+                // Create a new anchor element
+                const anchor = document.createElement("a");
+                anchor.href = sanitizedData;
+                anchor.target = "_blank";
+                anchor.rel = "noopener noreferrer";
+
+                // Append the extracted content to the anchor
+                anchor.appendChild(extractedContent);
+
+                // Serialize the anchor's outerHTML
+                const anchorHtml = anchor.outerHTML;
+
+                // Insert the anchor HTML using execCommand to ensure undo functionality
+                document.execCommand("insertHTML", false, anchorHtml);
+                event.preventDefault();
+                onChange();
+            } else {
+                /**
+                 * Without selection:
+                 * Insert the pasted URL as an anchor
+                 */
+
+                // Create a new anchor element
+                const anchor = document.createElement("a");
+                anchor.href = sanitizedData;
+                anchor.textContent = sanitizedData;
+                anchor.target = "_blank";
+                anchor.rel = "noopener noreferrer";
+
+                // Serialize the anchor's outerHTML
+                const anchorHtml = anchor.outerHTML;
+
+                // Insert the anchor HTML using execCommand to ensure undo functionality
+                document.execCommand("insertHTML", false, anchorHtml);
+                event.preventDefault();
+                onChange();
+            }
+        }
+    };
+
     return {
         handleKeyDown,
         handleInput,
         handleLinkClick,
+        handlePaste,
     };
 };

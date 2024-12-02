@@ -23,8 +23,8 @@ export const InlineEditor = forwardRef(
         ref
     ) => {
         const { colors } = useTheme();
-        const { handleKeyDown, handleInput, handleLinkClick } = useInlineEditor(
-            {
+        const { handleKeyDown, handleInput, handleLinkClick, handlePaste } =
+            useInlineEditor({
                 ref,
                 defaultValue,
                 onChange,
@@ -32,8 +32,7 @@ export const InlineEditor = forwardRef(
                 onRemoveLine,
                 onFocusPreviousEditor,
                 onFocusNextEditor,
-            }
-        );
+            });
 
         return (
             <>
@@ -64,6 +63,7 @@ export const InlineEditor = forwardRef(
                     onClick={handleLinkClick}
                     onPointerDown={onMouseDown}
                     onInput={handleInput}
+                    onPaste={handlePaste}
                 />
             </>
         );
