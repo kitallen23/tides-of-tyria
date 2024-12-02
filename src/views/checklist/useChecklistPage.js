@@ -8,7 +8,10 @@ import { getLocalItem } from "@/utils/util";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import { useTimer } from "@/utils/hooks/useTimer";
 import debounce from "lodash.debounce";
-import { sanitizeRichText } from "@/components/editor/utils";
+import {
+    getDecodedLengthWithBr,
+    sanitizeRichText,
+} from "@/components/editor/utils";
 import {
     cleanChecklist,
     DEFAULT_DAILY_CHECKLIST,
@@ -42,7 +45,16 @@ const useChecklistPage = () => {
                 ...item,
                 inputRef: createRef(),
             }));
-            return todoChecklistWithRefs;
+            if (todoChecklistWithRefs.length === 1) {
+                const firstItem = todoChecklistWithRefs[0];
+                const contentLength = getDecodedLengthWithBr(firstItem.text);
+                if (contentLength === 0 || firstItem.text === "<br>") {
+                    return [];
+                }
+                return todoChecklistWithRefs;
+            } else {
+                return todoChecklistWithRefs;
+            }
         } catch {
             return [];
         }
@@ -132,7 +144,16 @@ const useChecklistPage = () => {
                 ...item,
                 inputRef: createRef(),
             }));
-            return dailyChecklistWithRefs;
+            if (dailyChecklistWithRefs.length === 1) {
+                const firstItem = dailyChecklistWithRefs[0];
+                const contentLength = getDecodedLengthWithBr(firstItem.text);
+                if (contentLength === 0 || firstItem.text === "<br>") {
+                    return [];
+                }
+                return dailyChecklistWithRefs;
+            } else {
+                return dailyChecklistWithRefs;
+            }
         } catch {
             return DEFAULT_DAILY_CHECKLIST.map(item => ({
                 ...item,
@@ -240,7 +261,16 @@ const useChecklistPage = () => {
                     inputRef: createRef(),
                 })
             );
-            return weeklyChecklistWithRefs;
+            if (weeklyChecklistWithRefs.length === 1) {
+                const firstItem = weeklyChecklistWithRefs[0];
+                const contentLength = getDecodedLengthWithBr(firstItem.text);
+                if (contentLength === 0 || firstItem.text === "<br>") {
+                    return [];
+                }
+                return weeklyChecklistWithRefs;
+            } else {
+                return weeklyChecklistWithRefs;
+            }
         } catch {
             return DEFAULT_WEEKLY_CHECKLIST.map(item => ({
                 ...item,
