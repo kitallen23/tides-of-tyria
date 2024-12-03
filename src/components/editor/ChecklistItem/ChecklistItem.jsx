@@ -186,6 +186,7 @@ export const ChecklistItem = ({
                     checked={item.isComplete}
                     onChange={handleCheckboxChange}
                     className={styles.itemCheckbox}
+                    inputProps={{ "aria-label": "controlled" }}
                 />
                 <div className={styles.editorWrapper}>
                     <InlineEditor

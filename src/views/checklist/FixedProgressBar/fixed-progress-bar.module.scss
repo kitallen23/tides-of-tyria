@@ -1,0 +1,48 @@
+@use "@/styles/variables/core-variables" as c;
+$progress-bar-width: 4px;
+
+.progressBar {
+    position: fixed;
+    bottom: 0;
+
+    width: $progress-bar-width;
+    height: calc(100vh - #{c.$topbar-height});
+
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+
+    .bar {
+        width: 100%;
+        transition: height var(--transition);
+        position: relative;
+
+        .progressText {
+            position: absolute;
+            top: 0;
+            color: var(--text-muted);
+            padding-top: 4px;
+
+            .text {
+                font-size: 0.875em;
+                white-space: nowrap;
+                writing-mode: vertical-lr;
+                transform: rotate(180deg);
+            }
+        }
+    }
+
+    &.left {
+        left: 0;
+        .progressText {
+            left: $progress-bar-width;
+        }
+    }
+    &:not(.left) {
+        right: 0;
+
+        .progressText {
+            right: calc(#{$progress-bar-width} + 2px);
+        }
+    }
+}
