@@ -1,8 +1,6 @@
 import { createRef, useEffect, useMemo, useState } from "react";
 import { nanoid } from "nanoid";
 import { addHours } from "date-fns";
-// TODO: Remove me
-// import { format, differenceInMinutes } from "date-fns";
 
 import { getLocalItem } from "@/utils/util";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
@@ -19,9 +17,15 @@ import {
     formatRelativeTime,
     getNextWeeklyReset,
 } from "./utils";
+import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 
 const useChecklistPage = () => {
     const { now, dailyReset, weeklyReset } = useTimer();
+    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
+
+    useGlobalHotkeys({
+        "?": () => setIsHelpModalOpen(true),
+    });
 
     /**
      * Todo checklist logic
@@ -168,11 +172,6 @@ const useChecklistPage = () => {
     );
 
     useEffect(() => {
-        // TODO: Remove me
-        // console.info(
-        //     `Minutes until next daily reset (${format(dailyReset, "hh:mmaaa dd/MM/yyyy")}): `,
-        //     differenceInMinutes(addHours(dailyReset, 24), new Date())
-        // );
         setDailyChecklistItems(prevItems => {
             const newItems = cleanChecklist(prevItems, dailyReset);
             return newItems;
@@ -352,6 +351,9 @@ const useChecklistPage = () => {
         timeUntilWeeklyReset,
         setWeeklyChecklistItems,
         addWeeklyChecklistItem,
+
+        isHelpModalOpen,
+        handleCloseHelpModal: () => setIsHelpModalOpen(false),
     };
 };
 

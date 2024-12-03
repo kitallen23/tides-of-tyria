@@ -3,7 +3,6 @@ import { Outlet } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
 import { Toaster } from "react-hot-toast";
-import { useState } from "react";
 
 import { TITLE_SUFFIX } from "@/utils/constants";
 import { ThemeProvider } from "@/utils/theme-provider";
@@ -12,8 +11,8 @@ import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 
 import useApp from "@/useApp";
 import Layout from "@/components/Layout/Layout";
-import HelpModal from "@/components/HelpModal";
-import useViewportHeight from "./utils/hooks/useViewportHeight";
+import useViewportHeight from "@/utils/hooks/useViewportHeight";
+import SearchModal from "@/components/SearchModal";
 
 function App() {
     const {
@@ -25,13 +24,15 @@ function App() {
         setFontSize,
         setTimeFormat,
         setPrimaryColor,
+
+        isSearchOpen,
+        handleCloseSearch,
+        handleOpenSearch,
     } = useApp();
     useViewportHeight();
 
-    const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
-
     useGlobalHotkeys({
-        "?": () => setIsHelpModalOpen(true),
+        "/": handleOpenSearch,
     });
 
     return (
@@ -82,9 +83,9 @@ function App() {
                                 },
                             }}
                         />
-                        <HelpModal
-                            isOpen={isHelpModalOpen}
-                            onClose={() => setIsHelpModalOpen(false)}
+                        <SearchModal
+                            open={isSearchOpen}
+                            onClose={handleCloseSearch}
                         />
                     </TimerProvider>
                 </ThemeProvider>

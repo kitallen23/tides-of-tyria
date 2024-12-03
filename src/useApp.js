@@ -1,4 +1,4 @@
-import { useReducer, useMemo, useEffect } from "react";
+import { useReducer, useMemo, useEffect, useState } from "react";
 import { alpha, createTheme } from "@mui/material";
 
 import "@/styles/globals.scss";
@@ -170,6 +170,19 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
+        MuiInputAdornment: {
+            styleOverrides: {
+                root: {
+                    "& .MuiTypography-root": {
+                        fontSize: "inherit",
+                        lineHeight: "inherit",
+                        color: "inherit",
+                    },
+                    fontSize: "inherit",
+                    lineHeight: "inherit",
+                },
+            },
+        },
     },
 });
 
@@ -303,6 +316,14 @@ const useApp = () => {
 
     useFavicon(themeState.colors.primary);
 
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+    const handleCloseSearch = () => setIsSearchOpen(false);
+    const handleOpenSearch = event => {
+        setIsSearchOpen(true);
+        event.preventDefault();
+    };
+
     return {
         themeState,
         muiTheme,
@@ -312,6 +333,10 @@ const useApp = () => {
         setFontSize,
         setTimeFormat,
         setPrimaryColor,
+
+        isSearchOpen,
+        handleCloseSearch,
+        handleOpenSearch,
     };
 };
 

@@ -33,27 +33,9 @@ const HelpModal = ({ isOpen = false, onClose }) => {
                         </TableHead>
                         <TableBody>
                             <TableRow>
+                                <TableCell>Open search window</TableCell>
                                 <TableCell>
-                                    Expand / collapse event timer
-                                </TableCell>
-                                <TableCell>
-                                    <code>F</code>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    Show / hide completed events
-                                </TableCell>
-                                <TableCell>
-                                    <code>H</code>
-                                </TableCell>
-                            </TableRow>
-                            <TableRow>
-                                <TableCell>
-                                    Cycle event highlight scheme
-                                </TableCell>
-                                <TableCell>
-                                    <code>S</code>
+                                    <code>/</code>
                                 </TableCell>
                             </TableRow>
                             <TableRow>

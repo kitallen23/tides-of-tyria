@@ -1,13 +1,15 @@
-import { AddSharp, TaskAltSharp } from "@mui/icons-material";
-
-import globalStyles from "@/styles/modules/global-styles.module.scss";
-import styles from "./checklist-page.module.scss";
-import ChecklistGroup from "@/components/editor/ChecklistGroup";
-import useChecklistPage from "./useChecklistPage";
 import classNames from "classnames";
 import { Button } from "@mui/material";
-import FixedProgressBar from "./FixedProgressBar/FixedProgressBar";
+import { AddSharp, TaskAltSharp } from "@mui/icons-material";
+
 import { useTheme } from "@/utils/theme-provider";
+import globalStyles from "@/styles/modules/global-styles.module.scss";
+import styles from "./checklist-page.module.scss";
+
+import ChecklistGroup from "@/components/editor/ChecklistGroup";
+import useChecklistPage from "./useChecklistPage";
+import FixedProgressBar from "./FixedProgressBar/FixedProgressBar";
+import HelpModal from "./HelpModal";
 
 const ChecklistPage = () => {
     const { colors } = useTheme();
@@ -25,6 +27,9 @@ const ChecklistPage = () => {
         timeUntilWeeklyReset,
         setWeeklyChecklistItems,
         addWeeklyChecklistItem,
+
+        isHelpModalOpen,
+        handleCloseHelpModal,
     } = useChecklistPage();
 
     const dailyProgressColor = colors.primary;
@@ -151,6 +156,10 @@ const ChecklistPage = () => {
                     />
                 </div>
             </div>
+            <HelpModal
+                isOpen={isHelpModalOpen}
+                onClose={handleCloseHelpModal}
+            />
         </>
     );
 };
