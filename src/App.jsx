@@ -13,6 +13,7 @@ import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 import useApp from "@/useApp";
 import Layout from "@/components/Layout/Layout";
 import HelpModal from "@/components/HelpModal";
+import useViewportHeight from "./utils/hooks/useViewportHeight";
 
 function App() {
     const {
@@ -25,6 +26,7 @@ function App() {
         setTimeFormat,
         setPrimaryColor,
     } = useApp();
+    useViewportHeight();
 
     const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
 
