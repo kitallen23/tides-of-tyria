@@ -7,12 +7,12 @@ import { Toaster } from "react-hot-toast";
 import { TITLE_SUFFIX } from "@/utils/constants";
 import { ThemeProvider } from "@/utils/theme-provider";
 import { TimerProvider } from "@/utils/timer-provider";
-import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 
 import useApp from "@/useApp";
 import Layout from "@/components/Layout/Layout";
 import useViewportHeight from "@/utils/hooks/useViewportHeight";
-import SearchModal from "@/components/SearchModal";
+import SearchModal from "@/components/Search/SearchModal";
+import { SearchModalProvider } from "@/components/Search/SearchModalContext";
 
 function App() {
     const {
@@ -24,16 +24,8 @@ function App() {
         setFontSize,
         setTimeFormat,
         setPrimaryColor,
-
-        isSearchOpen,
-        handleCloseSearch,
-        handleOpenSearch,
     } = useApp();
     useViewportHeight();
-
-    useGlobalHotkeys({
-        "/": handleOpenSearch,
-    });
 
     return (
         <>
@@ -52,41 +44,41 @@ function App() {
                     }}
                 >
                     <TimerProvider>
-                        <Layout>
-                            <Outlet />
-                        </Layout>
-                        <Toaster
-                            position="top-center"
-                            reverseOrder={false}
-                            containerStyle={{
-                                top: 66,
-                            }}
-                            toastOptions={{
-                                className: "toaster",
-                                style: {
-                                    background: themeState.colors.backgroundNav,
-                                    color: themeState.colors.body,
-                                },
-                                success: {
-                                    iconTheme: {
-                                        primary: themeState.colors.success,
-                                        secondary:
+                        <SearchModalProvider>
+                            <Layout>
+                                <Outlet />
+                            </Layout>
+                            <Toaster
+                                position="top-center"
+                                reverseOrder={false}
+                                containerStyle={{
+                                    top: 66,
+                                }}
+                                toastOptions={{
+                                    className: "toaster",
+                                    style: {
+                                        background:
                                             themeState.colors.backgroundNav,
+                                        color: themeState.colors.body,
                                     },
-                                },
-                                error: {
-                                    iconTheme: {
-                                        primary: themeState.colors.error,
-                                        secondary:
-                                            themeState.colors.backgroundNav,
+                                    success: {
+                                        iconTheme: {
+                                            primary: themeState.colors.success,
+                                            secondary:
+                                                themeState.colors.backgroundNav,
+                                        },
                                     },
-                                },
-                            }}
-                        />
-                        <SearchModal
-                            open={isSearchOpen}
-                            onClose={handleCloseSearch}
-                        />
+                                    error: {
+                                        iconTheme: {
+                                            primary: themeState.colors.error,
+                                            secondary:
+                                                themeState.colors.backgroundNav,
+                                        },
+                                    },
+                                }}
+                            />
+                            <SearchModal />
+                        </SearchModalProvider>
                     </TimerProvider>
                 </ThemeProvider>
             </MuiThemeProvider>

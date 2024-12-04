@@ -4,6 +4,8 @@ import classNames from "classnames";
 
 import { useTheme } from "@/utils/theme-provider";
 import styles from "@/components/Modal/modal.module.scss";
+import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
+import useSearchModal from "./useSearchModal";
 
 /**
  * Generates a Guild Wars 2 wiki search URL for the given search term.
@@ -17,16 +19,15 @@ const generateWikiSearchURL = searchTerm => {
     return `${baseUrl}${encodedSearch}`;
 };
 
-const SearchModal = ({
-    style = {},
-    className = "",
-    open,
-    onClose: _onClose,
-    ...rest
-}) => {
+const SearchModal = ({ style = {}, className = "", ...rest }) => {
     const { colors } = useTheme();
     const inputRef = useRef(null);
     const [searchValue, setSearchValue] = useState("");
+    const { isOpen, onOpen, onClose: _onClose } = useSearchModal();
+
+    useGlobalHotkeys({
+        "/": onOpen,
+    });
 
     const _style = useMemo(
         () =>
@@ -74,10 +75,10 @@ const SearchModal = ({
     };
 
     useEffect(() => {
-        if (open) {
+        if (isOpen) {
             setTimeout(() => inputRef.current?.focus(), 0);
         }
-    }, [open]);
+    }, [isOpen]);
 
     const handleKeyDown = event => {
         if (event.key === "Enter") {
@@ -89,7 +90,7 @@ const SearchModal = ({
 
     return (
         <Modal
-            open={open}
+            open={isOpen}
             className={classNames(styles.modal, className)}
             onClose={onClose}
             disableEscapeKeyDown={true}
@@ -103,7 +104,7 @@ const SearchModal = ({
             {...rest}
         >
             <Box sx={_style}>
-                {open ? (
+                {isOpen ? (
                     <OutlinedInput
                         inputRef={inputRef}
                         id="theme-primary-color"
