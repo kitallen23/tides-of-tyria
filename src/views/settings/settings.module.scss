@@ -29,6 +29,11 @@
                 min-width: 8rem;
             }
         }
+
+        @media (max-width: c.$media-md) {
+            grid-template-columns: 1fr;
+            gap: 0.5em;
+        }
     }
 
     .settingsButtons {
@@ -93,4 +98,15 @@
 .clearLocalDataModal {
     display: grid;
     gap: 1rem;
+}
+
+.attributionTextContainer {
+    margin-top: 2rem;
+    display: grid;
+    gap: 0.5em;
+
+    & > div {
+        text-align: center;
+        color: var(--text-muted);
+    }
 }
