@@ -22,9 +22,6 @@ export const useInlineEditor = ({
     }, [defaultValue]); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     const handleKeyDown = e => {
-        // TODO: Remove me
-        // console.info(`handleKeyDown event: `, e.key);
-
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
             if (!e.repeat) {

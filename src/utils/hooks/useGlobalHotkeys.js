@@ -6,20 +6,20 @@ const useGlobalHotkeys = hotkeys => {
             // Check if the event target is an input field
             const targetTagName = event.target.tagName.toLowerCase();
             if (
-                targetTagName === "input" ||
-                targetTagName === "textarea" ||
+                ((targetTagName === "input" || targetTagName === "textarea") &&
+                    event.target.type !== "checkbox") ||
                 event.target.isContentEditable
             ) {
                 // Do nothing if the user is typing in an input field
                 return;
             }
 
-            hotkeys?.[event.key.toLowerCase()]?.();
+            hotkeys?.[event.key.toLowerCase()]?.(event);
         };
 
-        window.addEventListener("keydown", handleKeyDown);
+        window.addEventListener("keydown", handleKeyDown, true);
         return () => {
-            window.removeEventListener("keydown", handleKeyDown);
+            window.removeEventListener("keydown", handleKeyDown, true);
         };
     }, [hotkeys]);
 };

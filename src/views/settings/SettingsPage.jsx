@@ -10,6 +10,7 @@ import {
     CheckCircleSharp,
     FormatColorFillSharp,
     FormatSizeSharp,
+    GitHub,
     TextFormatSharp,
 } from "@mui/icons-material";
 import { useTheme } from "@/utils/theme-provider";
@@ -17,6 +18,7 @@ import { Button, TextField } from "@mui/material";
 import { SCHEMES } from "@/utils/color-schemes";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import Modal from "@/components/Modal/Modal";
+import HeartIcon from "@/components/HeartIcon";
 
 const SettingsPage = () => {
     const title = useMemo(() => getTitle("Settings"), []);
@@ -242,6 +244,38 @@ const SettingsPage = () => {
                     >
                         Clear local data
                     </Button>
+                </div>
+                <div className={styles.attributionTextContainer}>
+                    <div>
+                        Made with&nbsp;
+                        <HeartIcon
+                            style={{
+                                fontSize: "0.875em",
+                                color: colors.primary,
+                            }}
+                        />
+                        &nbsp;by Woods to Eternity.9851
+                    </div>
+                    <div style={{ fontSize: "0.875em" }}>
+                        Have some feedback? Found a bug? I'd love to hear from
+                        you!
+                        <br />
+                        Send me mail in-game, or open an issue on{" "}
+                        <a
+                            href="https://github.com/kitallen23/tides-of-tyria"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <GitHub
+                                style={{
+                                    marginRight: "0.2em",
+                                    fontSize: "0.875em",
+                                }}
+                            />
+                            GitHub
+                        </a>
+                        .
+                    </div>
                 </div>
             </div>
             <Modal

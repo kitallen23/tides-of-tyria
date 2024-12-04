@@ -30,23 +30,4 @@
         display: grid;
         gap: 1rem;
     }
-
-    // TODO: Remove me
-    .scratchpadPlaceholder {
-        display: flex;
-        align-items: center;
-        height: 1.35em;
-        gap: 0.5em;
-
-        & > div {
-            background: var(--text-muted);
-            border-radius: 2px;
-            height: 1.15em;
-            opacity: 0.15;
-
-            &:first-child {
-                width: 1.15em;
-            }
-        }
-    }
 }

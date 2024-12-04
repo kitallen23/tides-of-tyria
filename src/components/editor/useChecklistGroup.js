@@ -134,9 +134,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @param {string} params.id - The identifier of the item to update.
      */
     const handleItemChange = ({ key, value, id }) => {
-        // TODO: Remove me
-        // console.info(`itemChange: `, id, key, value);
-
         setChecklistItems(prevItems =>
             prevItems.map(item => {
                 if (item.id === id) {
@@ -181,9 +178,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      */
     const handleAddItem = useCallback(
         ({ text = "", id = "", focus = false, insertAbove = false }) => {
-            // TODO: Remove me
-            // console.info(`addItem: `, id, text, focus);
-
             setChecklistItems(items => {
                 // Determine the index to insert the new item
                 let index = -1;
@@ -232,9 +226,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      *                                         even if it's the last remaining item.*
      */
     const handleRemoveItem = ({ text = "", id, force = false }) => {
-        // TODO: Remove me
-        // console.info(`removeItem: `, id, text, force);
-
         // Don't allow the last item to be removed from the array, unless the force flag is passed
         if (checklistItems.length === 1 && !force) {
             return;
@@ -323,8 +314,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      */
 
     const handleFocusNextEditor = ({ id, left }) => {
-        // TODO: Remove me
-        // console.info(`focusNextEditor: `, id, left);
         const index = checklistItems.findIndex(item => item.id === id);
 
         if (index >= 0) {
@@ -359,8 +348,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @throws {Error} If the `checklistItems` array is not defined or empty.
      */
     const handleFocusPreviousEditor = ({ id, left }) => {
-        // TODO: Remove me
-        // console.info(`focusPreviousEditor: `, id, left);
         const index = checklistItems.findIndex(item => item.id === id);
 
         if (index > 0) {
@@ -387,8 +374,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @param {boolean} params.indent - A flag indicating whether to increase (true) or decrease (false) the indent level.
      */
     const handleIndentItem = ({ id, indent }) => {
-        // TODO: Remove me
-        // console.info(`indentItem: `, id, indent);
         const item = checklistItems.find(item => item.id === id);
 
         if (item) {
@@ -853,7 +838,8 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         if (
             isSelectionMenuOpen &&
             (selectedItemIndices?.start || selectedItemIndices?.start === 0) &&
-            (selectedItemIndices?.end || selectedItemIndices?.end === 0)
+            (selectedItemIndices?.end || selectedItemIndices?.end === 0) &&
+            checklistItems.length
         ) {
             const { min, max } = getMinAndMax([
                 selectedItemIndices.start,
@@ -976,9 +962,17 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
             const checklistItemBoxes = [];
             for (let i = min; i <= max; ++i) {
-                const editor = checklistItems[i].inputRef?.current;
-                const checklistItem = editor.closest(".checklist-item");
-                checklistItemBoxes.push(checklistItem.getBoundingClientRect());
+                if (checklistItems[i]) {
+                    const editor = checklistItems[i].inputRef?.current;
+                    const checklistItem = editor.closest(".checklist-item");
+                    checklistItemBoxes.push(
+                        checklistItem.getBoundingClientRect()
+                    );
+                }
+            }
+
+            if (!checklistItemBoxes.length) {
+                return;
             }
 
             const checklistGroupBox =
@@ -1012,6 +1006,10 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 ? SELECTION_MENU_WIDTH_SMALL
                 : SELECTION_MENU_WIDTH;
 
+            if (!checklistItems[min]) {
+                return;
+            }
+
             const firstChecklistEditor = checklistItems[min].inputRef?.current;
             const firstChecklistItem =
                 firstChecklistEditor.closest(".checklist-item");
@@ -1022,7 +1020,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                 .getBoundingClientRect();
 
             const GAP = 2;
-            // TODO: Replace this with a calculation
             const PROGRESS_BAR_WIDTH = 4;
 
             const checklistGroupBox =
@@ -1454,7 +1451,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
                     handleMenuMarkAsIncomplete();
                 }
             }
-            // TODO: Enter key handling
         };
 
         window.addEventListener("keydown", handleKeyDown);

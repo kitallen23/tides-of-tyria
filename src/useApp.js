@@ -170,6 +170,19 @@ export const getDesignTokens = theme => ({
                 },
             },
         },
+        MuiInputAdornment: {
+            styleOverrides: {
+                root: {
+                    "& .MuiTypography-root": {
+                        fontSize: "inherit",
+                        lineHeight: "inherit",
+                        color: "inherit",
+                    },
+                    fontSize: "inherit",
+                    lineHeight: "inherit",
+                },
+            },
+        },
     },
 });
 
