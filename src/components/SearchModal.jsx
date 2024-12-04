@@ -5,11 +5,23 @@ import classNames from "classnames";
 import { useTheme } from "@/utils/theme-provider";
 import styles from "@/components/Modal/modal.module.scss";
 
+/**
+ * Generates a Guild Wars 2 wiki search URL for the given search term.
+ *
+ * @param {string} searchTerm - The term to search for.
+ * @returns {string} The complete search URL.
+ */
+const generateWikiSearchURL = searchTerm => {
+    const baseUrl = "https://wiki.guildwars2.com/index.php?search=";
+    const encodedSearch = encodeURIComponent(searchTerm).replace(/%20/g, "+");
+    return `${baseUrl}${encodedSearch}`;
+};
+
 const SearchModal = ({
     style = {},
     className = "",
     open,
-    onClose,
+    onClose: _onClose,
     ...rest
 }) => {
     const { colors } = useTheme();
@@ -23,29 +35,30 @@ const SearchModal = ({
                       position: "absolute",
                       top: "50%",
                       left: "50%",
-                      transform: "translate(-50%, -50%)",
-                      maxWidth: 768,
-                      width: "100%",
+                      transform: "translate(calc(-50% - 1em), -50%)",
+                      maxWidth: `calc(768px - 2em)`,
+                      width: `calc(100% - 2em)`,
                       bgcolor: colors.menu,
                       border: `2px solid ${colors.primary}`,
                       borderRadius: "8px",
                       boxShadow: 24,
                       outline: "none",
+                      margin: "0 1em",
                       ...style,
                   }
                 : undefined,
         [style, colors]
     );
 
-    const _onClose = useCallback(() => {
+    const onClose = useCallback(() => {
         setSearchValue("");
-        onClose();
-    }, [onClose]);
+        _onClose();
+    }, [_onClose]);
 
     useEffect(() => {
         const handleKeydown = event => {
             if (event.key === "Escape") {
-                _onClose();
+                onClose();
             }
         };
 
@@ -53,7 +66,7 @@ const SearchModal = ({
         return () => {
             document.removeEventListener("keydown", handleKeydown);
         };
-    }, [_onClose]);
+    }, [onClose]);
 
     const handleChange = event => {
         let value = event.target.value;
@@ -66,11 +79,19 @@ const SearchModal = ({
         }
     }, [open]);
 
+    const handleKeyDown = event => {
+        if (event.key === "Enter") {
+            const wikiUrl = generateWikiSearchURL(searchValue);
+            window.open(wikiUrl, "_blank", "noopener,noreferrer");
+            onClose();
+        }
+    };
+
     return (
         <Modal
             open={open}
             className={classNames(styles.modal, className)}
-            onClose={_onClose}
+            onClose={onClose}
             disableEscapeKeyDown={true}
             slotProps={{
                 backdrop: {
@@ -100,6 +121,7 @@ const SearchModal = ({
                         }
                         // autoFocus
                         sx={{
+                            width: "100%",
                             border: "none",
                             backgroundColor: "transparent",
                             fontSize: "1.6em",
@@ -113,6 +135,7 @@ const SearchModal = ({
                                 border: "none",
                             },
                         }}
+                        onKeyDown={handleKeyDown}
                     />
                 ) : null}
             </Box>
