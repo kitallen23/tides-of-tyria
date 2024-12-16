@@ -1,5 +1,9 @@
 # Tides of Tyria
 
+## Live website
+
+This website is hosted at: https://tides-of-tyria.chuggs.net
+
 ## Running the app
 
 Ensure you are running the correct node version (`nvm use`).
