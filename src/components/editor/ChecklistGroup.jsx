@@ -21,6 +21,7 @@ import {
     CheckSharp,
     ContentCopySharp,
     DeleteSharp,
+    DoNotDisturbAltSharp,
     ExpandMoreSharp,
     FormatBoldSharp,
     FormatIndentDecreaseSharp,
@@ -107,10 +108,13 @@ export const ChecklistGroup = ({
         handleMenuDecreaseIndent,
         handleMenuDuplicateItems,
         handleMenuDeleteItems,
+        handleMenuToggleCheckboxes,
         disableDecreaseIndent,
         disableIncreaseIndent,
         disableMarkAsComplete,
         disableMarkAsIncomplete,
+        selectedContainsCheckboxes,
+        isMultiselect,
     } = useChecklistGroup({ checklistItems, setChecklistItems });
 
     return (
@@ -395,6 +399,20 @@ export const ChecklistGroup = ({
                                         <ContentCopySharp />
                                     </ListItemIcon>
                                     <ListItemText>Duplicate</ListItemText>
+                                </MenuItem>
+                                <MenuItem onClick={handleMenuToggleCheckboxes}>
+                                    <ListItemIcon>
+                                        {selectedContainsCheckboxes ? (
+                                            <DoNotDisturbAltSharp />
+                                        ) : (
+                                            <CheckBoxOutlineBlankSharp />
+                                        )}
+                                    </ListItemIcon>
+                                    <ListItemText>
+                                        {selectedContainsCheckboxes
+                                            ? `Remove checkbox${isMultiselect ? "es" : ""}`
+                                            : `Add checkbox${isMultiselect ? "es" : ""}`}
+                                    </ListItemText>
                                 </MenuItem>
                                 <MenuItem onClick={handleMenuDeleteItems}>
                                     <ListItemIcon>

@@ -25,6 +25,7 @@ export const DEFAULT_DAILY_CHECKLIST = [
         text: "Do instanced content:",
         isComplete: false,
         indentLevel: 0,
+        type: "text",
     },
     {
         text: "Strikes",
@@ -68,6 +69,7 @@ export const DEFAULT_WEEKLY_CHECKLIST = [
         text: 'Buy <a rel="noopener noreferrer" target="_blank" href="https://wiki.guildwars2.com/wiki/Mystic_Clover">Mystic Clovers</a>:',
         isComplete: false,
         indentLevel: 0,
+        type: "text",
     },
     {
         text: "Magnetite shards",
@@ -88,6 +90,7 @@ export const DEFAULT_WEEKLY_CHECKLIST = [
         text: "Also buy mystic coins here",
         isComplete: false,
         indentLevel: 2,
+        type: "text",
     },
     {
         text: "Antique Summoning Stones",
@@ -115,7 +118,7 @@ export const DEFAULT_WEEKLY_CHECKLIST = [
         indentLevel: 1,
     },
     {
-        text: "Weekly Wizard's Vault",
+        text: "Wizard's Vault weeklies",
         isComplete: false,
         indentLevel: 0,
     },

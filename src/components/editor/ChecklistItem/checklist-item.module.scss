@@ -34,7 +34,8 @@
     grid-template-columns: auto 1fr;
     align-items: start;
 
-    .itemCheckbox {
+    .itemCheckbox,
+    .itemTextline {
         padding: 0 4px;
         border-radius: 2px;
         min-height: calc(
@@ -46,9 +47,24 @@
         }
     }
 
+    .itemTextline {
+        .itemTextlineContent {
+            font-size: 1.2em;
+            width: 1em;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+        }
+    }
+
     &.isComplete {
         color: var(--text-muted) !important;
-        text-decoration: line-through;
+
+        .editorWrapper {
+            text-decoration: line-through;
+        }
     }
 
     .editorWrapper {
