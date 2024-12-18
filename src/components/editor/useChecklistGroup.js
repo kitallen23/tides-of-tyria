@@ -12,7 +12,10 @@ import { toast } from "react-hot-toast";
 import { copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
 import {
+    cloneItems,
+    findParentIndex,
     getDecodedLengthWithBr,
+    getIndicesOfChildren,
     getMinAndMax,
     moveCursorToCharacterOffsetOfEditor,
     moveCursorToEditor,
@@ -115,6 +118,10 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * the user selected.
      */
     const [selectedItemIndices, setSelectedItemIndices] = useState(undefined);
+    const isMultiselect = useMemo(
+        () => selectedItemIndices?.start !== selectedItemIndices?.end,
+        [selectedItemIndices]
+    );
     const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
@@ -125,6 +132,171 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     const [disableMarkAsIncomplete, setDisableMarkAsIncomplete] =
         useState(false);
 
+    const markDescendentsAsComplete = ({ index, time, items }) => {
+        const updatedItems = cloneItems(items);
+
+        // Find a list of all children (regardless of type or indent)
+        const childIndices = getIndicesOfChildren(index, updatedItems);
+
+        childIndices.forEach(index => {
+            if (!updatedItems[index].isComplete) {
+                updatedItems[index].isComplete = true;
+                updatedItems[index].lastCompletion = time;
+            }
+        });
+
+        return updatedItems;
+    };
+
+    const markDescendentsAsIncomplete = ({ index, items }) => {
+        const updatedItems = cloneItems(items);
+
+        // First, find a list of all children (regardless of type or indent)
+        let childIndices = getIndicesOfChildren(index, updatedItems);
+
+        // Now for each child index, test whether or not it should be modified.
+        // Should be unchecked if:
+        // - Type is "text", and
+        // - Is a direct descendent of the current item
+        // If there's a checkbox ancestor that isn't the current item, then
+        // don't modify it at all.
+        const childIndicesToNotModify = [];
+        childIndices.forEach(childIndex => {
+            if (updatedItems[childIndex]?.type !== "text") {
+                const subChildIndices = getIndicesOfChildren(
+                    childIndex,
+                    updatedItems
+                );
+                childIndicesToNotModify.push(
+                    ...[...subChildIndices, childIndex]
+                );
+            }
+        });
+        childIndices = childIndices.filter(
+            idx => !childIndicesToNotModify.includes(idx)
+        );
+        childIndices.forEach(index => {
+            if (updatedItems[index].isComplete) {
+                updatedItems[index].isComplete = false;
+                updatedItems[index].lastCompletion = undefined;
+            }
+        });
+
+        return updatedItems;
+    };
+
+    /**
+     * Retrieves all immediate child items of a given parent index based on indentation levels.
+     *
+     * @param {number} parentIdx - The index of the parent item.
+     * @param {Array} items - The list of checklist items.
+     * @returns {Array} - An array of immediate child items.
+     */
+    const getImmediateChildren = (parentIdx, items) => {
+        const parentIndentLevel = items[parentIdx].indentLevel;
+        const children = [];
+        let childIndentLevel = -1;
+        for (let i = parentIdx + 1; i < items.length; ++i) {
+            if (items[i]) {
+                const itemIndentLevel =
+                    items[i]?.indentLevel >= 0
+                        ? items[i].indentLevel
+                        : -Infinity;
+                if (itemIndentLevel > parentIndentLevel) {
+                    if (
+                        childIndentLevel === -1 ||
+                        itemIndentLevel < childIndentLevel
+                    ) {
+                        childIndentLevel = itemIndentLevel;
+                    }
+                    if (itemIndentLevel <= childIndentLevel) {
+                        children.push(items[i]);
+                    }
+                } else {
+                    // If we get here, we've found a non-child item, so don't
+                    // continue looking for children
+                    break;
+                }
+            }
+        }
+
+        return children;
+    };
+
+    /**
+     * Updates the completion status of all ancestor items recursively.
+     *
+     * @param {Object} params
+     * @param {number} params.index - The index of the current item.
+     * @param {Date} params.time - The timestamp for completion.
+     * @param {Array} params.items - The list of checklist items.
+     * @returns {Array} - The updated list of items.
+     */
+    const updateParentsRecursively = ({ index, time, items }) => {
+        const updatedItems = cloneItems(items);
+
+        // Find the immediate parent of this item
+        const parentIdx = findParentIndex(index, updatedItems);
+        const parent = updatedItems[parentIdx];
+
+        // Break early if the parent is not a text type (it's a checkbox).
+        // This is our stopping condition for the recursive call.
+        if (!parent || parent?.type !== "text") {
+            return updatedItems;
+        }
+
+        // Find all the "immediate children" of this parent
+        const children = getImmediateChildren(parentIdx, updatedItems);
+        const allChildrenAreChecked = children.every(
+            item => item.isComplete === true
+        );
+        if (allChildrenAreChecked) {
+            // If all children are checked, set the parent as complete
+            updatedItems[parentIdx].isComplete = true;
+            updatedItems[parentIdx].lastCompletion = time;
+        } else {
+            // If any one child is not checked, set the parent as incomplete
+            updatedItems[parentIdx].isComplete = false;
+            updatedItems[parentIdx].lastCompletion = undefined;
+        }
+
+        // Recursively call the update parent function
+        return updateParentsRecursively({
+            index: parentIdx,
+            time,
+            items: updatedItems,
+        });
+    };
+
+    const toggleRelatedItems = ({ index, time, value, items }) => {
+        let updatedItems = [...items];
+
+        if (value) {
+            // If new value is true, set all children of this item to true
+            updatedItems = markDescendentsAsComplete({
+                index,
+                time,
+                items,
+            });
+        } else {
+            // If new value is false, set children to false (if they aren't
+            // checkboxes)
+            updatedItems = markDescendentsAsIncomplete({
+                index,
+                items,
+            });
+        }
+
+        updatedItems = updateParentsRecursively({
+            index,
+            time,
+            value,
+            items: updatedItems,
+        });
+
+        return updatedItems;
+    };
+
     /**
      * Handles changes to a checklist item by updating its specified property.
      *
@@ -134,25 +306,36 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
      * @param {string} params.id - The identifier of the item to update.
      */
     const handleItemChange = ({ key, value, id }) => {
-        setChecklistItems(prevItems =>
-            prevItems.map(item => {
+        setChecklistItems(prevItems => {
+            const index = prevItems.findIndex(item => item.id === id);
+            const time = new Date().toISOString();
+
+            let updatedItems = prevItems.map(item => {
                 if (item.id === id) {
                     if (key === "isComplete") {
                         return {
                             ...item,
                             [key]: value,
-                            lastCompletion: value
-                                ? new Date().toISOString()
-                                : undefined,
+                            lastCompletion: value ? time : undefined,
                         };
-                    } else {
-                        return { ...item, [key]: value };
                     }
+                    return { ...item, [key]: value };
                 } else {
                     return item;
                 }
-            })
-        );
+            });
+
+            if (key === "isComplete") {
+                updatedItems = toggleRelatedItems({
+                    index,
+                    time,
+                    value,
+                    items: updatedItems,
+                });
+            }
+
+            return updatedItems;
+        });
     };
 
     /**
@@ -1420,6 +1603,50 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         deactivateSelectedBorderBox();
     }, [selectedItemIndices, setChecklistItems]);
 
+    const selectedContainsCheckboxes = useMemo(() => {
+        if (selectedItemIndices) {
+            const { min, max } = getMinAndMax([
+                selectedItemIndices.start,
+                selectedItemIndices.end,
+            ]);
+            const selectedItems = checklistItems.slice(min, max + 1);
+            const hasCheckbox = selectedItems.some(
+                item => item.type !== "text"
+            );
+            return hasCheckbox;
+        } else {
+            return false;
+        }
+    }, [selectedItemIndices, checklistItems]);
+
+    const handleMenuToggleCheckboxes = () => {
+        if (!selectedItemIndices) {
+            return;
+        }
+        const { min, max } = getMinAndMax([
+            selectedItemIndices.start,
+            selectedItemIndices.end,
+        ]);
+
+        // First, check if we should be adding or removing checkboxes
+        const shouldRemoveCheckboxes = selectedContainsCheckboxes;
+
+        // Second, manage the "type" property of each selected item
+        setChecklistItems(prevItems => {
+            const newItems = prevItems.map((item, i) => {
+                if (i >= min && i <= max) {
+                    return {
+                        ...item,
+                        type: shouldRemoveCheckboxes ? "text" : undefined,
+                    };
+                }
+                return item;
+            });
+            return newItems;
+        });
+        deactivateSelectedBorderBox();
+    };
+
     useEffect(() => {
         const handleKeyDown = event => {
             // Return early if we don't even have a selection active
@@ -1531,10 +1758,13 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         handleMenuDecreaseIndent,
         handleMenuDuplicateItems,
         handleMenuDeleteItems,
+        handleMenuToggleCheckboxes,
         disableDecreaseIndent,
         disableIncreaseIndent,
         disableMarkAsComplete,
         disableMarkAsIncomplete,
+        selectedContainsCheckboxes,
+        isMultiselect,
     };
 };
 

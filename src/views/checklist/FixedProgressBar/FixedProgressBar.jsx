@@ -5,11 +5,16 @@ import styles from "./fixed-progress-bar.module.scss";
 
 const FixedProgressBar = ({ checklistItems, position, color }) => {
     const numCompleted = useMemo(
-        () => checklistItems?.filter(item => item.isComplete).length || 0,
+        () =>
+            checklistItems?.filter(
+                item => item?.type !== "text" && item.isComplete
+            ).length || 0,
         [checklistItems]
     );
     const numTotal = useMemo(
-        () => checklistItems?.length || 0,
+        () =>
+            (checklistItems || []).filter(item => item?.type !== "text")
+                .length || 0,
         [checklistItems]
     );
     const percentageComplete = useMemo(

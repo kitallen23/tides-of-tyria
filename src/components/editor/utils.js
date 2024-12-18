@@ -488,3 +488,53 @@ export function getMinAndMax(numbers) {
     const min = Math.min(...numbers);
     return { min, max };
 }
+
+/**
+ * Retrieves the indices of all child items that are indented below the specified item.
+ * Starting from the given index, it collects all subsequent items with a higher indentation level
+ * until an item with the same or lower indentation level is encountered.
+ *
+ * @param {number} index - The index of the parent item in the items array.
+ * @param {Array<{ indentLevel: number }>} items - The array of items, each with an `indentLevel` property.
+ * @returns {number[]} An array of indices representing the child items of the specified parent.
+ */
+export function getIndicesOfChildren(index, items) {
+    if (!items[index]) {
+        return [];
+    }
+    const indices = [];
+    const currentIndentLevel = items[index]?.indentLevel;
+
+    let idx = index + 1;
+    while ((items[idx]?.indentLevel ?? -1) > currentIndentLevel) {
+        indices.push(idx);
+        ++idx;
+    }
+
+    return indices;
+}
+
+/**
+ * Finds the index of the parent item based on indentation levels.
+ * Starting from the specified index, it searches backwards in the `items` array
+ * to locate the first item with a lower indentation level, indicating it is the parent.
+ *
+ * @param {number} index - The index of the current item in the `items` array.
+ * @param {Array<{ indentLevel: number }>} items - The array of items, each with an `indentLevel` property.
+ * @returns {number} The index of the parent item if found; otherwise, -1.
+ */
+export function findParentIndex(index, items) {
+    const currentIndentLevel = items[index].indentLevel;
+    for (let i = index - 1; i >= -1; --i) {
+        if (items[i]) {
+            const itemIndentLevel =
+                items[i]?.indentLevel >= 0 ? items[i].indentLevel : Infinity;
+            if (itemIndentLevel < currentIndentLevel) {
+                return i;
+            }
+        }
+    }
+    return -1;
+}
+
+export const cloneItems = arr => arr.map(item => Object.assign({}, item));

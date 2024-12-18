@@ -182,12 +182,18 @@ export const ChecklistItem = ({
                 onKeyDown={handleKeyDown}
                 onBlur={handleBlur}
             >
-                <Checkbox
-                    checked={item.isComplete}
-                    onChange={handleCheckboxChange}
-                    className={styles.itemCheckbox}
-                    inputProps={{ "aria-label": "controlled" }}
-                />
+                {item.type === "text" ? (
+                    <div className={styles.itemTextline}>
+                        <div className={styles.itemTextlineContent}>•</div>
+                    </div>
+                ) : (
+                    <Checkbox
+                        checked={item.isComplete}
+                        onChange={handleCheckboxChange}
+                        className={styles.itemCheckbox}
+                        inputProps={{ "aria-label": "controlled" }}
+                    />
+                )}
                 <div className={styles.editorWrapper}>
                     <InlineEditor
                         id={item.id}
