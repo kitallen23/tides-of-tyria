@@ -374,6 +374,18 @@ const EventTimers = () => {
         );
     };
 
+    const [denseMode, setDenseMode] = useState(() => {
+        const denseMode = getLocalItem(LOCAL_STORAGE_KEYS.denseMode, "false");
+        localStorage.setItem(LOCAL_STORAGE_KEYS.denseMode, denseMode);
+        return denseMode === "true";
+    });
+
+    const toggleDenseMode = () => {
+        const _denseMode = !denseMode;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.denseMode, _denseMode);
+        setDenseMode(_denseMode);
+    };
+
     const [mode, setMode] = useState(MODES.view);
 
     const [menuAnchor, setMenuAnchor] = useState(null);
@@ -487,6 +499,8 @@ const EventTimers = () => {
                                     }
                                     showCompleted={showCompleted}
                                     toggleShowCompleted={toggleShowCompleted}
+                                    denseMode={denseMode}
+                                    toggleDenseMode={toggleDenseMode}
                                     setMode={setMode}
                                 />
                                 <Button
@@ -539,6 +553,7 @@ const EventTimers = () => {
                     onComplete,
                     onToggleHidden,
                     highlightScheme,
+                    denseMode,
                     mode,
                 }}
             >

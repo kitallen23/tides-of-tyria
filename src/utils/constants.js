@@ -17,6 +17,7 @@ export const LOCAL_STORAGE_KEYS = {
     fontType: "tot_font_type",
     timeFormat: "tot_time_format",
     isTimerCollapsed: "tot_is_timer_collapsed",
+    denseMode: "tot_dense_mode",
     primaryColor: "tot_primary_color",
     eventConfig: "tot_event_config",
     highlightScheme: "tot_highlight_scheme",
