@@ -1,5 +1,7 @@
 import { useState } from "react";
 import {
+    DensityMediumSharp,
+    DensitySmallSharp,
     DoneSharp,
     EditSharp,
     FullscreenExitSharp,
@@ -36,6 +38,8 @@ const OptionsMenu = ({
     showCompleted,
     toggleShowCompleted,
     setMode,
+    denseMode,
+    toggleDenseMode,
     ...rest
 }) => {
     const { colors } = useTheme();
@@ -63,6 +67,10 @@ const OptionsMenu = ({
     };
     const onModeClick = () => {
         setMode(MODES.edit);
+        onClose();
+    };
+    const onToggleDenseModeClick = () => {
+        toggleDenseMode();
         onClose();
     };
 
@@ -124,6 +132,22 @@ const OptionsMenu = ({
                                     </span>
                                 </>
                             )}
+                        </Typography>
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem onClick={onToggleDenseModeClick}>
+                    <ListItemIcon>
+                        {denseMode ? (
+                            <DensityMediumSharp />
+                        ) : (
+                            <DensitySmallSharp />
+                        )}
+                    </ListItemIcon>
+                    <ListItemText>
+                        <Typography variant="inherit" noWrap>
+                            {denseMode
+                                ? "Disable dense mode"
+                                : "Enable dense mode"}
                         </Typography>
                     </ListItemText>
                 </MenuItem>

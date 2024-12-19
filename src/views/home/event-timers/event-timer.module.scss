@@ -3,6 +3,8 @@ $min-area-width: 768px;
 $timer-gap: 4px;
 $line-height: var(--line-height);
 $time-row-font-size: 0.875em;
+$phase-padding: 0.2em;
+$phase-padding-dense: 0.3em;
 
 [data-font-size="sm"]:root {
     .eventTimer {
@@ -114,7 +116,7 @@ $time-row-font-size: 0.875em;
                 user-select: none;
                 touch-action: none;
                 background: rgba(var(--scrollbar-track-color), 0);
-                transition: background var(--transition);
+                transition: background-color var(--transition);
 
                 &:hover {
                     background: rgba(var(--scrollbar-track-color), 1);
@@ -173,13 +175,14 @@ $time-row-font-size: 0.875em;
                         line-height: $line-height;
                         font-size: 0.875em;
                         border-radius: 0.25rem;
-                        padding: 0 0.2em;
+                        padding: 0 $phase-padding;
                         display: grid;
                         border-width: 2px;
                         border-style: solid;
                         border-color: transparent;
                         transition:
-                            background var(--transition),
+                            background-color var(--transition),
+                            min-height var(--transition),
                             border-color var(--transition);
 
                         user-select: none;
@@ -189,8 +192,24 @@ $time-row-font-size: 0.875em;
                         // padding * 2
                         min-height: calc(
                             (1em * #{$line-height}) +
-                                (0.875em * #{$line-height}) + (0.2em * 2)
+                                (0.875em * #{$line-height}) +
+                                ($phase-padding * 2)
                         );
+                        &.denseMode {
+                            min-height: calc(
+                                (1em * #{$line-height}) +
+                                    ($phase-padding-dense * 2)
+                            );
+
+                            grid-template-columns: 1fr auto;
+                            align-content: center;
+                            column-gap: 0.25em;
+                            .timeUntil {
+                                display: flex;
+                                align-items: center;
+                                font-weight: 600;
+                            }
+                        }
 
                         &.dayNight {
                             min-height: 8px;
@@ -220,13 +239,13 @@ $time-row-font-size: 0.875em;
                         line-height: $line-height;
                         font-size: 0.875em;
                         border-radius: 0.25rem;
-                        padding: 0 0.2em;
+                        padding: 0 $phase-padding;
 
                         border-width: 2px;
                         border-style: solid;
                         border-color: transparent;
                         transition:
-                            background var(--transition),
+                            background-color var(--transition),
                             border-color var(--transition);
 
                         display: grid;
@@ -244,7 +263,8 @@ $time-row-font-size: 0.875em;
                         // padding * 2
                         min-height: calc(
                             (1em * #{$line-height}) +
-                                (0.875em * #{$line-height}) + (0.2em * 2)
+                                (0.875em * #{$line-height}) +
+                                ($phase-padding * 2)
                         );
 
                         .text {
@@ -377,6 +397,7 @@ $time-row-font-size: 0.875em;
 
     top: 0;
     left: 0;
+    z-index: 1;
 
     border-width: 2px;
     border-style: solid;

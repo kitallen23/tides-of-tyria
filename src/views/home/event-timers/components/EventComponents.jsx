@@ -258,6 +258,7 @@ const AreaEventPhase = ({
         selectedEvent,
         setSelectedEvent,
         highlightScheme,
+        denseMode,
     } = useContext(EventTimerContext);
 
     const isSelected = useMemo(
@@ -312,11 +313,29 @@ const AreaEventPhase = ({
         if (item.type === "downtime" || item.key === "downtime") {
             return "";
         }
+
+        // Dense mode uses different text; simply show mins up until 60
+        if (denseMode) {
+            if (item.startDate > addMinutes(now, 60)) {
+                return "";
+            }
+            const isInFuture = item.startDate > now;
+            const minDiff = differenceInMinutes(item.startDate, now);
+            if (minDiff === 0) {
+                return "!";
+            }
+            if (isInFuture) {
+                return `${minDiff + 1}m`;
+            } else {
+                return "";
+            }
+        }
+
         // 5 mins ago
         if (addMinutes(item.startDate, 5 + 1) < now) {
             return "";
         }
-        // 120 mins in the future
+        // 120 (or more) mins in the future
         if (item.startDate >= addMinutes(now, 120)) {
             return "";
         }
@@ -343,7 +362,7 @@ const AreaEventPhase = ({
                 return `in ${minDiff + 1} min${minDiff + 1 > 1 ? "s" : ""}`;
             }
         }
-    }, [now, item]);
+    }, [now, item, denseMode]);
 
     const onClick = () => {
         if (!isClickable) {
@@ -455,6 +474,7 @@ const AreaEventPhase = ({
                 [styles.isSelected]: selectedEvent?.id === item.id,
                 [styles.isClickable]: isClickable,
                 [styles.dayNight]: isDayNight,
+                [styles.denseMode]: denseMode,
                 "event-phase": isClickable,
             })}
             css={styleClass}
@@ -502,7 +522,9 @@ const AreaEventPhase = ({
                         {item.isContinued ? "…" : ""}
                         {item.name}
                     </div>
-                    <div className={styles.timeUntil}>{eventTimeText}</div>
+                    {width < 60 ? null : (
+                        <div className={styles.timeUntil}>{eventTimeText}</div>
+                    )}
                 </>
             )}
         </div>
