@@ -269,7 +269,7 @@ $phase-padding-dense: 0.3em;
 
                         .text {
                             display: grid;
-                            grid-template-columns: 170px auto auto;
+                            grid-template-columns: 220px auto auto;
                             gap: 0.5em;
                             align-content: center;
                             justify-content: start;
@@ -281,9 +281,41 @@ $phase-padding-dense: 0.3em;
                             }
                             .events {
                                 font-size: 0.85em;
-                                white-space: nowrap;
+
+                                display: flex;
+                                align-items: center;
+
                                 overflow: hidden;
-                                text-overflow: ellipsis;
+
+                                & > div {
+                                    white-space: nowrap;
+                                    overflow: hidden;
+                                    text-overflow: ellipsis;
+                                }
+                            }
+                        }
+
+                        &.withPhases {
+                            .text {
+                                grid-template-columns: 1fr;
+                            }
+                        }
+
+                        &.editablePhase {
+                            margin-left: 40px;
+                            .text {
+                                grid-template-columns: 1fr;
+                                &.hasAreaName {
+                                    grid-template-columns: 180px auto auto;
+                                }
+
+                                .title {
+                                    & > div {
+                                        white-space: nowrap;
+                                        overflow: hidden;
+                                        text-overflow: ellipsis;
+                                    }
+                                }
                             }
                         }
                     }

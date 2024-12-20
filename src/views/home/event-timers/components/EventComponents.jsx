@@ -36,6 +36,7 @@ import {
 } from "../utils";
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import useEventColors from "@/utils/hooks/useEventColors";
+import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -242,15 +243,7 @@ const getPeriodicEventStartTimesWithinWindow = ({
     return eventStartTimes;
 };
 
-const AreaEventPhase = ({
-    item,
-    eventBackground,
-    isBackgroundLight,
-    isDulledBackgroundLight,
-    isLast,
-    isAreaComplete,
-    isDayNight,
-}) => {
+const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
     const { colors } = useTheme();
     const { now, dailyReset } = useTimer();
     const {
@@ -260,6 +253,43 @@ const AreaEventPhase = ({
         highlightScheme,
         denseMode,
     } = useContext(EventTimerContext);
+
+    const {
+        eventBackground: _eventBackground,
+        backgroundLight: _backgroundLight,
+        backgroundDark: _backgroundDark,
+        backgroundMiddle: _backgroundMiddle,
+        isBackgroundLight: _isBackgroundLight,
+        isDarkBackgroundLight: _isDarkBackgroundLight,
+        isMiddleBackgroundLight: _isMiddleBackgroundLight,
+        isDulledBackgroundLight: _isDulledBackgroundLight,
+        isDulledDarkBackgroundLight: _isDulledDarkBackgroundLight,
+    } = useEventColors({
+        colors,
+        color: item.color,
+        downtimeOpacity: DOWNTIME_OPACITY,
+    });
+
+    const _isDay = isDayNight && item.key.endsWith("day");
+    const _isNight = isDayNight && item.key.endsWith("night");
+    let _isMiddle =
+        isDayNight && (item.key.endsWith("dusk") || item.key.endsWith("dawn"));
+
+    const backgroundColor = _isDay
+        ? _backgroundLight
+        : _isNight
+          ? _backgroundDark
+          : _isMiddle
+            ? _backgroundMiddle
+            : _eventBackground;
+    const isBackgroundLight = _isNight
+        ? _isDarkBackgroundLight
+        : _isMiddle
+          ? _isMiddleBackgroundLight
+          : _isBackgroundLight;
+    const isDulledBackgroundLight = _isNight
+        ? _isDulledDarkBackgroundLight
+        : _isDulledBackgroundLight;
 
     const isSelected = useMemo(
         () => selectedEvent?.id === item.id,
@@ -321,7 +351,7 @@ const AreaEventPhase = ({
             }
             const isInFuture = item.startDate > now;
             const minDiff = differenceInMinutes(item.startDate, now);
-            if (minDiff === 0) {
+            if (minDiff === 0 && !isInFuture) {
                 return "!";
             }
             if (isInFuture) {
@@ -384,8 +414,8 @@ const AreaEventPhase = ({
     };
 
     const borderColor = useMemo(
-        () => adjustLuminance(eventBackground, -40),
-        [eventBackground]
+        () => adjustLuminance(backgroundColor, -40),
+        [backgroundColor]
     );
 
     const isDulledBecauseOfScheme = useMemo(() => {
@@ -431,7 +461,7 @@ const AreaEventPhase = ({
 
     const style = useMemo(
         () => ({
-            background: `${eventBackground}${isDulled ? "33" : ""}`,
+            background: `${backgroundColor}${isDulled ? "33" : ""}`,
             width,
             borderColor: isSelected ? borderColor : undefined,
             color: `${
@@ -452,7 +482,7 @@ const AreaEventPhase = ({
             colors,
             isBackgroundLight,
             isDulledBackgroundLight,
-            eventBackground,
+            backgroundColor,
         ]
     );
 
@@ -538,20 +568,22 @@ const PeriodicArea = ({ area, region }) => {
     // Calculate all events that must be rendered inside this time window
     const [areaEvents, downtime] = useMemo(() => {
         const allEvents = [];
-        area?.phases.forEach(phase => {
-            const eventStartTimes = getPeriodicEventStartTimesWithinWindow({
-                phase,
-                dailyReset,
-                currentTimeBlockStart,
+        area?.phases
+            .filter(phase => !phase.hidePhase)
+            .forEach(phase => {
+                const eventStartTimes = getPeriodicEventStartTimesWithinWindow({
+                    phase,
+                    dailyReset,
+                    currentTimeBlockStart,
+                });
+                allEvents.push(
+                    ...(eventStartTimes || []).map(item => ({
+                        ...item,
+                        area: { ...area, phases: undefined },
+                        region,
+                    }))
+                );
             });
-            allEvents.push(
-                ...(eventStartTimes || []).map(item => ({
-                    ...item,
-                    area: { ...area, phases: undefined },
-                    region,
-                }))
-            );
-        });
         allEvents.sort((a, b) => a.startDate - b.startDate);
 
         // Add "minutes from start of window" to each event
@@ -612,7 +644,7 @@ const PeriodicArea = ({ area, region }) => {
                     windowStartMinute: Math.max(nextEvent.windowStartMinute, 0),
                     isContinued: nextEvent.windowStartMinute < 0,
                     isCutOff: windowEndMinute > TIME_BLOCK_MINS,
-                    color: area.color,
+                    color: nextEvent.color || area.color,
                 });
                 const durationInWindow =
                     Math.min(TIME_BLOCK_MINS, windowEndMinute) -
@@ -628,23 +660,6 @@ const PeriodicArea = ({ area, region }) => {
         () => area.key.startsWith("day-night"),
         [area.key]
     );
-
-    const { colors } = useTheme();
-    const {
-        eventBackground,
-        backgroundLight,
-        backgroundDark,
-        backgroundMiddle,
-        isBackgroundLight,
-        isDarkBackgroundLight,
-        isMiddleBackgroundLight,
-        isDulledBackgroundLight,
-        isDulledDarkBackgroundLight,
-    } = useEventColors({
-        colors,
-        color: area.color,
-        downtimeOpacity: DOWNTIME_OPACITY,
-    });
 
     const isComplete = useMemo(() => {
         if (
@@ -662,41 +677,15 @@ const PeriodicArea = ({ area, region }) => {
     }
     return (
         <div className={styles.area}>
-            {(minuteBlocks || []).map((item, i) => {
-                let isDay = isDayNight && item.key.endsWith("day");
-                let isNight = isDayNight && item.key.endsWith("night");
-                let isMiddle =
-                    isDayNight &&
-                    (item.key.endsWith("dusk") || item.key.endsWith("dawn"));
-                let _eventBackground = isDay
-                    ? backgroundLight
-                    : isNight
-                      ? backgroundDark
-                      : isMiddle
-                        ? backgroundMiddle
-                        : eventBackground;
-                let _isBackgroundLight = isNight
-                    ? isDarkBackgroundLight
-                    : isMiddle
-                      ? isMiddleBackgroundLight
-                      : isBackgroundLight;
-                let _isDulledBackgroundLight = isNight
-                    ? isDulledDarkBackgroundLight
-                    : isDulledBackgroundLight;
-
-                return (
-                    <AreaEventPhase
-                        key={item.id}
-                        item={item}
-                        eventBackground={_eventBackground}
-                        isBackgroundLight={_isBackgroundLight}
-                        isDulledBackgroundLight={_isDulledBackgroundLight}
-                        isLast={i === minuteBlocks.length - 1}
-                        isAreaComplete={isComplete}
-                        isDayNight={isDayNight}
-                    />
-                );
-            })}
+            {(minuteBlocks || []).map((item, i) => (
+                <AreaEventPhase
+                    key={item.id}
+                    item={item}
+                    isLast={i === minuteBlocks.length - 1}
+                    isAreaComplete={isComplete}
+                    isDayNight={isDayNight}
+                />
+            ))}
         </div>
     );
 };
@@ -760,20 +749,24 @@ const FixedTimeArea = ({ area, region }) => {
     // Calculate all events that must be rendered inside this time window
     const [areaEvents, downtime] = useMemo(() => {
         const allEvents = [];
-        area?.phases.forEach(phase => {
-            const eventStartTimes = getFixedTimeEventStartTimesWithinWindow({
-                phase,
-                dailyReset,
-                currentTimeBlockStart,
+        area?.phases
+            .filter(phase => !phase.hidePhase)
+            .forEach(phase => {
+                const eventStartTimes = getFixedTimeEventStartTimesWithinWindow(
+                    {
+                        phase,
+                        dailyReset,
+                        currentTimeBlockStart,
+                    }
+                );
+                allEvents.push(
+                    ...(eventStartTimes || []).map(item => ({
+                        ...item,
+                        area: { ...area, phases: undefined },
+                        region,
+                    }))
+                );
             });
-            allEvents.push(
-                ...(eventStartTimes || []).map(item => ({
-                    ...item,
-                    area: { ...area, phases: undefined },
-                    region,
-                }))
-            );
-        });
         allEvents.sort((a, b) => a.startDate - b.startDate);
 
         // Add "minutes from start of window" to each event
@@ -834,7 +827,7 @@ const FixedTimeArea = ({ area, region }) => {
                     windowStartMinute: Math.max(nextEvent.windowStartMinute, 0),
                     isContinued: nextEvent.windowStartMinute < 0,
                     isCutOff: windowEndMinute > TIME_BLOCK_MINS,
-                    color: area.color,
+                    color: nextEvent.color || area.color,
                 });
                 const durationInWindow =
                     Math.min(TIME_BLOCK_MINS, windowEndMinute) -
@@ -850,23 +843,6 @@ const FixedTimeArea = ({ area, region }) => {
         () => area.key.startsWith("day-night"),
         [area.key]
     );
-
-    const { colors } = useTheme();
-    const {
-        eventBackground,
-        backgroundLight,
-        backgroundDark,
-        backgroundMiddle,
-        isBackgroundLight,
-        isDarkBackgroundLight,
-        isMiddleBackgroundLight,
-        isDulledBackgroundLight,
-        isDulledDarkBackgroundLight,
-    } = useEventColors({
-        colors,
-        color: area.color,
-        downtimeOpacity: DOWNTIME_OPACITY,
-    });
 
     const isComplete = useMemo(() => {
         if (
@@ -884,43 +860,19 @@ const FixedTimeArea = ({ area, region }) => {
     }
     return (
         <div className={styles.area}>
-            {(minuteBlocks || []).map((item, i) => {
-                let isDay = isDayNight && item.key.endsWith("day");
-                let isNight = isDayNight && item.key.endsWith("night");
-                let isMiddle =
-                    isDayNight &&
-                    (item.key.endsWith("dusk") || item.key.endsWith("dawn"));
-                let _eventBackground = isDay
-                    ? backgroundLight
-                    : isNight
-                      ? backgroundDark
-                      : isMiddle
-                        ? backgroundMiddle
-                        : eventBackground;
-                let _isBackgroundLight = isNight
-                    ? isDarkBackgroundLight
-                    : isMiddle
-                      ? isMiddleBackgroundLight
-                      : isBackgroundLight;
-                let _isDulledBackgroundLight = isNight
-                    ? isDulledDarkBackgroundLight
-                    : isDulledBackgroundLight;
-
-                return (
-                    <AreaEventPhase
-                        key={item.id}
-                        item={item}
-                        eventBackground={_eventBackground}
-                        isBackgroundLight={_isBackgroundLight}
-                        isDulledBackgroundLight={_isDulledBackgroundLight}
-                        isLast={i === minuteBlocks.length - 1}
-                        isAreaComplete={isComplete}
-                    />
-                );
-            })}
+            {(minuteBlocks || []).map((item, i) => (
+                <AreaEventPhase
+                    key={item.id}
+                    item={item}
+                    isLast={i === minuteBlocks.length - 1}
+                    isAreaComplete={isComplete}
+                    isDayNight={isDayNight}
+                />
+            ))}
         </div>
     );
 };
+
 const EditableArea = ({ area, region }) => {
     const { colors } = useTheme();
     const { onToggleHidden } = useContext(EventTimerContext);
@@ -1004,16 +956,19 @@ const EditableArea = ({ area, region }) => {
                     {"|"}
                     <div className={styles.events}>
                         {region.key === "special_events" && !area.active ? (
-                            <>
-                                [Event Inactive]{" "}
+                            <div>
+                                [Event Inactive]
                                 <span
-                                    style={{ textDecoration: "line-through" }}
+                                    style={{
+                                        textDecoration: "line-through",
+                                        marginLeft: "0.5em",
+                                    }}
                                 >
                                     {areaEvents}
                                 </span>
-                            </>
+                            </div>
                         ) : (
-                            areaEvents
+                            <div>{areaEvents}</div>
                         )}
                     </div>
                 </div>
@@ -1022,9 +977,233 @@ const EditableArea = ({ area, region }) => {
     );
 };
 
+const EditableAreaWithPhases = ({ area, region }) => {
+    const { colors } = useTheme();
+    const { onToggleHidden } = useContext(EventTimerContext);
+    const { eventBackground, isBackgroundLight, isDulledBackgroundLight } =
+        useEventColors({
+            colors,
+            color: area.color,
+            downtimeOpacity: DOWNTIME_OPACITY,
+        });
+
+    const borderColor = useMemo(
+        () => adjustLuminance(eventBackground, -40),
+        [eventBackground]
+    );
+
+    const areaMetas = useMemo(() => {
+        const metas = new Map();
+        area.phases.forEach(phase => metas.set(phase.key, phase));
+        return Array.from(metas.values());
+    }, [area.phases]);
+
+    const isDulled = area.hideArea === true;
+    const isHidden = area.hideArea === true;
+
+    const style = useMemo(
+        () => ({
+            background: `${eventBackground}${isDulled ? "33" : ""}`,
+            color: `${
+                isDulled
+                    ? isDulledBackgroundLight
+                        ? colors.bodyDark
+                        : colors.bodyLight
+                    : isBackgroundLight
+                      ? colors.bodyDark
+                      : colors.bodyLight
+            }${isDulled ? "66" : ""}`,
+        }),
+        [
+            isDulled,
+            colors,
+            isBackgroundLight,
+            isDulledBackgroundLight,
+            eventBackground,
+        ]
+    );
+
+    const styleClass = useMemo(
+        () =>
+            css({
+                "&:hover": {
+                    borderColor: `${borderColor} !important`,
+                },
+            }),
+        [borderColor]
+    );
+
+    const onClick = () => {
+        onToggleHidden(area);
+    };
+
+    return (
+        <>
+            <div className={styles.area} onClick={onClick}>
+                <div
+                    className={classNames(
+                        styles.editableArea,
+                        styles.withPhases
+                    )}
+                    css={styleClass}
+                    style={style}
+                >
+                    <Switch
+                        checked={!isHidden}
+                        disabled={isHidden}
+                        color={isBackgroundLight ? "bodyDark" : "bodyLight"}
+                        size="small"
+                    />
+                    <div className={styles.text}>
+                        <div
+                            className={styles.title}
+                            style={{
+                                textDecoration:
+                                    region.key === "special_events" &&
+                                    !area.active
+                                        ? "line-through"
+                                        : undefined,
+                            }}
+                        >
+                            {area.displayTitle ?? area.name}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {areaMetas.map(phase => (
+                <EditablePhase
+                    key={phase.key}
+                    region={region}
+                    area={area}
+                    phase={phase}
+                    color={phase.color ?? area.color}
+                />
+            ))}
+        </>
+    );
+};
+
+const EditablePhase = ({ region, area, phase, color }) => {
+    const { colors } = useTheme();
+    const { onTogglePhaseHidden } = useContext(EventTimerContext);
+    const { eventBackground, isBackgroundLight, isDulledBackgroundLight } =
+        useEventColors({
+            colors,
+            color,
+            downtimeOpacity: DOWNTIME_OPACITY,
+        });
+
+    const borderColor = useMemo(
+        () => adjustLuminance(eventBackground, -40),
+        [eventBackground]
+    );
+
+    const isDulled = area.hideArea === true || phase.hidePhase === true;
+    const isHidden = phase.hidePhase === true;
+
+    const style = useMemo(
+        () => ({
+            background: `${eventBackground}${isDulled ? "33" : ""}`,
+            color: `${
+                isDulled
+                    ? isDulledBackgroundLight
+                        ? colors.bodyDark
+                        : colors.bodyLight
+                    : isBackgroundLight
+                      ? colors.bodyDark
+                      : colors.bodyLight
+            }${isDulled ? "66" : ""}`,
+        }),
+        [
+            isDulled,
+            colors,
+            isBackgroundLight,
+            isDulledBackgroundLight,
+            eventBackground,
+        ]
+    );
+
+    const styleClass = useMemo(
+        () =>
+            css({
+                "&:hover": {
+                    borderColor: `${borderColor} !important`,
+                },
+            }),
+        [borderColor]
+    );
+
+    const onPhaseClick = key => {
+        onTogglePhaseHidden(area, key);
+    };
+
+    return (
+        <div
+            className={styles.area}
+            onClick={() => onPhaseClick(phase.key)}
+            key={phase.key}
+        >
+            <div
+                className={classNames(
+                    styles.editableArea,
+                    styles.editablePhase
+                )}
+                css={styleClass}
+                style={style}
+            >
+                <Switch
+                    checked={!isHidden}
+                    disabled={area.hideArea || isHidden}
+                    color={isBackgroundLight ? "bodyDark" : "bodyLight"}
+                    size="small"
+                />
+                <div
+                    className={classNames(styles.text, {
+                        [styles.hasAreaName]: !!phase.areaName,
+                    })}
+                >
+                    <div
+                        className={styles.title}
+                        style={{
+                            textDecoration:
+                                region.key === "special_events" && !phase.active
+                                    ? "line-through"
+                                    : undefined,
+                        }}
+                    >
+                        {region.key === "special_events" && !area.active ? (
+                            <div>
+                                [Event Inactive]
+                                <span
+                                    style={{
+                                        textDecoration: "line-through",
+                                        marginLeft: "0.5em",
+                                    }}
+                                >
+                                    {phase.metaName ?? phase.name}
+                                </span>
+                            </div>
+                        ) : (
+                            <div>{phase.metaName ?? phase.name}</div>
+                        )}
+                    </div>
+                    {phase.areaName ? (
+                        <>
+                            {"|"}
+                            <div className={styles.events}>
+                                <div>{phase.areaName}</div>
+                            </div>
+                        </>
+                    ) : null}
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
     const { height, ref } = useResizeDetector();
-    const { mode } = useContext(EventTimerContext);
+    const { mode, groupedMode } = useContext(EventTimerContext);
 
     useEffect(() => {
         if (height && indicatorWrapperRef.current) {
@@ -1052,13 +1231,28 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
             onMouseEnter={() => setHoveredRegion(region.key)}
             onMouseLeave={() => setHoveredRegion("")}
         >
-            {region.sub_areas.map(area =>
-                mode === MODES.edit ? (
-                    <EditableArea
-                        key={area.key}
-                        area={area}
-                        region={regionData}
-                    />
+            {region.sub_areas.map(area => {
+                if (
+                    (groupedMode && area.grouped === false) ||
+                    (!groupedMode && area.grouped === true)
+                ) {
+                    return null;
+                }
+
+                return mode === MODES.edit ? (
+                    area.onComplete === ON_COMPLETE_TYPES.completeEvent ? (
+                        <EditableAreaWithPhases
+                            key={area.key}
+                            area={area}
+                            region={regionData}
+                        />
+                    ) : (
+                        <EditableArea
+                            key={area.key}
+                            area={area}
+                            region={regionData}
+                        />
+                    )
                 ) : area.type === "fixed_time" ? (
                     <FixedTimeArea
                         key={area.key}
@@ -1071,8 +1265,8 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
                         area={area}
                         region={regionData}
                     />
-                )
-            )}
+                );
+            })}
         </div>
     );
 };

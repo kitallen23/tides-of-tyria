@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-11-21",
+        version: "2024-12-20",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -489,9 +489,10 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "path_of_fire",
+        key: "path_of_fire__ungrouped",
         name: "PoF",
         color: COLOR_TYPES.orange,
+        grouped: false,
         sub_areas: [
             {
                 key: "crystal_oasis",
@@ -501,7 +502,7 @@ const META_EVENTS = [
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
-                        key: "crystal_oasis__collect_coins",
+                        key: "crystal_oasis__casino_blitz",
                         name: "Collect coins",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Casino_Blitz",
@@ -511,7 +512,7 @@ const META_EVENTS = [
                         waypoint: "[&BLsKAAA=]",
                     },
                     {
-                        key: "crystal_oasis__pinata",
+                        key: "crystal_oasis__casino_blitz",
                         name: "Piñata",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Casino_Blitz",
@@ -631,9 +632,147 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "living_world_season_4",
+        key: "path_of_fire__grouped",
+        name: "PoF",
+        color: COLOR_TYPES.orange,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "path_of_fire__area1",
+                name: "Path of Fire: Crystal Oasis & Desert Highlands",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "crystal_oasis__casino_blitz",
+                        name: "Collect coins",
+                        areaName: "Crystal Oasis",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Casino_Blitz",
+                        start: 5,
+                        duration: 15,
+                        frequency: 120,
+                        waypoint: "[&BLsKAAA=]",
+                    },
+                    {
+                        key: "crystal_oasis__casino_blitz",
+                        name: "Piñata",
+                        areaName: "Crystal Oasis",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Casino_Blitz",
+                        start: 20,
+                        duration: 10,
+                        frequency: 120,
+                        waypoint: "[&BLsKAAA=]",
+                    },
+                    {
+                        key: "desert_highlands__buried_treasure",
+                        name: "Buried Treasure",
+                        areaName: "Desert Highlands",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Search_for_Buried_Treasure",
+                        start: 60,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BGsKAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "elon_riverlands",
+                name: "Elon Riverlands",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "elon_riverlands__path_to_ascension",
+                        name: "The Path to Ascension",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Path_to_Ascension",
+                        start: 90,
+                        duration: 25,
+                        frequency: 120,
+                        waypoint: "[&BFMKAAA=]",
+                    },
+                    {
+                        key: "elon_riverlands__doppelganger",
+                        name: "Doppelganger",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Shift_beyond_reality_to_confront_the_crazed_doppelganger",
+                        start: 115,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BFMKAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "the_desolation",
+                name: "The Desolation",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "the_desolation__junundu_rising",
+                        name: "Junundu Rising",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Junundu_Rising",
+                        start: 30,
+                        duration: 20,
+                        frequency: 60,
+                        waypoint: "[&BMEKAAA=]",
+                    },
+                    {
+                        key: "the_desolation__maws_of_torment",
+                        name: "Maws of Torment",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Maws_of_Torment",
+                        start: 60,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BKMKAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "domain_of_vabbi",
+                name: "Domain of Vabbi",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "domain_of_vabbi__forged_with_fire",
+                        name: "Forged with Fire",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Forged_with_Fire",
+                        start: 60,
+                        duration: 30,
+                        frequency: 60,
+                        waypoint: "[&BO0KAAA=]",
+                    },
+                    {
+                        key: "domain_of_vabbi__serpents_ire",
+                        name: "Serpents' Ire",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Serpents'_Ire",
+                        start: 30,
+                        duration: 30,
+                        frequency: 120,
+                        waypoint: "[&BHQKAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "living_world_season_4__ungrouped",
         name: "LWS4",
         color: COLOR_TYPES.purple,
+        grouped: false,
         sub_areas: [
             {
                 key: "domain_of_istan",
@@ -662,7 +801,7 @@ const META_EVENTS = [
                 onComplete: ON_COMPLETE_TYPES.completeArea,
                 phases: [
                     {
-                        key: "jahai_bluffs__escorts",
+                        key: "jahai_bluffs__death_branded_shatterer",
                         name: "Escorts",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Dangerous_Prey",
@@ -674,6 +813,85 @@ const META_EVENTS = [
                     {
                         key: "jahai_bluffs__death_branded_shatterer",
                         name: "Death Branded Shatterer",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Destroy_the_Death-Branded_Shatterer",
+                        start: 75,
+                        duration: 15,
+                        frequency: 120,
+                        waypoint: "[&BJMLAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "thunderhead_peaks",
+                name: "Thunderhead Peaks",
+                color: COLOR_TYPES.purple,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "thunderhead_peaks__the_oil_floes",
+                        name: "The Oil Floes",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Oil_Floes",
+                        start: 45,
+                        duration: 15,
+                        frequency: 120,
+                        waypoint: "[&BKYLAAA=]",
+                    },
+                    {
+                        key: "thunderhead_peaks__thunderhead_keep",
+                        name: "Thunderhead Keep",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Thunderhead_Keep_(meta_event)",
+                        start: 105,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BLsLAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "living_world_season_4__grouped",
+        name: "LWS4",
+        color: COLOR_TYPES.purple,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "living_world_season_4__area1",
+                name: "Living World Season 4: Domain of Istan & Jahai Bluffs",
+                color: COLOR_TYPES.purple,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "domain_of_istan__palawadan",
+                        name: "Palawadan",
+                        areaName: "Domain of Istan",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Palawadan,_Jewel_of_Istan_(meta_event)",
+                        start: 105,
+                        duration: 30,
+                        frequency: 120,
+                        waypoint: "[&BAkLAAA=]",
+                    },
+                    {
+                        key: "jahai_bluffs__death_branded_shatterer",
+                        name: "Escorts",
+                        areaName: "Jahai Bluffs",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Dangerous_Prey",
+                        start: 60,
+                        duration: 15,
+                        frequency: 120,
+                        waypoint: "[&BIMLAAA=]",
+                    },
+                    {
+                        key: "jahai_bluffs__death_branded_shatterer",
+                        name: "Death Branded Shatterer",
+                        areaName: "Jahai Bluffs",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Destroy_the_Death-Branded_Shatterer",
                         start: 75,
@@ -788,6 +1006,8 @@ const META_EVENTS = [
                     {
                         key: "bjora_marches__storms_of_winter",
                         name: "Defend Jora's Keep",
+                        metaName:
+                            "Storms of Winter: Defend Jora's Keep, Shards & Construct, Icebrood Champions",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Storms_of_Winter",
                         start: 105,
@@ -798,6 +1018,8 @@ const META_EVENTS = [
                     {
                         key: "bjora_marches__storms_of_winter",
                         name: "Shards & Construct",
+                        metaName:
+                            "Storms of Winter: Defend Jora's Keep, Shards & Construct, Icebrood Champions",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Storms_of_Winter",
                         start: 0,
@@ -808,6 +1030,8 @@ const META_EVENTS = [
                     {
                         key: "bjora_marches__storms_of_winter",
                         name: "Icebrood Champions",
+                        metaName:
+                            "Storms of Winter: Defend Jora's Keep, Shards & Construct, Icebrood Champions",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Storms_of_Winter",
                         start: 5,
@@ -839,9 +1063,10 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "end_of_dragons",
+        key: "end_of_dragons__ungrouped",
         name: "EoD",
         color: COLOR_TYPES.aqua,
+        grouped: false,
         sub_areas: [
             {
                 key: "day-night__cantha",
@@ -995,9 +1220,199 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "secrets_of_the_obscure",
+        key: "end_of_dragons__grouped",
+        name: "EoD",
+        color: COLOR_TYPES.aqua,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "day-night__cantha",
+                name: "Day-Night Cycle (Cantha)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "day-night__cantha__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 35,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 40,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 95,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__cantha__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "end_of_dragons__area1",
+                name: "End of Dragons: Seitung Province & Kaineng Blackout",
+                color: COLOR_TYPES.aqua,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "seitung_province__aetherblade_assault",
+                        name: "Aetherblade Assault",
+                        areaName: "Seitung Province",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Aetherblade_Assault",
+                        start: 90,
+                        duration: 30,
+                        frequency: 120,
+                        waypoint: "[&BGUNAAA=]",
+                    },
+                    {
+                        key: "new_kaineng_city__kaineng_blackout",
+                        name: "Kaineng Blackout",
+                        areaName: "New Kaineng City",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Kaineng_Blackout",
+                        start: 0,
+                        duration: 40,
+                        frequency: 120,
+                        waypoint: "[&BBkNAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "the_echovald_wilds",
+                name: "The Echovald Wilds",
+                color: COLOR_TYPES.aqua,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "the_echovald_wilds__aspenwood",
+                        name: "Aspenwood",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Use_the_siege_turtles_to_destroy_the_shield_generators_as_you_fight_through_the_fort",
+                        start: 100,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BPkMAAA=]",
+                    },
+                    {
+                        key: "the_echovald_wilds__gang_war",
+                        name: "Gang War",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Gang_War_of_Echovald",
+                        start: 30,
+                        duration: 35,
+                        frequency: 120,
+                        waypoint: "[&BMwMAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "dragons_end",
+                name: "Dragon's End",
+                color: COLOR_TYPES.aqua,
+                type: TIME_TYPES.fixedTime,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                downtime: {
+                    name: "Preparations",
+                },
+                phases: [
+                    {
+                        key: "dragons_end__jade_maw",
+                        name: "Jade Maw",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Defeat_the_Void-corrupted_Jade_Maw",
+                        times: [
+                            5, 45, 125, 165, 245, 285, 365, 405, 485, 525, 605,
+                            645, 725, 765, 845, 885, 965, 1005, 1085, 1125,
+                            1205, 1245, 1325, 1365,
+                        ],
+                        duration: 8,
+                        waypoint: "[&BKIMAAA=]",
+                    },
+                    {
+                        key: "dragons_end__the_battle_for_the_jade_sea",
+                        name: "The Battle for the Jade Sea",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Battle_for_the_Jade_Sea",
+                        times: [
+                            60, 180, 300, 420, 540, 660, 780, 900, 1020, 1140,
+                            1260, 1380,
+                        ],
+                        duration: 60,
+                        waypoint: "[&BKIMAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "secrets_of_the_obscure__grouped",
         name: "SotO",
         color: COLOR_TYPES.yellow,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "secrets_of_the_obscure__area",
+                name: "Secrets of the Obscure: Skywatch Archipelago & Amnytas",
+                color: COLOR_TYPES.yellow,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "skywatch_archipelago__unlocking_the_wizards_tower",
+                        name: "Unlocking the Wizard's Tower",
+                        areaName: "Skywatch Archipelago",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Unlocking_the_Wizard's_Tower",
+                        start: 60,
+                        duration: 25,
+                        frequency: 120,
+                        waypoint: "[&BL4NAAA=]",
+                    },
+                    {
+                        key: "amnytas__the_defense_of_amnytas",
+                        name: "Defense of Amnytas",
+                        areaName: "Amnytas",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/The_Defense_of_Amnytas",
+                        start: 0,
+                        duration: 25,
+                        frequency: 120,
+                        waypoint: "[&BDQOAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "secrets_of_the_obscure__ungrouped",
+        name: "SotO",
+        color: COLOR_TYPES.yellow,
+        grouped: false,
         sub_areas: [
             {
                 key: "skywatch_archipelago",
@@ -1060,9 +1475,37 @@ const META_EVENTS = [
         ],
     },
     {
-        key: "janthir_wilds",
+        key: "janthir_wilds__grouped",
         name: "JW",
         color: COLOR_TYPES.blue,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "janthir_syntri",
+                name: "Janthir Syntri",
+                color: COLOR_TYPES.blue,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "janthir_syntri__of_mists_and_monsters",
+                        name: "Of Mists and Monsters",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Of_Mists_and_Monsters",
+                        start: 30,
+                        duration: 25,
+                        frequency: 120,
+                        waypoint: "[&BCoPAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "janthir_wilds__ungrouped",
+        name: "JW",
+        color: COLOR_TYPES.blue,
+        grouped: false,
         sub_areas: [
             {
                 key: "janthir_syntri",
@@ -1100,6 +1543,47 @@ const META_EVENTS = [
                         duration: 10,
                         frequency: 180,
                         waypoint: "[&BK4OAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "convergences__grouped",
+        name: "CONV",
+        color: COLOR_TYPES.gray,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "convergences__area1",
+                name: "Convergences",
+                color: COLOR_TYPES.gray,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                phases: [
+                    {
+                        key: "convergences",
+                        name: "SotO: Convergence",
+                        areaName: "The Wizard's Tower (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergences",
+                        start: 90,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BB8OAAA=]",
+                        color: COLOR_TYPES.yellow,
+                    },
+                    {
+                        key: "mt_balrior__convergences",
+                        name: "JW: Convergence",
+                        areaName: "Mount Balrior (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Mount_Balrior",
+                        start: 0,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BK4OAAA=]",
+                        color: COLOR_TYPES.blue,
                     },
                 ],
             },

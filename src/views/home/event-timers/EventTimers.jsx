@@ -4,7 +4,7 @@ import classNames from "classnames";
 import styles from "./event-timer.module.scss";
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import layoutStyles from "../home.module.scss";
-import { Button } from "@mui/material";
+import { Button, useMediaQuery } from "@mui/material";
 import {
     ChevronLeftSharp,
     ChevronRightSharp,
@@ -47,6 +47,7 @@ import {
     markEventComplete,
     resetConfigToDefault,
     toggleAreaVisibility,
+    togglePhaseVisibility,
 } from "./utils";
 import EventTimerContext from "./EventTimerContext";
 import OptionsMenu from "./components/OptionsMenu";
@@ -81,6 +82,7 @@ const EventTimers = () => {
     const indicatorWrapperRef = useRef(null);
     const eventWrapperRef = useRef(null);
     const { now, dailyReset } = useTimer();
+    const isTouchDevice = useMediaQuery("(pointer: coarse)");
 
     const [hoveredRegion, setHoveredRegion] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
@@ -195,6 +197,18 @@ const EventTimers = () => {
         localStorage.setItem(
             LOCAL_STORAGE_KEYS.eventConfig,
             JSON.stringify(eventConfigWithToggledAreaVisibility)
+        );
+    };
+    const onTogglePhaseHidden = (area, phaseKey) => {
+        const eventConfigWithToggledPhaseVisibility = togglePhaseVisibility(
+            _eventConfig,
+            area,
+            phaseKey
+        );
+        set_eventConfig(eventConfigWithToggledPhaseVisibility);
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.eventConfig,
+            JSON.stringify(eventConfigWithToggledPhaseVisibility)
         );
     };
 
@@ -375,7 +389,10 @@ const EventTimers = () => {
     };
 
     const [denseMode, setDenseMode] = useState(() => {
-        const denseMode = getLocalItem(LOCAL_STORAGE_KEYS.denseMode, "false");
+        const denseMode = getLocalItem(
+            LOCAL_STORAGE_KEYS.denseMode,
+            isTouchDevice ? "true" : "false"
+        );
         localStorage.setItem(LOCAL_STORAGE_KEYS.denseMode, denseMode);
         return denseMode === "true";
     });
@@ -384,6 +401,21 @@ const EventTimers = () => {
         const _denseMode = !denseMode;
         localStorage.setItem(LOCAL_STORAGE_KEYS.denseMode, _denseMode);
         setDenseMode(_denseMode);
+    };
+
+    const [groupedMode, setGroupedMode] = useState(() => {
+        const groupedMode = getLocalItem(
+            LOCAL_STORAGE_KEYS.groupedMode,
+            "true"
+        );
+        localStorage.setItem(LOCAL_STORAGE_KEYS.groupedMode, groupedMode);
+        return groupedMode === "true";
+    });
+
+    const toggleGroupedMode = () => {
+        const _groupedMode = !groupedMode;
+        localStorage.setItem(LOCAL_STORAGE_KEYS.groupedMode, _groupedMode);
+        setGroupedMode(_groupedMode);
     };
 
     const [mode, setMode] = useState(MODES.view);
@@ -501,6 +533,8 @@ const EventTimers = () => {
                                     toggleShowCompleted={toggleShowCompleted}
                                     denseMode={denseMode}
                                     toggleDenseMode={toggleDenseMode}
+                                    groupedMode={groupedMode}
+                                    toggleGroupedMode={toggleGroupedMode}
                                     setMode={setMode}
                                 />
                                 <Button
@@ -552,8 +586,10 @@ const EventTimers = () => {
                     widthRulerRef,
                     onComplete,
                     onToggleHidden,
+                    onTogglePhaseHidden,
                     highlightScheme,
                     denseMode,
+                    groupedMode,
                     mode,
                 }}
             >
@@ -569,13 +605,25 @@ const EventTimers = () => {
                         >
                             <div className={styles.spacer} />
                             <div className={styles.regionIndicatorContainer}>
-                                {eventConfig.map(region => (
-                                    <RegionIndicator
-                                        key={region.key}
-                                        region={region}
-                                        isHovered={hoveredRegion === region.key}
-                                    />
-                                ))}
+                                {eventConfig.map(region => {
+                                    if (
+                                        (groupedMode &&
+                                            region.grouped === false) ||
+                                        (!groupedMode &&
+                                            region.grouped === true)
+                                    ) {
+                                        return null;
+                                    }
+                                    return (
+                                        <RegionIndicator
+                                            key={region.key}
+                                            region={region}
+                                            isHovered={
+                                                hoveredRegion === region.key
+                                            }
+                                        />
+                                    );
+                                })}
                             </div>
                         </div>
                         <div
@@ -599,21 +647,32 @@ const EventTimers = () => {
                                             className={styles.regions}
                                             ref={eventWrapperRef}
                                         >
-                                            {eventConfig.map(region => (
-                                                <EventRegion
-                                                    key={region.key}
-                                                    region={region}
-                                                    currentTimeBlockStart={
-                                                        currentTimeBlockStart
-                                                    }
-                                                    indicatorWrapperRef={
-                                                        indicatorWrapperRef
-                                                    }
-                                                    setHoveredRegion={
-                                                        setHoveredRegion
-                                                    }
-                                                />
-                                            ))}
+                                            {eventConfig.map(region => {
+                                                if (
+                                                    (groupedMode &&
+                                                        region.grouped ===
+                                                            false) ||
+                                                    (!groupedMode &&
+                                                        region.grouped === true)
+                                                ) {
+                                                    return null;
+                                                }
+                                                return (
+                                                    <EventRegion
+                                                        key={region.key}
+                                                        region={region}
+                                                        currentTimeBlockStart={
+                                                            currentTimeBlockStart
+                                                        }
+                                                        indicatorWrapperRef={
+                                                            indicatorWrapperRef
+                                                        }
+                                                        setHoveredRegion={
+                                                            setHoveredRegion
+                                                        }
+                                                    />
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </ScrollArea.Viewport>
