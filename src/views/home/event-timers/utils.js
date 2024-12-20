@@ -97,6 +97,27 @@ export const toggleAreaVisibility = (eventConfig, area) => {
         }),
     }));
 };
+export const togglePhaseVisibility = (eventConfig, area, phaseKey) => {
+    const _eventConfig = structuredClone(eventConfig);
+    let toggledValue = null;
+    return _eventConfig.map(region => ({
+        ...region,
+        sub_areas: region.sub_areas.map(subArea => {
+            if (subArea.key === area.key) {
+                subArea.phases = subArea.phases.map(phase => {
+                    if (phase.key === phaseKey) {
+                        if (toggledValue === null) {
+                            toggledValue = !(phase.hidePhase ?? false);
+                        }
+                        phase.hidePhase = toggledValue;
+                    }
+                    return phase;
+                });
+            }
+            return subArea;
+        }),
+    }));
+};
 export const markAllAreasVisible = eventConfig => {
     const _eventConfig = structuredClone(eventConfig);
     return _eventConfig.map(region => ({

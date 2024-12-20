@@ -6,16 +6,18 @@ import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { MODES } from "./utils";
 
 const isAreaEventsComplete = (area, dailyReset) => {
-    const isIncomplete = area.phases.some(event => {
-        if (
-            event.lastCompletion &&
-            !isBefore(event.lastCompletion, dailyReset) &&
-            isBefore(event.lastCompletion, addHours(dailyReset, 24))
-        ) {
-            return false;
-        }
-        return true;
-    });
+    const isIncomplete = area.phases
+        .filter(phase => !phase.hidePhase)
+        .some(event => {
+            if (
+                event.lastCompletion &&
+                !isBefore(event.lastCompletion, dailyReset) &&
+                isBefore(event.lastCompletion, addHours(dailyReset, 24))
+            ) {
+                return false;
+            }
+            return true;
+        });
     return !isIncomplete;
 };
 const isAreaComplete = (area, dailyReset) => {
@@ -55,9 +57,10 @@ const shouldRenderArea = ({
         return !isComplete;
     } else if (area.onComplete === ON_COMPLETE_TYPES.completeEvent) {
         const isComplete = isAreaEventsComplete(area, dailyReset);
+        const hasPhases = area.phases.some(phase => phase.hidePhase !== true);
         // If area is not complete, return true (region should render
         // because it has an area with incomplete events in it)
-        return !isComplete;
+        return hasPhases && !isComplete;
     }
 };
 const shouldRenderRegion = ({ region, dailyReset, showCompleted, mode }) => {

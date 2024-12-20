@@ -4,9 +4,12 @@ import {
     DensitySmallSharp,
     DoneSharp,
     EditSharp,
+    ExpandSharp,
     FullscreenExitSharp,
     FullscreenSharp,
+    HelpTwoTone,
     RestartAltSharp,
+    VerticalAlignCenterSharp,
     VisibilityOffSharp,
     VisibilitySharp,
 } from "@mui/icons-material";
@@ -18,6 +21,7 @@ import {
     ListSubheader,
     Menu,
     MenuItem,
+    Tooltip,
     Typography,
     useMediaQuery,
 } from "@mui/material";
@@ -40,11 +44,14 @@ const OptionsMenu = ({
     setMode,
     denseMode,
     toggleDenseMode,
+    groupedMode,
+    toggleGroupedMode,
     ...rest
 }) => {
     const { colors } = useTheme();
     const [isResetModalOpen, setIsResetModalOpen] = useState(false);
     const isSmallScreen = useMediaQuery("(max-width: 768px)");
+    const isTouchDevice = useMediaQuery("(pointer: coarse)");
 
     const onResetClick = () => {
         setIsResetModalOpen(true);
@@ -73,6 +80,10 @@ const OptionsMenu = ({
         toggleDenseMode();
         onClose();
     };
+    const onToggleGroupedModeClick = () => {
+        toggleGroupedMode();
+        onClose();
+    };
 
     return (
         <>
@@ -94,8 +105,8 @@ const OptionsMenu = ({
                     <ListItemText>
                         <Typography variant="inherit" noWrap>
                             {showCompleted
-                                ? "Hide completed"
-                                : "Show completed"}
+                                ? "Hide completed areas"
+                                : "Show completed areas"}
 
                             {isSmallScreen ? null : (
                                 <>
@@ -144,10 +155,62 @@ const OptionsMenu = ({
                         )}
                     </ListItemIcon>
                     <ListItemText>
-                        <Typography variant="inherit" noWrap>
+                        <Typography
+                            variant="inherit"
+                            noWrap
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.5em",
+                            }}
+                        >
                             {denseMode
                                 ? "Disable dense mode"
                                 : "Enable dense mode"}
+                            {isTouchDevice ? null : (
+                                <Tooltip title="Dense mode reduces the height of each event, allowing more events to be displayed on one page.">
+                                    <HelpTwoTone
+                                        sx={{
+                                            fontSize: "1.2em",
+                                            color: colors.muted,
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
+                        </Typography>
+                    </ListItemText>
+                </MenuItem>
+                <MenuItem onClick={onToggleGroupedModeClick}>
+                    <ListItemIcon>
+                        {groupedMode ? (
+                            <ExpandSharp />
+                        ) : (
+                            <VerticalAlignCenterSharp />
+                        )}
+                    </ListItemIcon>
+                    <ListItemText>
+                        <Typography
+                            variant="inherit"
+                            noWrap
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: "0.5em",
+                            }}
+                        >
+                            {groupedMode
+                                ? "Disable grouped mode"
+                                : "Enable grouped mode"}
+                            {isTouchDevice ? null : (
+                                <Tooltip title="Grouped mode places non-overlapping events on the same line as each other, where possible.">
+                                    <HelpTwoTone
+                                        sx={{
+                                            fontSize: "1.2em",
+                                            color: colors.muted,
+                                        }}
+                                    />
+                                </Tooltip>
+                            )}
                         </Typography>
                     </ListItemText>
                 </MenuItem>

@@ -386,7 +386,7 @@ const EventInfoMenu = () => {
                     >
                         {format(selectedEvent.startDate, formatString)}
                         &nbsp;|&nbsp;
-                        {selectedEvent.area.name}
+                        {selectedEvent.areaName || selectedEvent.area.name}
                     </div>
                     <div className={styles.buttonArea}>
                         <div

@@ -1,63 +1,63 @@
-import { useMemo } from "react";
 import { blendColors, isLight } from "@/utils/color";
 
+const colorCache = new Map();
+
+/**
+ * @typedef {Object} UseEventColorsParams
+ * @property {string} color
+ * @property {Object} colors
+ * @property {number} downtimeOpacity
+ */
+
+/**
+ * Custom hook to compute and cache event colors.
+ *
+ * @param {UseEventColorsParams} params
+ * @returns {Object}
+ */
 const useEventColors = ({ color, colors, downtimeOpacity }) => {
-    const eventBackground = useMemo(
-        () => colors?.[color] || "",
-        [colors, color]
-    );
-    const backgroundLight = useMemo(() => colors?.light || "", [colors]);
-    const backgroundDark = useMemo(() => colors?.dark || "", [colors]);
-    const backgroundMiddle = useMemo(
-        () =>
+    const key = `${color}-${downtimeOpacity}-${JSON.stringify(colors)}`;
+
+    if (colorCache.has(key)) {
+        return colorCache.get(key);
+    }
+
+    const computedValues = {
+        eventBackground: colors?.[color] || "",
+        backgroundLight: colors?.light || "",
+        backgroundDark: colors?.dark || "",
+        backgroundMiddle: blendColors({
+            opacity: 0.5,
+            color: colors.light,
+            backgroundColor: colors.dark,
+        }),
+        isBackgroundLight: isLight(colors?.[color] || ""),
+        isMiddleBackgroundLight: isLight(
             blendColors({
                 opacity: 0.5,
                 color: colors.light,
                 backgroundColor: colors.dark,
-            }),
-        [colors]
-    );
-    const isBackgroundLight = useMemo(
-        () => isLight(eventBackground),
-        [eventBackground]
-    );
-    const isMiddleBackgroundLight = useMemo(
-        () => isLight(backgroundMiddle),
-        [backgroundMiddle]
-    );
-    const isDarkBackgroundLight = useMemo(
-        () => isLight(backgroundDark),
-        [backgroundDark]
-    );
-
-    const isDulledBackgroundLight = useMemo(() => {
-        const effectiveDulledBackgroundColor = blendColors({
-            opacity: downtimeOpacity,
-            color: eventBackground,
-            backgroundColor: colors.background,
-        });
-        return isLight(effectiveDulledBackgroundColor);
-    }, [eventBackground, colors, downtimeOpacity]);
-    const isDulledDarkBackgroundLight = useMemo(() => {
-        const effectiveDulledDarkBackgroundColor = blendColors({
-            opacity: downtimeOpacity,
-            color: colors.dark,
-            backgroundColor: colors.background,
-        });
-        return isLight(effectiveDulledDarkBackgroundColor);
-    }, [colors, downtimeOpacity]);
-
-    return {
-        eventBackground,
-        backgroundLight,
-        backgroundDark,
-        backgroundMiddle,
-        isBackgroundLight,
-        isDarkBackgroundLight,
-        isMiddleBackgroundLight,
-        isDulledBackgroundLight,
-        isDulledDarkBackgroundLight,
+            })
+        ),
+        isDarkBackgroundLight: isLight(colors?.dark || ""),
+        isDulledBackgroundLight: isLight(
+            blendColors({
+                opacity: downtimeOpacity,
+                color: colors?.[color] || "",
+                backgroundColor: colors.background,
+            })
+        ),
+        isDulledDarkBackgroundLight: isLight(
+            blendColors({
+                opacity: downtimeOpacity,
+                color: colors?.dark || "",
+                backgroundColor: colors.background,
+            })
+        ),
     };
+
+    colorCache.set(key, computedValues);
+    return computedValues;
 };
 
 export default useEventColors;
