@@ -24,7 +24,7 @@
             height: calc(1em * var(--line-height));
         }
     }
-    &:hover .itemMenuIndicator {
+    &:hover .itemMenuIndicator:not(.disabled) {
         opacity: 1;
     }
 }

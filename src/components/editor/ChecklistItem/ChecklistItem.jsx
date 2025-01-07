@@ -3,6 +3,7 @@ import { Button, Checkbox } from "@mui/material";
 import { DragIndicator } from "@mui/icons-material";
 import debounce from "lodash.debounce";
 import classNames from "classnames";
+import { useSortable } from "@dnd-kit/sortable";
 
 import styles from "./checklist-item.module.scss";
 import InlineEditor from "../InlineEditor/InlineEditor";
@@ -23,6 +24,7 @@ export const ChecklistItem = ({
     onFocusPreviousEditor,
     onSelectItem,
     onMouseDown,
+    isDragging,
 }) => {
     const checklistItemRef = useRef(null);
     const [defaultValue] = useState(item?.text || "");
@@ -140,19 +142,29 @@ export const ChecklistItem = ({
         }
     }, [item.inputRef]);
 
+    const { attributes, listeners, setNodeRef, isSorting } = useSortable({
+        id: item.id,
+    });
+
     return (
         <div
+            ref={setNodeRef}
             className={classNames(
                 styles.checklistItemHoverArea,
                 styles[`indent${item.indentLevel}`],
                 "checklist-item-hover-area"
             )}
+            style={{
+                opacity: isSorting ? (isDragging ? 1 : 0.5) : 1,
+            }}
+            id={`item-${item.id}`}
         >
             {/* Drag handle / menu icon */}
             <div
                 className={classNames(
                     styles.itemMenuIndicator,
-                    "item-menu-indicator"
+                    "item-menu-indicator",
+                    { [styles.disabled]: isSorting }
                 )}
             >
                 <Button
@@ -163,7 +175,9 @@ export const ChecklistItem = ({
                         fontSize: "inherit",
                     }}
                     className={styles.dragHandle}
-                    onPointerDown={event => onSelectItem(event, item.id)}
+                    {...listeners}
+                    {...attributes}
+                    onClick={e => onSelectItem(e, item.id)}
                 >
                     <DragIndicator />
                 </Button>
