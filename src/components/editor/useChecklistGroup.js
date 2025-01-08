@@ -8,6 +8,8 @@ import {
 } from "react";
 import { nanoid } from "nanoid";
 import { toast } from "react-hot-toast";
+import { useMediaQuery } from "@mui/material";
+import { PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 
 import { copyToClipboard } from "@/utils/util";
 import inlineEditorStyles from "./InlineEditor/inline-editor.module.scss";
@@ -23,7 +25,6 @@ import {
     moveCursorToLastLineOfEditor,
     sanitizeRichText,
 } from "./utils";
-import { useMediaQuery } from "@mui/material";
 
 const LINK_HOVER_DELAY = 500;
 const MAX_INDENT = 3;
@@ -125,12 +126,20 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
     const [selectedBorderBoxPosition, setSelectedBorderBoxPosition] =
         useState(undefined);
     const [showSelectedBorderBox, setShowSelectedBorderBox] = useState(false);
+    const [borderBoxRecalculationKey, setBorderBoxRecalculationKey] =
+        useState(0);
 
     const [disableDecreaseIndent, setDisableDecreaseIndent] = useState(false);
     const [disableIncreaseIndent, setDisableIncreaseIndent] = useState(false);
     const [disableMarkAsComplete, setDisableMarkAsComplete] = useState(false);
     const [disableMarkAsIncomplete, setDisableMarkAsIncomplete] =
         useState(false);
+
+    const [draggedItemIndices, setDraggedItemIndices] = useState([]);
+    const [dropIndex, setDropIndex] = useState(null);
+    const [draggedBorderBoxPosition, setDraggedBorderBoxPosition] =
+        useState(undefined);
+    const [showDraggedBorderBox, setShowDraggedBorderBox] = useState(false);
 
     const markDescendentsAsComplete = ({ index, time, items }) => {
         const updatedItems = cloneItems(items);
@@ -1017,6 +1026,8 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         setSelectedItemIndices(undefined);
     };
 
+    // Manage button states (e.g. disable the mark as complete button if all
+    // selected items are already complete)
     useEffect(() => {
         if (
             isSelectionMenuOpen &&
@@ -1079,12 +1090,25 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
         if (itemIndex >= 0) {
             if (
-                event.pointerType === "touch" &&
                 selectedItemIndices?.start === start &&
                 selectedItemIndices?.end === end
             ) {
+                if (selectedItemIndices.start !== selectedItemIndices.end) {
+                    setSelectedItemIndices({
+                        start: itemIndex,
+                        end: itemIndex,
+                    });
+                    activateSelectedBorderBox();
+                } else {
+                    // If the clicked item is already highlighted, deselect it
+                    deactivateSelectedBorderBox();
+                }
+            } else if (
+                selectedItemIndices?.start === itemIndex &&
+                selectedItemIndices?.end === itemIndex &&
+                start !== end
+            ) {
                 // If the touched item is already highlighted, deselect it
-                // (turns it into a toggle on touch devices)
                 deactivateSelectedBorderBox();
             } else {
                 // Update the selected item indices based on the user's selection
@@ -1137,8 +1161,6 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         return { start: index, end: end - 1 };
     };
 
-    const [borderBoxRecalculationKey, setBorderBoxRecalculationKey] =
-        useState(0);
     useEffect(() => {
         const calculateSelectedBorderBox = ({ start, end }) => {
             const { min, max } = getMinAndMax([start, end]);
@@ -1647,6 +1669,225 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         deactivateSelectedBorderBox();
     };
 
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 4,
+            },
+        })
+    );
+
+    /**
+     * Handles the initiation of a drag event within the checklist.
+     *
+     * @param {Object} event - The drag event object.
+     */
+    const handleDragStart = event => {
+        const { active } = event;
+
+        // Find the index of the active item
+        const index = checklistItems.findIndex(item => item.id === active.id);
+
+        // If the active item is not found, exit the function
+        if (index === -1) {
+            console.warn(`handleDragStart: No item found with id ${active.id}`);
+            return;
+        }
+
+        setDropIndex(index);
+        activateDraggedBorderBox();
+        deactivateSelectedBorderBox();
+
+        // Determine which items are being dragged based on the current
+        // selection
+        if (selectedItemIndices) {
+            const { min, max } = getMinAndMax([
+                selectedItemIndices.start,
+                selectedItemIndices.end,
+            ]);
+            if (index >= min && index <= max) {
+                setDraggedItemIndices(selectedItemIndices);
+
+                // Early return to prevent overwriting the state below
+                return;
+            }
+        }
+        // If no selection or the active item is outside the current selection,
+        // drag only the clicked / active item
+        setDraggedItemIndices({ start: index, end: index });
+    };
+
+    /**
+     * Handles the drag over event for checklist items.
+     * Determines the index of the item being dragged over and sets the drop position accordingly.
+     * If the drag is over a range of items that includes the dragged items, it adjusts the drop index
+     * to prevent invalid drop positions.
+     *
+     * @param {Object} event - The drag over event object.
+     * @param {Object} event.over - The item currently being dragged over.
+     */
+    const handleDragOver = event => {
+        const { over } = event;
+        if (over) {
+            if (over.id.startsWith("dummy-")) {
+                setDropIndex(checklistItems.length);
+                return;
+            }
+            // Find the index of the checklist item that is currently being
+            // dragged over
+            const overIndex = checklistItems.findIndex(
+                item => item.id === over.id
+            );
+            if (draggedItemIndices) {
+                const { min, max } = getMinAndMax([
+                    draggedItemIndices?.start,
+                    draggedItemIndices?.end,
+                ]);
+                // Check if the overIndex is within the range of dragged item
+                // indices.
+                // This prevents dropping an item into its own range, which
+                // could cause logical errors.
+                if (overIndex >= min && overIndex <= max) {
+                    setDropIndex(null);
+                    return;
+                }
+            }
+            setDropIndex(overIndex);
+        } else {
+            // Reset the drop index if not over any item
+            setDropIndex(null);
+        }
+    };
+
+    const handleDragEnd = event => {
+        const { over } = event;
+        if (over) {
+            if (over.id.startsWith("dummy-")) {
+                // Place dragged items at the end
+                const { start, end } = draggedItemIndices;
+                const draggedItems = checklistItems.slice(start, end + 1);
+                const remainingItems = [
+                    ...checklistItems.slice(0, start),
+                    ...checklistItems.slice(end + 1),
+                    ...draggedItems,
+                ];
+                setChecklistItems(remainingItems);
+                setDropIndex(null);
+                deactivateDraggedBorderBox();
+                return;
+            }
+
+            // Find the index of the checklist item that is currently being
+            // dragged over
+            const overIndex = checklistItems.findIndex(
+                item => item.id === over.id
+            );
+
+            if (draggedItemIndices) {
+                const { min, max } = getMinAndMax([
+                    draggedItemIndices?.start,
+                    draggedItemIndices?.end,
+                ]);
+                // Check if the overIndex is within the range of dragged item
+                // indices.
+                // This prevents dropping an item into its own range, which
+                // could cause logical errors.
+                if (overIndex >= min && overIndex <= max) {
+                    // Dropped within the dragged range; do nothing
+                    setDropIndex(null);
+                    deactivateDraggedBorderBox();
+                    return;
+                }
+
+                const draggedItems = checklistItems.slice(min, max + 1);
+                const remainingItems = [
+                    ...checklistItems.slice(0, min),
+                    ...checklistItems.slice(max + 1),
+                ];
+                const insertIndex =
+                    overIndex > min ? overIndex - (max - min + 1) : overIndex;
+                const reorderedItems = [
+                    ...remainingItems.slice(0, insertIndex),
+                    ...draggedItems,
+                    ...remainingItems.slice(insertIndex),
+                ];
+
+                setChecklistItems(reorderedItems);
+            }
+        }
+        setDropIndex(null);
+        deactivateDraggedBorderBox();
+    };
+
+    useEffect(() => {
+        const calculateDraggedBorderBox = ({ start, end }) => {
+            const { min, max } = getMinAndMax([start, end]);
+
+            const checklistItemBoxes = [];
+            for (let i = min; i <= max; ++i) {
+                if (checklistItems[i]) {
+                    const editor = checklistItems[i].inputRef?.current;
+                    const checklistItem = editor.closest(".checklist-item");
+                    checklistItemBoxes.push(
+                        checklistItem.getBoundingClientRect()
+                    );
+                }
+            }
+
+            if (!checklistItemBoxes.length) {
+                return;
+            }
+
+            const checklistGroupBox =
+                checklistGroupRef.current.getBoundingClientRect();
+
+            // Calculate the top position of the bounding box
+            const relativeTop =
+                checklistItemBoxes[0].top - checklistGroupBox.top;
+
+            // Calculate the left position of the bounding box
+            const minX = Math.min(...checklistItemBoxes.map(rect => rect.x));
+            const relativeLeft = minX - checklistGroupBox.left;
+
+            // Calculate the bottom position of the bounding box
+            const relativeBottom =
+                checklistGroupBox.bottom -
+                checklistItemBoxes[checklistItemBoxes.length - 1].bottom;
+
+            return {
+                top: relativeTop,
+                left: relativeLeft,
+                bottom: relativeBottom,
+                right: 0,
+            };
+        };
+
+        if (draggedItemIndices) {
+            const draggedBorderBoxPosition =
+                calculateDraggedBorderBox(draggedItemIndices);
+            setDraggedBorderBoxPosition(draggedBorderBoxPosition);
+        }
+    }, [draggedItemIndices, checklistItems]);
+
+    const activateDraggedBorderBox = () => {
+        const selection = window.getSelection();
+        if (selection) {
+            selection.removeAllRanges();
+        }
+        if (document.activeElement) {
+            document.activeElement.blur();
+        }
+        setShowToolbar(false);
+        setTimeout(() => {
+            setShowDraggedBorderBox(true);
+        }, 0);
+    };
+
+    const deactivateDraggedBorderBox = () => {
+        setShowDraggedBorderBox(false);
+        setDraggedItemIndices(undefined);
+    };
+
     useEffect(() => {
         const handleKeyDown = event => {
             // Return early if we don't even have a selection active
@@ -1747,6 +1988,15 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
         selectedBorderBoxPosition,
         showSelectedBorderBox,
         isSelectionMenuOpen,
+
+        sensors,
+        dropIndex,
+        draggedBorderBoxPosition,
+        showDraggedBorderBox,
+        draggedItemIndices,
+        handleDragStart,
+        handleDragOver,
+        handleDragEnd,
 
         selectionMenuRef,
         selectionMenuPosition,

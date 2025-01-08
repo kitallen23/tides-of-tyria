@@ -16,7 +16,7 @@ import {
 import { useTheme } from "@/utils/theme-provider";
 import { Button, TextField } from "@mui/material";
 import { SCHEMES } from "@/utils/color-schemes";
-import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import { APP_VERSION, LOCAL_STORAGE_KEYS } from "@/utils/constants";
 import Modal from "@/components/Modal/Modal";
 import HeartIcon from "@/components/HeartIcon";
 
@@ -276,6 +276,7 @@ const SettingsPage = () => {
                         </a>
                         .
                     </div>
+                    <div style={{ fontSize: "0.65em" }}>v{APP_VERSION}</div>
                 </div>
             </div>
             <Modal

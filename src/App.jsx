@@ -7,10 +7,10 @@ import { Toaster } from "react-hot-toast";
 import { TITLE_SUFFIX } from "@/utils/constants";
 import { ThemeProvider } from "@/utils/theme-provider";
 import { TimerProvider } from "@/utils/timer-provider";
+import useViewportHeight from "@/utils/hooks/useViewportHeight";
 
 import useApp from "@/useApp";
 import Layout from "@/components/Layout/Layout";
-import useViewportHeight from "@/utils/hooks/useViewportHeight";
 import SearchModal from "@/components/Search/SearchModal";
 import { SearchModalProvider } from "@/components/Search/SearchModalContext";
 

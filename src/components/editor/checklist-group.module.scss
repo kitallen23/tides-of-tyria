@@ -106,6 +106,7 @@
         }
     }
 
+    .draggedItemBorderBox,
     .selectedItemBorderBox {
         position: absolute;
         inset: 0;
@@ -133,6 +134,18 @@
         &.active {
             visibility: visible;
             pointer-events: initial;
+        }
+    }
+
+    .dropIndicator {
+        height: 4px;
+        position: absolute;
+        width: 100%;
+
+        display: none;
+
+        &.show {
+            display: block;
         }
     }
 }
