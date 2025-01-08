@@ -73,7 +73,6 @@ const useChecklistPage = () => {
             debounce(items => {
                 // Sanitise the HTML of the items
                 const sanitisedItems = items.map(item => {
-                    // eslint-disable-next-line no-unused-vars
                     const { inputRef, ...rest } = item;
                     return {
                         ...rest,
@@ -183,7 +182,6 @@ const useChecklistPage = () => {
             debounce(items => {
                 // Sanitise the HTML of the items
                 const sanitisedItems = items.map(item => {
-                    // eslint-disable-next-line no-unused-vars
                     const { inputRef, ...rest } = item;
                     return {
                         ...rest,
@@ -295,7 +293,6 @@ const useChecklistPage = () => {
             debounce(items => {
                 // Sanitise the HTML of the items
                 const sanitisedItems = items.map(item => {
-                    // eslint-disable-next-line no-unused-vars
                     const { inputRef, ...rest } = item;
                     return {
                         ...rest,
