@@ -17,12 +17,14 @@
     }
 
     .itemMenuIndicator {
-        opacity: 0;
         transition: opacity 0.15s;
 
         svg {
             height: calc(1em * var(--line-height));
         }
+    }
+    &:not(.isTouchDevice) .itemMenuIndicator {
+        opacity: 0;
     }
     &:hover .itemMenuIndicator:not(.disabled) {
         opacity: 1;

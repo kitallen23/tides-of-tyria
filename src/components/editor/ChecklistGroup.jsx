@@ -355,30 +355,8 @@ export const ChecklistGroup = ({
                         </div>
                     </div>
 
-                    {/* DnD indicator (shows drop location) */}
-                    <DropIndicator
-                        items={checklistItems}
-                        index={dropIndex}
-                        containerRef={checklistGroupRef}
-                    />
-
-                    <DndContext
-                        sensors={sensors}
-                        collisionDetection={closestCenter}
-                        onDragStart={handleDragStart}
-                        onDragOver={handleDragOver}
-                        onDragEnd={handleDragEnd}
-                    >
-                        <DragCursorManager />
-                        <SortableContext
-                            items={[
-                                ...checklistItems.map(
-                                    item => `item-${item.id}`
-                                ),
-                                dummyDropZoneId,
-                            ]}
-                            strategy={verticalListSortingStrategy}
-                        >
+                    {isTouchDevice ? (
+                        <>
                             {/* Checklist items */}
                             {checklistItems.map((item, index) => (
                                 <ChecklistItem
@@ -400,10 +378,65 @@ export const ChecklistGroup = ({
                                     isDragging={draggedItems.includes(index)}
                                 />
                             ))}
-                            <DummyDropZone item={{ id: dummyDropZoneId }} />
-                        </SortableContext>
-                    </DndContext>
+                        </>
+                    ) : (
+                        <>
+                            {/* DnD indicator (shows drop location) */}
+                            <DropIndicator
+                                items={checklistItems}
+                                index={dropIndex}
+                                containerRef={checklistGroupRef}
+                            />
 
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragStart={handleDragStart}
+                                onDragOver={handleDragOver}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <DragCursorManager />
+                                <SortableContext
+                                    items={[
+                                        ...checklistItems.map(
+                                            item => `item-${item.id}`
+                                        ),
+                                        dummyDropZoneId,
+                                    ]}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    {/* Checklist items */}
+                                    {checklistItems.map((item, index) => (
+                                        <ChecklistItem
+                                            key={item.id}
+                                            item={item}
+                                            onChange={handleItemChange}
+                                            onNewLine={handleAddItem}
+                                            onRemoveLine={handleRemoveItem}
+                                            onSelect={handleSelect}
+                                            onIndent={handleIndentItem}
+                                            onFocusNextEditor={
+                                                handleFocusNextEditor
+                                            }
+                                            onFocusPreviousEditor={
+                                                handleFocusPreviousEditor
+                                            }
+                                            onBlur={handleBlurItem}
+                                            onSelectItem={handleSelectItem}
+                                            onMouseDown={handleEditorMouseDown}
+                                            placeholder={placeholder}
+                                            isDragging={draggedItems.includes(
+                                                index
+                                            )}
+                                        />
+                                    ))}
+                                    <DummyDropZone
+                                        item={{ id: dummyDropZoneId }}
+                                    />
+                                </SortableContext>
+                            </DndContext>
+                        </>
+                    )}
                     {/* Selection menu */}
                     <div
                         className={classNames(
@@ -596,6 +629,20 @@ export const ChecklistGroup = ({
                                         </Typography>
                                     )}
                                 </MenuItem>
+                                {isTouchDevice ? null : (
+                                    <Typography
+                                        sx={{
+                                            color: colors.muted,
+                                            fontSize: "0.65em",
+                                            textAlign: "center",
+                                            paddingTop: "8px",
+                                        }}
+                                    >
+                                        Hint: <code>Shift</code>+
+                                        <code>click</code> to select multiple
+                                        lines
+                                    </Typography>
+                                )}
                             </MenuList>
                         </Paper>
                     </div>

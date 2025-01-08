@@ -1090,12 +1090,25 @@ const useChecklistGroup = ({ checklistItems, setChecklistItems }) => {
 
         if (itemIndex >= 0) {
             if (
-                event.pointerType === "touch" &&
                 selectedItemIndices?.start === start &&
                 selectedItemIndices?.end === end
             ) {
+                if (selectedItemIndices.start !== selectedItemIndices.end) {
+                    setSelectedItemIndices({
+                        start: itemIndex,
+                        end: itemIndex,
+                    });
+                    activateSelectedBorderBox();
+                } else {
+                    // If the clicked item is already highlighted, deselect it
+                    deactivateSelectedBorderBox();
+                }
+            } else if (
+                selectedItemIndices?.start === itemIndex &&
+                selectedItemIndices?.end === itemIndex &&
+                start !== end
+            ) {
                 // If the touched item is already highlighted, deselect it
-                // (turns it into a toggle on touch devices)
                 deactivateSelectedBorderBox();
             } else {
                 // Update the selected item indices based on the user's selection

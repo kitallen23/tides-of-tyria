@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Checkbox } from "@mui/material";
+import { Button, Checkbox, useMediaQuery } from "@mui/material";
 import { DragIndicator } from "@mui/icons-material";
 import debounce from "lodash.debounce";
 import classNames from "classnames";
@@ -26,6 +26,7 @@ export const ChecklistItem = ({
     onMouseDown,
     isDragging,
 }) => {
+    const isTouchDevice = useMediaQuery("(pointer: coarse)");
     const checklistItemRef = useRef(null);
     const [defaultValue] = useState(item?.text || "");
 
@@ -152,7 +153,10 @@ export const ChecklistItem = ({
             className={classNames(
                 styles.checklistItemHoverArea,
                 styles[`indent${item.indentLevel}`],
-                "checklist-item-hover-area"
+                "checklist-item-hover-area",
+                {
+                    [styles.isTouchDevice]: isTouchDevice,
+                }
             )}
             style={{
                 opacity: isSorting ? (isDragging ? 1 : 0.5) : 1,
