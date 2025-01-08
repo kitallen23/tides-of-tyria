@@ -31,6 +31,7 @@ import {
     LanguageSharp,
 } from "@mui/icons-material";
 import classNames from "classnames";
+import { closestCenter, DndContext } from "@dnd-kit/core";
 
 import { useTheme } from "@/utils/theme-provider";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
@@ -39,6 +40,16 @@ import useChecklistGroup, {
     SELECTION_MENU_WIDTH_SMALL,
 } from "./useChecklistGroup";
 import styles from "./checklist-group.module.scss";
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import DropIndicator from "./DropIndicator/DropIndicator";
+import { getMinAndMax } from "./utils";
+import { useMemo } from "react";
+import DragCursorManager from "./DragCursorManager";
+import DummyDropZone from "./DummyDropZone";
+import { nanoid } from "nanoid";
 
 export const ChecklistGroup = ({
     checklistItems,
@@ -98,6 +109,15 @@ export const ChecklistGroup = ({
         showSelectedBorderBox,
         isSelectionMenuOpen,
 
+        sensors,
+        dropIndex,
+        draggedBorderBoxPosition,
+        showDraggedBorderBox,
+        draggedItemIndices,
+        handleDragStart,
+        handleDragOver,
+        handleDragEnd,
+
         selectionMenuRef,
         selectionMenuPosition,
         handleMenuAddLineAboveClick,
@@ -116,6 +136,19 @@ export const ChecklistGroup = ({
         selectedContainsCheckboxes,
         isMultiselect,
     } = useChecklistGroup({ checklistItems, setChecklistItems });
+
+    const draggedItems = useMemo(() => {
+        if (!draggedItemIndices) {
+            return [];
+        }
+        const { min, max } = getMinAndMax([
+            draggedItemIndices?.start,
+            draggedItemIndices?.end,
+        ]);
+        return Array.from({ length: max - min + 1 }, (_, i) => min + i);
+    }, [draggedItemIndices]);
+
+    const dummyDropZoneId = useMemo(() => `dummy-${nanoid(6)}`, []);
 
     return (
         <div
@@ -144,6 +177,17 @@ export const ChecklistGroup = ({
                             ...selectedBorderBoxPosition,
                             borderColor: colors.primary,
                             background: `${colors.primary}08`,
+                        }}
+                    />
+                    {/* Dragged item border box */}
+                    <div
+                        className={classNames(styles.draggedItemBorderBox, {
+                            [styles.active]: showDraggedBorderBox,
+                        })}
+                        style={{
+                            ...draggedBorderBoxPosition,
+                            borderColor: colors.secondary,
+                            background: `${colors.secondary}33`,
                         }}
                     />
 
@@ -311,25 +355,88 @@ export const ChecklistGroup = ({
                         </div>
                     </div>
 
-                    {/* Checklist items */}
-                    {checklistItems.map(item => (
-                        <ChecklistItem
-                            key={item.id}
-                            item={item}
-                            onChange={handleItemChange}
-                            onNewLine={handleAddItem}
-                            onRemoveLine={handleRemoveItem}
-                            onSelect={handleSelect}
-                            onIndent={handleIndentItem}
-                            onFocusNextEditor={handleFocusNextEditor}
-                            onFocusPreviousEditor={handleFocusPreviousEditor}
-                            onBlur={handleBlurItem}
-                            onSelectItem={handleSelectItem}
-                            onMouseDown={handleEditorMouseDown}
-                            placeholder={placeholder}
-                        />
-                    ))}
+                    {isTouchDevice ? (
+                        <>
+                            {/* Checklist items */}
+                            {checklistItems.map((item, index) => (
+                                <ChecklistItem
+                                    key={item.id}
+                                    item={item}
+                                    onChange={handleItemChange}
+                                    onNewLine={handleAddItem}
+                                    onRemoveLine={handleRemoveItem}
+                                    onSelect={handleSelect}
+                                    onIndent={handleIndentItem}
+                                    onFocusNextEditor={handleFocusNextEditor}
+                                    onFocusPreviousEditor={
+                                        handleFocusPreviousEditor
+                                    }
+                                    onBlur={handleBlurItem}
+                                    onSelectItem={handleSelectItem}
+                                    onMouseDown={handleEditorMouseDown}
+                                    placeholder={placeholder}
+                                    isDragging={draggedItems.includes(index)}
+                                />
+                            ))}
+                        </>
+                    ) : (
+                        <>
+                            {/* DnD indicator (shows drop location) */}
+                            <DropIndicator
+                                items={checklistItems}
+                                index={dropIndex}
+                                containerRef={checklistGroupRef}
+                            />
 
+                            <DndContext
+                                sensors={sensors}
+                                collisionDetection={closestCenter}
+                                onDragStart={handleDragStart}
+                                onDragOver={handleDragOver}
+                                onDragEnd={handleDragEnd}
+                            >
+                                <DragCursorManager />
+                                <SortableContext
+                                    items={[
+                                        ...checklistItems.map(
+                                            item => `item-${item.id}`
+                                        ),
+                                        dummyDropZoneId,
+                                    ]}
+                                    strategy={verticalListSortingStrategy}
+                                >
+                                    {/* Checklist items */}
+                                    {checklistItems.map((item, index) => (
+                                        <ChecklistItem
+                                            key={item.id}
+                                            item={item}
+                                            onChange={handleItemChange}
+                                            onNewLine={handleAddItem}
+                                            onRemoveLine={handleRemoveItem}
+                                            onSelect={handleSelect}
+                                            onIndent={handleIndentItem}
+                                            onFocusNextEditor={
+                                                handleFocusNextEditor
+                                            }
+                                            onFocusPreviousEditor={
+                                                handleFocusPreviousEditor
+                                            }
+                                            onBlur={handleBlurItem}
+                                            onSelectItem={handleSelectItem}
+                                            onMouseDown={handleEditorMouseDown}
+                                            placeholder={placeholder}
+                                            isDragging={draggedItems.includes(
+                                                index
+                                            )}
+                                        />
+                                    ))}
+                                    <DummyDropZone
+                                        item={{ id: dummyDropZoneId }}
+                                    />
+                                </SortableContext>
+                            </DndContext>
+                        </>
+                    )}
                     {/* Selection menu */}
                     <div
                         className={classNames(
@@ -522,6 +629,20 @@ export const ChecklistGroup = ({
                                         </Typography>
                                     )}
                                 </MenuItem>
+                                {isTouchDevice ? null : (
+                                    <Typography
+                                        sx={{
+                                            color: colors.muted,
+                                            fontSize: "0.65em",
+                                            textAlign: "center",
+                                            paddingTop: "8px",
+                                        }}
+                                    >
+                                        Hint: <code>Shift</code>+
+                                        <code>click</code> to select multiple
+                                        lines
+                                    </Typography>
+                                )}
                             </MenuList>
                         </Paper>
                     </div>

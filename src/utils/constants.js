@@ -27,3 +27,5 @@ export const LOCAL_STORAGE_KEYS = {
     weeklyChecklist: "tot_weekly_checklist",
     todoChecklist: "tot_todo_checklist",
 };
+
+export const APP_VERSION = "1.1.0";

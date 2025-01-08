@@ -41,3 +41,11 @@ a {
         display: none;
     }
 }
+
+.dragCursor {
+    cursor: row-resize !important;
+
+    *:hover {
+        cursor: row-resize !important;
+    }
+}
