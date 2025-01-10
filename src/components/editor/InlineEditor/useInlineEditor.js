@@ -284,13 +284,13 @@ export const useInlineEditor = ({
 
         let sanitizedData = sanitizeRichText(pastedData);
 
-        const isUrl = isValidUrl(sanitizedData);
         const selection = window.getSelection();
-
-        if (!selection.rangeCount) return;
-
+        if (!selection.rangeCount) {
+            return;
+        }
         const range = selection.getRangeAt(0);
 
+        const isUrl = isValidUrl(pastedData);
         if (isUrl) {
             if (!selection.isCollapsed) {
                 /**
@@ -303,7 +303,7 @@ export const useInlineEditor = ({
 
                 // Create a new anchor element
                 const anchor = document.createElement("a");
-                anchor.href = sanitizedData;
+                anchor.href = pastedData;
                 anchor.target = "_blank";
                 anchor.rel = "noopener noreferrer";
 
@@ -325,8 +325,8 @@ export const useInlineEditor = ({
 
                 // Create a new anchor element
                 const anchor = document.createElement("a");
-                anchor.href = sanitizedData;
-                anchor.textContent = sanitizedData;
+                anchor.href = pastedData;
+                anchor.textContent = pastedData;
                 anchor.target = "_blank";
                 anchor.rel = "noopener noreferrer";
 
@@ -338,6 +338,10 @@ export const useInlineEditor = ({
                 event.preventDefault();
                 onChange();
             }
+        } else {
+            document.execCommand("insertHTML", false, sanitizedData);
+            event.preventDefault();
+            onChange();
         }
     };
 
