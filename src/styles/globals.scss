@@ -183,6 +183,28 @@
     --status-warning: #ffb347;
     --status-info: #79a9d1;
 }
+[data-theme="catppuccin"]:root {
+    color-scheme: dark;
+    --primary-rgb: 202, 158, 230;
+    --secondary-rgb: 166, 227, 161;
+    --foreground-rgb: 205, 214, 244;
+    --foreground-light-rgb: 205, 214, 244;
+    --foreground-dark-rgb: 76, 79, 105;
+    --background-rgb: 30, 30, 46;
+    --nav-background-rgb: 36, 39, 58;
+    --menu-background-rgb: 30, 30, 46;
+
+    --scrollbar-track-color: 36, 39, 58;
+    --scrollbar-thumb-color: 205, 214, 244;
+
+    --text-muted: #7c7f93;
+    --muted-rgb: 124, 127, 147;
+
+    --status-success: #a6e3a1;
+    --status-danger: #f38ba8;
+    --status-warning: #f9e2af;
+    --status-info: #89b4fa;
+}
 [data-theme="dark"]:root {
     color-scheme: dark;
     --primary-rgb: 255, 133, 51;
