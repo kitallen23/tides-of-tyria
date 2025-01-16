@@ -32,37 +32,36 @@ export const SCHEMES = {
             dark: "#1a1a1a", // 26, 26, 26
         },
     },
-    kanagawa: {
-        // https://github.com/rebelot/kanagawa.nvim
-        name: "Kanagawa",
+    catppuccin: {
+        // https://github.com/catppuccin/catppuccin
+        name: "Catppuccin",
         mode: "dark",
-        // Secondary is the same as muted
         colors: {
-            primary: "#7e9cd8", // 126, 156, 216
-            secondary: "#6f6f90", // 111, 111, 144
-            body: "#dcd7ba", // 220, 215, 186
-            bodyLight: "#dcd7ba", // 220, 215, 186
-            bodyDark: "#2a2a37", // 42, 42, 55
-            background: "#1f1f28", // 31, 31, 40
-            backgroundNav: "#2a2a37", // 42, 42, 55
-            muted: "#6f6f90", // 111, 111, 144
-            menu: "#1f1f28", // 31, 31, 40
+            primary: "#ca9ee6", // 202, 158, 230
+            secondary: "#a6e3a1", // 166, 227, 161
+            body: "#cdd6f4", // 205, 214, 244
+            bodyLight: "#cdd6f4", // 205, 214, 244
+            bodyDark: "#4c4f69", // 76, 79, 105
+            background: "#1e1e2e", // 30, 30, 46
+            backgroundNav: "#24273a", // 36, 39, 58
+            muted: "#7c7f93", // 124, 127, 147
+            menu: "#1e1e2e", // 30, 30, 46
 
-            success: "#98bb6c", // 152, 187, 108
-            danger: "#ff5d62", // 255, 93, 98
-            warning: "#ffa066", // 255, 160, 102
-            info: "#7fb4ca", // 127, 180, 202
+            success: "#a6e3a1",
+            danger: "#f38ba8",
+            warning: "#f9e2af",
+            info: "#89b4fa",
 
-            orange: "#ffa066", // 255, 160, 102
-            yellow: "#e6c384", // 230, 195, 132
-            green: "#98bb6c", // 152, 187, 108
-            aqua: "#67d8c2", // 103, 216, 194
-            blue: "#a3d4d5", // 163, 212, 213
-            purple: "#957fb8", // 149, 127, 184
-            pink: "#d27e99", // 210, 126, 153
-            gray: "#54546d", // 84, 84, 109
-            light: "#dcd7ba", // 220, 215, 186
-            dark: "#2a2a37", // 42, 42, 55
+            orange: "#fab387",
+            yellow: "#f9e2af",
+            green: "#a6e3a1",
+            aqua: "#94e2d5",
+            blue: "#89b4fa",
+            purple: "#b4befe",
+            pink: "#f5c2e7",
+            gray: "#a6adc8",
+            light: "#eff1f5",
+            dark: "#11111b",
         },
     },
     monokai_pro: {
@@ -130,6 +129,39 @@ export const SCHEMES = {
             gray: "#585b74", // 88, 91, 116
             light: "#f8f8f2", // 248, 248, 242
             dark: "#44475a", // 68, 71, 90
+        },
+    },
+    kanagawa: {
+        // https://github.com/rebelot/kanagawa.nvim
+        name: "Kanagawa",
+        mode: "dark",
+        // Secondary is the same as muted
+        colors: {
+            primary: "#7e9cd8", // 126, 156, 216
+            secondary: "#6f6f90", // 111, 111, 144
+            body: "#dcd7ba", // 220, 215, 186
+            bodyLight: "#dcd7ba", // 220, 215, 186
+            bodyDark: "#2a2a37", // 42, 42, 55
+            background: "#1f1f28", // 31, 31, 40
+            backgroundNav: "#2a2a37", // 42, 42, 55
+            muted: "#6f6f90", // 111, 111, 144
+            menu: "#1f1f28", // 31, 31, 40
+
+            success: "#98bb6c", // 152, 187, 108
+            danger: "#ff5d62", // 255, 93, 98
+            warning: "#ffa066", // 255, 160, 102
+            info: "#7fb4ca", // 127, 180, 202
+
+            orange: "#ffa066", // 255, 160, 102
+            yellow: "#e6c384", // 230, 195, 132
+            green: "#98bb6c", // 152, 187, 108
+            aqua: "#67d8c2", // 103, 216, 194
+            blue: "#a3d4d5", // 163, 212, 213
+            purple: "#957fb8", // 149, 127, 184
+            pink: "#d27e99", // 210, 126, 153
+            gray: "#54546d", // 84, 84, 109
+            light: "#dcd7ba", // 220, 215, 186
+            dark: "#2a2a37", // 42, 42, 55
         },
     },
     gruvbox_dark: {
