@@ -28,4 +28,4 @@ export const LOCAL_STORAGE_KEYS = {
     todoChecklist: "tot_todo_checklist",
 };
 
-export const APP_VERSION = "1.2.1";
+export const APP_VERSION = "1.2.2";
