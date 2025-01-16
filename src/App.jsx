@@ -13,6 +13,7 @@ import useApp from "@/useApp";
 import Layout from "@/components/Layout/Layout";
 import SearchModal from "@/components/Search/SearchModal";
 import { SearchModalProvider } from "@/components/Search/SearchModalContext";
+import useAnalytics from "./utils/hooks/useAnalytics";
 
 function App() {
     const {
@@ -26,6 +27,7 @@ function App() {
         setPrimaryColor,
     } = useApp();
     useViewportHeight();
+    useAnalytics();
 
     return (
         <>
