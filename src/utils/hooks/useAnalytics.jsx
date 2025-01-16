@@ -28,7 +28,7 @@ const useAnalytics = () => {
             return;
         }
         if (window.umami) {
-            window.umami.track();
+            window.umami.track(props => ({ ...props, url: pathname }));
         }
     }, [pathname]);
 
