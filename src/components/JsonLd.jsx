@@ -39,9 +39,20 @@ const JSON_LD = {
 };
 
 const JsonLd = () => (
-    <Helmet>
-        <script type="application/ld+json">{JSON.stringify(JSON_LD)}</script>
-    </Helmet>
+    <>
+        <Helmet>
+            <script type="application/ld+json">
+                {JSON.stringify(JSON_LD)}
+            </script>
+        </Helmet>
+        <div style={{ display: "none" }}>
+            <ul>
+                {INDEXABLE_EVENT_NAMES.map((name, i) => (
+                    <li key={i}>{name}</li>
+                ))}
+            </ul>
+        </div>
+    </>
 );
 
 export default JsonLd;

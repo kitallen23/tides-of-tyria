@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /checklist
+Disallow: /settings
+
+Sitemap: https://tides-of-tyria.chuggs.net/sitemap.xml
