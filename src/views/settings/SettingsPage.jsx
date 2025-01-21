@@ -74,6 +74,7 @@ const SettingsPage = () => {
         <>
             <Helmet>
                 <title>{title}</title>
+                <meta name="robots" content="noindex, nofollow" />
             </Helmet>
             <div
                 className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}

@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2024-12-20",
+        version: "2025-01-21",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -32,6 +32,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.light,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "day-night__tyria__dawn",
@@ -643,6 +644,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "crystal_oasis__casino_blitz",
@@ -685,6 +687,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "elon_riverlands__path_to_ascension",
@@ -714,6 +717,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "the_desolation__junundu_rising",
@@ -743,6 +747,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "domain_of_vabbi__forged_with_fire",
@@ -865,6 +870,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.purple,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "domain_of_istan__palawadan",
@@ -1074,6 +1080,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.light,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "day-night__cantha__dawn",
@@ -1231,6 +1238,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.light,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "day-night__cantha__dawn",
@@ -1276,6 +1284,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "seitung_province__aetherblade_assault",
@@ -1307,6 +1316,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "the_echovald_wilds__aspenwood",
@@ -1336,6 +1346,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.aqua,
                 type: TIME_TYPES.fixedTime,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
+                disableIndexing: true,
                 downtime: {
                     name: "Preparations",
                 },
@@ -1381,6 +1392,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.yellow,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "skywatch_archipelago__unlocking_the_wizards_tower",
@@ -1486,6 +1498,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "janthir_syntri__of_mists_and_monsters",
@@ -1560,6 +1573,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "convergences",

@@ -14,6 +14,7 @@ import Layout from "@/components/Layout/Layout";
 import SearchModal from "@/components/Search/SearchModal";
 import { SearchModalProvider } from "@/components/Search/SearchModalContext";
 import useAnalytics from "./utils/hooks/useAnalytics";
+import JsonLd from "./components/JsonLd";
 
 function App() {
     const {
@@ -34,6 +35,7 @@ function App() {
             <Helmet>
                 <title>{TITLE_SUFFIX}</title>
             </Helmet>
+            <JsonLd />
             <MuiThemeProvider theme={muiTheme}>
                 <ThemeProvider
                     value={{

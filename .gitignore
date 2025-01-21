@@ -23,3 +23,6 @@ docker_images
 *.njsproj
 *.sln
 *.sw?
+
+# Files generated at build time
+public/sitemap.xml
