@@ -53,6 +53,7 @@ const Header = () => {
                     <div
                         className={styles.searchBar}
                         onClick={onOpenSearchModal}
+                        aria-label="Search Guild Wars 2 Wiki"
                     >
                         <div className={styles.searchBarContent}>
                             {isSmallScreen ? null : "/wiki"}
@@ -67,6 +68,7 @@ const Header = () => {
                         }
                         className={globalStyles.internalLink}
                         onClick={() => setPrevPath(pathname)}
+                        aria-label="Go to site settings"
                     >
                         <IconButton
                             aria-label="settings"

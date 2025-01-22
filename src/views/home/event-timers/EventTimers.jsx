@@ -82,6 +82,7 @@ const EventTimers = () => {
     const indicatorWrapperRef = useRef(null);
     const eventWrapperRef = useRef(null);
     const { now, dailyReset } = useTimer();
+    const isSmallScreen = useMediaQuery("(max-width: 768px)");
     const isTouchDevice = useMediaQuery("(pointer: coarse)");
 
     const [hoveredRegion, setHoveredRegion] = useState("");
@@ -455,7 +456,7 @@ const EventTimers = () => {
                             <HourglassTopSharp
                                 style={{ marginRight: "0.25rem" }}
                             />
-                            Event Timers
+                            {isSmallScreen ? "" : "GW2 "}Event Timers
                         </h3>
                         <span
                             style={{
@@ -503,6 +504,7 @@ const EventTimers = () => {
                                     color="muted"
                                     onClick={onMenuButtonClick}
                                     key="more-menu"
+                                    aria-label="Event timer menu"
                                 >
                                     <MoreVertSharp
                                         sx={{ fontSize: "1.17em" }}
@@ -542,6 +544,7 @@ const EventTimers = () => {
                                     sx={{ minWidth: 0 }}
                                     color="muted"
                                     onClick={() => setOffset(offset - 1)}
+                                    aria-label="Previous hour"
                                 >
                                     <ChevronLeftSharp
                                         sx={{ fontSize: "1.17em" }}
@@ -558,6 +561,7 @@ const EventTimers = () => {
                                     color="muted"
                                     onClick={() => setOffset(0)}
                                     disabled={offset === 0}
+                                    aria-label="Jump to now"
                                 >
                                     <HistorySharp sx={{ fontSize: "1.17em" }} />
                                 </Button>
@@ -566,6 +570,7 @@ const EventTimers = () => {
                                     sx={{ minWidth: 0 }}
                                     color="muted"
                                     onClick={() => setOffset(offset + 1)}
+                                    aria-label="Next hour"
                                 >
                                     <ChevronRightSharp
                                         sx={{ fontSize: "1.17em" }}

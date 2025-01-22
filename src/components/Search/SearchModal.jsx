@@ -137,6 +137,7 @@ const SearchModal = ({ style = {}, className = "", ...rest }) => {
                             },
                         }}
                         onKeyDown={handleKeyDown}
+                        aria-label="Search Guild Wars 2 Wiki"
                     />
                 ) : null}
             </Box>
