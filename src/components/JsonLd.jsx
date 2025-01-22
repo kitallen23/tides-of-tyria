@@ -30,7 +30,7 @@ const JSON_LD = {
             "@type": "ListItem",
             position: index + 1,
             item: {
-                "@type": "Event",
+                "@type": "Thing",
                 name: eventName,
                 description: `Details and timers for the ${eventName} event in Guild Wars 2.`,
             },
