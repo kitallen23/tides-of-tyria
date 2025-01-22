@@ -5,10 +5,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "@/styles/globals.scss";
 import App from "@/App";
 import RootError from "@/views/errors/RootError";
-
-import SettingsPage from "@/views/settings/SettingsPage";
-import HomePage from "@/views/home/HomePage";
-import ChecklistPage from "@/views/checklist/ChecklistPage";
+import { ChecklistPage, HomePage, SettingsPage } from "@/lazyRoutes";
 
 const router = createBrowserRouter([
     {

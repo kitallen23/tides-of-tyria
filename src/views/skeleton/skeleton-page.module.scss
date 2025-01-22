@@ -1,0 +1,17 @@
+@use "@/styles/variables/core-variables" as c;
+
+.pageWrapper {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: c.$content-width;
+
+    &.checklist {
+        max-width: c.$content-width-narrow;
+    }
+
+    .group {
+        display: grid;
+        gap: 1rem;
+    }
+}

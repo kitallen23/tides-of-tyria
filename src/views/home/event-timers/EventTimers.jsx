@@ -490,6 +490,7 @@ const EventTimers = () => {
                                     color="muted"
                                     onClick={onMarkAllAreasVisible}
                                     key="reset-hidden"
+                                    aria-label="Reset to default"
                                 >
                                     <RestartAltSharp
                                         sx={{ fontSize: "1.17em" }}
