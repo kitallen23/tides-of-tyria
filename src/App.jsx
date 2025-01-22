@@ -1,9 +1,10 @@
-import "@/styles/globals.scss";
-import { Outlet } from "react-router-dom";
+import { Suspense } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
 import { Toaster } from "react-hot-toast";
 
+import "@/styles/globals.scss";
 import { TITLE_SUFFIX } from "@/utils/constants";
 import { ThemeProvider } from "@/utils/theme-provider";
 import { TimerProvider } from "@/utils/timer-provider";
@@ -15,6 +16,15 @@ import SearchModal from "@/components/Search/SearchModal";
 import { SearchModalProvider } from "@/components/Search/SearchModalContext";
 import useAnalytics from "./utils/hooks/useAnalytics";
 import JsonLd from "./components/JsonLd";
+import SkeletonChecklistPage from "@/views/skeleton/SkeletonChecklistPage";
+import SkeletonEventTimerPage from "@/views/skeleton/SkeletonEventTimerPage";
+import SkeletonSettingsPage from "@/views/skeleton/SkeletonSettingsPage";
+
+const FALLBACKS = {
+    "/checklist": <SkeletonChecklistPage />,
+    "/settings": <SkeletonSettingsPage />,
+    "/": <SkeletonEventTimerPage />,
+};
 
 function App() {
     const {
@@ -29,6 +39,7 @@ function App() {
     } = useApp();
     useViewportHeight();
     useAnalytics();
+    const { pathname } = useLocation();
 
     return (
         <>
@@ -50,7 +61,15 @@ function App() {
                     <TimerProvider>
                         <SearchModalProvider>
                             <Layout>
-                                <Outlet />
+                                <Suspense
+                                    fallback={
+                                        FALLBACKS[pathname] ?? (
+                                            <SkeletonEventTimerPage />
+                                        )
+                                    }
+                                >
+                                    <Outlet />
+                                </Suspense>
                             </Layout>
                             <Toaster
                                 position="top-center"
