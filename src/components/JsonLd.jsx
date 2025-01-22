@@ -23,14 +23,14 @@ const JSON_LD = {
     name: "Tides of Tyria",
     url: "https://tides-of-tyria.chuggs.net",
     description:
-        "Manage your Guild Wars 2 events and personal goals with this easy-to-use timer app.",
+        "Manage your GW2 (Guild Wars 2) events and goals with this easy-to-use timer app.",
     mainEntity: {
         "@type": "ItemList",
         itemListElement: INDEXABLE_EVENT_NAMES.map((eventName, index) => ({
             "@type": "ListItem",
             position: index + 1,
             item: {
-                "@type": "Enumeration",
+                "@type": "Event",
                 name: eventName,
                 description: `Details and timers for the ${eventName} event in Guild Wars 2.`,
             },
