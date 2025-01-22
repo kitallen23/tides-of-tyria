@@ -125,6 +125,10 @@ export const markAllAreasVisible = eventConfig => {
         sub_areas: region.sub_areas.map(subArea => ({
             ...subArea,
             hideArea: undefined,
+            phases: subArea.phases.map(phase => ({
+                ...phase,
+                hidePhase: undefined,
+            })),
         })),
     }));
 };
