@@ -499,8 +499,10 @@ const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
         [isClickable, borderColor]
     );
 
+    const Tag = isDowntime ? "div" : UnstyledButton;
+
     return (
-        <UnstyledButton
+        <Tag
             className={classNames(`${styles.phase}`, {
                 [styles.isSelected]: selectedEvent?.id === item.id,
                 [styles.isClickable]: isClickable,
@@ -514,6 +516,7 @@ const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
             onClick={onClick}
             onDoubleClick={onDoubleClick}
             tabIndex={-1}
+            aria-label={item.name}
         >
             {isDayNight ? null : isDowntime ? (
                 item.wikiUrl ? (
@@ -559,7 +562,7 @@ const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
                     )}
                 </>
             )}
-        </UnstyledButton>
+        </Tag>
     );
 };
 
@@ -934,6 +937,8 @@ const EditableArea = ({ area, region }) => {
         onToggleHidden(area);
     };
 
+    const labelId = useMemo(() => nanoid(6), []);
+
     return (
         <UnstyledButton
             className={styles.area}
@@ -947,8 +952,11 @@ const EditableArea = ({ area, region }) => {
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
                     tabIndex={-1}
+                    inputProps={{
+                        "aria-labelledby": labelId,
+                    }}
                 />
-                <div className={styles.text}>
+                <div className={styles.text} id={labelId}>
                     <div
                         className={styles.title}
                         style={{
@@ -1044,6 +1052,8 @@ const EditableAreaWithPhases = ({ area, region }) => {
         onToggleHidden(area);
     };
 
+    const labelId = useMemo(() => nanoid(6), []);
+
     return (
         <>
             <UnstyledButton
@@ -1065,8 +1075,11 @@ const EditableAreaWithPhases = ({ area, region }) => {
                         color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                         size="small"
                         tabIndex={-1}
+                        inputProps={{
+                            "aria-labelledby": labelId,
+                        }}
                     />
-                    <div className={styles.text}>
+                    <div className={styles.text} id={labelId}>
                         <div
                             className={styles.title}
                             style={{
@@ -1149,6 +1162,8 @@ const EditablePhase = ({ region, area, phase, color }) => {
         onTogglePhaseHidden(area, key);
     };
 
+    const labelId = useMemo(() => nanoid(6), []);
+
     return (
         <UnstyledButton
             className={styles.area}
@@ -1170,11 +1185,15 @@ const EditablePhase = ({ region, area, phase, color }) => {
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
                     tabIndex={-1}
+                    inputProps={{
+                        "aria-labelledby": labelId,
+                    }}
                 />
                 <div
                     className={classNames(styles.text, {
                         [styles.hasAreaName]: !!phase.areaName,
                     })}
+                    id={labelId}
                 >
                     <div
                         className={styles.title}

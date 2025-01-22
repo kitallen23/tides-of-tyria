@@ -187,6 +187,7 @@ $phase-padding-dense: 0.3em;
 
                         user-select: none;
                         -webkit-user-select: none;
+                        outline: none;
 
                         // Text height of title, text height of "time until",
                         // padding * 2
@@ -328,6 +329,7 @@ $phase-padding-dense: 0.3em;
                 border-left: 2px solid var(--red);
                 transition: left var(--transition);
                 z-index: 1;
+                pointer-events: none;
             }
 
             .hoveredEventIndicator {
