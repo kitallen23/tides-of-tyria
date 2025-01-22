@@ -81,6 +81,7 @@ const Header = () => {
                             sx={{
                                 fontSize: "1.5em",
                             }}
+                            aria-label="Settings"
                         >
                             <SettingsSharp />
                         </IconButton>
