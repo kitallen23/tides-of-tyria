@@ -270,10 +270,6 @@ body {
     -webkit-text-size-adjust: none;
 }
 
-button {
-    outline: none !important;
-}
-
 code {
     border: 1px solid rgba(var(--foreground-rgb), 0.1);
     border-radius: 3px;
@@ -301,4 +297,15 @@ ul {
 
 .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline {
     transition: border-color var(--transition);
+}
+
+.unstyled-button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    background: none;
+    border: none;
+    text-align: start;
 }

@@ -37,6 +37,7 @@ import {
 import CurrentTimeIndicator from "./CurrentTimeIndicator";
 import useEventColors from "@/utils/hooks/useEventColors";
 import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
+import UnstyledButton from "@/components/UnstyledButton";
 
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
@@ -499,7 +500,7 @@ const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
     );
 
     return (
-        <div
+        <UnstyledButton
             className={classNames(`${styles.phase}`, {
                 [styles.isSelected]: selectedEvent?.id === item.id,
                 [styles.isClickable]: isClickable,
@@ -512,6 +513,7 @@ const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
             id={item.id}
             onClick={onClick}
             onDoubleClick={onDoubleClick}
+            tabIndex={-1}
         >
             {isDayNight ? null : isDowntime ? (
                 item.wikiUrl ? (
@@ -557,7 +559,7 @@ const AreaEventPhase = ({ item, isLast, isAreaComplete, isDayNight }) => {
                     )}
                 </>
             )}
-        </div>
+        </UnstyledButton>
     );
 };
 
@@ -933,13 +935,18 @@ const EditableArea = ({ area, region }) => {
     };
 
     return (
-        <div className={styles.area} onClick={onClick}>
+        <UnstyledButton
+            className={styles.area}
+            onClick={onClick}
+            aria-label={`Toggle visibility of group: ${area.displayTitle ?? area.name}`}
+        >
             <div className={styles.editableArea} css={styleClass} style={style}>
                 <Switch
                     checked={!isHidden}
                     disabled={isHidden}
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
+                    tabIndex={-1}
                 />
                 <div className={styles.text}>
                     <div
@@ -973,7 +980,7 @@ const EditableArea = ({ area, region }) => {
                     </div>
                 </div>
             </div>
-        </div>
+        </UnstyledButton>
     );
 };
 
@@ -1039,7 +1046,11 @@ const EditableAreaWithPhases = ({ area, region }) => {
 
     return (
         <>
-            <div className={styles.area} onClick={onClick}>
+            <UnstyledButton
+                className={styles.area}
+                onClick={onClick}
+                aria-label={`Toggle visibility of group: ${area.displayTitle ?? area.name}`}
+            >
                 <div
                     className={classNames(
                         styles.editableArea,
@@ -1053,6 +1064,7 @@ const EditableAreaWithPhases = ({ area, region }) => {
                         disabled={isHidden}
                         color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                         size="small"
+                        tabIndex={-1}
                     />
                     <div className={styles.text}>
                         <div
@@ -1069,7 +1081,7 @@ const EditableAreaWithPhases = ({ area, region }) => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </UnstyledButton>
             {areaMetas.map(phase => (
                 <EditablePhase
                     key={phase.key}
@@ -1138,10 +1150,11 @@ const EditablePhase = ({ region, area, phase, color }) => {
     };
 
     return (
-        <div
+        <UnstyledButton
             className={styles.area}
             onClick={() => onPhaseClick(phase.key)}
             key={phase.key}
+            aria-label={`Toggle visibility of event: ${phase.metaName ?? phase.name}`}
         >
             <div
                 className={classNames(
@@ -1156,6 +1169,7 @@ const EditablePhase = ({ region, area, phase, color }) => {
                     disabled={area.hideArea || isHidden}
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
+                    tabIndex={-1}
                 />
                 <div
                     className={classNames(styles.text, {
@@ -1197,7 +1211,7 @@ const EditablePhase = ({ region, area, phase, color }) => {
                     ) : null}
                 </div>
             </div>
-        </div>
+        </UnstyledButton>
     );
 };
 

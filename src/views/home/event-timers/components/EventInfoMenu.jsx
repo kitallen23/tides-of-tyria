@@ -29,6 +29,7 @@ import { ON_COMPLETE_TYPES } from "@/utils/meta_events";
 import { copyToClipboard } from "@/utils/util";
 import Modal from "@/components/Modal/Modal";
 import { useTimer } from "@/utils/hooks/useTimer";
+import UnstyledButton from "@/components/UnstyledButton";
 
 import EventTimerContext from "../EventTimerContext";
 
@@ -368,12 +369,13 @@ const EventInfoMenu = () => {
                     }}
                     ref={eventPhaseMenuRef}
                 >
-                    <div
+                    <UnstyledButton
                         className={styles.closeButtonWrapper}
                         onClick={() => setSelectedEvent(null)}
+                        aria-label="Close menu"
                     >
                         <ClearSharp />
-                    </div>
+                    </UnstyledButton>
                     <div
                         className={styles.eventTitle}
                         style={{ color: highlightColor }}

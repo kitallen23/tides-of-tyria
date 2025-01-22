@@ -54,6 +54,7 @@ const NavTabs = () => {
                     )
                 }
                 to="/"
+                aria-label="Go to Guild Wars 2 event timer page"
             />
             <LinkTab
                 label={
@@ -74,6 +75,7 @@ const NavTabs = () => {
                     )
                 }
                 to="/checklist"
+                aria-label="Go to checklist page"
             />
         </Tabs>
     );

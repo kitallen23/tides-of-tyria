@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import {
     Box,
     Button,
@@ -32,24 +33,25 @@ import {
 } from "@mui/icons-material";
 import classNames from "classnames";
 import { closestCenter, DndContext } from "@dnd-kit/core";
+import { nanoid } from "nanoid";
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 import { useTheme } from "@/utils/theme-provider";
+
+import UnstyledButton from "@/components/UnstyledButton";
 import ChecklistItem from "./ChecklistItem/ChecklistItem";
 import useChecklistGroup, {
     SELECTION_MENU_WIDTH,
     SELECTION_MENU_WIDTH_SMALL,
 } from "./useChecklistGroup";
 import styles from "./checklist-group.module.scss";
-import {
-    SortableContext,
-    verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import DropIndicator from "./DropIndicator/DropIndicator";
 import { getMinAndMax } from "./utils";
-import { useMemo } from "react";
 import DragCursorManager from "./DragCursorManager";
 import DummyDropZone from "./DummyDropZone";
-import { nanoid } from "nanoid";
 
 export const ChecklistGroup = ({
     checklistItems,
@@ -160,12 +162,15 @@ export const ChecklistGroup = ({
         >
             {checklistItems.length === 0 ? (
                 // No items placeholder
-                <div
+                <UnstyledButton
                     className={styles.noItemsPlaceholder}
                     onClick={() => handleAddItem({ focus: true })}
                 >
-                    <em>No items{isTouchDevice ? " (tap to add)" : "."}</em>
-                </div>
+                    <em>
+                        No items
+                        {isTouchDevice ? " (tap to add)" : " (click to add)"}
+                    </em>
+                </UnstyledButton>
             ) : (
                 <>
                     {/* Selected item border box */}

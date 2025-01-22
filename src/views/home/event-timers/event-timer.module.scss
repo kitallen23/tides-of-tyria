@@ -443,13 +443,17 @@ $phase-padding-dense: 0.3em;
         position: absolute;
         cursor: pointer;
 
-        width: 1em;
         text-align: center;
         top: 0;
         right: 0;
+        padding: 2px;
 
         color: var(--text-muted);
         transition: color var(--transition);
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
         &:hover {
             color: rgb(var(--foreground-rgb));
