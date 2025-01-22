@@ -13,6 +13,10 @@
         color: var(--text-muted);
         transition: color var(--transition);
 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
         &:hover {
             color: rgb(var(--foreground-rgb));
         }

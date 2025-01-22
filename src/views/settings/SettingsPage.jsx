@@ -139,6 +139,7 @@ const SettingsPage = () => {
                                 fontFamily: "Noto Sans",
                             }}
                             className={styles.uniformButton}
+                            aria-label="Set font to regular"
                         >
                             Regular
                         </Button>
@@ -152,6 +153,7 @@ const SettingsPage = () => {
                                 fontFamily: "Noto Sans Mono",
                             }}
                             className={styles.uniformButton}
+                            aria-label="Set font to monospaced"
                         >
                             Monospace
                         </Button>
@@ -171,6 +173,7 @@ const SettingsPage = () => {
                                 fontSize: "0.75rem",
                             }}
                             className={styles.uniformButton}
+                            aria-label="Set font size to small"
                         >
                             Small
                         </Button>
@@ -186,6 +189,7 @@ const SettingsPage = () => {
                                 fontSize: "0.875rem",
                             }}
                             className={styles.uniformButton}
+                            aria-label="Set font size to medium (default)"
                         >
                             Medium
                         </Button>
@@ -197,6 +201,7 @@ const SettingsPage = () => {
                                 fontSize: "1rem",
                             }}
                             className={styles.uniformButton}
+                            aria-label="Set font size to large"
                         >
                             Large
                         </Button>
@@ -215,6 +220,7 @@ const SettingsPage = () => {
                             onClick={() => setTimeFormat("12h")}
                             disableElevation
                             className={styles.uniformButton}
+                            aria-label="Set time format to 12h time"
                         >
                             12 hour
                         </Button>
@@ -225,6 +231,7 @@ const SettingsPage = () => {
                             onClick={() => setTimeFormat("24h")}
                             disableElevation
                             className={styles.uniformButton}
+                            aria-label="Set time format to 24h time"
                         >
                             24 hour
                         </Button>
@@ -242,6 +249,7 @@ const SettingsPage = () => {
                         onClick={() => setIsClearDataModalOpen(true)}
                         color="error"
                         disableElevation
+                        aria-label="Clear local data"
                     >
                         Clear local data
                     </Button>

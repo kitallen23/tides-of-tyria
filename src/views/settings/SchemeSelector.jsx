@@ -1,12 +1,15 @@
-import { SCHEMES } from "@/utils/color-schemes";
-import styles from "./settings.module.scss";
 import { useMemo } from "react";
+
+import styles from "./settings.module.scss";
+import { SCHEMES } from "@/utils/color-schemes";
 import { getLocalItem } from "@/utils/util";
 import { useTheme } from "@/utils/theme-provider";
 import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
 
+import UnstyledButton from "@/components/UnstyledButton";
+
 const SchemeItem = ({ scheme, selected, onChange }) => (
-    <div
+    <UnstyledButton
         className={styles.schemeItem}
         style={{
             color: scheme.colors.primary,
@@ -14,6 +17,7 @@ const SchemeItem = ({ scheme, selected, onChange }) => (
             borderColor: selected ? scheme.colors.primary : "transparent",
         }}
         onClick={() => onChange(scheme.key)}
+        aria-label={`Set color scheme to ${scheme.name}`}
     >
         {scheme.name}
         <div className={styles.colorIndicators}>
@@ -30,7 +34,7 @@ const SchemeItem = ({ scheme, selected, onChange }) => (
                 style={{ background: scheme.colors.body }}
             />
         </div>
-    </div>
+    </UnstyledButton>
 );
 
 const SchemeSelector = ({ scheme, onChange }) => {

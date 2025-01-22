@@ -11,6 +11,7 @@ import { useTheme } from "@/utils/theme-provider";
 import { HOMEPAGE } from "@/utils/constants";
 import Logo from "@/components/Logo";
 import NavTabs from "@/components/NavTabs";
+import UnstyledButton from "@/components/UnstyledButton";
 
 const Header = () => {
     const { colors } = useTheme();
@@ -27,6 +28,7 @@ const Header = () => {
                 <Link
                     to={HOMEPAGE}
                     className={`${styles.logoLink} ${globalStyles.internalLink}`}
+                    aria-label="Go to homepage"
                 >
                     <Logo size={48} color={colors.primary} />
                     <div
@@ -50,7 +52,7 @@ const Header = () => {
                 </Link>
                 <NavTabs />
                 <div className={styles.rightOptions}>
-                    <div
+                    <UnstyledButton
                         className={styles.searchBar}
                         onClick={onOpenSearchModal}
                         aria-label="Search Guild Wars 2 Wiki"
@@ -59,7 +61,7 @@ const Header = () => {
                             {isSmallScreen ? null : "/wiki"}
                             <SearchSharp />
                         </div>
-                    </div>
+                    </UnstyledButton>
                     <Link
                         to={
                             pathname === "/settings"
@@ -71,7 +73,6 @@ const Header = () => {
                         aria-label="Go to site settings"
                     >
                         <IconButton
-                            aria-label="settings"
                             color={
                                 pathname === "/settings"
                                     ? "primary"

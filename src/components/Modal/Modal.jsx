@@ -2,8 +2,10 @@ import { useEffect, useMemo } from "react";
 import { Box, Modal as _Modal } from "@mui/material";
 import { ClearSharp } from "@mui/icons-material";
 import classNames from "classnames";
+
 import styles from "./modal.module.scss";
 import { useTheme } from "@/utils/theme-provider";
+import UnstyledButton from "@/components/UnstyledButton";
 
 const Modal = ({
     children,
@@ -71,9 +73,13 @@ const Modal = ({
             <>
                 <Box sx={_style}>
                     {closeButton && onClose ? (
-                        <div className={styles.closeButton} onClick={onClose}>
+                        <UnstyledButton
+                            className={styles.closeButton}
+                            onClick={onClose}
+                            aria-label="Close modal"
+                        >
                             <ClearSharp />
-                        </div>
+                        </UnstyledButton>
                     ) : null}
                     {children}
                 </Box>
