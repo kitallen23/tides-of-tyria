@@ -1,26 +1,35 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
+import toast from "react-hot-toast";
+import { useSearchParams } from "react-router-dom";
+import {
+    BrowseGallerySharp,
+    CheckCircleSharp,
+    ColorLensSharp,
+    DataObjectSharp,
+    FormatColorFillSharp,
+    FormatSizeSharp,
+    GitHub,
+    SaveAltSharp,
+    TextFormatSharp,
+    UploadSharp,
+} from "@mui/icons-material";
+import { Button, TextField, useMediaQuery } from "@mui/material";
 
 import globalStyles from "@/styles/modules/global-styles.module.scss";
 import styles from "./settings.module.scss";
 import { getLocalItem, getTitle, isHexValid } from "@/utils/util";
-
-import SchemeSelector from "./SchemeSelector";
-import {
-    CheckCircleSharp,
-    FormatColorFillSharp,
-    FormatSizeSharp,
-    GitHub,
-    TextFormatSharp,
-} from "@mui/icons-material";
+import { useSettingsPersistence } from "@/utils/hooks/useSettingsPersistence";
 import { useTheme } from "@/utils/theme-provider";
-import { Button, TextField } from "@mui/material";
 import { SCHEMES } from "@/utils/color-schemes";
 import { APP_VERSION, LOCAL_STORAGE_KEYS } from "@/utils/constants";
+
+import SchemeSelector from "./SchemeSelector";
 import Modal from "@/components/Modal/Modal";
 import HeartIcon from "@/components/HeartIcon";
 
 const SettingsPage = () => {
+    const isSmallScreen = useMediaQuery("(max-width: 768px)");
     const title = useMemo(() => getTitle("Settings"), []);
     const {
         colorScheme: scheme,
@@ -35,6 +44,8 @@ const SettingsPage = () => {
         setTimeFormat,
         setPrimaryColor,
     } = useTheme();
+
+    const { onSaveToFile, onRestoreFromFile } = useSettingsPersistence();
 
     const setScheme = key => {
         if (key) {
@@ -67,8 +78,20 @@ const SettingsPage = () => {
         Object.values(LOCAL_STORAGE_KEYS).forEach(key =>
             localStorage.removeItem(key)
         );
-        location.reload();
+        window.location.reload();
     };
+
+    const [searchParams, setSearchParams] = useSearchParams();
+    useEffect(() => {
+        try {
+            const isRestored = searchParams.get("restored");
+            if (isRestored === "true") {
+                toast.success("Configuration restored successfully.");
+                searchParams.delete("restored");
+                setSearchParams(searchParams);
+            }
+        } catch {} // eslint-disable-line no-empty
+    }, []); /* eslint-disable-line react-hooks/exhaustive-deps */
 
     return (
         <>
@@ -91,7 +114,7 @@ const SettingsPage = () => {
                 {scheme === "dark" || scheme === "light" ? (
                     <div className={styles.inlineSetting}>
                         <h3 className={styles.heading}>
-                            <TextFormatSharp
+                            <ColorLensSharp
                                 style={{ marginRight: "0.25rem" }}
                             />
                             Primary color
@@ -209,7 +232,9 @@ const SettingsPage = () => {
                 </div>
                 <div className={styles.inlineSetting}>
                     <h3 className={styles.heading}>
-                        <FormatSizeSharp style={{ marginRight: "0.25rem" }} />
+                        <BrowseGallerySharp
+                            style={{ marginRight: "0.25rem" }}
+                        />
                         Time format
                     </h3>
                     <div className={styles.settingsButtons}>
@@ -237,22 +262,73 @@ const SettingsPage = () => {
                         </Button>
                     </div>
                 </div>
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        alignItems: "center",
-                    }}
-                >
-                    <Button
-                        variant="text"
-                        onClick={() => setIsClearDataModalOpen(true)}
-                        color="error"
-                        disableElevation
-                        aria-label="Clear local data"
-                    >
-                        Clear local data
-                    </Button>
+                <div className={styles.settingGroup}>
+                    <h3 className={styles.heading}>
+                        <DataObjectSharp style={{ marginRight: "0.25rem" }} />
+                        Data
+                    </h3>
+                    <div style={{ display: "grid", gap: "0.5rem" }}>
+                        <div
+                            style={{
+                                fontSize: "0.875em",
+                                color: colors.muted,
+                            }}
+                        >
+                            All data is stored locally. Clearing your browser
+                            cache will erase your event timer settings and
+                            checklist items. Use these buttons to backup or
+                            restore from file.
+                        </div>
+                        <div
+                            style={{
+                                display: isSmallScreen ? "flex" : "grid",
+                                flexWrap: "wrap",
+                                gridTemplateColumns: "auto auto 1fr",
+                                gap: "0.5rem",
+                                alignItems: "start",
+                            }}
+                        >
+                            <Button
+                                variant="contained"
+                                onClick={() => onSaveToFile()}
+                                disableElevation
+                                aria-label="Save site settings to file"
+                                style={{ gap: "0.25em" }}
+                            >
+                                <SaveAltSharp />
+                                Backup
+                            </Button>
+                            <Button
+                                variant="contained"
+                                onClick={() => onRestoreFromFile()}
+                                disableElevation
+                                aria-label="Restore site settings from file"
+                                style={{ gap: "0.25em" }}
+                            >
+                                <UploadSharp />
+                                Restore
+                            </Button>
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "flex-end",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <Button
+                                    variant="text"
+                                    onClick={() =>
+                                        setIsClearDataModalOpen(true)
+                                    }
+                                    color="error"
+                                    disableElevation
+                                    aria-label="Clear local data"
+                                >
+                                    Clear local data
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div className={styles.attributionTextContainer}>
                     <div>
