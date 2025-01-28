@@ -45,6 +45,7 @@ export const useSettingsPersistence = () => {
         const json = JSON.stringify(data, null, 4);
         const blob = new Blob([json], { type: "application/json" });
 
+        // Note: this still doesn't work well with iOS
         saveAs(blob, "tides-of-tyria_config.json");
         toast.success("Configuration downloaded successfully.");
     };
