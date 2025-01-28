@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { isRouteErrorResponse, useRouteError, Link } from "react-router-dom";
+import { isRouteErrorResponse, useRouteError } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import { Button } from "@mui/material";
 import { ThemeProvider as MuiThemeProvider } from "@mui/material";
@@ -79,14 +79,14 @@ const RootError = () => {
                                 </div>
                             </div>
                             <div className={styles.buttons}>
-                                <Link
-                                    to="/"
+                                <a
+                                    href="/"
                                     className={globalStyles.internalLink}
                                 >
                                     <Button color="primary">
                                         Return to homepage
                                     </Button>
-                                </Link>
+                                </a>
                             </div>
                         </div>
                     </div>
