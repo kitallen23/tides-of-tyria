@@ -8,11 +8,15 @@ import styles from "./errors.module.scss";
 
 import { ThemeProvider } from "@/utils/theme-provider";
 import { getTitle } from "@/utils/util";
+import useAnalytics from "@/utils/hooks/useAnalytics";
+import useViewportHeight from "@/utils/hooks/useViewportHeight";
 import useApp from "@/useApp";
 import Logo from "@/components/Logo";
 
 const RootError = () => {
     const { themeState, muiTheme } = useApp();
+    useViewportHeight();
+    useAnalytics();
 
     const error = useRouteError();
     useEffect(() => {
