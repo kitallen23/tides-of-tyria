@@ -29,6 +29,10 @@ const router = createBrowserRouter([
     },
 ]);
 
+window.addEventListener("vite:preloadError", () => {
+    window.location.reload();
+});
+
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <RouterProvider router={router} />
