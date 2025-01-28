@@ -1,7 +1,9 @@
-import { LOCAL_STORAGE_KEYS } from "../constants";
 import toast from "react-hot-toast";
+import { saveAs } from "file-saver";
+
 import { resetConfigToDefault } from "@/views/home/event-timers/utils";
-import META_EVENTS from "../meta_events";
+import { LOCAL_STORAGE_KEYS } from "@/utils/constants";
+import META_EVENTS from "@/utils/meta_events";
 
 const JSON_TYPES = [
     LOCAL_STORAGE_KEYS.dailyChecklist,
@@ -42,15 +44,9 @@ export const useSettingsPersistence = () => {
 
         const json = JSON.stringify(data, null, 4);
         const blob = new Blob([json], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
 
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `tides-of-tyria_settings.json`;
-        a.click();
-
-        URL.revokeObjectURL(url);
-        toast.success(`Settings downloaded successfully.`);
+        saveAs(blob, "tides-of-tyria_config.json");
+        toast.success("Configuration downloaded successfully.");
     };
 
     const onRestoreFromFile = () => {
@@ -102,7 +98,7 @@ export const useSettingsPersistence = () => {
                 } catch (err) {
                     console.error(`Error restoring saved configuration: `, err);
                     toast.error(
-                        "Failed to restore settings. The file may be malformed."
+                        "Failed to restore configuration. The file may be malformed."
                     );
                 }
             };
