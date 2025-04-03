@@ -23,7 +23,12 @@ const SearchModal = ({ style = {}, className = "", ...rest }) => {
     const { colors } = useTheme();
     const inputRef = useRef(null);
     const [searchValue, setSearchValue] = useState("");
-    const { isOpen, onOpen, onClose: _onClose } = useSearchModal();
+    const { isOpen, onOpen: _onOpen, onClose: _onClose } = useSearchModal();
+
+    const onOpen = event => {
+        event.preventDefault();
+        _onOpen(event);
+    };
 
     useGlobalHotkeys({
         "/": onOpen,
