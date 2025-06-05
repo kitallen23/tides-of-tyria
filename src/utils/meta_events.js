@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-01-21",
+        version: "2025-06-05",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -223,6 +223,7 @@ const META_EVENTS = [
                 color: COLOR_TYPES.gray,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeArea,
+                disableIndexing: true,
                 phases: [
                     {
                         key: "ley_line_anomaly__iron_marches",
@@ -1493,22 +1494,34 @@ const META_EVENTS = [
         grouped: true,
         sub_areas: [
             {
-                key: "janthir_syntri",
-                name: "Janthir Syntri",
+                key: "janthir_wilds__area_1",
+                name: "Janthir Wilds: Janthir Syntri & Bava Nisos",
                 color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
-                onComplete: ON_COMPLETE_TYPES.completeArea,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
                 disableIndexing: true,
                 phases: [
                     {
                         key: "janthir_syntri__of_mists_and_monsters",
                         name: "Of Mists and Monsters",
+                        areaName: "Janthir Syntri",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Of_Mists_and_Monsters",
                         start: 30,
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BCoPAAA=]",
+                    },
+                    {
+                        key: "bava_nisos__a_titanic_voyage",
+                        name: "A Titanic Voyage",
+                        areaName: "Bava Nisos",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/A_Titanic_Voyage",
+                        start: 80,
+                        duration: 15,
+                        frequency: 120,
+                        waypoint: "[&BGEPAAA=]",
                     },
                 ],
             },
@@ -1536,6 +1549,25 @@ const META_EVENTS = [
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BCoPAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "bava_nisos",
+                name: "Bava Nisos",
+                color: COLOR_TYPES.blue,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "bava_nisos__a_titanic_voyage",
+                        name: "A Titanic Voyage",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/A_Titanic_Voyage",
+                        start: 80,
+                        duration: 15,
+                        frequency: 120,
+                        waypoint: "[&BGEPAAA=]",
                     },
                 ],
             },
