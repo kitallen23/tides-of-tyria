@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-06-05",
+        version: "2025-06-19",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1723,6 +1723,56 @@ const META_EVENTS = [
                         duration: 10,
                         frequency: 120,
                         waypoint: "[&BBAEAAA=]",
+                    },
+                ],
+            },
+            {
+                active: true,
+                key: "dragon_bash",
+                name: "Dragon Bash",
+                color: COLOR_TYPES.gray,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "dragon_bash__wayfarer",
+                        name: "Wayfarer Foothills",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Dragon_Bash_Hologram_Stampede!",
+                        start: 0,
+                        duration: 5,
+                        frequency: 60,
+                        waypoint: "[&BH0BAAA=]",
+                    },
+                    {
+                        key: "dragon_bash__dredgehaunt_cliffs",
+                        name: "Dredgehaunt Cliffs",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Dragon_Bash_Hologram_Stampede!",
+                        start: 15,
+                        duration: 5,
+                        frequency: 60,
+                        waypoint: "[&BGMCAAA=]",
+                    },
+                    {
+                        key: "dragon_bash__lornars_pass",
+                        name: "Lornar's Pass",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Dragon_Bash_Hologram_Stampede!",
+                        start: 30,
+                        duration: 5,
+                        frequency: 60,
+                        waypoint: "[&BJkBAAA=]",
+                    },
+                    {
+                        key: "dragon_bash__snowden_drifts",
+                        name: "Snowden Drifts",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Dragon_Bash_Hologram_Stampede!",
+                        start: 45,
+                        duration: 5,
+                        frequency: 60,
+                        waypoint: "[&BL4AAAA=]",
                     },
                 ],
             },
