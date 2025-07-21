@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-07-21",
+        version: "2025-07-21_01",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1635,19 +1635,12 @@ const META_EVENTS = [
             },
         ],
     },
-    /**
-     * NOTE: Special events must have an "active" flag. If false, the event will
-     * be temporarily disabled.
-     *
-     * Don't forget to update the version number when making changes!
-     * **/
     {
         key: "special_events",
         name: "OTHER",
         color: COLOR_TYPES.gray,
         sub_areas: [
             {
-                active: false,
                 key: "labyrinthine_cliffs",
                 name: "Labyrinthine Cliffs",
                 color: COLOR_TYPES.gray,
@@ -1707,7 +1700,6 @@ const META_EVENTS = [
                 ],
             },
             {
-                active: false,
                 key: "halloween",
                 name: "Lion's Arch",
                 color: COLOR_TYPES.gray,
@@ -1727,7 +1719,6 @@ const META_EVENTS = [
                 ],
             },
             {
-                active: false,
                 key: "dragon_bash",
                 name: "Dragon Bash",
                 color: COLOR_TYPES.gray,

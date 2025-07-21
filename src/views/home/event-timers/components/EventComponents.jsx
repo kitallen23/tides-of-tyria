@@ -42,7 +42,7 @@ import UnstyledButton from "@/components/UnstyledButton";
 const ID_LENGTH = 6;
 const DOWNTIME_OPACITY = 0.2;
 
-export const RegionIndicator = ({ region, isHovered }) => {
+export const RegionIndicator = ({ region, isHovered, currentSpecialEvent }) => {
     const { colors, mode } = useTheme();
     const { selectedEvent } = useContext(EventTimerContext);
     const schemeColorString = useMemo(
@@ -77,7 +77,11 @@ export const RegionIndicator = ({ region, isHovered }) => {
         [selectedEvent?.region?.key, region?.key, isHovered]
     );
 
-    if (!region.shouldRender) {
+    const hideSpecialEventRegion =
+        region.key === "special_events" &&
+        (currentSpecialEvent === "none" || !currentSpecialEvent);
+
+    if (!region.shouldRender || hideSpecialEventRegion) {
         return null;
     }
     return (
@@ -934,6 +938,9 @@ const EditableArea = ({ area, region }) => {
     );
 
     const onClick = () => {
+        if (region.key === "special_events") {
+            return;
+        }
         onToggleHidden(area);
     };
 
@@ -948,7 +955,7 @@ const EditableArea = ({ area, region }) => {
             <div className={styles.editableArea} css={styleClass} style={style}>
                 <Switch
                     checked={!isHidden}
-                    disabled={isHidden}
+                    disabled={isHidden || region.key === "special_events"}
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
                     tabIndex={-1}
@@ -957,34 +964,12 @@ const EditableArea = ({ area, region }) => {
                     }}
                 />
                 <div className={styles.text} id={labelId}>
-                    <div
-                        className={styles.title}
-                        style={{
-                            textDecoration:
-                                region.key === "special_events" && !area.active
-                                    ? "line-through"
-                                    : undefined,
-                        }}
-                    >
+                    <div className={styles.title}>
                         {area.displayTitle ?? area.name}
                     </div>
                     {"|"}
                     <div className={styles.events}>
-                        {region.key === "special_events" && !area.active ? (
-                            <div>
-                                [Event Inactive]
-                                <span
-                                    style={{
-                                        textDecoration: "line-through",
-                                        marginLeft: "0.5em",
-                                    }}
-                                >
-                                    {areaEvents}
-                                </span>
-                            </div>
-                        ) : (
-                            <div>{areaEvents}</div>
-                        )}
+                        <div>{areaEvents}</div>
                     </div>
                 </div>
             </div>
@@ -1049,6 +1034,9 @@ const EditableAreaWithPhases = ({ area, region }) => {
     );
 
     const onClick = () => {
+        if (region.key === "special_events") {
+            return;
+        }
         onToggleHidden(area);
     };
 
@@ -1071,7 +1059,7 @@ const EditableAreaWithPhases = ({ area, region }) => {
                 >
                     <Switch
                         checked={!isHidden}
-                        disabled={isHidden}
+                        disabled={isHidden || region.key === "special_events"}
                         color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                         size="small"
                         tabIndex={-1}
@@ -1080,16 +1068,7 @@ const EditableAreaWithPhases = ({ area, region }) => {
                         }}
                     />
                     <div className={styles.text} id={labelId}>
-                        <div
-                            className={styles.title}
-                            style={{
-                                textDecoration:
-                                    region.key === "special_events" &&
-                                    !area.active
-                                        ? "line-through"
-                                        : undefined,
-                            }}
-                        >
+                        <div className={styles.title}>
                             {area.displayTitle ?? area.name}
                         </div>
                     </div>
@@ -1159,6 +1138,9 @@ const EditablePhase = ({ region, area, phase, color }) => {
     );
 
     const onPhaseClick = key => {
+        if (region.key === "special_events") {
+            return;
+        }
         onTogglePhaseHidden(area, key);
     };
 
@@ -1181,7 +1163,11 @@ const EditablePhase = ({ region, area, phase, color }) => {
             >
                 <Switch
                     checked={!isHidden}
-                    disabled={area.hideArea || isHidden}
+                    disabled={
+                        area.hideArea ||
+                        isHidden ||
+                        region.key === "special_events"
+                    }
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
                     tabIndex={-1}
@@ -1195,30 +1181,8 @@ const EditablePhase = ({ region, area, phase, color }) => {
                     })}
                     id={labelId}
                 >
-                    <div
-                        className={styles.title}
-                        style={{
-                            textDecoration:
-                                region.key === "special_events" && !phase.active
-                                    ? "line-through"
-                                    : undefined,
-                        }}
-                    >
-                        {region.key === "special_events" && !area.active ? (
-                            <div>
-                                [Event Inactive]
-                                <span
-                                    style={{
-                                        textDecoration: "line-through",
-                                        marginLeft: "0.5em",
-                                    }}
-                                >
-                                    {phase.metaName ?? phase.name}
-                                </span>
-                            </div>
-                        ) : (
-                            <div>{phase.metaName ?? phase.name}</div>
-                        )}
+                    <div className={styles.title}>
+                        <div>{phase.metaName ?? phase.name}</div>
                     </div>
                     {phase.areaName ? (
                         <>
@@ -1234,7 +1198,12 @@ const EditablePhase = ({ region, area, phase, color }) => {
     );
 };
 
-const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
+const EventRegion = ({
+    region,
+    setHoveredRegion,
+    currentSpecialEvent,
+    indicatorWrapperRef,
+}) => {
     const { height, ref } = useResizeDetector();
     const { mode, groupedMode } = useContext(EventTimerContext);
 
@@ -1254,7 +1223,11 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
         [region]
     );
 
-    if (!region.shouldRender) {
+    const hideSpecialEventRegion =
+        region.key === "special_events" &&
+        (currentSpecialEvent === "none" || !currentSpecialEvent);
+
+    if (!region.shouldRender || hideSpecialEventRegion) {
         return null;
     }
     return (
@@ -1264,42 +1237,50 @@ const EventRegion = ({ region, setHoveredRegion, indicatorWrapperRef }) => {
             onMouseEnter={() => setHoveredRegion(region.key)}
             onMouseLeave={() => setHoveredRegion("")}
         >
-            {region.sub_areas.map(area => {
-                if (
-                    (groupedMode && area.grouped === false) ||
-                    (!groupedMode && area.grouped === true)
-                ) {
-                    return null;
-                }
+            {region.sub_areas
+                .filter(area => {
+                    if (region.key === "special_events") {
+                        return area.key === currentSpecialEvent;
+                    } else {
+                        return true;
+                    }
+                })
+                .map(area => {
+                    if (
+                        (groupedMode && area.grouped === false) ||
+                        (!groupedMode && area.grouped === true)
+                    ) {
+                        return null;
+                    }
 
-                return mode === MODES.edit ? (
-                    area.onComplete === ON_COMPLETE_TYPES.completeEvent ? (
-                        <EditableAreaWithPhases
+                    return mode === MODES.edit ? (
+                        area.onComplete === ON_COMPLETE_TYPES.completeEvent ? (
+                            <EditableAreaWithPhases
+                                key={area.key}
+                                area={area}
+                                region={regionData}
+                            />
+                        ) : (
+                            <EditableArea
+                                key={area.key}
+                                area={area}
+                                region={regionData}
+                            />
+                        )
+                    ) : area.type === "fixed_time" ? (
+                        <FixedTimeArea
                             key={area.key}
                             area={area}
                             region={regionData}
                         />
                     ) : (
-                        <EditableArea
+                        <PeriodicArea
                             key={area.key}
                             area={area}
                             region={regionData}
                         />
-                    )
-                ) : area.type === "fixed_time" ? (
-                    <FixedTimeArea
-                        key={area.key}
-                        area={area}
-                        region={regionData}
-                    />
-                ) : (
-                    <PeriodicArea
-                        key={area.key}
-                        area={area}
-                        region={regionData}
-                    />
-                );
-            })}
+                    );
+                })}
         </div>
     );
 };

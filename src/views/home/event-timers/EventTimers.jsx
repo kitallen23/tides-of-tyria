@@ -58,6 +58,7 @@ import useEventConfig from "./useEventConfig";
 import useGlobalHotkeys from "@/utils/hooks/useGlobalHotkeys";
 import { toast } from "react-hot-toast";
 import InfoIcon from "@/components/InfoIcon";
+import CurrentSpecialEventPicker from "@/components/CurrentSpecialEventPicker";
 
 // Obtains the start time of a "time block"; a 2-hour period of time, relative to the
 // local timezone, that started on the last 1-hour time window.
@@ -87,6 +88,22 @@ const EventTimers = () => {
 
     const [hoveredRegion, setHoveredRegion] = useState("");
     const [selectedEvent, setSelectedEvent] = useState(null);
+    const [currentSpecialEvent, setCurrentSpecialEvent] = useState(() => {
+        const currentSpecialEvent = getLocalItem(
+            LOCAL_STORAGE_KEYS.currentSpecialEvent,
+            "none"
+        );
+        localStorage.setItem(
+            LOCAL_STORAGE_KEYS.currentSpecialEvent,
+            currentSpecialEvent
+        );
+        return currentSpecialEvent;
+    });
+
+    const onCurrentSpecialEventChange = value => {
+        localStorage.setItem(LOCAL_STORAGE_KEYS.currentSpecialEvent, value);
+        setCurrentSpecialEvent(value);
+    };
 
     const [_eventConfig, set_eventConfig] = useState(null);
 
@@ -597,6 +614,8 @@ const EventTimers = () => {
                     denseMode,
                     groupedMode,
                     mode,
+                    currentSpecialEvent,
+                    setCurrentSpecialEvent: onCurrentSpecialEventChange,
                 }}
             >
                 <div
@@ -626,6 +645,9 @@ const EventTimers = () => {
                                             region={region}
                                             isHovered={
                                                 hoveredRegion === region.key
+                                            }
+                                            currentSpecialEvent={
+                                                currentSpecialEvent
                                             }
                                         />
                                     );
@@ -676,10 +698,17 @@ const EventTimers = () => {
                                                         setHoveredRegion={
                                                             setHoveredRegion
                                                         }
+                                                        currentSpecialEvent={
+                                                            currentSpecialEvent
+                                                        }
                                                     />
                                                 );
                                             })}
                                         </div>
+
+                                        {mode === MODES.view ? (
+                                            <CurrentSpecialEventPicker />
+                                        ) : null}
                                     </div>
                                 </ScrollArea.Viewport>
                                 <ScrollArea.Scrollbar
