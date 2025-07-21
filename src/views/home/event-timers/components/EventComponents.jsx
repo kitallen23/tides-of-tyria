@@ -934,6 +934,9 @@ const EditableArea = ({ area, region }) => {
     );
 
     const onClick = () => {
+        if (region.key === "special_events") {
+            return;
+        }
         onToggleHidden(area);
     };
 
@@ -948,7 +951,7 @@ const EditableArea = ({ area, region }) => {
             <div className={styles.editableArea} css={styleClass} style={style}>
                 <Switch
                     checked={!isHidden}
-                    disabled={isHidden}
+                    disabled={isHidden || region.key === "special_events"}
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
                     tabIndex={-1}
@@ -957,34 +960,12 @@ const EditableArea = ({ area, region }) => {
                     }}
                 />
                 <div className={styles.text} id={labelId}>
-                    <div
-                        className={styles.title}
-                        style={{
-                            textDecoration:
-                                region.key === "special_events" && !area.active
-                                    ? "line-through"
-                                    : undefined,
-                        }}
-                    >
+                    <div className={styles.title}>
                         {area.displayTitle ?? area.name}
                     </div>
                     {"|"}
                     <div className={styles.events}>
-                        {region.key === "special_events" && !area.active ? (
-                            <div>
-                                [Event Inactive]
-                                <span
-                                    style={{
-                                        textDecoration: "line-through",
-                                        marginLeft: "0.5em",
-                                    }}
-                                >
-                                    {areaEvents}
-                                </span>
-                            </div>
-                        ) : (
-                            <div>{areaEvents}</div>
-                        )}
+                        <div>{areaEvents}</div>
                     </div>
                 </div>
             </div>
@@ -1049,6 +1030,9 @@ const EditableAreaWithPhases = ({ area, region }) => {
     );
 
     const onClick = () => {
+        if (region.key === "special_events") {
+            return;
+        }
         onToggleHidden(area);
     };
 
@@ -1071,7 +1055,7 @@ const EditableAreaWithPhases = ({ area, region }) => {
                 >
                     <Switch
                         checked={!isHidden}
-                        disabled={isHidden}
+                        disabled={isHidden || region.key === "special_events"}
                         color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                         size="small"
                         tabIndex={-1}
@@ -1080,16 +1064,7 @@ const EditableAreaWithPhases = ({ area, region }) => {
                         }}
                     />
                     <div className={styles.text} id={labelId}>
-                        <div
-                            className={styles.title}
-                            style={{
-                                textDecoration:
-                                    region.key === "special_events" &&
-                                    !area.active
-                                        ? "line-through"
-                                        : undefined,
-                            }}
-                        >
+                        <div className={styles.title}>
                             {area.displayTitle ?? area.name}
                         </div>
                     </div>
@@ -1159,6 +1134,9 @@ const EditablePhase = ({ region, area, phase, color }) => {
     );
 
     const onPhaseClick = key => {
+        if (region.key === "special_events") {
+            return;
+        }
         onTogglePhaseHidden(area, key);
     };
 
@@ -1181,7 +1159,11 @@ const EditablePhase = ({ region, area, phase, color }) => {
             >
                 <Switch
                     checked={!isHidden}
-                    disabled={area.hideArea || isHidden}
+                    disabled={
+                        area.hideArea ||
+                        isHidden ||
+                        region.key === "special_events"
+                    }
                     color={isBackgroundLight ? "bodyDark" : "bodyLight"}
                     size="small"
                     tabIndex={-1}
@@ -1195,30 +1177,8 @@ const EditablePhase = ({ region, area, phase, color }) => {
                     })}
                     id={labelId}
                 >
-                    <div
-                        className={styles.title}
-                        style={{
-                            textDecoration:
-                                region.key === "special_events" && !phase.active
-                                    ? "line-through"
-                                    : undefined,
-                        }}
-                    >
-                        {region.key === "special_events" && !area.active ? (
-                            <div>
-                                [Event Inactive]
-                                <span
-                                    style={{
-                                        textDecoration: "line-through",
-                                        marginLeft: "0.5em",
-                                    }}
-                                >
-                                    {phase.metaName ?? phase.name}
-                                </span>
-                            </div>
-                        ) : (
-                            <div>{phase.metaName ?? phase.name}</div>
-                        )}
+                    <div className={styles.title}>
+                        <div>{phase.metaName ?? phase.name}</div>
                     </div>
                     {phase.areaName ? (
                         <>
