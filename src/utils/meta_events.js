@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-06-19",
+        version: "2025-07-21",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1727,7 +1727,7 @@ const META_EVENTS = [
                 ],
             },
             {
-                active: true,
+                active: false,
                 key: "dragon_bash",
                 name: "Dragon Bash",
                 color: COLOR_TYPES.gray,
