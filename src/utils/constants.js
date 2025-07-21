@@ -26,6 +26,7 @@ export const LOCAL_STORAGE_KEYS = {
     dailyChecklist: "tot_daily_checklist",
     weeklyChecklist: "tot_weekly_checklist",
     todoChecklist: "tot_todo_checklist",
+    currentSpecialEvent: "tot_current_special_event",
 };
 
 export const APP_VERSION = "1.7.0";
