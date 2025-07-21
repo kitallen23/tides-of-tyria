@@ -706,7 +706,9 @@ const EventTimers = () => {
                                             })}
                                         </div>
 
-                                        <CurrentSpecialEventPicker />
+                                        {mode === MODES.view ? (
+                                            <CurrentSpecialEventPicker />
+                                        ) : null}
                                     </div>
                                 </ScrollArea.Viewport>
                                 <ScrollArea.Scrollbar

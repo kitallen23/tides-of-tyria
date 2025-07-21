@@ -29,4 +29,4 @@ export const LOCAL_STORAGE_KEYS = {
     currentSpecialEvent: "tot_current_special_event",
 };
 
-export const APP_VERSION = "1.7.0";
+export const APP_VERSION = "1.8.0";
