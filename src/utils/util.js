@@ -1,8 +1,4 @@
-import {
-    LOCAL_STORAGE_KEYS,
-    STALE_TIME_IN_SECONDS,
-    TITLE_SUFFIX,
-} from "@/utils/constants";
+import { LOCAL_STORAGE_KEYS, TITLE_SUFFIX } from "@/utils/constants";
 import {
     subHours as _subHours,
     format as _format,
@@ -57,12 +53,6 @@ export function getLocalItem(key, defaultValue = "") {
         return defaultValue;
     }
     return value;
-}
-
-export function getStaleTime(key) {
-    return STALE_TIME_IN_SECONDS?.[key]
-        ? STALE_TIME_IN_SECONDS[key] * 1000
-        : undefined;
 }
 
 export function copyToClipboard(text, options) {
