@@ -1,12 +1,9 @@
-export const API_URL = import.meta.env.VITE_API_URL;
-export const ACCESS_TOKEN_KEY = "access_token";
+import packageJson from "@/../package.json";
+export const APP_VERSION = packageJson.version;
+
 export const TITLE_SUFFIX = "Tides of Tyria";
 
 export const HOMEPAGE = "";
-
-export const LOGOS = {};
-
-export const STALE_TIME_IN_SECONDS = {};
 
 // WCAG minimum is 4.5m but this value looks nice!
 export const CONTRAST_RATIO = 2.5;
@@ -28,5 +25,3 @@ export const LOCAL_STORAGE_KEYS = {
     todoChecklist: "tot_todo_checklist",
     currentSpecialEvent: "tot_current_special_event",
 };
-
-export const APP_VERSION = "1.8.0";
