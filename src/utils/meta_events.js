@@ -1565,7 +1565,7 @@ const META_EVENTS = [
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/A_Titanic_Voyage",
                         start: 80,
-                        duration: 15,
+                        duration: 25,
                         frequency: 120,
                         waypoint: "[&BGEPAAA=]",
                     },
