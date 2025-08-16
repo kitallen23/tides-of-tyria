@@ -1,3 +1,6 @@
+import packageJson from "@/../package.json";
+export const APP_VERSION = packageJson.version;
+
 export const TITLE_SUFFIX = "Tides of Tyria";
 
 export const HOMEPAGE = "";
@@ -22,5 +25,3 @@ export const LOCAL_STORAGE_KEYS = {
     todoChecklist: "tot_todo_checklist",
     currentSpecialEvent: "tot_current_special_event",
 };
-
-export const APP_VERSION = "1.8.0";
