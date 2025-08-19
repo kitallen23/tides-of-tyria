@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-07-21_01",
+        version: "2025-08-19",
         sub_areas: [
             {
                 key: "day-night__tyria",
