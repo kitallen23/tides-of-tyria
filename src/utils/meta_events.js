@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-08-19",
+        version: "2025-08-19_01",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1519,7 +1519,7 @@ const META_EVENTS = [
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/A_Titanic_Voyage",
                         start: 80,
-                        duration: 15,
+                        duration: 25,
                         frequency: 120,
                         waypoint: "[&BGEPAAA=]",
                     },
