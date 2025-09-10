@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-08-19_01",
+        version: "2025-09-11_02",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1764,6 +1764,55 @@ const META_EVENTS = [
                         duration: 5,
                         frequency: 60,
                         waypoint: "[&BL4AAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "fractal_incursions",
+                name: "Fractal Incursions",
+                color: COLOR_TYPES.gray,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                phases: [
+                    {
+                        key: "fractal_incursions__kessex_hills",
+                        name: "Kessex Hills",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Fractal_Incursion",
+                        start: 0,
+                        duration: 15,
+                        frequency: 240,
+                        waypoint: "[&BBIAAAA=]",
+                    },
+                    {
+                        key: "fractal_incursions__diessa_plateau",
+                        name: "Diessa Plateau",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Fractal_Incursion",
+                        start: 60,
+                        duration: 15,
+                        frequency: 240,
+                        waypoint: "[&BN0AAAA=]",
+                    },
+                    {
+                        key: "fractal_incursions__brisban_wildlands",
+                        name: "Brisban Wildlands",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Fractal_Incursion",
+                        start: 120,
+                        duration: 15,
+                        frequency: 240,
+                        waypoint: "[&BHUAAAA=]",
+                    },
+                    {
+                        key: "fractal_incursions__snowden_drifts",
+                        name: "Snowden Drifts",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Fractal_Incursion",
+                        start: 180,
+                        duration: 15,
+                        frequency: 240,
+                        waypoint: "[&BLQAAAA=]",
                     },
                 ],
             },

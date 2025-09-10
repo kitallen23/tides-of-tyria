@@ -5,9 +5,10 @@ import { useContext } from "react";
 
 const SPECIAL_EVENTS = {
     none: "None",
-    labyrinthine_cliffs: "Labyrinthine Cliffs",
-    halloween: "Halloween",
     dragon_bash: "Dragon Bash",
+    fractal_incursions: "Fractal Incursions",
+    halloween: "Halloween",
+    labyrinthine_cliffs: "Labyrinthine Cliffs",
 };
 
 const CurrentSpecialEventPicker = () => {
