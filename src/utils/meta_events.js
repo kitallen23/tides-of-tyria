@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-09-11_02",
+        version: "2025-11-10",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1636,6 +1636,182 @@ const META_EVENTS = [
         ],
     },
     {
+        key: "visions_of_eternity__ungrouped",
+        name: "VoE",
+        color: COLOR_TYPES.orange,
+        grouped: false,
+        sub_areas: [
+            {
+                key: "day-night__castora",
+                name: "Day-Night Cycle (Castora)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                disableIndexing: true,
+                phases: [
+                    {
+                        key: "day-night__castora__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 35,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__castora__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 40,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__castora__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 95,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__castora__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "shipwreck_strand",
+                name: "Shipwreck Strand",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "shipwreck_strand__hammerhart_rumble",
+                        name: "Hammerhart Rumble",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Hammerhart_Rumble!",
+                        start: 40,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BJEPAAA=]",
+                    },
+                ],
+            },
+            {
+                key: "starlit_weald",
+                name: "Starlit Weald",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "starlit_weald__secrets_of_the_weald",
+                        name: "Secrets of the Weald",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Secrets_of_the_Weald",
+                        start: 100,
+                        duration: 35,
+                        frequency: 120,
+                        waypoint: "[&BJ4PAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "visions_of_eternity__grouped",
+        name: "VoE",
+        color: COLOR_TYPES.orange,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "day-night__castora",
+                name: "Day-Night Cycle (Castora)",
+                color: COLOR_TYPES.light,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.none,
+                disableIndexing: true,
+                phases: [
+                    {
+                        key: "day-night__castora__dawn",
+                        name: "Dawn",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 35,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__castora__day",
+                        name: "Day",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 40,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__castora__dusk",
+                        name: "Dusk",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 95,
+                        duration: 5,
+                        frequency: 120,
+                    },
+                    {
+                        key: "day-night__castora__night",
+                        name: "Night",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Day_and_night",
+                        start: 100,
+                        duration: 55,
+                        frequency: 120,
+                    },
+                ],
+            },
+            {
+                key: "visions_of_eternity__area_1",
+                name: "Visions of Eternity: Shipwreck Strand & Starlit Weald",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
+                phases: [
+                    {
+                        key: "shipwreck_strand__hammerhart_rumble",
+                        name: "Hammerhart Rumble",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Hammerhart_Rumble!",
+                        start: 40,
+                        duration: 20,
+                        frequency: 120,
+                        waypoint: "[&BJEPAAA=]",
+                    },
+                    {
+                        key: "starlit_weald__secrets_of_the_weald",
+                        name: "Secrets of the Weald",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Secrets_of_the_Weald",
+                        start: 100,
+                        duration: 35,
+                        frequency: 120,
+                        waypoint: "[&BJ4PAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
         key: "special_events",
         name: "OTHER",
         color: COLOR_TYPES.gray,
@@ -1643,7 +1819,7 @@ const META_EVENTS = [
             {
                 key: "labyrinthine_cliffs",
                 name: "Labyrinthine Cliffs",
-                color: COLOR_TYPES.gray,
+                color: COLOR_TYPES.blue,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
@@ -1702,7 +1878,7 @@ const META_EVENTS = [
             {
                 key: "halloween",
                 name: "Lion's Arch",
-                color: COLOR_TYPES.gray,
+                color: COLOR_TYPES.green,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
@@ -1721,7 +1897,7 @@ const META_EVENTS = [
             {
                 key: "dragon_bash",
                 name: "Dragon Bash",
-                color: COLOR_TYPES.gray,
+                color: COLOR_TYPES.purple,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.none,
                 phases: [
