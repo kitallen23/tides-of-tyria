@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2026-05-23",
+        version: "2026-05-23_1",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1800,7 +1800,7 @@ const META_EVENTS = [
             },
             {
                 key: "visions_of_eternity__area_1",
-                name: "Visions of Eternity: Shipwreck Strand & Starlit Weald",
+                name: "Visions of Eternity: Shipwreck Strand, Starlit Weald & Eternity's Garden",
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
@@ -1809,6 +1809,7 @@ const META_EVENTS = [
                     {
                         key: "shipwreck_strand__hammerhart_rumble",
                         name: "Hammerhart Rumble",
+                        areaName: "Shipwreck Strand",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Hammerhart_Rumble!",
                         start: 40,
@@ -1819,6 +1820,7 @@ const META_EVENTS = [
                     {
                         key: "starlit_weald__secrets_of_the_weald",
                         name: "Secrets of the Weald",
+                        areaName: "Starlit Weald",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Secrets_of_the_Weald",
                         start: 100,
@@ -1829,6 +1831,7 @@ const META_EVENTS = [
                     {
                         key: "eternitys_garden__shackles_of_the_ancients",
                         name: "Shackles of the Ancients",
+                        areaName: "Eternity's Garden",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Shackles_of_the_Ancients",
                         start: 70,
