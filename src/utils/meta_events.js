@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2025-11-10",
+        version: "2026-05-23",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1725,6 +1725,25 @@ const META_EVENTS = [
                     },
                 ],
             },
+            {
+                key: "eternitys_garden",
+                name: "Eternity's Garden",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "eternitys_garden__shackles_of_the_ancients",
+                        name: "Shackles of the Ancients",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Shackles_of_the_Ancients",
+                        start: 70,
+                        duration: 25,
+                        frequency: 120,
+                        waypoint: "[&BPwPAAA=]",
+                    },
+                ],
+            },
         ],
     },
     {
@@ -1806,6 +1825,16 @@ const META_EVENTS = [
                         duration: 35,
                         frequency: 120,
                         waypoint: "[&BJ4PAAA=]",
+                    },
+                    {
+                        key: "eternitys_garden__shackles_of_the_ancients",
+                        name: "Shackles of the Ancients",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Shackles_of_the_Ancients",
+                        start: 70,
+                        duration: 25,
+                        frequency: 120,
+                        waypoint: "[&BPwPAAA=]",
                     },
                 ],
             },
