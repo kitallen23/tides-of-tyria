@@ -1893,21 +1893,11 @@ const META_EVENTS = [
                     {
                         key: "leyspring_hollows__depths_of_cruelty",
                         name: "Depths of Cruelty",
+                        areaName: "Leyspring Hollows",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Depths_of_Cruelty",
                         start: 120,
                         duration: 30,
-                        frequency: 180,
-                        waypoint: "[&BDYQAAA=]",
-                    },
-                    {
-                        key: "nexus_of_eternity__convergences",
-                        name: "VoE: Convergence",
-                        areaName: "Nexus of Eternity (instance)",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Convergence:_Nexus_of_Eternity",
-                        start: 60,
-                        duration: 10,
                         frequency: 180,
                         waypoint: "[&BDYQAAA=]",
                     },
