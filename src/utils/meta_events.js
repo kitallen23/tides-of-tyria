@@ -1753,6 +1753,9 @@ const META_EVENTS = [
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BPwPAAA=]",
+                    },
+                ],
+            },
             {
                 key: "leyspring_hollows",
                 name: "Leyspring Hollows",
@@ -1769,6 +1772,9 @@ const META_EVENTS = [
                         duration: 30,
                         frequency: 180,
                         waypoint: "[&BDYQAAA=]",
+                    },
+                ],
+            },
             {
                 key: "nexus_of_eternity",
                 name: "Nexus of Eternity (instance)",
@@ -1883,6 +1889,7 @@ const META_EVENTS = [
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BPwPAAA=]",
+                    },
                     {
                         key: "leyspring_hollows__depths_of_cruelty",
                         name: "Depths of Cruelty",
@@ -1892,6 +1899,7 @@ const META_EVENTS = [
                         duration: 30,
                         frequency: 180,
                         waypoint: "[&BDYQAAA=]",
+                    },
                     {
                         key: "nexus_of_eternity__convergences",
                         name: "VoE: Convergence",
