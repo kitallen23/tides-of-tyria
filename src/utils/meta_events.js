@@ -1737,10 +1737,26 @@ const META_EVENTS = [
                         name: "Shackles of the Ancients",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Shackles_of_the_Ancients",
-                        start: 70,
+                        start: 75,
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BPwPAAA=]",
+            {
+                key: "leyspring_hollows",
+                name: "Leyspring Hollows",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "leyspring_hollows__depths_of_cruelty",
+                        name: "Depths of Cruelty",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Depths_of_Cruelty",
+                        start: 120,
+                        duration: 30,
+                        frequency: 180,
+                        waypoint: "[&BDYQAAA=]",
                     },
                 ],
             },
@@ -1800,7 +1816,7 @@ const META_EVENTS = [
             },
             {
                 key: "visions_of_eternity__area_1",
-                name: "Visions of Eternity: Shipwreck Strand, Starlit Weald & Eternity's Garden",
+                name: "Visions of Eternity: Shipwreck Strand, Starlit Weald, Eternity's Garden" & "Leyspring Hollows",
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
@@ -1834,10 +1850,19 @@ const META_EVENTS = [
                         areaName: "Eternity's Garden",
                         wikiUrl:
                             "https://wiki.guildwars2.com/wiki/Shackles_of_the_Ancients",
-                        start: 70,
+                        start: 75,
                         duration: 25,
                         frequency: 120,
                         waypoint: "[&BPwPAAA=]",
+                    {
+                        key: "leyspring_hollows__depths_of_cruelty",
+                        name: "Depths of Cruelty",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Depths_of_Cruelty",
+                        start: 120,
+                        duration: 30,
+                        frequency: 180,
+                        waypoint: "[&BDYQAAA=]",
                     },
                 ],
             },
