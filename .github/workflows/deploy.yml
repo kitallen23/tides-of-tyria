@@ -24,16 +24,14 @@ jobs:
       with:
         ref: ${{ github.event.inputs.branch || 'main' }}
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v6
-      with:
-        node-version: '20'
+    - name: Set up tools (mise)
+      uses: jdx/mise-action@v3
 
     - name: Install dependencies
-      run: yarn install
+      run: npm ci
 
     - name: Build the app
-      run: yarn build
+      run: mise run build
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v6
