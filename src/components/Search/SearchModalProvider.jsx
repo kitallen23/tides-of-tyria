@@ -1,18 +1,5 @@
-import { createContext, useState } from "react";
-
-/**
- * @typedef {Object} SearchModalContextProps
- * @property {boolean} isOpen
- * @property {() => void} onOpen
- * @property {() => void} onClose
- */
-
-/** @type {React.Context<SearchModalContextProps>} */
-export const SearchModalContext = createContext({
-    isOpen: false,
-    onOpen: () => {},
-    onClose: () => {},
-});
+import { useState } from "react";
+import { SearchModalContext } from "./SearchModalContext";
 
 /**
  * Provider for SearchModalContext
