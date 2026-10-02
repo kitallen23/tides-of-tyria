@@ -1630,6 +1630,7 @@ const META_EVENTS = [
                         frequency: 180,
                         waypoint: "[&BK4OAAA=]",
                         color: COLOR_TYPES.blue,
+                    },
                     {
                         key: "nexus_of_eternity__convergences",
                         name: "VoE: Convergence",
