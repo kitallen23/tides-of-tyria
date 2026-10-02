@@ -1630,6 +1630,17 @@ const META_EVENTS = [
                         frequency: 180,
                         waypoint: "[&BK4OAAA=]",
                         color: COLOR_TYPES.blue,
+                    {
+                        key: "nexus_of_eternity__convergences",
+                        name: "VoE: Convergence",
+                        areaName: "Nexus of Eternity (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Nexus_of_Eternity",
+                        start: 60,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BDYQAAA=]",
+                        color: COLOR_TYPES.orange,
                     },
                 ],
             },
@@ -1757,6 +1768,23 @@ const META_EVENTS = [
                         duration: 30,
                         frequency: 180,
                         waypoint: "[&BDYQAAA=]",
+            {
+                key: "nexus_of_eternity",
+                name: "Nexus of Eternity (instance)",
+                displayTitle: "Convergence: Nexus of Eternity",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeArea,
+                phases: [
+                    {
+                        key: "nexus_of_eternity__convergences",
+                        name: "Convergence: Nexus of Eternity",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Nexus_of_Eternity",
+                        start: 60,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BDYQAAA=]",
                     },
                 ],
             },
@@ -1861,6 +1889,16 @@ const META_EVENTS = [
                             "https://wiki.guildwars2.com/wiki/Depths_of_Cruelty",
                         start: 120,
                         duration: 30,
+                        frequency: 180,
+                        waypoint: "[&BDYQAAA=]",
+                    {
+                        key: "nexus_of_eternity__convergences",
+                        name: "VoE: Convergence",
+                        areaName: "Nexus of Eternity (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Nexus_of_Eternity",
+                        start: 60,
+                        duration: 10,
                         frequency: 180,
                         waypoint: "[&BDYQAAA=]",
                     },
