@@ -24,7 +24,7 @@ const META_EVENTS = [
         key: "core_tyria",
         name: "CORE",
         color: COLOR_TYPES.gray,
-        version: "2026-05-23_1",
+        version: "2026-10-03_03",
         sub_areas: [
             {
                 key: "day-night__tyria",
@@ -1475,9 +1475,9 @@ const META_EVENTS = [
                 phases: [
                     {
                         key: "convergences",
-                        name: "Convergence",
+                        name: "Convergence: Outer Nayos",
                         wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Convergences",
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Outer_Nayos",
                         start: 90,
                         duration: 10,
                         frequency: 180,
@@ -1588,60 +1588,6 @@ const META_EVENTS = [
                         duration: 10,
                         frequency: 180,
                         waypoint: "[&BK4OAAA=]",
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        key: "convergences__grouped",
-        name: "CONV",
-        color: COLOR_TYPES.gray,
-        grouped: true,
-        sub_areas: [
-            {
-                key: "convergences__area1",
-                name: "Convergences",
-                color: COLOR_TYPES.gray,
-                type: TIME_TYPES.periodic,
-                onComplete: ON_COMPLETE_TYPES.completeEvent,
-                disableIndexing: true,
-                phases: [
-                    {
-                        key: "convergences",
-                        name: "SotO: Convergence",
-                        areaName: "The Wizard's Tower (instance)",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Convergences",
-                        start: 90,
-                        duration: 10,
-                        frequency: 180,
-                        waypoint: "[&BB8OAAA=]",
-                        color: COLOR_TYPES.yellow,
-                    },
-                    {
-                        key: "mt_balrior__convergences",
-                        name: "JW: Convergence",
-                        areaName: "Mount Balrior (instance)",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Convergence:_Mount_Balrior",
-                        start: 0,
-                        duration: 10,
-                        frequency: 180,
-                        waypoint: "[&BK4OAAA=]",
-                        color: COLOR_TYPES.blue,
-                    },
-                    {
-                        key: "nexus_of_eternity__convergences",
-                        name: "VoE: Convergence",
-                        areaName: "Nexus of Eternity (instance)",
-                        wikiUrl:
-                            "https://wiki.guildwars2.com/wiki/Convergence:_Nexus_of_Eternity",
-                        start: 60,
-                        duration: 10,
-                        frequency: 180,
-                        waypoint: "[&BDYQAAA=]",
-                        color: COLOR_TYPES.orange,
                     },
                 ],
             },
@@ -1851,7 +1797,7 @@ const META_EVENTS = [
             },
             {
                 key: "visions_of_eternity__area_1",
-                name: "Visions of Eternity: Shipwreck Strand, Starlit Weald, Eternity's Garden" & "Leyspring Hollows",
+                name: "Visions of Eternity: Shipwreck Strand, Starlit Weald, Eternity's Garden",
                 color: COLOR_TYPES.orange,
                 type: TIME_TYPES.periodic,
                 onComplete: ON_COMPLETE_TYPES.completeEvent,
@@ -1890,6 +1836,16 @@ const META_EVENTS = [
                         frequency: 120,
                         waypoint: "[&BPwPAAA=]",
                     },
+                ],
+            },
+            {
+                key: "visions_of_eternity__area_2",
+                name: "Visions of Eternity: Leyspring Hollows",
+                color: COLOR_TYPES.orange,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
+                phases: [
                     {
                         key: "leyspring_hollows__depths_of_cruelty",
                         name: "Depths of Cruelty",
@@ -1900,6 +1856,60 @@ const META_EVENTS = [
                         duration: 30,
                         frequency: 180,
                         waypoint: "[&BDYQAAA=]",
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        key: "convergences__grouped",
+        name: "CONV",
+        color: COLOR_TYPES.gray,
+        grouped: true,
+        sub_areas: [
+            {
+                key: "convergences__area1",
+                name: "Convergences",
+                color: COLOR_TYPES.gray,
+                type: TIME_TYPES.periodic,
+                onComplete: ON_COMPLETE_TYPES.completeEvent,
+                disableIndexing: true,
+                phases: [
+                    {
+                        key: "convergences",
+                        name: "SotO: Convergence",
+                        areaName: "The Wizard's Tower (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Outer_Nayos",
+                        start: 90,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BB8OAAA=]",
+                        color: COLOR_TYPES.yellow,
+                    },
+                    {
+                        key: "mt_balrior__convergences",
+                        name: "JW: Convergence",
+                        areaName: "Mount Balrior (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Mount_Balrior",
+                        start: 0,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BK4OAAA=]",
+                        color: COLOR_TYPES.blue,
+                    },
+                    {
+                        key: "nexus_of_eternity__convergences",
+                        name: "VoE: Convergence",
+                        areaName: "Nexus of Eternity (instance)",
+                        wikiUrl:
+                            "https://wiki.guildwars2.com/wiki/Convergence:_Nexus_of_Eternity",
+                        start: 60,
+                        duration: 10,
+                        frequency: 180,
+                        waypoint: "[&BDYQAAA=]",
+                        color: COLOR_TYPES.orange,
                     },
                 ],
             },
