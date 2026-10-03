@@ -9,7 +9,7 @@ import { createContext } from "react";
 
 /** @type {React.Context<SearchModalContextProps>} */
 export const SearchModalContext = createContext({
-    isOpen: false,
-    onOpen: () => {},
-    onClose: () => {},
+  isOpen: false,
+  onOpen: () => {},
+  onClose: () => {},
 });

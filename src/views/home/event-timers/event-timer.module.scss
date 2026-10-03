@@ -7,511 +7,506 @@ $phase-padding: 0.2em;
 $phase-padding-dense: 0.3em;
 
 [data-font-size="sm"]:root {
-    .eventTimer {
-        font-size: var(--font-size-sm);
-    }
+  .eventTimer {
+    font-size: var(--font-size-sm);
+  }
 }
 [data-font-size="md"]:root {
-    .eventTimer {
-        font-size: var(--font-size-md);
-    }
+  .eventTimer {
+    font-size: var(--font-size-md);
+  }
 }
 [data-font-size="lg"]:root {
-    .eventTimer {
-        font-size: var(--font-size-lg);
-    }
+  .eventTimer {
+    font-size: var(--font-size-lg);
+  }
 }
 
 .eventTimer {
+  display: grid;
+  grid-template-columns: 1fr;
+  justify-items: center;
+
+  .innerWrapper {
+    max-width: 100%;
+    width: 100%;
+    transition: max-width 0.1s;
     display: grid;
-    grid-template-columns: 1fr;
-    justify-items: center;
+    grid-template-columns: auto 1fr;
 
+    @media (max-width: c.$media-md) {
+      grid-template-columns: 1fr;
+      .leftFrame {
+        display: none;
+      }
+    }
+  }
+
+  &.isCollapsed {
     .innerWrapper {
-        max-width: 100%;
+      max-width: c.$content-width;
+      width: 100%;
+    }
+  }
+
+  .leftFrame {
+    padding-right: $timer-gap;
+
+    .spacer {
+      height: $timer-gap;
+    }
+
+    .regionIndicatorContainer {
+      padding-top: calc((#{$time-row-font-size} * #{$line-height}) + 1px);
+      display: grid;
+      gap: $timer-gap;
+      margin-bottom: $timer-gap;
+
+      .regionIndicator {
+        color: var(--text-muted);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: flex-end;
+
+        border: 0;
+        border-right: 1px solid rgb(var(--muted-rgb));
+        transition:
+          border-color var(--transition),
+          color var(--transition);
+
+        .regionTitle {
+          margin-right: 0.25rem;
+        }
+        .regionBorder {
+          border: 0;
+          border-bottom: 1px solid rgb(var(--muted-rgb));
+          transition: border-color var(--transition);
+
+          width: calc(((#{$time-row-font-size} * #{$line-height}) + 1px) / 2);
+          height: 0;
+        }
+      }
+    }
+  }
+
+  // Note: right frame here can't be used to scroll horizontally,
+  // as we are using a sticky element inside it.
+  .rightFrame {
+    display: grid;
+
+    .widthRuler {
+      overflow-x: auto;
+      height: 0;
+      & > div {
+        min-width: $min-area-width;
+      }
+    }
+
+    .scrollAreaRoot {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+
+      .scrollAreaScrollbar {
+        display: flex;
+        user-select: none;
+        touch-action: none;
+        background: rgba(var(--scrollbar-track-color), 0);
+        transition: background-color var(--transition);
+
+        &:hover {
+          background: rgba(var(--scrollbar-track-color), 1);
+        }
+      }
+      .scrollAreaScrollbar[data-orientation="vertical"] {
+        width: var(--scrollbar-thickness);
+      }
+      .scrollAreaScrollbar[data-orientation="horizontal"] {
+        flex-direction: column;
+        height: var(--scrollbar-thickness);
+      }
+      .scrollAreaThumb {
+        flex: 1;
+        background: rgb(var(--scrollbar-thumb-color));
+        border-radius: var(--scrollbar-thickness);
+        position: relative;
+        z-index: 1;
+      }
+      // increase target size for touch devices
+      // https://www.w3.org/WAI/WCAG21/Understanding/target-size.html
+      .scrollAreaThumb:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         width: 100%;
-        transition: max-width 0.1s;
+        height: 100%;
+        min-width: 44px;
+        min-height: 44px;
+      }
+      .scrollAreaCorner {
+        background: transparent;
+      }
+    }
+    .eventContainer {
+      position: relative;
+
+      .regions {
+        min-width: $min-area-width;
         display: grid;
-        grid-template-columns: auto 1fr;
+        gap: $timer-gap;
+        margin-bottom: $timer-gap;
 
-        @media (max-width: c.$media-md) {
-            grid-template-columns: 1fr;
-            .leftFrame {
-                display: none;
-            }
+        .region {
+          display: grid;
+          gap: $timer-gap;
         }
-    }
+        .area {
+          position: relative;
+          display: flex;
+          gap: 4px;
 
-    &.isCollapsed {
-        .innerWrapper {
-            max-width: c.$content-width;
-            width: 100%;
-        }
-    }
-
-    .leftFrame {
-        padding-right: $timer-gap;
-
-        .spacer {
-            height: $timer-gap;
-        }
-
-        .regionIndicatorContainer {
-            padding-top: calc((#{$time-row-font-size} * #{$line-height}) + 1px);
+          .phase {
+            line-height: $line-height;
+            font-size: 0.875em;
+            border-radius: 0.25rem;
+            padding: 0 $phase-padding;
             display: grid;
-            gap: $timer-gap;
-            margin-bottom: $timer-gap;
+            border-width: 2px;
+            border-style: solid;
+            border-color: transparent;
+            transition:
+              background-color var(--transition),
+              min-height var(--transition),
+              border-color var(--transition);
 
-            .regionIndicator {
-                color: var(--text-muted);
+            user-select: none;
+            -webkit-user-select: none;
+            outline: none;
 
+            // Text height of title, text height of "time until",
+            // padding * 2
+            min-height: calc(
+              (1em * #{$line-height}) + (0.875em * #{$line-height}) +
+                ($phase-padding * 2)
+            );
+            &.denseMode {
+              min-height: calc(
+                (1em * #{$line-height}) + ($phase-padding-dense * 2)
+              );
+
+              grid-template-columns: 1fr auto;
+              align-content: center;
+              column-gap: 0.25em;
+              .timeUntil {
                 display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: flex-end;
-
-                border: 0;
-                border-right: 1px solid rgb(var(--muted-rgb));
-                transition:
-                    border-color var(--transition),
-                    color var(--transition);
-
-                .regionTitle {
-                    margin-right: 0.25rem;
-                }
-                .regionBorder {
-                    border: 0;
-                    border-bottom: 1px solid rgb(var(--muted-rgb));
-                    transition: border-color var(--transition);
-
-                    width: calc(
-                        ((#{$time-row-font-size} * #{$line-height}) + 1px) / 2
-                    );
-                    height: 0;
-                }
+                align-items: center;
+                font-weight: 600;
+              }
             }
-        }
-    }
 
-    // Note: right frame here can't be used to scroll horizontally,
-    // as we are using a sticky element inside it.
-    .rightFrame {
-        display: grid;
-
-        .widthRuler {
-            overflow-x: auto;
-            height: 0;
-            & > div {
-                min-width: $min-area-width;
+            &.dayNight {
+              min-height: 8px;
             }
-        }
 
-        .scrollAreaRoot {
-            position: relative;
+            &.isClickable {
+              cursor: pointer;
+            }
+            &:not(.isClickable) {
+              cursor: default;
+            }
+
+            .title {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+            }
+            .timeUntil {
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+
+              font-size: 0.875em;
+            }
+          }
+          .editableArea {
+            line-height: $line-height;
+            font-size: 0.875em;
+            border-radius: 0.25rem;
+            padding: 0 $phase-padding;
+
+            border-width: 2px;
+            border-style: solid;
+            border-color: transparent;
+            transition:
+              background-color var(--transition),
+              border-color var(--transition);
+
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-content: center;
+            gap: 1rem;
+
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: pointer;
+
             width: 100%;
-            overflow: hidden;
 
-            .scrollAreaScrollbar {
-                display: flex;
-                user-select: none;
-                touch-action: none;
-                background: rgba(var(--scrollbar-track-color), 0);
-                transition: background-color var(--transition);
+            // Text height of title, text height of "time until",
+            // padding * 2
+            min-height: calc(
+              (1em * #{$line-height}) + (0.875em * #{$line-height}) +
+                ($phase-padding * 2)
+            );
 
-                &:hover {
-                    background: rgba(var(--scrollbar-track-color), 1);
-                }
-            }
-            .scrollAreaScrollbar[data-orientation="vertical"] {
-                width: var(--scrollbar-thickness);
-            }
-            .scrollAreaScrollbar[data-orientation="horizontal"] {
-                flex-direction: column;
-                height: var(--scrollbar-thickness);
-            }
-            .scrollAreaThumb {
-                flex: 1;
-                background: rgb(var(--scrollbar-thumb-color));
-                border-radius: var(--scrollbar-thickness);
-                position: relative;
-                z-index: 1;
-            }
-            // increase target size for touch devices
-            // https://www.w3.org/WAI/WCAG21/Understanding/target-size.html
-            .scrollAreaThumb:before {
-                content: "";
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                width: 100%;
-                height: 100%;
-                min-width: 44px;
-                min-height: 44px;
-            }
-            .scrollAreaCorner {
-                background: transparent;
-            }
-        }
-        .eventContainer {
-            position: relative;
+            .text {
+              display: grid;
+              grid-template-columns: 220px auto auto;
+              gap: 0.5em;
+              align-content: center;
+              justify-content: start;
 
-            .regions {
-                min-width: $min-area-width;
-                display: grid;
-                gap: $timer-gap;
-                margin-bottom: $timer-gap;
-
-                .region {
-                    display: grid;
-                    gap: $timer-gap;
-                }
-                .area {
-                    position: relative;
-                    display: flex;
-                    gap: 4px;
-
-                    .phase {
-                        line-height: $line-height;
-                        font-size: 0.875em;
-                        border-radius: 0.25rem;
-                        padding: 0 $phase-padding;
-                        display: grid;
-                        border-width: 2px;
-                        border-style: solid;
-                        border-color: transparent;
-                        transition:
-                            background-color var(--transition),
-                            min-height var(--transition),
-                            border-color var(--transition);
-
-                        user-select: none;
-                        -webkit-user-select: none;
-                        outline: none;
-
-                        // Text height of title, text height of "time until",
-                        // padding * 2
-                        min-height: calc(
-                            (1em * #{$line-height}) +
-                                (0.875em * #{$line-height}) +
-                                ($phase-padding * 2)
-                        );
-                        &.denseMode {
-                            min-height: calc(
-                                (1em * #{$line-height}) +
-                                    ($phase-padding-dense * 2)
-                            );
-
-                            grid-template-columns: 1fr auto;
-                            align-content: center;
-                            column-gap: 0.25em;
-                            .timeUntil {
-                                display: flex;
-                                align-items: center;
-                                font-weight: 600;
-                            }
-                        }
-
-                        &.dayNight {
-                            min-height: 8px;
-                        }
-
-                        &.isClickable {
-                            cursor: pointer;
-                        }
-                        &:not(.isClickable) {
-                            cursor: default;
-                        }
-
-                        .title {
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-                        .timeUntil {
-                            white-space: nowrap;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-
-                            font-size: 0.875em;
-                        }
-                    }
-                    .editableArea {
-                        line-height: $line-height;
-                        font-size: 0.875em;
-                        border-radius: 0.25rem;
-                        padding: 0 $phase-padding;
-
-                        border-width: 2px;
-                        border-style: solid;
-                        border-color: transparent;
-                        transition:
-                            background-color var(--transition),
-                            border-color var(--transition);
-
-                        display: grid;
-                        grid-template-columns: auto 1fr;
-                        align-content: center;
-                        gap: 1rem;
-
-                        user-select: none;
-                        -webkit-user-select: none;
-                        cursor: pointer;
-
-                        width: 100%;
-
-                        // Text height of title, text height of "time until",
-                        // padding * 2
-                        min-height: calc(
-                            (1em * #{$line-height}) +
-                                (0.875em * #{$line-height}) +
-                                ($phase-padding * 2)
-                        );
-
-                        .text {
-                            display: grid;
-                            grid-template-columns: 220px auto auto;
-                            gap: 0.5em;
-                            align-content: center;
-                            justify-content: start;
-
-                            .title {
-                                white-space: nowrap;
-                                overflow: hidden;
-                                text-overflow: ellipsis;
-                            }
-                            .events {
-                                font-size: 0.85em;
-
-                                display: flex;
-                                align-items: center;
-
-                                overflow: hidden;
-
-                                & > div {
-                                    white-space: nowrap;
-                                    overflow: hidden;
-                                    text-overflow: ellipsis;
-                                }
-                            }
-                        }
-
-                        &.withPhases {
-                            .text {
-                                grid-template-columns: 1fr;
-                            }
-                        }
-
-                        &.editablePhase {
-                            margin-left: 40px;
-                            .text {
-                                grid-template-columns: 1fr;
-                                &.hasAreaName {
-                                    grid-template-columns: 180px auto auto;
-                                }
-
-                                .title {
-                                    & > div {
-                                        white-space: nowrap;
-                                        overflow: hidden;
-                                        text-overflow: ellipsis;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            .currentTimeIndicator {
-                height: 100%;
-                position: absolute;
-                border-left: 2px solid var(--red);
-                transition: left var(--transition);
-                z-index: 1;
-                pointer-events: none;
-            }
-
-            .hoveredEventIndicator {
-                height: 100%;
-                position: absolute;
-                border-left-width: 2px;
-                border-left-style: solid;
-                transition: left var(--transition);
-                z-index: 1;
-            }
-        }
-
-        .timeRow {
-            position: sticky;
-            top: c.$topbar-height;
-            z-index: 1;
-            overflow-x: auto;
-
-            scrollbar-width: none; // Firefox
-            &::webkit-scrollbar {
-                display: none; // Chrome, Safari, Opera
-            }
-
-            .currentTimeIndicator {
-                height: 100%;
-                position: absolute;
-                border-left: 2px solid var(--red);
-                z-index: 1;
-                transition: left var(--transition);
-            }
-            .hoveredEventIndicator {
-                height: 100%;
-                position: absolute;
-                border-left-width: 2px;
-                border-left-style: solid;
-                transition: left var(--transition);
-                z-index: 1;
+              .title {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+              }
+              .events {
+                font-size: 0.85em;
 
                 display: flex;
+                align-items: center;
 
-                .timeLabel {
-                    padding-left: 0.5rem;
-                    font-size: $time-row-font-size;
+                overflow: hidden;
+
+                & > div {
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
                 }
+              }
             }
-            .timeRowInnerWrapper {
-                display: grid;
-                grid-template-columns: repeat(8, 1fr);
-                min-width: $min-area-width;
-                border-bottom: 1px solid rgb(var(--muted-rgb));
 
-                & > div:not(.hoveredEventIndicator) {
-                    display: grid;
-                    grid-template-columns: auto 1fr;
-                    align-items: end;
+            &.withPhases {
+              .text {
+                grid-template-columns: 1fr;
+              }
+            }
 
-                    color: var(--text-muted);
-
-                    .timeLabel {
-                        padding-left: 0.5rem;
-                        font-size: $time-row-font-size;
-                        visibility: visible;
-
-                        transition: opacity var(--transition);
-                        opacity: 1;
-                    }
-
-                    .timeMarker {
-                        width: 2px;
-                        border-left-width: 1px;
-                        border-left-style: solid;
-                        border-color: rgb(var(--muted-rgb));
-                        transition: border-color var(--transition);
-                        height: 100%;
-                    }
+            &.editablePhase {
+              margin-left: 40px;
+              .text {
+                grid-template-columns: 1fr;
+                &.hasAreaName {
+                  grid-template-columns: 180px auto auto;
                 }
-                & > div:nth-child(even) .timeMarker {
-                    height: 50%;
+
+                .title {
+                  & > div {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  }
                 }
+              }
             }
-            .spacer {
-                height: $timer-gap;
-            }
-            &.hideLabels
-                .timeRowInnerWrapper
-                > div:not(.hoveredEventIndicator)
-                .timeLabel {
-                opacity: 0;
-            }
+          }
         }
+      }
+
+      .currentTimeIndicator {
+        height: 100%;
+        position: absolute;
+        border-left: 2px solid var(--red);
+        transition: left var(--transition);
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .hoveredEventIndicator {
+        height: 100%;
+        position: absolute;
+        border-left-width: 2px;
+        border-left-style: solid;
+        transition: left var(--transition);
+        z-index: 1;
+      }
     }
+
+    .timeRow {
+      position: sticky;
+      top: c.$topbar-height;
+      z-index: 1;
+      overflow-x: auto;
+
+      scrollbar-width: none; // Firefox
+      &::webkit-scrollbar {
+        display: none; // Chrome, Safari, Opera
+      }
+
+      .currentTimeIndicator {
+        height: 100%;
+        position: absolute;
+        border-left: 2px solid var(--red);
+        z-index: 1;
+        transition: left var(--transition);
+      }
+      .hoveredEventIndicator {
+        height: 100%;
+        position: absolute;
+        border-left-width: 2px;
+        border-left-style: solid;
+        transition: left var(--transition);
+        z-index: 1;
+
+        display: flex;
+
+        .timeLabel {
+          padding-left: 0.5rem;
+          font-size: $time-row-font-size;
+        }
+      }
+      .timeRowInnerWrapper {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        min-width: $min-area-width;
+        border-bottom: 1px solid rgb(var(--muted-rgb));
+
+        & > div:not(.hoveredEventIndicator) {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          align-items: end;
+
+          color: var(--text-muted);
+
+          .timeLabel {
+            padding-left: 0.5rem;
+            font-size: $time-row-font-size;
+            visibility: visible;
+
+            transition: opacity var(--transition);
+            opacity: 1;
+          }
+
+          .timeMarker {
+            width: 2px;
+            border-left-width: 1px;
+            border-left-style: solid;
+            border-color: rgb(var(--muted-rgb));
+            transition: border-color var(--transition);
+            height: 100%;
+          }
+        }
+        & > div:nth-child(even) .timeMarker {
+          height: 50%;
+        }
+      }
+      .spacer {
+        height: $timer-gap;
+      }
+      &.hideLabels
+        .timeRowInnerWrapper
+        > div:not(.hoveredEventIndicator)
+        .timeLabel {
+        opacity: 0;
+      }
+    }
+  }
 }
 
 .eventPhaseMenu {
+  position: absolute;
+  background: rgb(var(--menu-background-rgb));
+  border-radius: 0.25rem;
+  width: 250px;
+
+  top: 0;
+  left: 0;
+  z-index: 10;
+
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+
+  display: grid;
+  gap: 0.5rem;
+  padding: 0.5em 1.5em 0.5em 1em;
+
+  .closeButtonWrapper {
     position: absolute;
-    background: rgb(var(--menu-background-rgb));
-    border-radius: 0.25rem;
-    width: 250px;
+    cursor: pointer;
 
+    text-align: center;
     top: 0;
-    left: 0;
-    z-index: 10;
+    right: 0;
+    padding: 2px;
 
-    border-width: 2px;
-    border-style: solid;
-    border-color: transparent;
+    color: var(--text-muted);
+    transition: color var(--transition);
 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: rgb(var(--foreground-rgb));
+    }
+  }
+
+  .eventTitle {
+    font-size: 1.17em;
+  }
+
+  .buttonArea {
     display: grid;
     gap: 0.5rem;
-    padding: 0.5em 1.5em 0.5em 1em;
 
-    .closeButtonWrapper {
-        position: absolute;
-        cursor: pointer;
-
-        text-align: center;
-        top: 0;
-        right: 0;
-        padding: 2px;
-
-        color: var(--text-muted);
-        transition: color var(--transition);
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover {
-            color: rgb(var(--foreground-rgb));
-        }
+    .buttonText {
+      text-align: center;
+      font-size: 0.875em;
+      opacity: 0;
+      color: var(--text-muted);
+      transition: opacity var(--transition);
+      min-height: calc((1em * #{$line-height}));
     }
-
-    .eventTitle {
-        font-size: 1.17em;
-    }
-
-    .buttonArea {
-        display: grid;
-        gap: 0.5rem;
-
-        .buttonText {
-            text-align: center;
-            font-size: 0.875em;
-            opacity: 0;
-            color: var(--text-muted);
-            transition: opacity var(--transition);
-            min-height: calc((1em * #{$line-height}));
-        }
-    }
+  }
 }
 .eventPhaseModal {
+  display: grid;
+  gap: 0.5rem;
+
+  .eventTitle {
+    font-size: 1.17em;
+  }
+
+  .buttonArea {
     display: grid;
     gap: 0.5rem;
 
-    .eventTitle {
-        font-size: 1.17em;
+    .buttonText {
+      text-align: center;
+      font-size: 0.875em;
+      opacity: 0;
+      color: var(--text-muted);
+      transition: opacity var(--transition);
+      min-height: calc((1em * #{$line-height}));
     }
-
-    .buttonArea {
-        display: grid;
-        gap: 0.5rem;
-
-        .buttonText {
-            text-align: center;
-            font-size: 0.875em;
-            opacity: 0;
-            color: var(--text-muted);
-            transition: opacity var(--transition);
-            min-height: calc((1em * #{$line-height}));
-        }
-    }
+  }
 }
 .eventOptionsMenuModal {
-    display: grid;
-    gap: 1rem;
+  display: grid;
+  gap: 1rem;
 }
 
 .eventOptionsMenu {
-    .eventOptions__fullscreenOption {
-        display: none;
-        @media (min-width: calc(#{c.$content-width} + 2 * #{c.$page-content-padding-horizontal})) {
-            display: flex;
-        }
+  .eventOptions__fullscreenOption {
+    display: none;
+    @media (min-width: calc(#{c.$content-width} + 2 * #{c.$page-content-padding-horizontal})) {
+      display: flex;
     }
+  }
 }

@@ -12,156 +12,145 @@ import FixedProgressBar from "./FixedProgressBar/FixedProgressBar";
 import HelpModal from "./HelpModal";
 
 const ChecklistPage = () => {
-    const { colors } = useTheme();
-    const {
-        todoChecklistItems,
-        setTodoChecklistItems,
-        addTodoChecklistItem,
+  const { colors } = useTheme();
+  const {
+    todoChecklistItems,
+    setTodoChecklistItems,
+    addTodoChecklistItem,
 
-        dailyChecklistItems,
-        timeUntilDailyReset,
-        setDailyChecklistItems,
-        addDailyChecklistItem,
+    dailyChecklistItems,
+    timeUntilDailyReset,
+    setDailyChecklistItems,
+    addDailyChecklistItem,
 
-        weeklyChecklistItems,
-        timeUntilWeeklyReset,
-        setWeeklyChecklistItems,
-        addWeeklyChecklistItem,
+    weeklyChecklistItems,
+    timeUntilWeeklyReset,
+    setWeeklyChecklistItems,
+    addWeeklyChecklistItem,
 
-        isHelpModalOpen,
-        handleCloseHelpModal,
-    } = useChecklistPage();
+    isHelpModalOpen,
+    handleCloseHelpModal,
+  } = useChecklistPage();
 
-    const dailyProgressColor = colors.primary;
-    const weeklyProgressColor =
-        colors.secondary === colors.muted
-            ? `${colors.primary}80`
-            : colors.secondary;
+  const dailyProgressColor = colors.primary;
+  const weeklyProgressColor =
+    colors.secondary === colors.muted
+      ? `${colors.primary}80`
+      : colors.secondary;
 
-    return (
-        <>
-            <FixedProgressBar
-                checklistItems={dailyChecklistItems}
-                position="left"
-                color={dailyProgressColor}
-            />
-            <FixedProgressBar
-                checklistItems={weeklyChecklistItems}
-                position="right"
-                color={weeklyProgressColor}
-            />
-            <div
-                className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}
-            >
-                {/* Todo checklist */}
-                <div className={styles.group}>
-                    <div className={styles.headingRow}>
-                        <div className={styles.heading}>
-                            <h3>
-                                <TaskAltSharp
-                                    style={{ marginRight: "0.25rem" }}
-                                />
-                                To-Do List
-                            </h3>
-                        </div>
-                        {todoChecklistItems.length === 0 ? (
-                            <Button
-                                variant="text"
-                                sx={{ minWidth: 0, padding: "4px 6px" }}
-                                color="muted"
-                                onClick={addTodoChecklistItem}
-                            >
-                                <AddSharp sx={{ fontSize: "1.17em" }} />
-                            </Button>
-                        ) : null}
-                    </div>
-                    <ChecklistGroup
-                        checklistItems={todoChecklistItems}
-                        setChecklistItems={setTodoChecklistItems}
-                        placeholder="To-do"
-                    />
-                </div>
-
-                {/* Daily checklist */}
-                <div className={styles.group}>
-                    <div className={styles.headingRow}>
-                        <div className={styles.heading}>
-                            <h3>
-                                <TaskAltSharp
-                                    style={{ marginRight: "0.25rem" }}
-                                />
-                                Daily Checklist
-                            </h3>
-                            <span
-                                className={classNames(
-                                    styles.resetIndicator,
-                                    globalStyles.hideBelowMd
-                                )}
-                            >
-                                &nbsp;| resets in {timeUntilDailyReset}
-                            </span>
-                        </div>
-                        {dailyChecklistItems.length === 0 ? (
-                            <Button
-                                variant="text"
-                                sx={{ minWidth: 0, padding: "4px 6px" }}
-                                color="muted"
-                                onClick={addDailyChecklistItem}
-                            >
-                                <AddSharp sx={{ fontSize: "1.17em" }} />
-                            </Button>
-                        ) : null}
-                    </div>
-                    <ChecklistGroup
-                        checklistItems={dailyChecklistItems}
-                        setChecklistItems={setDailyChecklistItems}
-                        placeholder="To-do daily"
-                    />
-                </div>
-
-                {/* Weekly checklist */}
-                <div className={styles.group}>
-                    <div className={styles.headingRow}>
-                        <div className={styles.heading}>
-                            <h3>
-                                <TaskAltSharp
-                                    style={{ marginRight: "0.25rem" }}
-                                />
-                                Weekly Checklist
-                            </h3>
-                            <span
-                                className={classNames(
-                                    styles.resetIndicator,
-                                    globalStyles.hideBelowMd
-                                )}
-                            >
-                                &nbsp;| resets in {timeUntilWeeklyReset}
-                            </span>
-                        </div>
-                        {weeklyChecklistItems.length === 0 ? (
-                            <Button
-                                variant="text"
-                                sx={{ minWidth: 0, padding: "4px 6px" }}
-                                color="muted"
-                                onClick={addWeeklyChecklistItem}
-                            >
-                                <AddSharp sx={{ fontSize: "1.17em" }} />
-                            </Button>
-                        ) : null}
-                    </div>
-                    <ChecklistGroup
-                        checklistItems={weeklyChecklistItems}
-                        setChecklistItems={setWeeklyChecklistItems}
-                        placeholder="To-do weekly"
-                    />
-                </div>
+  return (
+    <>
+      <FixedProgressBar
+        checklistItems={dailyChecklistItems}
+        position="left"
+        color={dailyProgressColor}
+      />
+      <FixedProgressBar
+        checklistItems={weeklyChecklistItems}
+        position="right"
+        color={weeklyProgressColor}
+      />
+      <div className={`${globalStyles.centeredContent} ${styles.pageWrapper}`}>
+        {/* Todo checklist */}
+        <div className={styles.group}>
+          <div className={styles.headingRow}>
+            <div className={styles.heading}>
+              <h3>
+                <TaskAltSharp style={{ marginRight: "0.25rem" }} />
+                To-Do List
+              </h3>
             </div>
-            <HelpModal
-                isOpen={isHelpModalOpen}
-                onClose={handleCloseHelpModal}
-            />
-        </>
-    );
+            {todoChecklistItems.length === 0 ? (
+              <Button
+                variant="text"
+                sx={{ minWidth: 0, padding: "4px 6px" }}
+                color="muted"
+                onClick={addTodoChecklistItem}
+              >
+                <AddSharp sx={{ fontSize: "1.17em" }} />
+              </Button>
+            ) : null}
+          </div>
+          <ChecklistGroup
+            checklistItems={todoChecklistItems}
+            setChecklistItems={setTodoChecklistItems}
+            placeholder="To-do"
+          />
+        </div>
+
+        {/* Daily checklist */}
+        <div className={styles.group}>
+          <div className={styles.headingRow}>
+            <div className={styles.heading}>
+              <h3>
+                <TaskAltSharp style={{ marginRight: "0.25rem" }} />
+                Daily Checklist
+              </h3>
+              <span
+                className={classNames(
+                  styles.resetIndicator,
+                  globalStyles.hideBelowMd
+                )}
+              >
+                &nbsp;| resets in {timeUntilDailyReset}
+              </span>
+            </div>
+            {dailyChecklistItems.length === 0 ? (
+              <Button
+                variant="text"
+                sx={{ minWidth: 0, padding: "4px 6px" }}
+                color="muted"
+                onClick={addDailyChecklistItem}
+              >
+                <AddSharp sx={{ fontSize: "1.17em" }} />
+              </Button>
+            ) : null}
+          </div>
+          <ChecklistGroup
+            checklistItems={dailyChecklistItems}
+            setChecklistItems={setDailyChecklistItems}
+            placeholder="To-do daily"
+          />
+        </div>
+
+        {/* Weekly checklist */}
+        <div className={styles.group}>
+          <div className={styles.headingRow}>
+            <div className={styles.heading}>
+              <h3>
+                <TaskAltSharp style={{ marginRight: "0.25rem" }} />
+                Weekly Checklist
+              </h3>
+              <span
+                className={classNames(
+                  styles.resetIndicator,
+                  globalStyles.hideBelowMd
+                )}
+              >
+                &nbsp;| resets in {timeUntilWeeklyReset}
+              </span>
+            </div>
+            {weeklyChecklistItems.length === 0 ? (
+              <Button
+                variant="text"
+                sx={{ minWidth: 0, padding: "4px 6px" }}
+                color="muted"
+                onClick={addWeeklyChecklistItem}
+              >
+                <AddSharp sx={{ fontSize: "1.17em" }} />
+              </Button>
+            ) : null}
+          </div>
+          <ChecklistGroup
+            checklistItems={weeklyChecklistItems}
+            setChecklistItems={setWeeklyChecklistItems}
+            placeholder="To-do weekly"
+          />
+        </div>
+      </div>
+      <HelpModal isOpen={isHelpModalOpen} onClose={handleCloseHelpModal} />
+    </>
+  );
 };
 
 export default ChecklistPage;

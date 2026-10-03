@@ -1,24 +1,24 @@
 .modal {
-    .closeButton {
-        position: absolute;
-        cursor: pointer;
+  .closeButton {
+    position: absolute;
+    cursor: pointer;
 
-        font-size: 1.17rem;
-        line-height: 1;
-        text-align: center;
-        top: 0;
-        right: 0;
-        padding: 2px;
+    font-size: 1.17rem;
+    line-height: 1;
+    text-align: center;
+    top: 0;
+    right: 0;
+    padding: 2px;
 
-        color: var(--text-muted);
-        transition: color var(--transition);
+    color: var(--text-muted);
+    transition: color var(--transition);
 
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-        &:hover {
-            color: rgb(var(--foreground-rgb));
-        }
+    &:hover {
+      color: rgb(var(--foreground-rgb));
     }
+  }
 }

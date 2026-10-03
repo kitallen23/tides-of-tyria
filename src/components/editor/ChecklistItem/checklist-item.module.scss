@@ -1,89 +1,89 @@
 @use "@/styles/variables/editor-variables" as e;
 
 @mixin indent($level) {
-    padding-left: #{2 * $level}em;
+  padding-left: #{2 * $level}em;
 }
 
 .checklistItemHoverArea {
-    margin-left: calc(-1 * ((2 * 2px) + 1em));
+  margin-left: calc(-1 * ((2 * 2px) + 1em));
 
-    display: grid;
-    grid-template-columns: auto 1fr;
+  display: grid;
+  grid-template-columns: auto 1fr;
 
-    @for $i from 0 through 3 {
-        &.indent#{$i} {
-            @include indent($i);
-        }
+  @for $i from 0 through 3 {
+    &.indent#{$i} {
+      @include indent($i);
     }
+  }
 
-    .itemMenuIndicator {
-        transition: opacity 0.15s;
+  .itemMenuIndicator {
+    transition: opacity 0.15s;
 
-        svg {
-            height: calc(1em * var(--line-height));
-        }
+    svg {
+      height: calc(1em * var(--line-height));
     }
-    &:not(.isTouchDevice) .itemMenuIndicator {
-        opacity: 0;
-    }
-    &:hover .itemMenuIndicator:not(.disabled) {
-        opacity: 1;
-    }
+  }
+  &:not(.isTouchDevice) .itemMenuIndicator {
+    opacity: 0;
+  }
+  &:hover .itemMenuIndicator:not(.disabled) {
+    opacity: 1;
+  }
 }
 
 .checklistItem {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    align-items: start;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
 
-    .itemCheckbox,
-    .itemTextline {
-        padding: 0 4px;
-        border-radius: 2px;
-        min-height: calc(
-            1em * var(--line-height) + 2 * #{e.$editor-padding-vertical}
-        );
+  .itemCheckbox,
+  .itemTextline {
+    padding: 0 4px;
+    border-radius: 2px;
+    min-height: calc(
+      1em * var(--line-height) + 2 * #{e.$editor-padding-vertical}
+    );
 
-        svg {
-            font-size: 1.2em;
-        }
+    svg {
+      font-size: 1.2em;
     }
+  }
 
-    .itemTextline {
-        .itemTextlineContent {
-            font-size: 1.2em;
-            width: 1em;
+  .itemTextline {
+    .itemTextlineContent {
+      font-size: 1.2em;
+      width: 1em;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-        }
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
     }
+  }
 
-    &.isComplete {
-        color: var(--text-muted) !important;
-
-        .editorWrapper {
-            text-decoration: line-through;
-        }
-    }
+  &.isComplete {
+    color: var(--text-muted) !important;
 
     .editorWrapper {
-        position: relative;
-
-        .placeholder {
-            position: absolute;
-            pointer-events: none;
-            color: var(--text-muted);
-            top: e.$editor-padding-vertical;
-            left: e.$editor-padding-horizontal;
-            opacity: 0;
-            transition: opacity 0.1s;
-
-            &.show {
-                opacity: 1;
-            }
-        }
+      text-decoration: line-through;
     }
+  }
+
+  .editorWrapper {
+    position: relative;
+
+    .placeholder {
+      position: absolute;
+      pointer-events: none;
+      color: var(--text-muted);
+      top: e.$editor-padding-vertical;
+      left: e.$editor-padding-horizontal;
+      opacity: 0;
+      transition: opacity 0.1s;
+
+      &.show {
+        opacity: 1;
+      }
+    }
+  }
 }

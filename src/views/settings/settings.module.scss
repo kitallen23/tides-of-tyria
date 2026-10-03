@@ -1,112 +1,112 @@
 @use "@/styles/variables/core-variables" as c;
 
 .pageWrapper {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+
+  .settingGroup {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1rem;
+  }
 
-    .settingGroup {
-        display: grid;
-        gap: 1rem;
+  .inlineSetting {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: center;
+
+    .colorInputWithIndicator {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
     }
 
-    .inlineSetting {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 1rem;
-        align-items: center;
+    .uniformButton {
+      padding: 6px 8px;
 
-        .colorInputWithIndicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5em;
-        }
-
-        .uniformButton {
-            padding: 6px 8px;
-
-            @media (min-width: c.$media-md) {
-                min-width: 8rem;
-            }
-        }
-
-        @media (max-width: c.$media-md) {
-            grid-template-columns: 1fr;
-            gap: 0.5em;
-        }
+      @media (min-width: c.$media-md) {
+        min-width: 8rem;
+      }
     }
 
-    .settingsButtons {
-        display: flex;
-        gap: 0.5rem;
+    @media (max-width: c.$media-md) {
+      grid-template-columns: 1fr;
+      gap: 0.5em;
     }
+  }
 
-    .heading {
-        display: flex;
-        align-items: center;
-    }
+  .settingsButtons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .heading {
+    display: flex;
+    align-items: center;
+  }
 }
 
 .schemeSelector {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
 
-    .schemeItem {
-        border-width: 4px;
-        border-radius: var(--border-radius);
-        border-style: solid;
-        padding: 0.5rem 0.25rem;
-        text-transform: capitalize;
-        position: relative;
-        cursor: pointer;
+  .schemeItem {
+    border-width: 4px;
+    border-radius: var(--border-radius);
+    border-style: solid;
+    padding: 0.5rem 0.25rem;
+    text-transform: capitalize;
+    position: relative;
+    cursor: pointer;
 
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-        transition:
-            transform 0.125s,
-            border-color 0.15s;
+    transition:
+      transform 0.125s,
+      border-color 0.15s;
 
-        &:hover {
-            transform: scale(1.05);
-        }
-
-        .colorIndicators {
-            display: flex;
-            gap: 0.25rem;
-            position: absolute;
-            right: 1rem;
-
-            .colorIndicator {
-                border-radius: 50%;
-                width: 16px;
-                height: 16px;
-            }
-        }
+    &:hover {
+      transform: scale(1.05);
     }
 
-    @media (max-width: c.$media-lg) {
-        grid-template-columns: 1fr 1fr;
+    .colorIndicators {
+      display: flex;
+      gap: 0.25rem;
+      position: absolute;
+      right: 1rem;
+
+      .colorIndicator {
+        border-radius: 50%;
+        width: 16px;
+        height: 16px;
+      }
     }
-    @media (max-width: c.$media-md) {
-        grid-template-columns: 1fr;
-    }
+  }
+
+  @media (max-width: c.$media-lg) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media (max-width: c.$media-md) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .clearLocalDataModal {
-    display: grid;
-    gap: 1rem;
+  display: grid;
+  gap: 1rem;
 }
 
 .attributionTextContainer {
-    margin-top: 2rem;
-    display: grid;
-    gap: 0.5em;
+  margin-top: 2rem;
+  display: grid;
+  gap: 0.5em;
 
-    & > div {
-        text-align: center;
-        color: var(--text-muted);
-    }
+  & > div {
+    text-align: center;
+    color: var(--text-muted);
+  }
 }

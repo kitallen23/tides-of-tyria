@@ -11,86 +11,86 @@ import DOMPurify from "dompurify";
  * @param {number} x - The x-coordinate where the cursor should be moved.
  */
 export const moveCursorToLastLineOfEditor = (ref, x) => {
-    const targetEditor = ref.current;
-    targetEditor.focus();
+  const targetEditor = ref.current;
+  targetEditor.focus();
 
-    const range = document.createRange();
-    const selection = window.getSelection();
+  const range = document.createRange();
+  const selection = window.getSelection();
 
-    let lastLineTop = -1;
-    const lastLineRects = [];
-    let lineChanged = false;
+  let lastLineTop = -1;
+  const lastLineRects = [];
+  let lineChanged = false;
 
-    // Iterate over each child node of the editor to determine the last line
-    targetEditor.childNodes.forEach(node => {
-        // Exit early if we've moved to a new line
-        if (lineChanged) {
-            return;
-        }
-        const nodeRange = document.createRange();
-        nodeRange.selectNodeContents(node);
+  // Iterate over each child node of the editor to determine the last line
+  targetEditor.childNodes.forEach(node => {
+    // Exit early if we've moved to a new line
+    if (lineChanged) {
+      return;
+    }
+    const nodeRange = document.createRange();
+    nodeRange.selectNodeContents(node);
 
-        // Get all rectangles representing the rendered positions of the node
-        const rects = Array.from(nodeRange.getClientRects());
-        rects.forEach(rect => {
-            if (rect.top > lastLineTop) {
-                // Found a new line, update lastLineTop and reset lastLineRects
-                lastLineTop = rect.top;
-                lastLineRects.length = 0;
-                lastLineRects.push({ node, rect });
-            } else if (rect.top === lastLineTop) {
-                // Add rect to lastLineRects if it is on the same line
-                lastLineRects.push({ node, rect });
-            } else if (rect.top < lastLineTop) {
-                lineChanged = true; // Mark that we've moved to a previous line
-                return;
-            }
-        });
+    // Get all rectangles representing the rendered positions of the node
+    const rects = Array.from(nodeRange.getClientRects());
+    rects.forEach(rect => {
+      if (rect.top > lastLineTop) {
+        // Found a new line, update lastLineTop and reset lastLineRects
+        lastLineTop = rect.top;
+        lastLineRects.length = 0;
+        lastLineRects.push({ node, rect });
+      } else if (rect.top === lastLineTop) {
+        // Add rect to lastLineRects if it is on the same line
+        lastLineRects.push({ node, rect });
+      } else if (rect.top < lastLineTop) {
+        lineChanged = true; // Mark that we've moved to a previous line
+        return;
+      }
     });
+  });
 
-    if (lastLineRects.length > 0) {
-        let found = false;
+  if (lastLineRects.length > 0) {
+    let found = false;
 
-        const lastIndex = lastLineRects.length - 1;
-        let currentIndex = 0;
-        for (const { node, rect } of lastLineRects) {
-            const isLastIteration = currentIndex === lastIndex;
-            // Check if x is within the current rect or if it's the last
-            // iteration
-            if ((x >= rect.left && x <= rect.right) || isLastIteration) {
-                // Get character index at the x position within the node
-                const charIndex = getCharacterIndexAtX(node, x, rect);
-                if (isLastIteration && x > rect.right) {
-                    found = false;
-                    break;
-                }
-                currentIndex++;
-                if (charIndex !== -1) {
-                    // Set the cursor at the calculated character index
-                    setCursorAtCharacterIndex(node, charIndex, range);
-                    found = true;
-                    break;
-                }
-            }
+    const lastIndex = lastLineRects.length - 1;
+    let currentIndex = 0;
+    for (const { node, rect } of lastLineRects) {
+      const isLastIteration = currentIndex === lastIndex;
+      // Check if x is within the current rect or if it's the last
+      // iteration
+      if ((x >= rect.left && x <= rect.right) || isLastIteration) {
+        // Get character index at the x position within the node
+        const charIndex = getCharacterIndexAtX(node, x, rect);
+        if (isLastIteration && x > rect.right) {
+          found = false;
+          break;
         }
-
-        if (!found) {
-            // If no suitable position found, put cursor at end of editor
-            const lastNode = lastLineRects[lastLineRects.length - 1].node;
-            range.selectNodeContents(lastNode);
-            range.collapse(false);
+        currentIndex++;
+        if (charIndex !== -1) {
+          // Set the cursor at the calculated character index
+          setCursorAtCharacterIndex(node, charIndex, range);
+          found = true;
+          break;
         }
-    } else {
-        // If no rects found, put the cursor at end of editor
-        range.selectNodeContents(targetEditor);
-        range.collapse(false);
+      }
     }
 
-    // Update the selection with the new range
-    selection.removeAllRanges();
-    selection.addRange(range);
+    if (!found) {
+      // If no suitable position found, put cursor at end of editor
+      const lastNode = lastLineRects[lastLineRects.length - 1].node;
+      range.selectNodeContents(lastNode);
+      range.collapse(false);
+    }
+  } else {
+    // If no rects found, put the cursor at end of editor
+    range.selectNodeContents(targetEditor);
+    range.collapse(false);
+  }
 
-    targetEditor.scrollIntoView({ behaviour: "instant", block: "nearest" });
+  // Update the selection with the new range
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  targetEditor.scrollIntoView({ behaviour: "instant", block: "nearest" });
 };
 
 /**
@@ -105,90 +105,90 @@ export const moveCursorToLastLineOfEditor = (ref, x) => {
  */
 
 export const moveCursorToFirstLineOfEditor = (ref, x) => {
-    const targetEditor = ref.current;
-    targetEditor.focus();
+  const targetEditor = ref.current;
+  targetEditor.focus();
 
-    const range = document.createRange();
-    const selection = window.getSelection();
+  const range = document.createRange();
+  const selection = window.getSelection();
 
-    let firstLineTop = Infinity;
-    const firstLineRects = [];
-    let lineFound = false;
+  let firstLineTop = Infinity;
+  const firstLineRects = [];
+  let lineFound = false;
 
-    // Iterate over each child node of the editor to determine the first line
-    targetEditor.childNodes.forEach(node => {
-        // Exit early if we're on a subsequent line (no need to do anything)
-        if (lineFound) {
-            return;
-        }
-        const nodeRange = document.createRange();
-        nodeRange.selectNodeContents(node);
+  // Iterate over each child node of the editor to determine the first line
+  targetEditor.childNodes.forEach(node => {
+    // Exit early if we're on a subsequent line (no need to do anything)
+    if (lineFound) {
+      return;
+    }
+    const nodeRange = document.createRange();
+    nodeRange.selectNodeContents(node);
 
-        // Get all rectangles representing the rendered positions of the node
-        const rects = Array.from(nodeRange.getClientRects());
-        rects.forEach(rect => {
-            if (rect.top < firstLineTop) {
-                // Found a new line, so update firstLineTop and reset
-                // firstLineRects
-                firstLineTop = rect.top;
-                firstLineRects.length = 0;
-                firstLineRects.push({ node, rect });
-            } else if (rect.top === firstLineTop) {
-                // Add rect to firstLineRects if it is on the same line
-                firstLineRects.push({ node, rect });
-            } else if (rect.top > firstLineTop) {
-                lineFound = true; // Mark that we've moved to a new line
-                return;
-            }
-        });
+    // Get all rectangles representing the rendered positions of the node
+    const rects = Array.from(nodeRange.getClientRects());
+    rects.forEach(rect => {
+      if (rect.top < firstLineTop) {
+        // Found a new line, so update firstLineTop and reset
+        // firstLineRects
+        firstLineTop = rect.top;
+        firstLineRects.length = 0;
+        firstLineRects.push({ node, rect });
+      } else if (rect.top === firstLineTop) {
+        // Add rect to firstLineRects if it is on the same line
+        firstLineRects.push({ node, rect });
+      } else if (rect.top > firstLineTop) {
+        lineFound = true; // Mark that we've moved to a new line
+        return;
+      }
     });
+  });
 
-    if (firstLineRects.length > 0) {
-        let found = false;
+  if (firstLineRects.length > 0) {
+    let found = false;
 
-        const lastIndex = firstLineRects.length - 1;
-        let currentIndex = 0;
-        for (const { node, rect } of firstLineRects) {
-            const isLastIteration = currentIndex === lastIndex;
-            // Check of x is within the current rect or if it's the last
-            // iteration
-            if ((x >= rect.left && x <= rect.right) || isLastIteration) {
-                // Get character index at the x position within the node
-                const charIndex = getCharacterIndexAtX(node, x, rect);
-                if (isLastIteration && x > rect.right) {
-                    // Place cursor at the end of the last node on the first line
-                    const lastNode = firstLineRects[lastIndex].node;
-                    range.selectNodeContents(lastNode);
-                    range.collapse(false);
-                    found = true;
-                    break;
-                }
-                currentIndex++;
-                if (charIndex !== -1) {
-                    // Set the cursor at the calculated character index
-                    setCursorAtCharacterIndex(node, charIndex, range);
-                    found = true;
-                    break;
-                }
-            }
+    const lastIndex = firstLineRects.length - 1;
+    let currentIndex = 0;
+    for (const { node, rect } of firstLineRects) {
+      const isLastIteration = currentIndex === lastIndex;
+      // Check of x is within the current rect or if it's the last
+      // iteration
+      if ((x >= rect.left && x <= rect.right) || isLastIteration) {
+        // Get character index at the x position within the node
+        const charIndex = getCharacterIndexAtX(node, x, rect);
+        if (isLastIteration && x > rect.right) {
+          // Place cursor at the end of the last node on the first line
+          const lastNode = firstLineRects[lastIndex].node;
+          range.selectNodeContents(lastNode);
+          range.collapse(false);
+          found = true;
+          break;
         }
-
-        if (!found) {
-            // If no suitable position found, put cursor at start of editor
-            const firstNode = firstLineRects[0].node;
-            range.selectNodeContents(firstNode);
-            range.collapse(true);
+        currentIndex++;
+        if (charIndex !== -1) {
+          // Set the cursor at the calculated character index
+          setCursorAtCharacterIndex(node, charIndex, range);
+          found = true;
+          break;
         }
-    } else {
-        // If no suitable position found, put cursor at start of editor
-        range.selectNodeContents(targetEditor);
-        range.collapse(true);
+      }
     }
 
-    // Update the selection with the new range
-    selection.removeAllRanges();
-    selection.addRange(range);
-    targetEditor.scrollIntoView({ behaviour: "instant", block: "nearest" });
+    if (!found) {
+      // If no suitable position found, put cursor at start of editor
+      const firstNode = firstLineRects[0].node;
+      range.selectNodeContents(firstNode);
+      range.collapse(true);
+    }
+  } else {
+    // If no suitable position found, put cursor at start of editor
+    range.selectNodeContents(targetEditor);
+    range.collapse(true);
+  }
+
+  // Update the selection with the new range
+  selection.removeAllRanges();
+  selection.addRange(range);
+  targetEditor.scrollIntoView({ behaviour: "instant", block: "nearest" });
 };
 
 /**
@@ -204,44 +204,44 @@ export const moveCursorToFirstLineOfEditor = (ref, x) => {
  * @returns {number} The character index at the specified x-coordinate, or the closest character index if no exact match is found.
  */
 const getCharacterIndexAtX = (node, x, lineRect) => {
-    const range = document.createRange();
-    let closestIndex = -1;
-    let closestDistance = Infinity;
+  const range = document.createRange();
+  let closestIndex = -1;
+  let closestDistance = Infinity;
 
-    const traverseNode = (currentNode, offset = 0) => {
-        if (currentNode.nodeType === Node.TEXT_NODE) {
-            for (let i = 0; i < currentNode.textContent.length; i++) {
-                range.setStart(currentNode, i);
-                range.setEnd(currentNode, i + 1);
-                const rect = range.getBoundingClientRect();
+  const traverseNode = (currentNode, offset = 0) => {
+    if (currentNode.nodeType === Node.TEXT_NODE) {
+      for (let i = 0; i < currentNode.textContent.length; i++) {
+        range.setStart(currentNode, i);
+        range.setEnd(currentNode, i + 1);
+        const rect = range.getBoundingClientRect();
 
-                if (rect.top !== lineRect.top) {
-                    continue;
-                }
-
-                const distance = Math.abs(x - rect.left);
-
-                if (x >= rect.left && x <= rect.right) {
-                    return offset + i;
-                } else if (distance < closestDistance) {
-                    closestDistance = distance;
-                    closestIndex = offset + i;
-                }
-            }
-        } else {
-            let childOffset = offset;
-            for (let child of currentNode.childNodes) {
-                const result = traverseNode(child, childOffset);
-                if (result !== -1) {
-                    return result;
-                }
-                childOffset += child.textContent.length;
-            }
+        if (rect.top !== lineRect.top) {
+          continue;
         }
-        return closestIndex;
-    };
 
-    return traverseNode(node);
+        const distance = Math.abs(x - rect.left);
+
+        if (x >= rect.left && x <= rect.right) {
+          return offset + i;
+        } else if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = offset + i;
+        }
+      }
+    } else {
+      let childOffset = offset;
+      for (let child of currentNode.childNodes) {
+        const result = traverseNode(child, childOffset);
+        if (result !== -1) {
+          return result;
+        }
+        childOffset += child.textContent.length;
+      }
+    }
+    return closestIndex;
+  };
+
+  return traverseNode(node);
 };
 
 /**
@@ -254,49 +254,49 @@ const getCharacterIndexAtX = (node, x, lineRect) => {
  * @param {number} offset - The character offset where the cursor should be placed.
  */
 export function moveCursorToCharacterOffsetOfEditor(ref, offset) {
-    if (!ref.current) return;
+  if (!ref.current) return;
 
-    const element = ref.current;
-    const selection = window.getSelection();
-    const range = document.createRange();
+  const element = ref.current;
+  const selection = window.getSelection();
+  const range = document.createRange();
 
-    let charCount = 0;
-    let nodeStack = [element];
-    let node,
-        found = false;
+  let charCount = 0;
+  let nodeStack = [element];
+  let node,
+    found = false;
 
-    // Traverse the DOM tree in a depth-first manner
-    while (nodeStack.length > 0 && !found) {
-        node = nodeStack.pop();
+  // Traverse the DOM tree in a depth-first manner
+  while (nodeStack.length > 0 && !found) {
+    node = nodeStack.pop();
 
-        if (node.nodeType === Node.TEXT_NODE) {
-            // Calculate the cumulative character count
-            const nextCharCount = charCount + node.textContent.length;
+    if (node.nodeType === Node.TEXT_NODE) {
+      // Calculate the cumulative character count
+      const nextCharCount = charCount + node.textContent.length;
 
-            if (nextCharCount >= offset) {
-                // If the offset is within this text node, set the start range
-                range.setStart(node, offset - charCount);
-                found = true;
-            } else {
-                // Update the charCount if offset is not reached
-                charCount = nextCharCount;
-            }
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            // Push child nodes onto the stack for further traversal
-            for (let i = node.childNodes.length - 1; i >= 0; i--) {
-                nodeStack.push(node.childNodes[i]);
-            }
-        }
+      if (nextCharCount >= offset) {
+        // If the offset is within this text node, set the start range
+        range.setStart(node, offset - charCount);
+        found = true;
+      } else {
+        // Update the charCount if offset is not reached
+        charCount = nextCharCount;
+      }
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      // Push child nodes onto the stack for further traversal
+      for (let i = node.childNodes.length - 1; i >= 0; i--) {
+        nodeStack.push(node.childNodes[i]);
+      }
     }
+  }
 
-    if (found) {
-        range.collapse(true);
-        selection.removeAllRanges();
-        selection.addRange(range);
-    }
-    // Focus the element to ensure the cursor is visible
-    element.focus();
-    element.scrollIntoView({ behaviour: "instant", block: "nearest" });
+  if (found) {
+    range.collapse(true);
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+  // Focus the element to ensure the cursor is visible
+  element.focus();
+  element.scrollIntoView({ behaviour: "instant", block: "nearest" });
 }
 
 /**
@@ -311,29 +311,29 @@ export function moveCursorToCharacterOffsetOfEditor(ref, offset) {
  * @param {Range} range - A Range object that will be used to set the cursor position.
  */
 function setCursorAtCharacterIndex(node, charIndex, range) {
-    let currentNode = node;
-    let currentIndex = 0;
+  let currentNode = node;
+  let currentIndex = 0;
 
-    function traverseNodes(node) {
-        if (node.nodeType === Node.TEXT_NODE) {
-            const textLength = node.textContent.length;
-            if (currentIndex + textLength >= charIndex) {
-                range.setStart(node, charIndex - currentIndex);
-                range.collapse(true);
-                return true; // Stop traversal
-            }
-            currentIndex += textLength;
-        } else if (node.nodeType === Node.ELEMENT_NODE) {
-            for (let i = 0; i < node.childNodes.length; i++) {
-                if (traverseNodes(node.childNodes[i])) {
-                    return true; // Stop traversal
-                }
-            }
+  function traverseNodes(node) {
+    if (node.nodeType === Node.TEXT_NODE) {
+      const textLength = node.textContent.length;
+      if (currentIndex + textLength >= charIndex) {
+        range.setStart(node, charIndex - currentIndex);
+        range.collapse(true);
+        return true; // Stop traversal
+      }
+      currentIndex += textLength;
+    } else if (node.nodeType === Node.ELEMENT_NODE) {
+      for (let i = 0; i < node.childNodes.length; i++) {
+        if (traverseNodes(node.childNodes[i])) {
+          return true; // Stop traversal
         }
-        return false;
+      }
     }
+    return false;
+  }
 
-    traverseNodes(currentNode);
+  traverseNodes(currentNode);
 }
 
 /**
@@ -346,21 +346,21 @@ function setCursorAtCharacterIndex(node, charIndex, range) {
  * @param {string} [pos="start"] - The position to move the cursor to, either "start" or "end".
  */
 export function moveCursorToEditor(ref, pos = "start") {
-    const range = document.createRange();
-    const selection = window.getSelection();
+  const range = document.createRange();
+  const selection = window.getSelection();
 
-    if (pos === "start") {
-        range.setStart(ref.current, 0);
-        range.collapse(true);
-    } else {
-        range.selectNodeContents(ref.current);
-        range.collapse(false);
-    }
+  if (pos === "start") {
+    range.setStart(ref.current, 0);
+    range.collapse(true);
+  } else {
+    range.selectNodeContents(ref.current);
+    range.collapse(false);
+  }
 
-    selection.removeAllRanges();
-    selection.addRange(range);
+  selection.removeAllRanges();
+  selection.addRange(range);
 
-    ref.current.scrollIntoView({ behaviour: "instant", block: "nearest" });
+  ref.current.scrollIntoView({ behaviour: "instant", block: "nearest" });
 }
 
 /**
@@ -374,16 +374,16 @@ export function moveCursorToEditor(ref, pos = "start") {
  * @returns {number} The length of the decoded text content plus the number of `<br>` tags.
  */
 export function getDecodedLengthWithBr(htmlString) {
-    const div = document.createElement("div");
-    div.innerHTML = htmlString;
+  const div = document.createElement("div");
+  div.innerHTML = htmlString;
 
-    // Count the number of <br> tags
-    const brCount = div.querySelectorAll("br").length;
+  // Count the number of <br> tags
+  const brCount = div.querySelectorAll("br").length;
 
-    // Calculate the length of the text content and add the number of <br> tags.
-    // Each <br> is considered as an additional character for the length
-    // calculation.
-    return div.textContent.length + brCount;
+  // Calculate the length of the text content and add the number of <br> tags.
+  // Each <br> is considered as an additional character for the length
+  // calculation.
+  return div.textContent.length + brCount;
 }
 
 /**
@@ -399,22 +399,22 @@ export function getDecodedLengthWithBr(htmlString) {
  * (`b`, `u`, `i`, `a`, `br`) and attributes (`href`, `target`, `rel` for `<a>` tags).
  */
 export function sanitizeRichText(dirty) {
-    // First, process HTML to merge redundant tags and remove empty ones
-    const processedHtml = processHtml(dirty);
+  // First, process HTML to merge redundant tags and remove empty ones
+  const processedHtml = processHtml(dirty);
 
-    // Then, sanitize the processed HTML
-    const clean = DOMPurify.sanitize(processedHtml, {
-        ALLOWED_TAGS: ["b", "u", "i", "a", "br"],
-        ALLOWED_ATTR: ["href", "target", "rel"],
-    });
+  // Then, sanitize the processed HTML
+  const clean = DOMPurify.sanitize(processedHtml, {
+    ALLOWED_TAGS: ["b", "u", "i", "a", "br"],
+    ALLOWED_ATTR: ["href", "target", "rel"],
+  });
 
-    // Remove all <br> tags from the end of the string
-    let result = clean;
-    while (result.endsWith("<br>")) {
-        result = result.slice(0, -4).trimEnd();
-    }
+  // Remove all <br> tags from the end of the string
+  let result = clean;
+  while (result.endsWith("<br>")) {
+    result = result.slice(0, -4).trimEnd();
+  }
 
-    return result;
+  return result;
 }
 
 /**
@@ -428,48 +428,48 @@ export function sanitizeRichText(dirty) {
  * @returns {string} The processed HTML string with redundant tags merged and empty elements removed.
  */
 function processHtml(html) {
-    // Create a temporary DOM element to parse the HTML string
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
+  // Create a temporary DOM element to parse the HTML string
+  const tempDiv = document.createElement("div");
+  tempDiv.innerHTML = html;
 
-    // Function to recursively process nodes
-    function processNodes(node) {
-        if (!node || !node.childNodes) return;
+  // Function to recursively process nodes
+  function processNodes(node) {
+    if (!node || !node.childNodes) return;
 
-        let previousNode = null;
+    let previousNode = null;
 
-        Array.from(node.childNodes).forEach(childNode => {
-            if (childNode.nodeType === Node.ELEMENT_NODE) {
-                // Remove the node if it's empty and not a <br> tag
-                if (
-                    childNode.tagName.toLowerCase() !== "br" &&
-                    childNode.innerHTML.trim() === ""
-                ) {
-                    node.removeChild(childNode);
-                    return;
-                }
+    Array.from(node.childNodes).forEach(childNode => {
+      if (childNode.nodeType === Node.ELEMENT_NODE) {
+        // Remove the node if it's empty and not a <br> tag
+        if (
+          childNode.tagName.toLowerCase() !== "br" &&
+          childNode.innerHTML.trim() === ""
+        ) {
+          node.removeChild(childNode);
+          return;
+        }
 
-                // If the current node is the same as the previous node, merge them
-                if (
-                    previousNode &&
-                    previousNode.tagName === childNode.tagName &&
-                    childNode.tagName.toLowerCase() !== "br"
-                ) {
-                    previousNode.innerHTML += childNode.innerHTML;
-                    node.removeChild(childNode);
-                    processNodes(previousNode); // Recursively process within the merged node
-                } else {
-                    previousNode = childNode;
-                    processNodes(childNode); // Recursively check this node's children
-                }
-            } else {
-                previousNode = null; // Reset if it's not an element node
-            }
-        });
-    }
+        // If the current node is the same as the previous node, merge them
+        if (
+          previousNode &&
+          previousNode.tagName === childNode.tagName &&
+          childNode.tagName.toLowerCase() !== "br"
+        ) {
+          previousNode.innerHTML += childNode.innerHTML;
+          node.removeChild(childNode);
+          processNodes(previousNode); // Recursively process within the merged node
+        } else {
+          previousNode = childNode;
+          processNodes(childNode); // Recursively check this node's children
+        }
+      } else {
+        previousNode = null; // Reset if it's not an element node
+      }
+    });
+  }
 
-    processNodes(tempDiv);
-    return tempDiv.innerHTML;
+  processNodes(tempDiv);
+  return tempDiv.innerHTML;
 }
 
 /**
@@ -481,9 +481,9 @@ function processHtml(html) {
  * @returns {{ min: number, max: number }} An object containing the minimum and maximum numbers.
  */
 export function getMinAndMax(numbers) {
-    const max = Math.max(...numbers);
-    const min = Math.min(...numbers);
-    return { min, max };
+  const max = Math.max(...numbers);
+  const min = Math.min(...numbers);
+  return { min, max };
 }
 
 /**
@@ -496,19 +496,19 @@ export function getMinAndMax(numbers) {
  * @returns {number[]} An array of indices representing the child items of the specified parent.
  */
 export function getIndicesOfChildren(index, items) {
-    if (!items[index]) {
-        return [];
-    }
-    const indices = [];
-    const currentIndentLevel = items[index]?.indentLevel;
+  if (!items[index]) {
+    return [];
+  }
+  const indices = [];
+  const currentIndentLevel = items[index]?.indentLevel;
 
-    let idx = index + 1;
-    while ((items[idx]?.indentLevel ?? -1) > currentIndentLevel) {
-        indices.push(idx);
-        ++idx;
-    }
+  let idx = index + 1;
+  while ((items[idx]?.indentLevel ?? -1) > currentIndentLevel) {
+    indices.push(idx);
+    ++idx;
+  }
 
-    return indices;
+  return indices;
 }
 
 /**
@@ -521,17 +521,17 @@ export function getIndicesOfChildren(index, items) {
  * @returns {number} The index of the parent item if found; otherwise, -1.
  */
 export function findParentIndex(index, items) {
-    const currentIndentLevel = items[index].indentLevel;
-    for (let i = index - 1; i >= -1; --i) {
-        if (items[i]) {
-            const itemIndentLevel =
-                items[i]?.indentLevel >= 0 ? items[i].indentLevel : Infinity;
-            if (itemIndentLevel < currentIndentLevel) {
-                return i;
-            }
-        }
+  const currentIndentLevel = items[index].indentLevel;
+  for (let i = index - 1; i >= -1; --i) {
+    if (items[i]) {
+      const itemIndentLevel =
+        items[i]?.indentLevel >= 0 ? items[i].indentLevel : Infinity;
+      if (itemIndentLevel < currentIndentLevel) {
+        return i;
+      }
     }
-    return -1;
+  }
+  return -1;
 }
 
 export const cloneItems = arr => arr.map(item => Object.assign({}, item));

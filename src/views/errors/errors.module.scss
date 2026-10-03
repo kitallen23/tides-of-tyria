@@ -1,54 +1,54 @@
 .errorPage {
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    .innerWrapper {
-        display: grid;
-        gap: 1rem;
-        .logo {
-            display: flex;
-            justify-content: center;
-        }
-        .text {
-            display: grid;
-            grid-template-columns: auto 1fr;
-            gap: 1rem;
-
-            font-size: 1.2em;
-
-            & > :first-child {
-                font-size: 1.6em;
-                font-weight: bold;
-            }
-            & > div {
-                display: flex;
-                align-items: center;
-            }
-        }
-        .buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-        }
+  .innerWrapper {
+    display: grid;
+    gap: 1rem;
+    .logo {
+      display: flex;
+      justify-content: center;
     }
+    .text {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+
+      font-size: 1.2em;
+
+      & > :first-child {
+        font-size: 1.6em;
+        font-weight: bold;
+      }
+      & > div {
+        display: flex;
+        align-items: center;
+      }
+    }
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+  }
 }
 [data-font-size="sm"]:root {
-    .errorPage {
-        font-size: var(--font-size-sm);
-    }
+  .errorPage {
+    font-size: var(--font-size-sm);
+  }
 }
 [data-font-size="md"]:root {
-    .errorPage {
-        font-size: var(--font-size-md);
-    }
+  .errorPage {
+    font-size: var(--font-size-md);
+  }
 }
 [data-font-size="lg"]:root {
-    .errorPage {
-        font-size: var(--font-size-lg);
-    }
+  .errorPage {
+    font-size: var(--font-size-lg);
+  }
 }
