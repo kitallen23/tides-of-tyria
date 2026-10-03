@@ -3,7 +3,7 @@ import { lazy } from "react";
 export const SettingsPage = lazy(() => import("@/views/settings/SettingsPage"));
 export const HomePage = lazy(() => import("@/views/home/HomePage"));
 export const ChecklistPage = lazy(
-    () => import("@/views/checklist/ChecklistPage")
+  () => import("@/views/checklist/ChecklistPage")
 );
 
 /**

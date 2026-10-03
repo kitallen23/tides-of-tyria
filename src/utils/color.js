@@ -8,14 +8,14 @@ const THRESHOLD = 156;
  * @returns {number[]} - An array containing the RGB values [r, g, b].
  */
 export function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    let fullHex = hex.replace(
-        /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
-        (_m, r, g, b) => `#${r}${r}${g}${g}${b}${b}`
-    );
+  // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+  let fullHex = hex.replace(
+    /^#?([a-f\d])([a-f\d])([a-f\d])$/i,
+    (_m, r, g, b) => `#${r}${r}${g}${g}${b}${b}`
+  );
 
-    const bigint = parseInt(fullHex.slice(1), 16);
-    return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
+  const bigint = parseInt(fullHex.slice(1), 16);
+  return [(bigint >> 16) & 255, (bigint >> 8) & 255, bigint & 255];
 }
 
 /**
@@ -27,11 +27,11 @@ export function hexToRgb(hex) {
  * @returns {number} - The relative luminance.
  */
 function luminance(r, g, b) {
-    const a = [r, g, b].map(v => {
-        v /= 255;
-        return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
-    });
-    return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
+  const a = [r, g, b].map(v => {
+    v /= 255;
+    return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+  });
+  return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
 }
 
 /**
@@ -42,11 +42,11 @@ function luminance(r, g, b) {
  * @returns {number} - The contrast ratio.
  */
 function contrastRatio(rgb1, rgb2) {
-    const lum1 = luminance(...rgb1);
-    const lum2 = luminance(...rgb2);
-    const brightest = Math.max(lum1, lum2);
-    const darkest = Math.min(lum1, lum2);
-    return (brightest + 0.05) / (darkest + 0.05);
+  const lum1 = luminance(...rgb1);
+  const lum2 = luminance(...rgb2);
+  const brightest = Math.max(lum1, lum2);
+  const darkest = Math.min(lum1, lum2);
+  return (brightest + 0.05) / (darkest + 0.05);
 }
 
 /**
@@ -58,10 +58,10 @@ function contrastRatio(rgb1, rgb2) {
  * otherwise false.
  */
 export function isContrastEnough(foregroundHex, backgroundHex) {
-    const foregroundRgb = hexToRgb(foregroundHex);
-    const backgroundRgb = hexToRgb(backgroundHex);
-    const ratio = contrastRatio(foregroundRgb, backgroundRgb);
-    return ratio >= CONTRAST_RATIO;
+  const foregroundRgb = hexToRgb(foregroundHex);
+  const backgroundRgb = hexToRgb(backgroundHex);
+  const ratio = contrastRatio(foregroundRgb, backgroundRgb);
+  return ratio >= CONTRAST_RATIO;
 }
 
 /**
@@ -73,7 +73,7 @@ export function isContrastEnough(foregroundHex, backgroundHex) {
  * @returns {string} - The HEX color string.
  */
 function rgbToHex(r, g, b) {
-    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
 /**
@@ -84,11 +84,11 @@ function rgbToHex(r, g, b) {
  * @returns {string} - The adjusted HEX color string.
  */
 export function adjustLuminance(hex, amount) {
-    let [r, g, b] = hexToRgb(hex);
-    r = Math.max(0, Math.min(255, r + amount));
-    g = Math.max(0, Math.min(255, g + amount));
-    b = Math.max(0, Math.min(255, b + amount));
-    return rgbToHex(r, g, b);
+  let [r, g, b] = hexToRgb(hex);
+  r = Math.max(0, Math.min(255, r + amount));
+  g = Math.max(0, Math.min(255, g + amount));
+  b = Math.max(0, Math.min(255, b + amount));
+  return rgbToHex(r, g, b);
 }
 
 /**
@@ -101,15 +101,15 @@ export function adjustLuminance(hex, amount) {
  * @returns {string} - The adjusted hex color code with sufficient contrast.
  */
 export function ensureContrast(foregroundHex, backgroundHex, mode = "darken") {
-    const adjustAmount = mode === "darken" ? -10 : 10;
+  const adjustAmount = mode === "darken" ? -10 : 10;
 
-    let adjustedColor = foregroundHex;
+  let adjustedColor = foregroundHex;
 
-    while (!isContrastEnough(adjustedColor, backgroundHex)) {
-        adjustedColor = adjustLuminance(adjustedColor, adjustAmount);
-    }
+  while (!isContrastEnough(adjustedColor, backgroundHex)) {
+    adjustedColor = adjustLuminance(adjustedColor, adjustAmount);
+  }
 
-    return adjustedColor;
+  return adjustedColor;
 }
 
 /**
@@ -121,39 +121,39 @@ export function ensureContrast(foregroundHex, backgroundHex, mode = "darken") {
  * @credit Taken from: https://awik.io/determine-color-bright-dark-using-javascript/
  */
 export function isLight(color, threshold = THRESHOLD) {
-    // Variables for red, green, blue values
-    // let c: string | number | RegExp | RegExpMatchArray | boolean | null = color;
-    let c = color;
-    let r, g, b;
+  // Variables for red, green, blue values
+  // let c: string | number | RegExp | RegExpMatchArray | boolean | null = color;
+  let c = color;
+  let r, g, b;
 
-    // Check the format of the color, HEX or RGB?
-    if (color.match(/^rgb/)) {
-        // If RGB --> store the red, green, blue values in separate variables
-        c = color.match(
-            /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
-        );
+  // Check the format of the color, HEX or RGB?
+  if (color.match(/^rgb/)) {
+    // If RGB --> store the red, green, blue values in separate variables
+    c = color.match(
+      /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/
+    );
 
-        r = +color[1];
-        g = +color[2];
-        b = +color[3];
-    } else {
-        // If hex --> Convert it to RGB: NOT USED http://gist.github.com/983661
+    r = +color[1];
+    g = +color[2];
+    b = +color[3];
+  } else {
+    // If hex --> Convert it to RGB: NOT USED http://gist.github.com/983661
 
-        const rgb = hexToRgb(c);
-        r = rgb?.[0] ?? 0;
-        g = rgb?.[1] ?? 0;
-        b = rgb?.[2] ?? 0;
-    }
+    const rgb = hexToRgb(c);
+    r = rgb?.[0] ?? 0;
+    g = rgb?.[1] ?? 0;
+    b = rgb?.[2] ?? 0;
+  }
 
-    // HSP equation from http://alienryderflex.com/hsp.html
-    const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
+  // HSP equation from http://alienryderflex.com/hsp.html
+  const hsp = Math.sqrt(0.299 * (r * r) + 0.587 * (g * g) + 0.114 * (b * b));
 
-    // Using the HSP value, determine whether the color is light or dark
-    if (hsp > threshold) {
-        return true;
-    } else {
-        return false;
-    }
+  // Using the HSP value, determine whether the color is light or dark
+  if (hsp > threshold) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 /**
@@ -175,9 +175,9 @@ export function isLight(color, threshold = THRESHOLD) {
  * opacityToHex(1);
  */
 export function opacityToHex(opacity) {
-    const value = Math.round(opacity * 255);
-    const hex = value.toString(16);
-    return hex.length === 1 ? "0" + hex : hex;
+  const value = Math.round(opacity * 255);
+  const hex = value.toString(16);
+  return hex.length === 1 ? "0" + hex : hex;
 }
 
 /**
@@ -200,14 +200,14 @@ export function opacityToHex(opacity) {
  * blendColors({ opacity: 0.25, color: '#0000ff', backgroundColor: '#000000' });
  */
 export function blendColors({ opacity, color, backgroundColor }) {
-    const color_rgb = hexToRgb(color);
-    const background_rgb = hexToRgb(backgroundColor);
+  const color_rgb = hexToRgb(color);
+  const background_rgb = hexToRgb(backgroundColor);
 
-    const blendColor = (o, c1, c2) => Math.round(o * c1 + (1 - o) * c2);
+  const blendColor = (o, c1, c2) => Math.round(o * c1 + (1 - o) * c2);
 
-    const new_r = blendColor(opacity, color_rgb[0], background_rgb[0]);
-    const new_g = blendColor(opacity, color_rgb[1], background_rgb[1]);
-    const new_b = blendColor(opacity, color_rgb[2], background_rgb[2]);
+  const new_r = blendColor(opacity, color_rgb[0], background_rgb[0]);
+  const new_g = blendColor(opacity, color_rgb[1], background_rgb[1]);
+  const new_b = blendColor(opacity, color_rgb[2], background_rgb[2]);
 
-    return rgbToHex(new_r, new_g, new_b);
+  return rgbToHex(new_r, new_g, new_b);
 }

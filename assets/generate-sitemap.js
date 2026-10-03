@@ -3,7 +3,7 @@ import { SitemapStream } from "sitemap";
 
 // Creates a sitemap object given the input configuration with URLs
 const sitemap = new SitemapStream({
-    hostname: "https://tides-of-tyria.chuggs.net",
+  hostname: "https://tides-of-tyria.chuggs.net",
 });
 
 const writeStream = createWriteStream("./public/sitemap.xml");

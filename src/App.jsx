@@ -21,92 +21,85 @@ import SkeletonEventTimerPage from "@/views/skeleton/SkeletonEventTimerPage";
 import SkeletonSettingsPage from "@/views/skeleton/SkeletonSettingsPage";
 
 const FALLBACKS = {
-    "/checklist": <SkeletonChecklistPage />,
-    "/settings": <SkeletonSettingsPage />,
-    "/": <SkeletonEventTimerPage />,
+  "/checklist": <SkeletonChecklistPage />,
+  "/settings": <SkeletonSettingsPage />,
+  "/": <SkeletonEventTimerPage />,
 };
 
 function App() {
-    const {
-        themeState,
-        muiTheme,
+  const {
+    themeState,
+    muiTheme,
 
-        setThemeKey,
-        setFontType,
-        setFontSize,
-        setTimeFormat,
-        setPrimaryColor,
-    } = useApp();
-    useViewportHeight();
-    useAnalytics();
-    const { pathname } = useLocation();
+    setThemeKey,
+    setFontType,
+    setFontSize,
+    setTimeFormat,
+    setPrimaryColor,
+  } = useApp();
+  useViewportHeight();
+  useAnalytics();
+  const { pathname } = useLocation();
 
-    return (
-        <>
-            <Helmet>
-                <title>{TITLE_SUFFIX}</title>
-            </Helmet>
-            <JsonLd />
-            <MuiThemeProvider theme={muiTheme}>
-                <ThemeProvider
-                    value={{
-                        ...themeState,
-                        setThemeKey,
-                        setFontType,
-                        setFontSize,
-                        setTimeFormat,
-                        setPrimaryColor,
-                    }}
+  return (
+    <>
+      <Helmet>
+        <title>{TITLE_SUFFIX}</title>
+      </Helmet>
+      <JsonLd />
+      <MuiThemeProvider theme={muiTheme}>
+        <ThemeProvider
+          value={{
+            ...themeState,
+            setThemeKey,
+            setFontType,
+            setFontSize,
+            setTimeFormat,
+            setPrimaryColor,
+          }}
+        >
+          <TimerProvider>
+            <SearchModalProvider>
+              <Layout>
+                <Suspense
+                  fallback={FALLBACKS[pathname] ?? <SkeletonEventTimerPage />}
                 >
-                    <TimerProvider>
-                        <SearchModalProvider>
-                            <Layout>
-                                <Suspense
-                                    fallback={
-                                        FALLBACKS[pathname] ?? (
-                                            <SkeletonEventTimerPage />
-                                        )
-                                    }
-                                >
-                                    <Outlet />
-                                </Suspense>
-                            </Layout>
-                            <Toaster
-                                position="top-center"
-                                reverseOrder={false}
-                                containerStyle={{
-                                    top: 66,
-                                }}
-                                toastOptions={{
-                                    className: "toaster",
-                                    style: {
-                                        background:
-                                            themeState.colors.backgroundNav,
-                                        color: themeState.colors.body,
-                                    },
-                                    success: {
-                                        iconTheme: {
-                                            primary: themeState.colors.success,
-                                            secondary:
-                                                themeState.colors.backgroundNav,
-                                        },
-                                    },
-                                    error: {
-                                        iconTheme: {
-                                            primary: themeState.colors.error,
-                                            secondary:
-                                                themeState.colors.backgroundNav,
-                                        },
-                                    },
-                                }}
-                            />
-                            <SearchModal />
-                        </SearchModalProvider>
-                    </TimerProvider>
-                </ThemeProvider>
-            </MuiThemeProvider>
-        </>
-    );
+                  <Outlet />
+                </Suspense>
+              </Layout>
+              <Toaster
+                position="top-center"
+                reverseOrder={false}
+                containerStyle={{
+                  top: 66,
+                }}
+                toastOptions={{
+                  className: "toaster",
+                  style: {
+                    background: themeState.colors.backgroundNav,
+                    color: themeState.colors.body,
+                  },
+                  success: {
+                    iconTheme: {
+                      primary: themeState.colors.success,
+                      secondary: themeState.colors.backgroundNav,
+                    },
+                  },
+                  error: {
+                    iconTheme: {
+                      primary: themeState.colors.error,
+                      secondary: themeState.colors.backgroundNav,
+                    },
+                  },
+                }}
+              />
+              <SearchModal />
+            </SearchModalProvider>
+          </TimerProvider>
+        </ThemeProvider>
+      </MuiThemeProvider>
+    </>
+  );
 }
 
 export default App;

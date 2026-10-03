@@ -7,14 +7,14 @@ import { SearchModalContext } from "./SearchModalContext";
  * @param {React.ReactNode} props.children
  */
 export const SearchModalProvider = ({ children }) => {
-    const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-    const onOpen = () => setIsOpen(true);
-    const onClose = () => setIsOpen(false);
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
 
-    return (
-        <SearchModalContext.Provider value={{ isOpen, onOpen, onClose }}>
-            {children}
-        </SearchModalContext.Provider>
-    );
+  return (
+    <SearchModalContext.Provider value={{ isOpen, onOpen, onClose }}>
+      {children}
+    </SearchModalContext.Provider>
+  );
 };

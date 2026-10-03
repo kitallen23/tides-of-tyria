@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { useTimer } from "./useTimer";
 
 const useTimerValue = (initialValue, updateFn) => {
-    const { key } = useTimer();
-    const [value, setValue] = useState(initialValue);
+  const { key } = useTimer();
+  const [value, setValue] = useState(initialValue);
 
-    useEffect(() => {
-        setValue(currentValue => updateFn(currentValue));
-    }, [key, updateFn]);
+  useEffect(() => {
+    setValue(currentValue => updateFn(currentValue));
+  }, [key, updateFn]);
 
-    return value;
+  return value;
 };
 
 export default useTimerValue;

@@ -4,47 +4,47 @@ $line-height: var(--line-height);
 $font-size: 0.875em;
 
 .progressBar {
-    position: fixed;
-    bottom: 0;
+  position: fixed;
+  bottom: 0;
 
-    width: $progress-bar-width;
-    height: calc(var(--vh, 1vh) * 100 - #{c.$topbar-height});
+  width: $progress-bar-width;
+  height: calc(var(--vh, 1vh) * 100 - #{c.$topbar-height});
 
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
 
-    .bar {
-        width: 100%;
-        transition: height var(--transition);
-        position: relative;
+  .bar {
+    width: 100%;
+    transition: height var(--transition);
+    position: relative;
 
-        .progressText {
-            position: absolute;
-            top: 0;
-            color: var(--text-muted);
-            padding-top: 4px;
+    .progressText {
+      position: absolute;
+      top: 0;
+      color: var(--text-muted);
+      padding-top: 4px;
 
-            .text {
-                font-size: $font-size;
-                white-space: nowrap;
-                writing-mode: vertical-lr;
-                transform: rotate(180deg);
-            }
-        }
+      .text {
+        font-size: $font-size;
+        white-space: nowrap;
+        writing-mode: vertical-lr;
+        transform: rotate(180deg);
+      }
     }
+  }
 
-    &.left {
-        left: 0;
-        .bar .progressText {
-            left: $progress-bar-width;
-        }
+  &.left {
+    left: 0;
+    .bar .progressText {
+      left: $progress-bar-width;
     }
-    &:not(.left) {
-        right: 0;
+  }
+  &:not(.left) {
+    right: 0;
 
-        .bar .progressText {
-            left: calc(-1 * ((#{$font-size} * #{$line-height}) + 1px));
-        }
+    .bar .progressText {
+      left: calc(-1 * ((#{$font-size} * #{$line-height}) + 1px));
     }
+  }
 }

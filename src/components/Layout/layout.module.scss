@@ -1,134 +1,133 @@
 @use "@/styles/variables/core-variables" as c;
 
 body {
-    margin-top: c.$topbar-height;
-    background-color: rgb(var(--background-rgb));
-    transition: background-color var(--transition);
+  margin-top: c.$topbar-height;
+  background-color: rgb(var(--background-rgb));
+  transition: background-color var(--transition);
 }
 
 .layoutWrapper {
-    width: 100%;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: auto;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto;
 
-    & > .pageContent {
-        padding: c.$page-content-padding-vertical
-            c.$page-content-padding-horizontal;
-        transition: background-color var(--transition);
-    }
+  & > .pageContent {
+    padding: c.$page-content-padding-vertical c.$page-content-padding-horizontal;
+    transition: background-color var(--transition);
+  }
 }
 [data-font-size="sm"]:root {
-    .layoutWrapper > .pageContent {
-        font-size: var(--font-size-sm);
-    }
-    .header > .content > .rightOptions > .searchBar {
-        font-size: var(--font-size-sm);
-    }
+  .layoutWrapper > .pageContent {
+    font-size: var(--font-size-sm);
+  }
+  .header > .content > .rightOptions > .searchBar {
+    font-size: var(--font-size-sm);
+  }
 }
 [data-font-size="md"]:root {
-    .layoutWrapper > .pageContent {
-        font-size: var(--font-size-md);
-    }
-    .header > .content > .rightOptions > .searchBar {
-        font-size: var(--font-size-md);
-    }
+  .layoutWrapper > .pageContent {
+    font-size: var(--font-size-md);
+  }
+  .header > .content > .rightOptions > .searchBar {
+    font-size: var(--font-size-md);
+  }
 }
 [data-font-size="lg"]:root {
-    .layoutWrapper > .pageContent {
-        font-size: var(--font-size-lg);
-    }
-    .header > .content > .rightOptions > .searchBar {
-        font-size: var(--font-size-lg);
-    }
+  .layoutWrapper > .pageContent {
+    font-size: var(--font-size-lg);
+  }
+  .header > .content > .rightOptions > .searchBar {
+    font-size: var(--font-size-lg);
+  }
 }
 
 .header {
-    background-color: rgb(var(--nav-background-rgb));
-    transition: background-color var(--transition);
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: c.$topbar-height;
-    z-index: 2;
-    padding: 0 0.5rem;
-    box-shadow:
-        0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  background-color: rgb(var(--nav-background-rgb));
+  transition: background-color var(--transition);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: c.$topbar-height;
+  z-index: 2;
+  padding: 0 0.5rem;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
 
-    .content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        max-width: c.$content-width;
-        margin: 0 auto;
-        height: 100%;
-        font-weight: 600;
+  .content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: c.$content-width;
+    margin: 0 auto;
+    height: 100%;
+    font-weight: 600;
 
-        .logoLink {
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+    .logoLink {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
 
-            .title {
-                display: grid;
-                text-align: center;
-                div:nth-child(2) {
-                    position: relative;
-                    font-size: 0.6rem;
-                    margin-top: -0.3rem;
-                    margin-bottom: -0.3rem;
-                    &:before,
-                    &:after {
-                        content: "";
-                        position: absolute;
-                        top: 52%;
-                        transform: translateY(-50%);
-                        width: 12px;
-                        height: 1px;
-                        transition: background-color var(--transition);
-                    }
-                    &:before {
-                        transform: translateX(calc(-100% - 2px));
-                    }
-                    &:after {
-                        transform: translateX(2px);
-                    }
-                }
-            }
+      .title {
+        display: grid;
+        text-align: center;
+        div:nth-child(2) {
+          position: relative;
+          font-size: 0.6rem;
+          margin-top: -0.3rem;
+          margin-bottom: -0.3rem;
+          &:before,
+          &:after {
+            content: "";
+            position: absolute;
+            top: 52%;
+            transform: translateY(-50%);
+            width: 12px;
+            height: 1px;
+            transition: background-color var(--transition);
+          }
+          &:before {
+            transform: translateX(calc(-100% - 2px));
+          }
+          &:after {
+            transform: translateX(2px);
+          }
         }
-
-        .rightOptions {
-            display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            gap: 1em;
-
-            .searchBar {
-                padding: 0 6px;
-                border: 1px solid #4e4e4e;
-                border-radius: 4px;
-                font-family: var(--font-mono);
-                color: var(--text-muted);
-                cursor: pointer;
-
-                height: 29.5px;
-                display: flex;
-                align-items: center;
-
-                .searchBarContent {
-                    font-size: 0.875em;
-                    display: flex;
-                    align-items: center;
-                    gap: 1em;
-                }
-            }
-
-            @media (max-width: c.$media-md) {
-                gap: 0.25em;
-            }
-        }
+      }
     }
+
+    .rightOptions {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+      gap: 1em;
+
+      .searchBar {
+        padding: 0 6px;
+        border: 1px solid #4e4e4e;
+        border-radius: 4px;
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        cursor: pointer;
+
+        height: 29.5px;
+        display: flex;
+        align-items: center;
+
+        .searchBarContent {
+          font-size: 0.875em;
+          display: flex;
+          align-items: center;
+          gap: 1em;
+        }
+      }
+
+      @media (max-width: c.$media-md) {
+        gap: 0.25em;
+      }
+    }
+  }
 }
