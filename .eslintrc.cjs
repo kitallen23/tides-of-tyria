@@ -22,4 +22,5 @@ module.exports = {
         "react/no-unknown-property": ["error", { ignore: ["css"] }],
         "no-console": ["warn", { allow: ["warn", "error", "info"] }],
     },
+    overrides: [{ files: ["assets/**/*.js"], env: { node: true } }],
 };

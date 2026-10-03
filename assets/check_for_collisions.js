@@ -91,4 +91,7 @@ META_EVENTS.forEach(region => {
 });
 if (numRegionsWithCollisions === 0) {
     console.info(`No collisions!`);
+} else {
+    // Non-zero exit code so CI fails when collisions are found
+    process.exitCode = 1;
 }
